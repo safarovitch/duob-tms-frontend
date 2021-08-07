@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useLocation, matchPath } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
-import {RootStateOrAny, useSelector} from 'react-redux';
+// import {useSelector} from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-    Avatar,
+    // Avatar,
     Box,
-    Chip,
+    // Chip,
     Divider,
     Drawer,
     Hidden,
@@ -26,6 +26,7 @@ import {
 } from 'react-feather';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
+// import {accountInitialState} from "../../../store/reducers/accountReducer";
 
 const navConfig = [
     {
@@ -190,7 +191,7 @@ const useStyles = makeStyles(() => ({
 const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ openMobile, onMobileClose, }) => {
     const classes = useStyles();
     const location = useLocation();
-    // const { user } = useSelector((state: RootStateOrAny) => state.account);
+    // const { user } = useSelector(({account}: {account: accountInitialState}) => account);
 
     useEffect(() => {
         if (openMobile && onMobileClose) {

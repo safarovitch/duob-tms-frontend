@@ -153,8 +153,4 @@ function NavItem({
     );
 }
 
-NavItem.defaultProps = {
-    open: false
-};
-
 export default NavItem;
