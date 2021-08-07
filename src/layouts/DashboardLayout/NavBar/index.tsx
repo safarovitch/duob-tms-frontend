@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // import {useSelector} from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-    // Avatar,
+    Avatar,
     Box,
     // Chip,
     Divider,
@@ -223,13 +223,13 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                         display="flex"
                         justifyContent="center"
                     >
-                        {/*<RouterLink to="/app/account">*/}
-                        {/*    <Avatar*/}
-                        {/*        alt="User"*/}
-                        {/*        className={classes.avatar}*/}
-                        {/*        src={user.avatar}*/}
-                        {/*    />*/}
-                        {/*</RouterLink>*/}
+                        <RouterLink to="/app/account">
+                            <Avatar
+                                alt="User"
+                                className={classes.avatar}
+                                src="/static/logo.svg"
+                            />
+                        </RouterLink>
                     </Box>
                     <Box
                         mt={2}
