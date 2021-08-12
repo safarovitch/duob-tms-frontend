@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
 import { useLocation, matchPath } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
-// import {useSelector} from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Avatar,
     Box,
-    // Chip,
     Divider,
     Drawer,
     Hidden,
@@ -26,7 +24,8 @@ import {
 } from 'react-feather';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
-// import {accountInitialState} from "../../../store/reducers/accountReducer";
+import {useSelector} from "react-redux";
+import {User} from "../../../model/User";
 
 const navConfig = [
     {
@@ -191,7 +190,7 @@ const useStyles = makeStyles(() => ({
 const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ openMobile, onMobileClose, }) => {
     const classes = useStyles();
     const location = useLocation();
-    // const { user } = useSelector(({account}: {account: accountInitialState}) => account);
+    const user = useSelector((state: {user: User}) => state.user);
 
     useEffect(() => {
         if (openMobile && onMobileClose) {
@@ -223,11 +222,11 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                         display="flex"
                         justifyContent="center"
                     >
-                        <RouterLink to="/app/account">
+                        <RouterLink to="/app/profile">
                             <Avatar
                                 alt="User"
                                 className={classes.avatar}
-                                src="/static/logo.svg"
+                                src={user.imageUrl}
                             />
                         </RouterLink>
                     </Box>
@@ -237,20 +236,18 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                     >
                         <Link
                             component={RouterLink}
-                            to="/app/account"
+                            to="/app/profile"
                             variant="h5"
                             color="textPrimary"
                             underline="none"
                         >
-                            {/*{`${user.firstName} ${user.lastName}`}*/}
-                            Dilshod Mizrobov
+                            {user.userName}
                         </Link>
                         <Typography
                             variant="body2"
                             color="textSecondary"
                         >
-                            {/*{user.bio}*/}
-                            Sales Manager
+                            {user.position}
                         </Typography>
                     </Box>
                 </Box>
