@@ -77,7 +77,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
     const handleAddCustomer = async (values: Customer, formActions: { [key: string]: any }) => {
         try {
-            formActions.resetForm();
             formActions.setStatus({success: true});
             formActions.setSubmitting(false);
             values.birthDate = moment(values.birthDate).format('DD.MM.yyyy')
@@ -87,10 +86,15 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 action: <Button onClick={() => history.push('/app/customers')}>Клиенты</Button>
             });
             history.go(-1);
+            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
+            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
+                variant: 'error',
+                action: <Button>OK</Button>
+            });
         }
     }
 
@@ -111,6 +115,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
+            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
+                variant: 'error',
+                action: <Button>OK</Button>
+            });
         }
     }
 

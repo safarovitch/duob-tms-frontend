@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {
     Avatar,
-    Box, Card, CircularProgress,
+    Box, Button, Card, CircularProgress,
     Container, IconButton, InputAdornment, Link,
     makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField, Typography
 } from '@material-ui/core';
@@ -26,6 +26,7 @@ import 'moment/locale/ru';
 import {useDispatch} from "react-redux";
 import {setSelectedCustomer} from "../../store/actions/customerActions";
 import useDebounce from "../../hooks/useDebounce";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -67,9 +68,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CustomerListView: React.FC<CustomerListProps> = ({className, ...rest}) => {
+const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {enqueueSnackbar} = useSnackbar();
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
@@ -99,10 +101,12 @@ const CustomerListView: React.FC<CustomerListProps> = ({className, ...rest}) => 
             setCustomers(customerObj.content)
             setTotal(customerObj.totalElements)
             setLoading(false);
-            console.log(customerObj)
         } catch (error) {
             setLoading(false);
-            console.log(error)
+            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
+                variant: 'error',
+                action: <Button onClick={() => getCustomers()}>Рестарт</Button>
+            });
         }
     };
 
@@ -121,7 +125,6 @@ const CustomerListView: React.FC<CustomerListProps> = ({className, ...rest}) => 
                     <Box mt={3} >
                         <Card
                             className={clsx(classes.root, className)}
-                            {...rest}
                         >
                             <Box
                                 p={2}
@@ -144,7 +147,7 @@ const CustomerListView: React.FC<CustomerListProps> = ({className, ...rest}) => 
                                         )
                                     }}
                                     onChange={handleQueryChange}
-                                    placeholder="Search customers"
+                                    placeholder="Поиск клиентов"
                                     value={query}
                                     variant="outlined"
                                 /></Box>

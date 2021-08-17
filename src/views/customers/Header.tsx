@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<CustomerListHeaderProps> = ({ className, ...rest }) => {
+const Header: React.FC<CustomerListHeaderProps> = ({ className }) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -42,7 +42,6 @@ const Header: React.FC<CustomerListHeaderProps> = ({ className, ...rest }) => {
             container
             justifyContent="space-between"
             spacing={3}
-            {...rest}
         >
             <Grid item>
                 <Breadcrumbs

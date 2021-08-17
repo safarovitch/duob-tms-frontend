@@ -11,7 +11,7 @@ class CustomerService {
     })
 
     updateCustomer = (customer: Customer) => new Promise((resolve, reject)  => {
-        api.put(API_BASE_URL + '/clients/'+customer.id, customer)
+        api.put(API_BASE_URL + '/clients/', customer)
             .then((response) => {
                 resolve(response.data)
             })

@@ -44,14 +44,14 @@ function App() {
         <ThemeProvider theme={createTheme(settings)}>
             <StylesProvider>
                 <MuiPickersUtilsProvider locale="ru" utils={MomentUtils}>
-                <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
-                    <BrowserRouter>
-                        <Auth>
-                            <ScrollReset/>
-                            <Routes/>
-                        </Auth>
-                    </BrowserRouter>
-                </SnackbarProvider>
+                    <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+                        <BrowserRouter>
+                            <Auth>
+                                <ScrollReset/>
+                                <Routes/>
+                            </Auth>
+                        </BrowserRouter>
+                    </SnackbarProvider>
                 </MuiPickersUtilsProvider>
             </StylesProvider>
         </ThemeProvider>

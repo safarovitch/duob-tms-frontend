@@ -30,9 +30,9 @@ function CustomerProfile() {
             })
             history.push('/app/customers');
         } catch (error) {
-            enqueueSnackbar('Что-то пошло не так. Попробуйте снова.', {
+            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
-                action: <Button onClick={() => history.push('/app/customers')}>Клиенты</Button>
+                action: <Button>OK</Button>
             })
         }
     }

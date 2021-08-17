@@ -9,20 +9,17 @@ import {
 } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Customer} from "../../../model/Customer";
-import getInitials from "../../../utils/getInitials";
 
 const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Header: React.FC<{className?: string, customer?: Customer}> = ({ className,customer, ...rest }) => {
+const Header: React.FC<{className?: string, customer?: Customer}> = ({ className,customer }) => {
     const classes = useStyles();
 
-    console.log(getInitials('Холов Аброр Сатторович'))
     return (
         <div
             className={clsx(classes.root, className)}
-            {...rest}
         >
             <Breadcrumbs
                 separator={<NavigateNextIcon fontSize="small" />}
