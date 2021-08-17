@@ -6,6 +6,10 @@ import useSettings from "./hooks/useSettings";
 import {createTheme} from "./theme";
 import Routes from "./routes";
 import Auth from "./components/Auth";
+import {SnackbarProvider} from "notistack";
+import {MuiPickersUtilsProvider} from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import "moment/locale/ru";
 
 const useStyles = makeStyles(() => createStyles({
     '@global': {
@@ -34,17 +38,21 @@ const useStyles = makeStyles(() => createStyles({
 function App() {
     useStyles();
 
-    const { settings } = useSettings();
+    const {settings} = useSettings();
 
     return (
         <ThemeProvider theme={createTheme(settings)}>
             <StylesProvider>
-                <BrowserRouter >
-                    <Auth>
-                        <ScrollReset/>
-                        <Routes />
-                    </Auth>
-                </BrowserRouter>
+                <MuiPickersUtilsProvider locale="ru" utils={MomentUtils}>
+                    <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+                        <BrowserRouter>
+                            <Auth>
+                                <ScrollReset/>
+                                <Routes/>
+                            </Auth>
+                        </BrowserRouter>
+                    </SnackbarProvider>
+                </MuiPickersUtilsProvider>
             </StylesProvider>
         </ThemeProvider>
     );

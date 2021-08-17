@@ -83,17 +83,7 @@ const navConfig = [
             {
                 title: 'Клиенты',
                 icon: FolderIcon,
-                href: '/app/management/orders',
-                items: [
-                    {
-                        title: 'List Orders',
-                        href: '/app/management/orders'
-                    },
-                    {
-                        title: 'View Order',
-                        href: '/app/management/orders/1'
-                    }
-                ]
+                href: '/app/customers'
             },
             {
                 title: 'Тарифы',
