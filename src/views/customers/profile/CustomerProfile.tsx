@@ -37,7 +37,7 @@ function CustomerProfile() {
         }
     }
 
-    useEffect(() => () => {dispatch(deleteSelectedCustomer())}, [])
+    useEffect(() => () => {dispatch(deleteSelectedCustomer())}, [dispatch])
 
     return (
         <div className={classes.root}>
