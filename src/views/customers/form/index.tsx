@@ -12,6 +12,7 @@ import Header from './Header';
 import {Customer} from "../../../model/Customer";
 import {useParams} from "react-router";
 import {useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,8 +25,11 @@ const useStyles = makeStyles((theme) => ({
 
 function CustomerFormView() {
     const classes = useStyles();
+    const history = useHistory();
     const {id} = useParams<{id: string}>();
     const selectedCustomer = useSelector((state: { selectedCustomer: Customer }) => state.selectedCustomer);
+
+    if (id && !selectedCustomer) {history.go(-1)}
     return (
         <Page
             className={classes.root}

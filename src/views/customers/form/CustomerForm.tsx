@@ -57,7 +57,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
     const initialValues: Customer = {
         name: customer?.name || '',
         phoneNumber: customer?.phoneNumber || '',
-        birthDate: customer ? moment(customer?.birthDate, 'dd.MM.yyyy').toDate() : null,
+        birthDate: customer ? moment(customer?.birthDate, 'DD.MM.yyyy').toDate().toString() : null,
         address: customer?.address || '',
         code: customer?.code || '',
         username: customer?.username || '',
@@ -206,7 +206,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                                         required
                                         inputVariant="outlined"
                                         format="DD.MM.yyyy"
-                                        value={props.values.birthDate}
+                                        value={props.values.birthDate ? props.values.birthDate : null}
                                         onChange={value => props.setFieldValue("birthDate", value)}
                                         KeyboardButtonProps={{
                                             "aria-label": "change date"
