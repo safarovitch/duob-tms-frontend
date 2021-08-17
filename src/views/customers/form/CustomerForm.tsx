@@ -43,8 +43,7 @@ interface CustomerFormValues {
 
 const CustomerForm: React.FC<CustomerFormProps> = ({
                                                        className,
-                                                       customer,
-                                                       ...rest
+                                                       customer
                                                    }) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
@@ -150,7 +149,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 <form
                     className={clsx(classes.root, className)}
                     onSubmit={props.handleSubmit}
-                    {...rest}
                 >
 
                     <Card>
