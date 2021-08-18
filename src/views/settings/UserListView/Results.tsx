@@ -25,7 +25,7 @@ import {Employee, Role} from "../../../model/Employee";
 import {useDispatch} from "react-redux";
 import {setSelectedEmployee} from "../../../store/actions/employeeActions";
 import useDebounce from "../../../hooks/useDebounce";
-import employeeService from "../../../services/employeeService";
+import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({

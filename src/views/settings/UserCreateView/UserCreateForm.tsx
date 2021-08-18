@@ -19,7 +19,7 @@ import { useSnackbar } from 'notistack';
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import {Plus as PlusIcon} from "react-feather";
 import {Employee, Role} from "../../../model/Employee";
-import employeeService from "../../../services/employeeService";
+import employeeService from "../../../services/EmployeeService";
 
 const useStyles = makeStyles(theme => ({
     root: {},

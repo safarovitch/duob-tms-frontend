@@ -54,14 +54,14 @@ const Header: React.FC<{className?: string}> = ({ className, ...rest }) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        Пользователи
+                        Сотрудники
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    Пользователи
+                    Сотрудники
                 </Typography>
             </Grid>
             <Grid item>

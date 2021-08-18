@@ -1,9 +1,11 @@
-import axios from "../utils/axios";
+import api from '../utils/Api'
+import {API_BASE_URL} from "../config";
 import {Employee} from "../model/Employee";
 
 class EmployeeService {
     getEmployees = (page: number, size: number, search: string, rolesId: string) => new Promise((resolve, reject) => {
-        axios.get('/employees', {params: {page, size, search, rolesId}})
+        api
+            .get(`${API_BASE_URL}/employees`, {params: {page, size, search, rolesId}})
             .then(response => {
                 if (response.data) resolve(response.data)
                 else reject(response.data.error)
@@ -13,8 +15,8 @@ class EmployeeService {
     })
 
     createEmployee = (values: Employee) => new Promise((resolve, reject) => {
-        axios
-            .post('/employees', values)
+        api
+            .post(`${API_BASE_URL}/employees`, values)
             .then(response => {
                 if (response.data) resolve(response.data)
                 else reject(response.data.error)
@@ -24,8 +26,8 @@ class EmployeeService {
     })
 
     updateEmployee = (values: Employee) => new Promise((resolve, reject) => {
-        axios
-            .put('/employees', values)
+        api
+            .put(`${API_BASE_URL}/employees`, values)
             .then(response => {
                 if (response.data) resolve(response.data)
                 else reject(response.data.error)
@@ -36,8 +38,8 @@ class EmployeeService {
     })
 
     deleteEmployee = (id: number) => new Promise((resolve, reject) => {
-        axios
-            .delete('/employees/' + id)
+        api
+            .delete(`${API_BASE_URL}/employees/${id}`)
             .then(response => {
                 if (response.status === 200) resolve(response.data)
                 else reject(response.data.error)
@@ -47,8 +49,8 @@ class EmployeeService {
     })
 
     getRoles = () => new Promise((resolve, reject) => {
-        axios
-            .get('/users/roles')
+        api
+            .get(`${API_BASE_URL}/users/roles`)
             .then(response => {
                 if (response.data) resolve(response.data)
                 else reject(response.data.error)

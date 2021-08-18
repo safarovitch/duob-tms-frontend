@@ -17,7 +17,7 @@ import * as Yup from 'yup';
 import {Link as RouterLink, useHistory} from "react-router-dom";
 import {Employee, Role} from "../../../model/Employee";
 import {useSnackbar} from "notistack";
-import employeeService from "../../../services/employeeService";
+import employeeService from "../../../services/EmployeeService";
 
 const useStyles = makeStyles(theme => ({
     root: {},

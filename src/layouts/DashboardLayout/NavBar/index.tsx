@@ -47,7 +47,7 @@ const navConfig = [
         subheader: 'Настройки',
         items: [
             {
-                title: 'Пользователи',
+                title: 'Сотрудники',
                 icon: UsersIcon,
                 href: '/app/employees',
             },

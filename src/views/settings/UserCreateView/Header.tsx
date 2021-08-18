@@ -39,20 +39,20 @@ const Header: React.FC<{className?: string}> = ({ className, ...rest }) => {
             to="/app/employees"
             component={RouterLink}
         >
-          Пользователи
+          Сотрудники
         </Link>
         <Typography
           variant="body1"
           color="textPrimary"
         >
-          Создание пользователя
+          Создание сотрудника
         </Typography>
       </Breadcrumbs>
       <Typography
         variant="h3"
         color="textPrimary"
       >
-        Создание пользователя
+        Создание сотрудника
       </Typography>
     </div>
   );

@@ -11,7 +11,7 @@ import Header from './Header';
 import Results from './Results';
 import {Role} from "../../../model/Employee";
 import {useSnackbar} from "notistack";
-import employeeService from "../../../services/employeeService";
+import employeeService from "../../../services/EmployeeService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,7 +46,7 @@ const UserListView = () => {
     if (roles.length === 0) return null
 
     return (
-        <Page className={classes.root} title="Пользователи">
+        <Page className={classes.root} title="Сотрудники">
             <Container maxWidth={false}>
                 <Header />
                     <Box mt={3}>

@@ -7,7 +7,7 @@ import {useSelector} from "react-redux";
 import {employeeInitialState} from "../../../store/reducers/employeeReducer";
 import {useHistory} from "react-router-dom";
 import {Role} from "../../../model/Employee";
-import employeeService from "../../../services/employeeService";
+import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +46,7 @@ const UserEditView: React.FC = () => {
     if (roles.length === 0 || !employee) return null;
 
     return (
-        <Page className={classes.root} title="Изменение пользователя">
+        <Page className={classes.root} title="Изменение сотрудника">
             <Container maxWidth="lg">
                 <Header />
                 <Box mt={3}>

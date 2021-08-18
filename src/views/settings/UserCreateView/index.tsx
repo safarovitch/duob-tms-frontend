@@ -4,7 +4,7 @@ import Page from '../../../components/Page';
 import Header from './Header';
 import UserCreateForm from './UserCreateForm';
 import {Role} from "../../../model/Employee";
-import employeeService from "../../../services/employeeService";
+import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +40,7 @@ const UserCreateView: React.FC = () => {
     if (roles.length === 0) return null;
 
     return (
-        <Page className={classes.root} title="Создание пользователя">
+        <Page className={classes.root} title="Создание сотрудника">
             <Container maxWidth={false}>
                 <Header />
                 <Box mt={3}>
