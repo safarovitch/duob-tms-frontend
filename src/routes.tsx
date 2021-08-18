@@ -57,6 +57,36 @@ const routesConfig = [
                 path: '/app/customers/:id',
                 component: lazy(() => import('./views/customers/profile/CustomerProfile'))
             },
+            {
+                exact: true,
+                path: '/app/cargo',
+                component: () => <Redirect to="/app/cargo/product" />
+            },
+            {
+                exact: true,
+                path: '/app/cargo/:stuffId',
+                component: lazy(() => import('./views/cargo')),
+            },
+            {
+                exact: true,
+                path: '/app/cargo/product/create',
+                component: lazy(() => import('./views/cargo/product'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/product/edit',
+                component: lazy(() => import('./views/cargo/product'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/customs/create',
+                component: lazy(() => import('./views/cargo/customs'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/customs/edit',
+                component: lazy(() => import('./views/cargo/customs'))
+            },
         ]
     }
 ];

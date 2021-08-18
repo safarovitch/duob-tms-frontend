@@ -86,6 +86,11 @@ const navConfig = [
                 href: '/app/customers'
             },
             {
+                title: 'Константы груза',
+                icon: FolderIcon,
+                href: '/app/cargo'
+            },
+            {
                 title: 'Тарифы',
                 icon: ReceiptIcon,
                 href: '/app/management/invoices',
