@@ -8,7 +8,7 @@ const routesConfig = [
     {
         exact: true,
         path: '/',
-        component: () => <Redirect to="/home" />
+        component: () => <Redirect to="/app" />
     },
     {
         path: '/app',
@@ -24,6 +24,21 @@ const routesConfig = [
                 exact: true,
                 path: '/app/reports/dashboard',
                 component: lazy(() => import('./views/reports/DashboardView'))
+            },
+            {
+                exact: true,
+                path: '/app/employees',
+                component: lazy(() => import('./views/settings/UserListView'))
+            },
+            {
+                exact: true,
+                path: '/app/employees/create',
+                component: lazy(() => import('./views/settings/UserCreateView'))
+            },
+            {
+                exact: true,
+                path: '/app/employees/:id/edit',
+                component: lazy(() => import('./views/settings/UserEditView'))
             },
         ]
     }

@@ -50,21 +50,7 @@ const navConfig = [
             {
                 title: 'Пользователи',
                 icon: UsersIcon,
-                href: '/app/management/customers',
-                items: [
-                    {
-                        title: 'List Customers',
-                        href: '/app/management/customers'
-                    },
-                    {
-                        title: 'View Customer',
-                        href: '/app/management/customers/1'
-                    },
-                    {
-                        title: 'Edit Customer',
-                        href: '/app/management/customers/1/edit'
-                    }
-                ]
+                href: '/app/employees',
             },
             {
                 title: 'Поставщики',

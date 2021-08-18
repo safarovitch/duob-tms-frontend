@@ -1,13 +1,11 @@
 import React from 'react';
-import {Router} from "react-router-dom";
-import {createBrowserHistory} from 'history';
+import {BrowserRouter} from "react-router-dom";
 import {createStyles, makeStyles, StylesProvider, ThemeProvider} from "@material-ui/core";
 import ScrollReset from "./components/ScrollReset";
 import useSettings from "./hooks/useSettings";
 import {createTheme} from "./theme";
 import Routes from "./routes";
-
-const history = createBrowserHistory();
+import { SnackbarProvider } from 'notistack';
 
 const useStyles = makeStyles(() => createStyles({
     '@global': {
@@ -41,10 +39,12 @@ function App() {
     return (
         <ThemeProvider theme={createTheme(settings)}>
             <StylesProvider>
-                <Router history={history}>
-                    <ScrollReset/>
-                    <Routes />
-                </Router>
+                <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+                    <BrowserRouter>
+                        <ScrollReset/>
+                        <Routes />
+                    </BrowserRouter>
+                </SnackbarProvider>
             </StylesProvider>
         </ThemeProvider>
     );
