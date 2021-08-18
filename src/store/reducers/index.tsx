@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
 import accountReducer from "./accountReducer";
+import customerReducer from "./customerReducer";
 import employeeReducer from './employeeReducer';
 
 const rootReducer = combineReducers({
-    account: accountReducer,
+    user: accountReducer,
+    selectedCustomer: customerReducer,
     employee: employeeReducer
 });
 

@@ -1,5 +1,5 @@
 import {Redirect, Switch, Route} from "react-router-dom";
-import {Fragment, Suspense, lazy} from "react";
+import React, {Fragment, Suspense, lazy} from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import AuthGuard from "./components/AuthGuard";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -9,6 +9,12 @@ const routesConfig = [
         exact: true,
         path: '/',
         component: () => <Redirect to="/app" />
+    },
+    {
+        exact: true,
+        guard: AuthGuard,
+        path: '/login',
+        component: lazy(() => import('./views/auth/Login'))
     },
     {
         path: '/app',
@@ -24,6 +30,32 @@ const routesConfig = [
                 exact: true,
                 path: '/app/reports/dashboard',
                 component: lazy(() => import('./views/reports/DashboardView'))
+            },
+
+            {
+                exact: true,
+                path: '/app/profile',
+                component: lazy(() => import('./views/profile/UserProfile'))
+            },
+            {
+                exact: true,
+                path: '/app/customers',
+                component: lazy(() => import('./views/customers/CustomerListView'))
+            },
+            {
+                exact: true,
+                path: '/app/customers/create',
+                component: lazy(() => import('./views/customers/form'))
+            },
+            {
+                exact: true,
+                path: '/app/customers/:id/edit',
+                component: lazy(() => import('./views/customers/form'))
+            },
+            {
+                exact: true,
+                path: '/app/customers/:id',
+                component: lazy(() => import('./views/customers/profile/CustomerProfile'))
             },
             {
                 exact: true,

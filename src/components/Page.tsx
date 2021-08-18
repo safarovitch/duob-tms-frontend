@@ -1,9 +1,14 @@
-import React, {forwardRef} from 'react';
+import React, {
+    forwardRef
+} from 'react';
 import { Helmet } from 'react-helmet';
 
-const Page = forwardRef(
-    ({title, children, ...rest}: {title: string, children: React.ReactNode, className?: string},
-     ref: React.Ref<HTMLDivElement>) => {
+const Page = forwardRef<HTMLDivElement, {[key: string]: any}>(({
+                             title,
+                             children,
+                             ...rest
+                         }, ref) => {
+
     return (
         <div
             ref={ref}

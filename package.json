@@ -2,19 +2,22 @@
   "name": "duob-tms",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://192.168.1.169:8080",
   "dependencies": {
+    "@date-io/moment": "1.x",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
+    "@material-ui/pickers": "^3.3.10",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "change-case": "^4.1.2",
     "formik": "^2.2.9",
-    "immer": "^9.0.5",
-    "jwt-decode": "^3.1.2",
+    "history": "^5.0.0",
     "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "notistack": "^1.0.10",
     "nprogress": "^0.2.0",
     "react": "^17.0.2",
@@ -73,6 +76,5 @@
     "@types/react-router-dom": "^5.1.8",
     "@types/redux-logger": "^3.0.9",
     "@types/yup": "^0.29.13"
-  },
-  "proxy": "http://192.168.1.99:8080"
+  }
 }
