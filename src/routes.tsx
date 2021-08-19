@@ -57,6 +57,21 @@ const routesConfig = [
                 path: '/app/customers/:id',
                 component: lazy(() => import('./views/customers/profile/CustomerProfile'))
             },
+            {
+                exact: true,
+                path: '/app/providers',
+                component: lazy(() => import('./views/providers/ProviderListView'))
+            },
+            {
+                exact: true,
+                path: '/app/providers/create',
+                component: lazy(() => import('./views/providers/form'))
+            },
+            {
+                exact: true,
+                path: '/app/providers/:id/edit',
+                component: lazy(() => import('./views/providers/form'))
+            },
         ]
     }
 ];
