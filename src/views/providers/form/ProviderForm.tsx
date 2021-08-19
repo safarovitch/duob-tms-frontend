@@ -71,7 +71,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({className, provider}) => {
             formActions.setSubmitting(false);
 
             await providerService.postNewProvider(values)
-            enqueueSnackbar('Клиент создан', {
+            enqueueSnackbar('Поставщик создан', {
                 variant: 'success',
                 action: <Button onClick={() => history.push('/app/providers')}>Поставщики</Button>
             });
@@ -95,7 +95,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({className, provider}) => {
             formActions.setSubmitting(false);
             values.id = provider?.id;
             await providerService.updateProvider(values)
-            enqueueSnackbar('Клиент обновлен', {
+            enqueueSnackbar('Поставщик обновлен', {
                 variant: 'success',
                 action: <Button onClick={() => history.push('/app/providers')}>Поставщики</Button>
             });

@@ -248,7 +248,7 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
                                     count={total}
                                     onPageChange={handlePageChange}
                                     page={page - 1}
-                                    labelRowsPerPage={'Количество клиентов:'}
+                                    labelRowsPerPage={'Количество поставщиков:'}
                                     rowsPerPage={size}
                                     rowsPerPageOptions={[5, 10, 25]}
                                     onRowsPerPageChange={handleRowsPerPageChange}
