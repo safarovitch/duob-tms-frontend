@@ -85,7 +85,7 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
         setLoading(true);
         try {
             const providersObj: any = await providerService.getFilteredProvider(page, size, query);
-            setProviders(providersObj.data)
+            setProviders(providersObj.content)
             setTotal(providersObj.totalElements)
             setLoading(false);
         } catch (error) {

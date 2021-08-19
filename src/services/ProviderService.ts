@@ -6,7 +6,7 @@ class ProviderService {
     getFilteredProvider = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(`${API_BASE_URL}/providers`, {params: {page, size, search: query}})
             .then((response) => {
-                resolve(response)
+                resolve(response.data)
             })
             .catch((error) => {reject(error)})
     })
