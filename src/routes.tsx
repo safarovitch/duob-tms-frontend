@@ -72,6 +72,21 @@ const routesConfig = [
                 path: '/app/employees/:id/edit',
                 component: lazy(() => import('./views/settings/UserEditView'))
             },
+            {
+                exact: true,
+                path: '/app/providers',
+                component: lazy(() => import('./views/providers/ProviderListView'))
+            },
+            {
+                exact: true,
+                path: '/app/providers/create',
+                component: lazy(() => import('./views/providers/form'))
+            },
+            {
+                exact: true,
+                path: '/app/providers/:id/edit',
+                component: lazy(() => import('./views/providers/form'))
+            },
         ]
     }
 ];

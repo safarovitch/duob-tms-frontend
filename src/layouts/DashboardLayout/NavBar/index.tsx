@@ -54,17 +54,7 @@ const navConfig = [
             {
                 title: 'Поставщики',
                 icon: ShoppingCartIcon,
-                href: '/app/management/products',
-                items: [
-                    {
-                        title: 'List Products',
-                        href: '/app/management/products'
-                    },
-                    {
-                        title: 'Create Product',
-                        href: '/app/management/products/create'
-                    }
-                ]
+                href: '/app/providers',
             },
             {
                 title: 'Клиенты',
