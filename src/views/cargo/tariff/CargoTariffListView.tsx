@@ -3,28 +3,23 @@ import React, {
     useEffect,
 } from 'react';
 import {
-    Avatar,
     Box, Button, Card, CircularProgress,
-    Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, InputAdornment, Link,
-    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField, Typography
+    IconButton, InputAdornment,
+    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField
 } from '@material-ui/core';
 import {
     Search as SearchIcon,
     Edit as EditIcon,
-    ArrowRight as ArrowRightIcon,
     Trash as TrashIcon,
-    Check as CheckIcon,
-    X as XIcon,
 
 } from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
-import 'moment/locale/ru';
 import {useDispatch} from "react-redux";
 import useDebounce from "../../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
-import {CargoType} from "../../../model/Cargo";
-import {setSelectedProduct} from "../../../store/actions/cargoActions";
+import {CargoTariff} from "../../../model/Cargo";
+import {setSelectedCargoTariff} from "../../../store/actions/cargoActions";
 import cargoService from "../../../services/CargoService";
 import ConfirmModal from "../../../components/ConfirmModal";
 
@@ -48,11 +43,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CargoTypeListView: React.FC = () => {
+const CargoTariffListView: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
-    const [cargoTypes, setCargoTypes] = useState<CargoType[]>([]);
+    const [cargoTariffs, setCargoTariffs] = useState<CargoTariff[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(5);
@@ -60,7 +55,7 @@ const CargoTypeListView: React.FC = () => {
     const debouncedSearchTerm = useDebounce(query, 500);
     const [loading, setLoading] = useState(false);
     const [isConfirmModalOpen, setOpen] = useState(false);
-    const [selectedCargoType, selectCargoType] = useState<CargoType>();
+    const [selectedCargoTariff, selectCargoTariff] = useState<CargoTariff>();
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -76,59 +71,59 @@ const CargoTypeListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectCargoType = (cargoType: CargoType, needDispatch: boolean) => {
-        selectCargoType(cargoType);
+    const handleSelectCargoTariff = (cargoTariff: CargoTariff, needDispatch: boolean) => {
+        selectCargoTariff(cargoTariff);
         if (needDispatch) {
-            dispatch(setSelectedProduct(cargoType))
+            dispatch(setSelectedCargoTariff(cargoTariff))
         } else {
             setOpen(true)
         }
     };
 
-    const handleDeleteCargoType = async (cargoTypeId: number) => {
+    const handleDeleteCargoTariff = async (cargoTariffId: number) => {
         setOpen(false);
         setLoading(true)
         try {
-            await cargoService.deleteCargoType(cargoTypeId);
+            await cargoService.deleteCargoTariff(cargoTariffId);
             enqueueSnackbar(`Успешно удалено!`, {
                 variant: 'success',
                 action: <Button>ОК</Button>
             });
-            getCargoTypes();
+            getCargoTariffs();
             setLoading(false);
             setPage(1);
         } catch (error) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
-                action: <Button onClick={() => getCargoTypes()}>Рестарт</Button>
+                action: <Button onClick={() => getCargoTariffs()}>Рестарт</Button>
             });
         }
     };
 
-    const getCargoTypes = async () => {
+    const getCargoTariffs = async () => {
         setLoading(true);
         try {
-            const cargoTypeObj: any = await cargoService.getFilteredCargoTypes(page, size, query);
-            setCargoTypes(cargoTypeObj.content)
-            setTotal(cargoTypeObj.totalElements)
+            const cargoTariffObj: any = await cargoService.getFilteredCargoTariffs(page, size, query);
+            setCargoTariffs(cargoTariffObj.content)
+            setTotal(cargoTariffObj.totalElements)
             setLoading(false);
         } catch (error) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
-                action: <Button onClick={() => getCargoTypes()}>Рестарт</Button>
+                action: <Button onClick={() => getCargoTariffs()}>Рестарт</Button>
             });
         }
     };
 
     useEffect(() => {
-        getCargoTypes()
+        getCargoTariffs()
     }, [page, debouncedSearchTerm, size]);
 
     return (
         <>
-            {cargoTypes && (
+            {cargoTariffs && (
                 <Card
                     className={classes.root}
                 >
@@ -165,58 +160,46 @@ const CargoTypeListView: React.FC = () => {
                                         <TableCell>
                                             Название
                                         </TableCell>
-                                        <TableCell align="center">
-                                            Ручная цена
+                                        <TableCell>
+                                            Филиал
                                         </TableCell>
-                                        <TableCell align="center">
-                                            Договорная цена
+                                        <TableCell>
+                                            Описание
                                         </TableCell>
-                                        <TableCell align="center">
-                                            Расчет по норме и весу
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            Учитывать скидку
-                                        </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="right" width="12%">
                                             Действия
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {cargoTypes.map((cargoType: CargoType) => {
+                                    {cargoTariffs.map((cargoTariff: CargoTariff) => {
 
                                         return (
                                             <TableRow
                                                 hover
-                                                key={cargoType.id}
+                                                key={cargoTariff.id}
                                             >
                                                 <TableCell>
-                                                    {cargoType.name}
+                                                    {cargoTariff.name}
                                                 </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.manualPrice ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
+                                                <TableCell>
+                                                    {cargoTariff.warehouseDto?.name}
                                                 </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.negotiatedPrice ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
+                                                <TableCell>
+                                                    {cargoTariff.description}
                                                 </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.calculationRateWeight ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.discount ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
-                                                </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" width="12%">
                                                     <IconButton
                                                         component={RouterLink}
-                                                        to={`/app/cargo/type/edit`}
-                                                        onClick={() => handleSelectCargoType(cargoType, true)}
+                                                        to={`/app/cargo/tariff/edit`}
+                                                        onClick={() => handleSelectCargoTariff(cargoTariff, true)}
                                                     >
                                                         <SvgIcon fontSize="small">
                                                             <EditIcon/>
                                                         </SvgIcon>
                                                     </IconButton>
                                                     <IconButton
-                                                        onClick={() => handleSelectCargoType(cargoType, false)}
+                                                        onClick={() => handleSelectCargoTariff(cargoTariff, false)}
                                                     >
                                                         <SvgIcon fontSize="small">
                                                             <TrashIcon/>
@@ -236,7 +219,7 @@ const CargoTypeListView: React.FC = () => {
                         count={total}
                         onPageChange={handlePageChange}
                         page={page - 1}
-                        labelRowsPerPage={'Количество наименований:'}
+                        labelRowsPerPage={'Количество тарифов:'}
                         rowsPerPage={size}
                         rowsPerPageOptions={[5, 10, 25]}
                         onRowsPerPageChange={handleRowsPerPageChange}
@@ -246,12 +229,12 @@ const CargoTypeListView: React.FC = () => {
             )}
             <ConfirmModal
                 isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите удалить вид груза?'}
-                description={'При удалении вида груза, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот вид груза.'}
+                title={'Вы уверены, что хотите удалить тариф?'}
+                description={'При удалении тарифа, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот тариф.'}
                 onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteCargoType(selectedCargoType?.id!!)}/>
+                onAccept={() => handleDeleteCargoTariff(selectedCargoTariff?.id!!)}/>
         </>
     );
 }
 
-export default CargoTypeListView;
+export default CargoTariffListView;

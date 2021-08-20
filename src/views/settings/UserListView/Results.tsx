@@ -234,7 +234,7 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                                 <TableCell>
                                     Телефон
                                 </TableCell>
-                                <TableCell align="right"/>
+                                <TableCell align="right" width="12%"/>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -264,7 +264,7 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                                         <TableCell>
                                             {employee.phoneNumber}
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="right" width="12%">
                                             <IconButton
                                                 onClick={() => handleEmployeeEdit(employee)}
                                                 component={RouterLink}

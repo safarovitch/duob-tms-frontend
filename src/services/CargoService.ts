@@ -75,6 +75,13 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+    getAllCargoTypes = () => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/cargos-types/all`)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
     postCargoType = (cargoType: CargoType) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + `/cargos-types`, cargoType)
             .then((response) => {
@@ -98,28 +105,28 @@ class CustomerService {
     })
 
     getFilteredCargoTariffs = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
-        api.get(API_BASE_URL + `/cargos-types?page=${page}&size=${size}&search=${query}`)
+        api.get(API_BASE_URL + `/tariffs?page=${page}&size=${size}&search=${query}`)
             .then((response) => {
                 resolve(response.data)
             })
             .catch((error) => {reject(error)})
     })
     postCargoTariff = (cargoTariff: CargoTariff) => new Promise((resolve, reject)  => {
-        api.post(API_BASE_URL + `/cargos-types`, cargoTariff)
+        api.post(API_BASE_URL + `/tariffs`, cargoTariff)
             .then((response) => {
                 resolve(response.data)
             })
             .catch((error) => {reject(error)})
     })
     updateCargoTariff = (cargoTariff: CargoTariff) => new Promise((resolve, reject)  => {
-        api.put(API_BASE_URL + `/cargos-types`, cargoTariff)
+        api.put(API_BASE_URL + `/tariffs`, cargoTariff)
             .then((response) => {
                 resolve(response.data)
             })
             .catch((error) => {reject(error)})
     })
     deleteCargoTariff = (cargoTariffId: number) => new Promise((resolve, reject)  => {
-        api.delete(API_BASE_URL + `/cargos-types/`+cargoTariffId)
+        api.delete(API_BASE_URL + `/tariffs/`+cargoTariffId)
             .then((response) => {
                 resolve(response.data)
             })

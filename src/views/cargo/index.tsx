@@ -1,7 +1,6 @@
 import {Box, Card, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import {useParams} from "react-router";
-import {useSelector} from "react-redux";
 import Page from "../../components/Page";
 import React, {useState} from "react";
 import Header from "./Header";
@@ -11,6 +10,7 @@ import CargoTabPanel from "./CargoTabPanel";
 import ProductListView from "./product/ProductListView";
 import CustomCodeListView from "./customs/CustomCodeListView";
 import CargoTypeListView from "./type/CargoTypeListView";
+import CargoTariffListView from "./tariff/CargoTariffListView";
 
 function getCurrentTab(stuffId: string) {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -79,7 +79,7 @@ function CargoStuffView() {
                             <CargoTypeListView/>
                         </CargoTabPanel>
                         <CargoTabPanel index={'tariff'} value={currentTab}>
-                            Privet tariff
+                            <CargoTariffListView/>
                         </CargoTabPanel>
                     </Card>
 

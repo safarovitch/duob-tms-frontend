@@ -3,6 +3,14 @@ import {Warehouse} from "../model/Warehouse";
 import {API_BASE_URL} from "../config";
 
 class WarehouseService {
+    getAllWarehouse = () => new Promise((resolve, reject)  => {
+        api.get(`${API_BASE_URL}/warehouses/all`)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+
     getFilteredWarehouse = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(`${API_BASE_URL}/warehouses`, {params: {page, size, search: query}})
             .then((response) => {

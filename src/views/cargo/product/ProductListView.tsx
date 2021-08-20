@@ -3,21 +3,18 @@ import React, {
     useEffect,
 } from 'react';
 import {
-    Avatar,
     Box, Button, Card, CircularProgress,
-    Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, InputAdornment, Link,
-    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField, Typography
+    IconButton, InputAdornment,
+    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField
 } from '@material-ui/core';
 import {
     Search as SearchIcon,
     Edit as EditIcon,
-    ArrowRight as ArrowRightIcon,
     Trash as TrashIcon,
 
 } from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
-import 'moment/locale/ru';
 import {useDispatch} from "react-redux";
 import useDebounce from "../../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
@@ -163,7 +160,7 @@ const ProductListView: React.FC = () => {
                                         <TableCell>
                                             Наименование
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="right" width="12%">
                                             Действия
                                         </TableCell>
                                     </TableRow>
@@ -179,7 +176,7 @@ const ProductListView: React.FC = () => {
                                                 <TableCell>
                                                     {product.name}
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" width="12%">
                                                     <IconButton
                                                         component={RouterLink}
                                                         to={`/app/cargo/product/edit`}

@@ -171,7 +171,7 @@ const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
                                                 <TableCell>
                                                     Баланс клиента
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" width="12%">
                                                     Действия
                                                 </TableCell>
                                             </TableRow>
@@ -226,7 +226,7 @@ const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
                                                         <TableCell>
                                                             {customer.balance}
                                                         </TableCell>
-                                                        <TableCell align="right">
+                                                        <TableCell align="right" width="12%">
                                                             <IconButton
                                                                 component={RouterLink}
                                                                 to={`/app/customers/${customer.id}/edit`}

@@ -3,15 +3,13 @@ import React, {
     useEffect,
 } from 'react';
 import {
-    Avatar,
     Box, Button, Card, CircularProgress,
-    Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, InputAdornment, Link,
-    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField, Typography
+    IconButton, InputAdornment,
+    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField
 } from '@material-ui/core';
 import {
     Search as SearchIcon,
     Edit as EditIcon,
-    ArrowRight as ArrowRightIcon,
     Trash as TrashIcon,
     Check as CheckIcon,
     X as XIcon,
@@ -177,7 +175,7 @@ const CargoTypeListView: React.FC = () => {
                                         <TableCell align="center">
                                             Учитывать скидку
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="right" width="12%">
                                             Действия
                                         </TableCell>
                                     </TableRow>
@@ -205,7 +203,7 @@ const CargoTypeListView: React.FC = () => {
                                                 <TableCell align="center">
                                                     {cargoType.discount ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" width="12%">
                                                     <IconButton
                                                         component={RouterLink}
                                                         to={`/app/cargo/type/edit`}

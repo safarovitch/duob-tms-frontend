@@ -178,7 +178,7 @@ const CustomCodeListView: React.FC = () => {
                                         <TableCell>
                                             Единица расчета
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="right" width="12%">
                                             Действия
                                         </TableCell>
                                     </TableRow>
@@ -212,7 +212,7 @@ const CustomCodeListView: React.FC = () => {
                                                 <TableCell>
                                                     {customCode.unit}
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" width="12%">
                                                     <IconButton
                                                         component={RouterLink}
                                                         to={`/app/cargo/customs/edit`}

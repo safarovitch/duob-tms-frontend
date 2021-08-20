@@ -1,12 +1,12 @@
-import {Box, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
+import {Box, Container, makeStyles} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import {useParams} from "react-router";
 import Page from "../../../components/Page";
-import React, {useState} from "react";
+import React from "react";
 import Header from "./Header";
-import CargoTypeForm from "./CargoTariffForm";
 import {useSelector} from "react-redux";
-import {CargoProduct, CargoTariff, CargoType} from "../../../model/Cargo";
+import { CargoTariff } from "../../../model/Cargo";
+import CargoTariffForm from "./CargoTariffForm";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,21 +19,19 @@ const useStyles = makeStyles((theme) => ({
 
 function CargoTariffView() {
     const classes = useStyles();
-    const history = useHistory();
-    const cargoTariff = useSelector((state: { cargoTariff: CargoTariff }) => state.cargoTariff);
-    const {stuffId} = useParams<{ stuffId: string }>();
+    const cargoTariff = useSelector((state: { selectedCargoTariff: CargoTariff }) => state.selectedCargoTariff);
 
     return (
         <Page
             className={classes.root}
-            title={'Вид груза'}
+            title={'Тарифы'}
         >
             <Container maxWidth="lg">
 
                 <Header cargoTariff={cargoTariff}/>
 
                 <Box mt={3}>
-                    <CargoTypeForm cargoType={cargoType}/>
+                    <CargoTariffForm cargoTariff={cargoTariff}/>
                 </Box>
             </Container>
         </Page>

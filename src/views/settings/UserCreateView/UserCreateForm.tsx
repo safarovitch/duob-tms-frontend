@@ -108,7 +108,6 @@ const CustomerCreateForm: React.FC<{className?: string, roles: Role[]}> = ({ cla
                     setStatus({ success: false });
                     setErrors(error.message);
                     setSubmitting(false);
-                    console.log(error);
                 }
             }}
         >

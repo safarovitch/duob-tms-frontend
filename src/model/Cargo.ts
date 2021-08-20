@@ -1,4 +1,5 @@
 import React from "react";
+import {Warehouse} from "./Warehouse";
 
 export interface CargoStuffTab {
     value: string;
@@ -75,11 +76,14 @@ export interface CargoTariff {
     kgNormInCube?: number;
     maxRoadMassInCube?: number;
     maxRoadCube?: number;
+    maxRoadMass?: number;
     totalMass?: number;
     totalCube?: number;
     totalPrice?: number;
     warehouseId?: number;
     cargoTypeId?: number;
+    warehouseDto?: Warehouse;
+    cargoTypeDto?: CargoType;
 }
 export interface CargoTariffFormProps {
     className?: string;
