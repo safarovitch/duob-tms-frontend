@@ -87,6 +87,16 @@ const routesConfig = [
                 path: '/app/cargo/customs/edit',
                 component: lazy(() => import('./views/cargo/customs'))
             },
+            {
+                exact: true,
+                path: '/app/cargo/type/create',
+                component: lazy(() => import('./views/cargo/type'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/type/edit',
+                component: lazy(() => import('./views/cargo/type'))
+            },
         ]
     }
 ];

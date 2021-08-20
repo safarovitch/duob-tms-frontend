@@ -36,11 +36,19 @@ const Header: React.FC<{className?: string, customCode: CargoCustomCode}> = ({ c
                 >
                     Константы груза
                 </Link>
+                <Link
+                    variant="body1"
+                    color="inherit"
+                    to="/app/cargo/customs"
+                    component={RouterLink}
+                >
+                    Томоженные коды
+                </Link>
                 <Typography
                     variant="body1"
                     color="textPrimary"
                 >
-                    {'Томоженный код'}
+                    {customCode ? customCode?.productDto?.name : 'Создание'}
                 </Typography>
             </Breadcrumbs>
             <Typography

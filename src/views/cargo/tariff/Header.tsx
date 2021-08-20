@@ -3,13 +3,13 @@ import React from "react";
 import clsx from "clsx";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {Link as RouterLink} from "react-router-dom";
-import {CargoProduct} from "../../../model/Cargo";
+import {CargoTariff} from "../../../model/Cargo";
 
 const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Header: React.FC<{className?: string, product: CargoProduct}> = ({ className, product }) => {
+const Header: React.FC<{className?: string, cargoTariff: CargoTariff}> = ({ className, cargoTariff }) => {
     const classes = useStyles();
 
     return (
@@ -39,23 +39,23 @@ const Header: React.FC<{className?: string, product: CargoProduct}> = ({ classNa
                 <Link
                     variant="body1"
                     color="inherit"
-                    to="/app/cargo/product"
+                    to="/app/cargo/tariff"
                     component={RouterLink}
                 >
-                    Наименования грузов
+                    Тарифы
                 </Link>
                 <Typography
                     variant="body1"
                     color="textPrimary"
                 >
-                    {product ? product.name : 'Создание'}
+                    {cargoTariff ? cargoTariff?.name : 'Создание'}
                 </Typography>
             </Breadcrumbs>
             <Typography
                 variant="h3"
                 color="textPrimary"
             >
-                {product ? 'Изменение наименования груза' : 'Создание наименования груза'}
+                {cargoTariff ? 'Изменение тарифа' : 'Создание тарифа'}
             </Typography>
         </div>
     );

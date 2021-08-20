@@ -10,6 +10,7 @@ import {CargoStuffTab} from "../../model/Cargo";
 import CargoTabPanel from "./CargoTabPanel";
 import ProductListView from "./product/ProductListView";
 import CustomCodeListView from "./customs/CustomCodeListView";
+import CargoTypeListView from "./type/CargoTypeListView";
 
 function getCurrentTab(stuffId: string) {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -75,7 +76,7 @@ function CargoStuffView() {
                             <CustomCodeListView/>
                         </CargoTabPanel>
                         <CargoTabPanel index={'type'} value={currentTab}>
-                            Privet type
+                            <CargoTypeListView/>
                         </CargoTabPanel>
                         <CargoTabPanel index={'tariff'} value={currentTab}>
                             Privet tariff

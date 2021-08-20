@@ -9,7 +9,7 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles
+    makeStyles, Container
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -96,87 +96,89 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
     }
 
     return (
-        <Formik
-            initialValues={initialValues}
-            validationSchema={!product ? validationSchema : null}
-            onSubmit={async (values, {
-                resetForm,
-                setErrors,
-                setStatus,
-                setSubmitting
-            }) => {
-                setSubmitting(true)
-                product ? await handleUpdateProduct(values, {
+        <Container maxWidth="sm">
+            <Formik
+                initialValues={initialValues}
+                validationSchema={!product ? validationSchema : null}
+                onSubmit={async (values, {
                     resetForm,
                     setErrors,
                     setStatus,
                     setSubmitting
-                }) : await handleAddProduct(values, {
-                    resetForm,
-                    setErrors,
-                    setStatus,
-                    setSubmitting
-                })
-            }}
-        >
-            {(props: FormikProps<CargoProduct>) => (
-                <form
-                    className={classes.root}
-                    onSubmit={props.handleSubmit}
-                >
+                }) => {
+                    setSubmitting(true)
+                    product ? await handleUpdateProduct(values, {
+                        resetForm,
+                        setErrors,
+                        setStatus,
+                        setSubmitting
+                    }) : await handleAddProduct(values, {
+                        resetForm,
+                        setErrors,
+                        setStatus,
+                        setSubmitting
+                    })
+                }}
+            >
+                {(props: FormikProps<CargoProduct>) => (
+                    <form
+                        className={classes.root}
+                        onSubmit={props.handleSubmit}
+                    >
 
-                    <Card>
-                        <CardContent>
+                        <Card>
+                            <CardContent>
 
-                            <Grid
-                                container
-                                spacing={3}
-                            >
                                 <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
+                                    container
+                                    spacing={3}
                                 >
-                                    <TextField
-                                        error={Boolean(props.touched.name && props.errors.name)}
-                                        fullWidth
-                                        helperText={props.touched.name && props.errors.name}
-                                        label="Наименование груза"
-                                        name="name"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        required
-                                        value={props.values.name}
-                                        variant="outlined"
-                                    />
+                                    <Grid
+                                        item
+                                        md={12}
+                                        xs={12}
+                                    >
+                                        <TextField
+                                            error={Boolean(props.touched.name && props.errors.name)}
+                                            fullWidth
+                                            helperText={props.touched.name && props.errors.name}
+                                            label="Наименование груза"
+                                            name="name"
+                                            onBlur={props.handleBlur}
+                                            onChange={props.handleChange}
+                                            required
+                                            value={props.values.name}
+                                            variant="outlined"
+                                        />
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                            <Box mt={2} pb={1} className={classes.buttons}>
-                                <Button
-                                    className={classes.cancelButton}
-                                    variant="outlined"
-                                    color="secondary"
-                                    type="button"
-                                    disabled={props.isSubmitting}
-                                    onClick={() => history.go(-1)}
-                                >
-                                    Отмена
-                                </Button>
+                                <Box mt={2} pb={1} className={classes.buttons}>
+                                    <Button
+                                        className={classes.cancelButton}
+                                        variant="outlined"
+                                        color="secondary"
+                                        type="button"
+                                        disabled={props.isSubmitting}
+                                        onClick={() => history.go(-1)}
+                                    >
+                                        Отмена
+                                    </Button>
 
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    type="submit"
-                                    disabled={props.isSubmitting}
-                                >
-                                    {product ? 'Сохранить' : 'Добавить'}
-                                </Button>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </form>
-            )}
-        </Formik>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        type="submit"
+                                        disabled={props.isSubmitting}
+                                    >
+                                        {product ? 'Сохранить' : 'Добавить'}
+                                    </Button>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </form>
+                )}
+            </Formik>
+        </Container>
     );
 }
 

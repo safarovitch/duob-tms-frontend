@@ -198,6 +198,7 @@ const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
                                                                 <div>
                                                                     <Link
                                                                         color="inherit"
+                                                                        onClick={() => dispatch(setSelectedCustomer(customer))}
                                                                         component={RouterLink}
                                                                         to={`/app/customers/${customer.id}`}
                                                                         variant="h6"

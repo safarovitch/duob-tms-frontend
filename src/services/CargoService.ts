@@ -1,6 +1,6 @@
 import api from "../utils/Api";
 import {API_BASE_URL} from "../config";
-import {CargoCustomCode, CargoProduct} from "../model/Cargo";
+import {CargoCustomCode, CargoProduct, CargoTariff, CargoType} from "../model/Cargo";
 
 class CustomerService {
     getFilteredProducts = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
@@ -62,6 +62,64 @@ class CustomerService {
     })
     deleteCustomCode = (customCodeId: number) => new Promise((resolve, reject)  => {
         api.delete(API_BASE_URL + `/customs-codes/`+customCodeId)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+
+    getFilteredCargoTypes = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/cargos-types?page=${page}&size=${size}&search=${query}`)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+    postCargoType = (cargoType: CargoType) => new Promise((resolve, reject)  => {
+        api.post(API_BASE_URL + `/cargos-types`, cargoType)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+    updateCargoType = (cargoType: CargoType) => new Promise((resolve, reject)  => {
+        api.put(API_BASE_URL + `/cargos-types`, cargoType)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+    deleteCargoType = (cargoTypeId: number) => new Promise((resolve, reject)  => {
+        api.delete(API_BASE_URL + `/cargos-types/`+cargoTypeId)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+
+    getFilteredCargoTariffs = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/cargos-types?page=${page}&size=${size}&search=${query}`)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+    postCargoTariff = (cargoTariff: CargoTariff) => new Promise((resolve, reject)  => {
+        api.post(API_BASE_URL + `/cargos-types`, cargoTariff)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+    updateCargoTariff = (cargoTariff: CargoTariff) => new Promise((resolve, reject)  => {
+        api.put(API_BASE_URL + `/cargos-types`, cargoTariff)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {reject(error)})
+    })
+    deleteCargoTariff = (cargoTariffId: number) => new Promise((resolve, reject)  => {
+        api.delete(API_BASE_URL + `/cargos-types/`+cargoTariffId)
             .then((response) => {
                 resolve(response.data)
             })

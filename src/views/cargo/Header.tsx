@@ -41,19 +41,11 @@ const Header: React.FC<{className?: string, title: string, linkName: string}> = 
                     >
                         Главная
                     </Link>
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/cargo"
-                        component={RouterLink}
-                    >
-                        Константы груза
-                    </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        {linkName}
+                        Константы груза
                     </Typography>
                 </Breadcrumbs>
                 <Typography

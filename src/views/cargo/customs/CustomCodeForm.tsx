@@ -11,8 +11,7 @@ import {
     Grid,
     makeStyles,
     MenuItem,
-    Select,
-    TextField
+    TextField, Typography
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -28,6 +27,12 @@ const useStyles = makeStyles((theme) => ({
     },
     cancelButton: {
         marginRight: theme.spacing(2)
+    },
+    checkbox: {
+        display: 'flex'
+    },
+    checkboxLabel: {
+        marginTop: 8
     }
 }));
 
@@ -54,13 +59,14 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
     const initialValues: CargoCustomCode = {
         // name: customCode?.productDto.name || '',
         code: customCode?.code || '',
-        price: customCode?.price || null,
-        baseRate: customCode?.baseRate || null,
-        vat: customCode?.vat || null,
-        totalRate: customCode?.totalRate || null,
+        price: customCode?.price || undefined,
+        baseRate: customCode?.baseRate || undefined,
+        vat: customCode?.vat || undefined,
+        totalRate: customCode?.totalRate || undefined,
         description: customCode?.description || '',
         unit: customCode?.unit as Units || Units.ton,
-        productId: customCode?.productId || 2
+        productId: customCode?.productDto?.id || undefined,
+        isUnitThing: customCode ? customCode?.unit === Units.thing : false
 
     }
 
@@ -91,8 +97,8 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
                 variant: 'success',
                 action: <Button>ОК</Button>
             });
-            // history.go(-1);
-            // formActions.resetForm();
+            history.go(-1);
+            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
@@ -168,23 +174,26 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
                                     md={6}
                                     xs={12}
                                 >
-                                    <Select
-                                        error={Boolean(props.touched.code && props.errors.code)}
+                                    <TextField
+                                        error={Boolean(props.touched.productId && props.errors.productId)}
                                         fullWidth
-                                        onBlur={props.handleBlur}
-                                        required
-                                        variant="outlined"
+                                        helperText={props.touched.productId && props.errors.productId}
                                         label="Наименование груза"
                                         name="productId"
-                                        value={props.values.productId}
+                                        select
+                                        onBlur={props.handleBlur}
                                         onChange={props.handleChange}
+                                        required
+                                        value={props.values.productId}
+                                        variant="outlined"
                                     >
                                         {products.map((product) => (
-                                            <MenuItem value={product.id}>
+                                            <MenuItem value={product.id} key={product.id}>
                                                 {product.name}
                                             </MenuItem>
                                         ))}
-                                    </Select>
+                                    </TextField>
+
                                 </Grid>
                                 <Grid
                                     item
@@ -304,24 +313,17 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
                                     md={12}
                                     xs={12}
                                 >
-
-                                    {/*<TextField*/}
-                                    {/*    error={Boolean(props.touched.description && props.errors.description)}*/}
-                                    {/*    fullWidth*/}
-                                    {/*    helperText={props.touched.description && props.errors.description}*/}
-                                    {/*    label="Код"*/}
-                                    {/*    name="description"*/}
-                                    {/*    onBlur={props.handleBlur}*/}
-                                    {/*    onChange={props.handleChange}*/}
-                                    {/*    required*/}
-                                    {/*    value={props.values.description}*/}
-                                    {/*    variant="outlined"*/}
-                                    {/*/>*/}
-                                    {/*<Checkbox*/}
-                                    {/*    checked={true}*/}
-                                    {/*    name="checkedB"*/}
-                                    {/*    color="primary"*/}
-                                    {/*/>*/}
+                                    <label onClick={props.handleChange} className={classes.checkbox}>
+                                        <Checkbox
+                                            checked={props.values.isUnitThing}
+                                            name="isUnitThing"
+                                            color="primary"
+                                            onChange={props.handleChange}
+                                        />
+                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
+                                            Вести расчет по штукам - (шт)
+                                        </Typography>
+                                    </label>
                                 </Grid>
                             </Grid>
                             <Box mt={2} pb={1} className={classes.buttons}>
