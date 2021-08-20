@@ -20,7 +20,8 @@ import {
     Folder as FolderIcon,
     BarChart as BarChartIcon,
     PieChart as PieChartIcon,
-    Users as UsersIcon
+    Users as UsersIcon,
+    Settings as SettingsIcon
 } from 'react-feather';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
@@ -47,38 +48,19 @@ const navConfig = [
         subheader: 'Настройки',
         items: [
             {
-                title: 'Пользователи',
+                title: 'Склады',
+                icon: SettingsIcon,
+                href: '/app/warehouses'
+            },
+            {
+                title: 'Сотрудники',
                 icon: UsersIcon,
-                href: '/app/management/customers',
-                items: [
-                    {
-                        title: 'List Customers',
-                        href: '/app/management/customers'
-                    },
-                    {
-                        title: 'View Customer',
-                        href: '/app/management/customers/1'
-                    },
-                    {
-                        title: 'Edit Customer',
-                        href: '/app/management/customers/1/edit'
-                    }
-                ]
+                href: '/app/employees',
             },
             {
                 title: 'Поставщики',
                 icon: ShoppingCartIcon,
-                href: '/app/management/products',
-                items: [
-                    {
-                        title: 'List Products',
-                        href: '/app/management/products'
-                    },
-                    {
-                        title: 'Create Product',
-                        href: '/app/management/products/create'
-                    }
-                ]
+                href: '/app/providers',
             },
             {
                 title: 'Клиенты',

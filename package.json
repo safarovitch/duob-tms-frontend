@@ -2,7 +2,7 @@
   "name": "duob-tms",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://192.168.1.169:8080",
+  "proxy": "http://192.168.1.82:8080",
   "dependencies": {
     "@date-io/moment": "1.x",
     "@material-ui/core": "^4.12.3",
@@ -74,6 +74,7 @@
     "@types/react-redux": "^7.1.18",
     "@types/react-router": "^5.1.16",
     "@types/react-router-dom": "^5.1.8",
-    "@types/redux-logger": "^3.0.9"
+    "@types/redux-logger": "^3.0.9",
+    "@types/yup": "^0.29.13"
   }
 }
