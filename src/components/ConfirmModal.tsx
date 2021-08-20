@@ -1,27 +1,16 @@
 import {
-    Box,
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, LinearProgress,
+    DialogTitle,
     makeStyles, Typography
 } from "@material-ui/core";
-import React, {useEffect} from "react";
-import NProgress from "nprogress";
+import React from "react";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        // alignItems: 'center',
-        // backgroundColor: theme.palette.background.default,
-        // display: 'flex',
-        // flexDirection: 'column',
-        // height: '100%',
-        // justifyContent: 'center',
-        // minHeight: '100%',
-        // padding: theme.spacing(3)
-    },
+const useStyles = makeStyles(() => ({
+    root: {},
     title: {
         marginTop: 16
     }
@@ -38,11 +27,6 @@ const ConfirmModal: React.FC<ConfirmModalProps> = (props: ConfirmModalProps) => 
     const classes = useStyles();
 
     return (
-        // <div className={classes.root}>
-        //     <Box width={400}>
-        //         <LinearProgress />
-        //     </Box>
-        // </div>
         <Dialog
             className={classes.root}
             open={isOpen}
