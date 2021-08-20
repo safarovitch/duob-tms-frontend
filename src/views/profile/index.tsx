@@ -55,10 +55,7 @@ function AccountView() {
     };
 
     return (
-        <Page
-            className={classes.root}
-            title="Settings"
-        >
+        <Page className={classes.root} title="Settings">
             <Container maxWidth="lg">
                 <Header />
                 {employee && (
