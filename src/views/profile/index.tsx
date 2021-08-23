@@ -14,6 +14,8 @@ import Security from './Security';
 import employeeService from "../../services/EmployeeService";
 import {Employee} from "../../model/Employee";
 import {useSnackbar} from "notistack";
+import {updateProfile} from "../../store/actions/accountActions";
+import {useDispatch} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 function AccountView() {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
+    const dispatch = useDispatch()
     const [currentTab, setCurrentTab] = useState('general');
     const [employee, setEmployee] = useState<Employee>();
     const tabs = [
@@ -38,9 +41,10 @@ function AccountView() {
         getEmployee().then(null)
     }, [])
 
-    const getEmployee = async () => {
+    const getEmployee = async (updateUser = false) => {
         try {
             const employee: any = await employeeService.getEmployee();
+            if  (updateUser) dispatch(updateProfile({avatar: employee.avatar === null ? '' : employee.avatar, name: employee.name}))
             setEmployee(employee);
         } catch (error) {
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {

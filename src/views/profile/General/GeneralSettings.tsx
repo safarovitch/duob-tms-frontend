@@ -15,6 +15,8 @@ import {
 } from '@material-ui/core';
 import {Employee} from "../../../model/Employee";
 import employeeService from "../../../services/EmployeeService";
+import {useDispatch} from "react-redux";
+import {updateProfile} from "../../../store/actions/accountActions";
 
 const useStyles = makeStyles(() => ({
     root: {}
@@ -23,6 +25,7 @@ const useStyles = makeStyles(() => ({
 const GeneralSettings: React.FC<{employee: Employee, getEmployee: Function}> = ({ employee, getEmployee}) =>  {
     const classes = useStyles()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const dispatch = useDispatch()
     const initialValues: Employee = {
         id: employee.id,
         name: employee.name,
@@ -66,6 +69,8 @@ const GeneralSettings: React.FC<{employee: Employee, getEmployee: Function}> = (
                     })
 
                     getEmployee();
+                    dispatch(updateProfile({name: values.name}))
+
                 } catch (error) {
                     setStatus({ success: false });
                     setErrors(error.message);

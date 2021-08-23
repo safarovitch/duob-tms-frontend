@@ -20,6 +20,7 @@ import {Link as RouterLink, useHistory} from "react-router-dom";
 import {Plus as PlusIcon} from "react-feather";
 import {Employee, Role} from "../../../model/Employee";
 import employeeService from "../../../services/EmployeeService";
+import {mapOfRoles} from "../../../constants";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -178,9 +179,9 @@ const CustomerCreateForm: React.FC<{className?: string, roles: Role[]}> = ({ cla
                                             input={<Input />}
                                             renderValue={
                                                 (selected) => {
-                                                    let newSelected: string[] = (selected as number[]).map((number) => {
+                                                    let newSelected: (string | undefined)[] = (selected as number[]).map((number) => {
                                                         let res =  roles.find((role) => role.id === number);
-                                                        return res ? res.name: ''
+                                                        return res ? mapOfRoles.get(res.name): ''
                                                     })
 
                                                     return newSelected.join(', ')
@@ -191,7 +192,7 @@ const CustomerCreateForm: React.FC<{className?: string, roles: Role[]}> = ({ cla
                                             {roles.map((role) => (
                                                 <MenuItem key={role.id} value={role.id}>
                                                     <Checkbox checked={values.rolesId.indexOf(role.id as never) > -1} />
-                                                    <ListItemText primary={role.name} />
+                                                    <ListItemText primary={mapOfRoles.get(role.name)} />
                                                 </MenuItem>
                                             ))}
                                         </Select>

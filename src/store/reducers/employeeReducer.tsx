@@ -1,5 +1,5 @@
 import {AnyAction} from "redux";
-import {SET_SELECTED_EMPLOYEE, UNSET_SELECTED_EMPLOYEE} from "../actions/employeeActions";
+import {SET_SELECTED_EMPLOYEE, DELETE_SELECTED_EMPLOYEE} from "../actions/employeeActions";
 import {Employee} from "../../model/Employee";
 
 export type employeeInitialState = {
@@ -18,7 +18,7 @@ const employeeReducer = (state = initialState, action: AnyAction) => {
                 selectedEmployee: action.payload.employee
             }
         }
-        case UNSET_SELECTED_EMPLOYEE: {
+        case DELETE_SELECTED_EMPLOYEE: {
             return {
                 ...state,
                 selectedEmployee: null

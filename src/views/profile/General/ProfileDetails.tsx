@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
     Avatar,
     Box,
@@ -13,7 +13,7 @@ import {
 import {Employee} from "../../../model/Employee";
 import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
-import {API_BASE_URL} from "../../../config";
+import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -38,38 +38,42 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProfileDetails: React.FC<{employee: Employee, getEmployee: Function}> = ({ employee , getEmployee}) => {
-    const classes = useStyles();
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-    const baseUrl = `${API_BASE_URL}/employees/image/`;
-    const [currentFile, setCurrentFile] = useState<File>();
-    const [selectedFile, setSelectedFile] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [avatar, setAvatar] = useState(employee.avatar ? baseUrl + employee.avatar : '')
+    const classes = useStyles()
+    const {enqueueSnackbar} = useSnackbar()
+    const [currentFile, setCurrentFile] = useState<File>()
+    const [selectedFile, setSelectedFile] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [avatar, setAvatar] = useState(employee.avatar ? EMPLOYEES_IMAGE_BASE_URL + employee.avatar : '')
+    const inputRef = useRef(null);
 
     const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.persist();
-        setSelectedFile(true);
         const target = event.target as HTMLInputElement;
         const file = (target.files!)[0];
+
+        if (file === undefined) return;
+
+        setSelectedFile(true);
         setCurrentFile(file)
         setAvatar(URL.createObjectURL(file));
+        event.target.value = '';
     }
 
     const handleDeleteAvatar = async () => {
         await employeeService.deleteAvatar(employee.avatar!);
 
         enqueueSnackbar('Изображения удален', {
-            variant: 'success',
-            action: key => (<Button onClick={() => { closeSnackbar(key) }}>ОК</Button>)
+            variant: 'success'
         })
 
         setAvatar('');
         setCurrentFile(undefined)
         setSelectedFile(false)
+        getEmployee(true);
     }
 
     const handleUploadCancel = () => {
-        setAvatar(employee.avatar ? baseUrl + employee.avatar : '')
+        setAvatar(employee.avatar ? EMPLOYEES_IMAGE_BASE_URL + employee.avatar : '')
         setCurrentFile(undefined)
         setSelectedFile(false)
     }
@@ -87,16 +91,15 @@ const ProfileDetails: React.FC<{employee: Employee, getEmployee: Function}> = ({
             await employeeService.uploadAvatar(currentFile!)
 
             enqueueSnackbar('Изображения добавлен', {
-                variant: 'success',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>ОК</Button>)
+                variant: 'success'
             })
-            getEmployee();
+
+            getEmployee(true);
             setCurrentFile(undefined);
             setSelectedFile(false);
         } catch (error) {
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>ОК</Button>)
+                variant: 'error'
             })
         } finally {
             setLoading(false);
@@ -120,7 +123,7 @@ const ProfileDetails: React.FC<{employee: Employee, getEmployee: Function}> = ({
                                     src={avatar}
                                 />
                             </label>
-                            <input accept="image/*" id="file" type="file" onChange={selectFile} hidden={true} />
+                            <input ref={inputRef} accept="image/*" id="file" type="file" onChange={selectFile} hidden={true} />
                             {loading && <CircularProgress size={110} className={classes.fabProgress} />}
                         </div>
                     </div>

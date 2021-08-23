@@ -1,7 +1,7 @@
 import {Employee} from "../../model/Employee";
 
 export const SET_SELECTED_EMPLOYEE = '@employee/set-selected-employee';
-export const UNSET_SELECTED_EMPLOYEE = '@employee/unset-selected-employee';
+export const DELETE_SELECTED_EMPLOYEE = '@employee/delete-selected-employee';
 
 export const setSelectedEmployee = (employee: Employee) => {
     return {
@@ -12,8 +12,8 @@ export const setSelectedEmployee = (employee: Employee) => {
     }
 }
 
-export const unsetSelectedEmployee = () => {
+export const deleteSelectedEmployee = () => {
     return {
-        type: UNSET_SELECTED_EMPLOYEE
+        type: DELETE_SELECTED_EMPLOYEE
     }
 }

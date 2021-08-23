@@ -3,12 +3,13 @@ import {Box, Button, Container, makeStyles} from '@material-ui/core';
 import Page from '../../../components/Page';
 import Header from './Header';
 import UserEditForm from './UserEditForm';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {employeeInitialState} from "../../../store/reducers/employeeReducer";
 import {useHistory} from "react-router-dom";
 import {Role} from "../../../model/Employee";
 import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
+import {deleteSelectedEmployee} from "../../../store/actions/employeeActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,13 +24,18 @@ const UserEditView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
+    const dispatch = useDispatch();
     const [roles, setRoles] = useState<[] | Role[]>([]);
     const employee = useSelector(({employee}: {employee: employeeInitialState}) => employee.selectedEmployee)
+
+    useEffect(() => () => {
+        dispatch(deleteSelectedEmployee())
+    }, [])
 
     useEffect(() => {
         if (!employee) history.push('/app/employees');
         else getRoles().then(null)
-    });
+    }, []);
 
     const getRoles = async () => {
         try {
