@@ -194,7 +194,7 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
                                                     <TableCell>
                                                         Телефон
                                                     </TableCell>
-                                                    <TableCell align="right">
+                                                    <TableCell align="right" width="12%">
                                                         Действия
                                                     </TableCell>
                                                 </TableRow>
@@ -219,7 +219,7 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
                                                             <TableCell>
                                                                 {provider.phoneNumber}
                                                             </TableCell>
-                                                            <TableCell align="right">
+                                                            <TableCell align="right" width="12%">
                                                                 <IconButton
                                                                     component={RouterLink}
                                                                     to={`/app/providers/${provider.id}/edit`}

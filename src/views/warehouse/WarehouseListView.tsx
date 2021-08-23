@@ -185,7 +185,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = ({className}) => {
                                                 <TableCell>
                                                     Название
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" width="12%">
                                                     Действия
                                                 </TableCell>
                                             </TableRow>
@@ -201,7 +201,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = ({className}) => {
                                                         <TableCell>
                                                             {warehouse.name}
                                                         </TableCell>
-                                                        <TableCell align="right">
+                                                        <TableCell align="right" width="12%">
                                                             <IconButton
                                                                 component={RouterLink}
                                                                 to={`/app/warehouses/${warehouse.id}/edit`}

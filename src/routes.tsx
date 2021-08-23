@@ -102,6 +102,56 @@ const routesConfig = [
                 path: '/app/warehouses/:id/edit',
                 component: lazy(() => import('./views/warehouse/form'))
             },
+            {
+                exact: true,
+                path: '/app/cargo',
+                component: () => <Redirect to="/app/cargo/product" />
+            },
+            {
+                exact: true,
+                path: '/app/cargo/:stuffId',
+                component: lazy(() => import('./views/cargo')),
+            },
+            {
+                exact: true,
+                path: '/app/cargo/product/create',
+                component: lazy(() => import('./views/cargo/product'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/product/edit',
+                component: lazy(() => import('./views/cargo/product'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/customs/create',
+                component: lazy(() => import('./views/cargo/customs'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/customs/edit',
+                component: lazy(() => import('./views/cargo/customs'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/type/create',
+                component: lazy(() => import('./views/cargo/type'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/type/edit',
+                component: lazy(() => import('./views/cargo/type'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/tariff/create',
+                component: lazy(() => import('./views/cargo/tariff'))
+            },
+            {
+                exact: true,
+                path: '/app/cargo/tariff/edit',
+                component: lazy(() => import('./views/cargo/tariff'))
+            },
         ]
     }
 ];
