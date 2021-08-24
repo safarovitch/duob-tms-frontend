@@ -6,27 +6,34 @@ import {
     CardContent,
     Box,
     Button,
+    SvgIcon,
     Grid,
     TextField,
-    InputLabel,
-    Select,
-    Input, MenuItem, Checkbox, ListItemText, FormControl
+    Input,
+    Checkbox,
+    Select, MenuItem, ListItemText, FormControl, InputLabel
 } from '@material-ui/core';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
 import {Link as RouterLink, useHistory} from "react-router-dom";
+import {Plus as PlusIcon} from "react-feather";
 import {Employee, Role} from "../../../model/Employee";
-import {useSnackbar} from "notistack";
 import employeeService from "../../../services/EmployeeService";
+import {Warehouse} from "../../../model/Warehouse";
 
 const useStyles = makeStyles(theme => ({
     root: {},
+    plusIcon: {
+        marginRight: theme.spacing(1),
+        fontSize: '15px'
+    },
     cancelButton: {
         background: 'white',
         boxShadow: '0 3px 3px rgba(0,0,0,0.10), 0 3px 3px rgba(0,0,0,0.15)'
     },
     submitButton: {
-        marginLeft: theme.spacing(3),
+        marginLeft: theme.spacing(3)
     },
     formControl: {
         margin: theme.spacing(1),
@@ -45,32 +52,33 @@ const MenuProps = {
     },
 };
 
-const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Role[]}> = ({ className, employee, roles, ...rest }) => {
+const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouses: Warehouse[]}> = ({ className, roles, warehouses, ...rest }) => {
     const classes = useStyles();
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const history = useHistory();
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    let history = useHistory();
 
     const initialValues: Employee = {
-        id: employee.id,
-        name: employee.name,
-        rolesId: (employee.roles!).map((role: Role) => role.id),
-        username: employee.username,
+        name: '',
+        rolesId: [],
+        username: '',
         password: '',
-        code: employee.code,
-        birthdate: employee.birthdate,
-        address: employee.address,
-        phoneNumber: employee.phoneNumber,
-    }
+        code: '',
+        birthdate: '',
+        address: '',
+        phoneNumber: '',
+        warehouseId: 0
+    };
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().max(255).required('Name is required'),
         rolesId: Yup.array().min(1).required('role is required'),
-        username: Yup.string().max(255).required('Login is required'),
-        password: Yup.string().max(255),
-        code: Yup.string().max(255).required('UserCode is required'),
+        username: Yup.string().max(255).min(6).required('Username is required'),
+        password: Yup.string().max(255).min(6).required('Password is required'),
+        code: Yup.string().max(255).required('Code is required'),
         birthdate: Yup.string().max(255),
         address: Yup.string().max(255).required('Address is required'),
-        phoneNumber: Yup.string().max(15)
+        phoneNumber: Yup.string().max(15),
+        warehouseId: Yup.number().moreThan(0, 'Выберите склад').required('warehouse is required')
     });
 
     return (
@@ -78,37 +86,43 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={async (values, {
+                resetForm,
                 setErrors,
                 setStatus,
                 setSubmitting
             }) => {
                 try {
-                    await employeeService.updateEmployee(values)
+                    await employeeService.createEmployee(values)
 
-                    enqueueSnackbar('Сотрудник обновлен', {
+                    resetForm();
+                    setStatus({ success: true });
+                    setSubmitting(false);
+
+                    enqueueSnackbar('Сотрудник создан', {
                         variant: 'success',
                         action: <Button onClick={() => history.push('/app/employees')}>Сотрудники</Button>
                     })
                 } catch (error) {
+                    enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
+                        variant: 'error',
+                        action: key => (<Button onClick={() => { closeSnackbar(key) }}>ОК</Button>)
+                    })
+
                     setStatus({ success: false });
                     setErrors(error.message);
                     setSubmitting(false);
-                    enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                        variant: 'error',
-                        action: key => (<Button onClick={() => {closeSnackbar(key)}}>OK</Button>)
-                    })
                 }
             }}
         >
             {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  isSubmitting,
-                  touched,
-                  values
-              }) => (
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values,
+            }) => (
                 <form
                     className={clsx(classes.root, className)}
                     onSubmit={handleSubmit}
@@ -176,7 +190,7 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
                                             }
                                             MenuProps={MenuProps}
                                         >
-                                            {roles.map((role: Role) => (
+                                            {roles.map((role) => (
                                                 <MenuItem key={role.id} value={role.id}>
                                                     <Checkbox checked={values.rolesId.indexOf(role.id as never) > -1} />
                                                     <ListItemText primary={role.name} />
@@ -201,6 +215,28 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
                                         }}
                                         placeholder="Введите пароль"
                                     />
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <TextField
+                                        select
+                                        error={Boolean(touched.warehouseId && errors.warehouseId)}
+                                        fullWidth
+                                        helperText={touched.warehouseId && errors.warehouseId}
+                                        label="Склад"
+                                        name="warehouseId"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.warehouseId}
+                                        variant="outlined"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    >
+                                        <MenuItem value={0} disabled>Выберите склад</MenuItem>
+                                        {warehouses.map((warehouse) => (
+                                            <MenuItem key={warehouse.id} value={warehouse.id}>{warehouse.name}</MenuItem>
+                                        ))}
+                                    </TextField>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <TextField
@@ -293,7 +329,12 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
                                         disabled={isSubmitting}
                                         className={classes.submitButton}
                                     >
-                                        Обновить
+                                        <SvgIcon
+                                            className={classes.plusIcon}
+                                        >
+                                            <PlusIcon />
+                                        </SvgIcon>
+                                        Добавить
                                     </Button>
                                 </Grid>
                             </Box>
@@ -305,4 +346,4 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
     );
 }
 
-export default UserEditForm;
+export default EmployeeCreateForm;
