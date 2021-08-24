@@ -9,7 +9,7 @@ import {cargoTariffReducer, cargoTypeReducer, customCodeReducer, productReducer}
 const rootReducer = combineReducers({
     user: accountReducer,
     selectedCustomer: customerReducer,
-    employee: employeeReducer,
+    selectedEmployee: employeeReducer,
     selectedProvider: providerReducer,
     selectedWarehouse: warehouseReducer,
     selectedProduct: productReducer,

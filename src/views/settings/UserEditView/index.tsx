@@ -3,12 +3,14 @@ import {Box, Button, Container, makeStyles} from '@material-ui/core';
 import Page from '../../../components/Page';
 import Header from './Header';
 import UserEditForm from './UserEditForm';
-import {useSelector} from "react-redux";
-import {employeeInitialState} from "../../../store/reducers/employeeReducer";
+import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
-import {Role} from "../../../model/Employee";
+import {Employee, Role} from "../../../model/Employee";
 import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
+import {Warehouse} from "../../../model/Warehouse";
+import warehouseService from "../../../services/WarehouseService";
+import {deleteSelectedEmployee} from "../../../store/actions/employeeActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,36 +23,57 @@ const useStyles = makeStyles((theme) => ({
 
 const UserEditView: React.FC = () => {
     const classes = useStyles()
-    const history = useHistory();
-    const {enqueueSnackbar} = useSnackbar();
-    const [roles, setRoles] = useState<[] | Role[]>([]);
-    const employee = useSelector(({employee}: {employee: employeeInitialState}) => employee.selectedEmployee)
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
+    const dispatch = useDispatch()
+    const [roles, setRoles] = useState<[] | Role[]>([])
+    const [warehouses, setWarehouses] = useState<[] | Warehouse[]>([])
+    const selectedEmployee = useSelector(({selectedEmployee}: {selectedEmployee: Employee}) => selectedEmployee)
 
     useEffect(() => {
-        if (!employee) history.push('/app/employees');
-        else getRoles().then(null)
-    });
+        if (!selectedEmployee) history.push('/app/employees');
+        else {
+            const getRoles = async () => {
+                try {
+                    const roles = await employeeService.getRoles();
+                    setRoles(roles as Role[]);
+                } catch (error) {
+                    enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
+                        variant: 'error',
+                        action: <Button onClick={() => getRoles()}>Рестарт</Button>
+                    });
+                }
+            }
 
-    const getRoles = async () => {
-        try {
-            const roles = await employeeService.getRoles();
-            setRoles(roles as Role[]);
-        } catch (error) {
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button onClick={() => getRoles()}>Рестарт</Button>
-            });
+            const getWarehouses = async () => {
+                try {
+                    const warehouses = await warehouseService.getAllWarehouse()
+                    setWarehouses(warehouses as Warehouse[])
+                } catch (error) {
+                    enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
+                        variant: 'error',
+                        action: <Button onClick={() => getWarehouses()}>Рестарт</Button>
+                    });
+                }
+            }
+
+            getRoles().then(null)
+            getWarehouses().then(null)
         }
-    }
 
-    if (roles.length === 0 || !employee) return null;
+        return () => {
+            dispatch(deleteSelectedEmployee())
+        }
+    }, [enqueueSnackbar]);
+
+    if (roles.length === 0 || warehouses.length === 0) return null;
 
     return (
         <Page className={classes.root} title="Изменение сотрудника">
             <Container maxWidth="lg">
                 <Header />
                 <Box mt={3}>
-                    <UserEditForm employee={employee!} roles={roles} />
+                    <UserEditForm employee={selectedEmployee!} roles={roles} warehouses={warehouses} />
                 </Box>
             </Container>
         </Page>

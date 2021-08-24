@@ -1,3 +1,5 @@
+import {Warehouse} from "./Warehouse";
+
 export type Employee = {
     id?: number,
     name: string,
@@ -9,7 +11,9 @@ export type Employee = {
     birthdate: string,
     address: string,
     phoneNumber: string,
-    avatar?: string
+    avatar?: string,
+    warehouseId?: number,
+    warehouseDto?: Warehouse
 }
 
 export interface Role {

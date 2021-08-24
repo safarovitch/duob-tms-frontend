@@ -6,6 +6,8 @@ import UserCreateForm from './UserCreateForm';
 import {Role} from "../../../model/Employee";
 import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
+import warehouseService from "../../../services/WarehouseService";
+import {Warehouse} from "../../../model/Warehouse";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,6 +22,7 @@ const UserCreateView: React.FC = () => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const [roles, setRoles] = useState<[] | Role[]>([]);
+    const [warehouses, setWarehouses] = useState<[] | Warehouse[]>([]);
 
     useEffect(() => {
         const getRoles = async () => {
@@ -34,17 +37,30 @@ const UserCreateView: React.FC = () => {
             }
         }
 
+        const getWarehouses = async () => {
+            try {
+                const warehouses = await warehouseService.getAllWarehouse()
+                setWarehouses(warehouses as Warehouse[])
+            } catch (error) {
+                enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
+                    variant: 'error',
+                    action: <Button onClick={() => getWarehouses()}>Рестарт</Button>
+                });
+            }
+        }
+
         getRoles().then(null)
+        getWarehouses().then(null)
     }, [enqueueSnackbar])
 
-    if (roles.length === 0) return null;
+    if (roles.length === 0 || warehouses.length === 0) return null;
 
     return (
         <Page className={classes.root} title="Создание сотрудника">
             <Container maxWidth={false}>
                 <Header />
                 <Box mt={3}>
-                    <UserCreateForm roles={roles} />
+                    <UserCreateForm roles={roles} warehouses={warehouses} />
                 </Box>
             </Container>
         </Page>

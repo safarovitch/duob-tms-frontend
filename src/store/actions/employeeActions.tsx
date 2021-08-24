@@ -1,19 +1,18 @@
 import {Employee} from "../../model/Employee";
 
-export const SET_SELECTED_EMPLOYEE = '@employee/set-selected-employee';
-export const UNSET_SELECTED_EMPLOYEE = '@employee/unset-selected-employee';
+export const SET_EMPLOYEE = '@employee/set-employee';
+export const DELETE_EMPLOYEE = '@employee/delete-employee';
 
 export const setSelectedEmployee = (employee: Employee) => {
     return {
-        type: SET_SELECTED_EMPLOYEE,
-        payload: {
-            employee
-        }
+        type: SET_EMPLOYEE,
+        payload: employee
     }
 }
 
-export const unsetSelectedEmployee = () => {
+export const deleteSelectedEmployee = () => {
     return {
-        type: UNSET_SELECTED_EMPLOYEE
+        type: DELETE_EMPLOYEE,
+        payload: null
     }
 }

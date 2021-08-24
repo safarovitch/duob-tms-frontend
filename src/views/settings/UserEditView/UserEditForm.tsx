@@ -18,6 +18,7 @@ import {Link as RouterLink, useHistory} from "react-router-dom";
 import {Employee, Role} from "../../../model/Employee";
 import {useSnackbar} from "notistack";
 import employeeService from "../../../services/EmployeeService";
+import {Warehouse} from "../../../model/Warehouse";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -45,7 +46,8 @@ const MenuProps = {
     },
 };
 
-const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Role[]}> = ({ className, employee, roles, ...rest }) => {
+const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Role[], warehouses: Warehouse[]}> =
+    ({ className, employee, roles, warehouses, ...rest }) => {
     const classes = useStyles();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const history = useHistory();
@@ -60,6 +62,7 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
         birthdate: employee.birthdate,
         address: employee.address,
         phoneNumber: employee.phoneNumber,
+        warehouseId: (employee.warehouseDto!).id
     }
 
     const validationSchema = Yup.object().shape({
@@ -70,7 +73,8 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
         code: Yup.string().max(255).required('UserCode is required'),
         birthdate: Yup.string().max(255),
         address: Yup.string().max(255).required('Address is required'),
-        phoneNumber: Yup.string().max(15)
+        phoneNumber: Yup.string().max(15),
+        warehouseId: Yup.number().moreThan(0, 'Выберите склад').required('warehouse is required')
     });
 
     return (
@@ -201,6 +205,28 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
                                         }}
                                         placeholder="Введите пароль"
                                     />
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <TextField
+                                        select
+                                        error={Boolean(touched.warehouseId && errors.warehouseId)}
+                                        fullWidth
+                                        helperText={touched.warehouseId && errors.warehouseId}
+                                        label="Склад"
+                                        name="warehouseId"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.warehouseId}
+                                        variant="outlined"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    >
+                                        <MenuItem value={0} disabled>Выберите склад</MenuItem>
+                                        {warehouses.map((warehouse) => (
+                                            <MenuItem key={warehouse.id} value={warehouse.id}>{warehouse.name}</MenuItem>
+                                        ))}
+                                    </TextField>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <TextField
