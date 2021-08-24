@@ -46,7 +46,7 @@ const MenuProps = {
     },
 };
 
-const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Role[], warehouses: Warehouse[]}> =
+const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles: Role[], warehouses: Warehouse[]}> =
     ({ className, employee, roles, warehouses, ...rest }) => {
     const classes = useStyles();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -62,7 +62,7 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
         birthdate: employee.birthdate,
         address: employee.address,
         phoneNumber: employee.phoneNumber,
-        warehouseId: (employee.warehouseDto!).id
+        warehouseId: employee.warehouseDto?.id
     }
 
     const validationSchema = Yup.object().shape({
@@ -331,4 +331,4 @@ const UserEditForm: React.FC<{className?: string, employee: Employee, roles: Rol
     );
 }
 
-export default UserEditForm;
+export default EmployeeEditForm;

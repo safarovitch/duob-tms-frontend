@@ -60,17 +60,17 @@ const routesConfig = [
             {
                 exact: true,
                 path: '/app/employees',
-                component: lazy(() => import('./views/settings/UserListView'))
+                component: lazy(() => import('./views/employees/EmployeeListView'))
             },
             {
                 exact: true,
                 path: '/app/employees/create',
-                component: lazy(() => import('./views/settings/UserCreateView'))
+                component: lazy(() => import('./views/employees/EmployeeCreateView'))
             },
             {
                 exact: true,
                 path: '/app/employees/:id/edit',
-                component: lazy(() => import('./views/settings/UserEditView'))
+                component: lazy(() => import('./views/employees/EmployeeEditView'))
             },
             {
                 exact: true,

@@ -52,7 +52,7 @@ const MenuProps = {
     },
 };
 
-const CustomerCreateForm: React.FC<{className?: string, roles: Role[], warehouses: Warehouse[]}> = ({ className, roles, warehouses, ...rest }) => {
+const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouses: Warehouse[]}> = ({ className, roles, warehouses, ...rest }) => {
     const classes = useStyles();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     let history = useHistory();
@@ -346,4 +346,4 @@ const CustomerCreateForm: React.FC<{className?: string, roles: Role[], warehouse
     );
 }
 
-export default CustomerCreateForm;
+export default EmployeeCreateForm;

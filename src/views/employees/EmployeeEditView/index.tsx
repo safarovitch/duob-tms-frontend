@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Box, Button, Container, makeStyles} from '@material-ui/core';
 import Page from '../../../components/Page';
 import Header from './Header';
-import UserEditForm from './UserEditForm';
+import EmployeeEditForm from './EmployeeEditForm';
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
 import {Employee, Role} from "../../../model/Employee";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const UserEditView: React.FC = () => {
+const EmployeeEditView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
@@ -31,7 +31,7 @@ const UserEditView: React.FC = () => {
     const selectedEmployee = useSelector(({selectedEmployee}: {selectedEmployee: Employee}) => selectedEmployee)
 
     useEffect(() => {
-        if (!selectedEmployee) history.push('/app/employees');
+        if (!selectedEmployee) history.go(-1);
         else {
             const getRoles = async () => {
                 try {
@@ -73,11 +73,11 @@ const UserEditView: React.FC = () => {
             <Container maxWidth="lg">
                 <Header />
                 <Box mt={3}>
-                    <UserEditForm employee={selectedEmployee!} roles={roles} warehouses={warehouses} />
+                    <EmployeeEditForm employee={selectedEmployee} roles={roles} warehouses={warehouses} />
                 </Box>
             </Container>
         </Page>
     );
 }
 
-export default UserEditView;
+export default EmployeeEditView;
