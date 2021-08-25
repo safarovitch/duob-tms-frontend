@@ -63,7 +63,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
         birthdate: employee.birthdate,
         address: employee.address,
         phoneNumber: employee.phoneNumber,
-        warehouseId: employee.warehouseDto?.id
+        warehouseId: employee.warehouseDto?.id || 0
     }
 
     const validationSchema = Yup.object().shape({
