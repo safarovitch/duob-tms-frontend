@@ -228,6 +228,9 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                                     Должность
                                 </TableCell>
                                 <TableCell>
+                                    Склад
+                                </TableCell>
+                                <TableCell>
                                     Код пользователя
                                 </TableCell>
                                 <TableCell>
@@ -256,6 +259,9 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                                         </TableCell>
                                         <TableCell>
                                             {(employee.roles!).map((role: Role)=>mapOfRoles.get(role.name)).join(', ')}
+                                        </TableCell>
+                                        <TableCell>
+                                            {employee.warehouseDto?.name}
                                         </TableCell>
                                         <TableCell>
                                             {employee.code}

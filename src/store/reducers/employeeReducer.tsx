@@ -1,32 +1,17 @@
-import {AnyAction} from "redux";
-import {SET_SELECTED_EMPLOYEE, DELETE_SELECTED_EMPLOYEE} from "../actions/employeeActions";
+import {SET_EMPLOYEE, DELETE_EMPLOYEE} from "../actions/employeeActions";
 import {Employee} from "../../model/Employee";
 
-export type employeeInitialState = {
-    selectedEmployee: null| Employee;
-}
-
-const initialState: employeeInitialState = {
-    selectedEmployee: null
-};
-
-const employeeReducer = (state = initialState, action: AnyAction) => {
+const employeeReducer = (state = null, action: {type: any, payload: Employee | null}) => {
     switch (action.type) {
-        case SET_SELECTED_EMPLOYEE: {
-            return {
-                ...state,
-                selectedEmployee: action.payload.employee
-            }
+        case SET_EMPLOYEE: {
+            return action.payload
         }
-        case DELETE_SELECTED_EMPLOYEE: {
-            return {
-                ...state,
-                selectedEmployee: null
-            }
+        case DELETE_EMPLOYEE: {
+            return action.payload;
         }
-    }
 
-    return state
+        default: return state
+    }
 }
 
 export default employeeReducer

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UserListView = () => {
+const EmployeeListView = () => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const [roles, setRoles] = useState<[] | Role[]>([]);
@@ -57,4 +57,4 @@ const UserListView = () => {
     );
 }
 
-export default UserListView;
+export default EmployeeListView;
