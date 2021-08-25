@@ -66,6 +66,17 @@ class AuthService {
         }
     }
 
+    updateSession = ({name, avatar}: {name?: string, avatar?: string}): User => {
+        const user: User = JSON.parse(localStorage.getItem('user')!);
+
+        if (name) user.name = name;
+        if (avatar !== undefined) user.avatar = avatar;
+
+        localStorage.setItem('user', JSON.stringify(user));
+
+        return user
+    }
+
     getAccessToken = () => localStorage.getItem('accessToken');
     isAuthenticated = () => !!this.getAccessToken()
 }

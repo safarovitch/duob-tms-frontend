@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {User} from "../../model/User";
 import {logout} from "../../store/actions/accountActions";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {}
 }));
 
@@ -19,7 +19,7 @@ function UserProfile() {
 
     return (
         <div className={classes.root}>
-            Profile is works via {user.userName}
+            Profile is works via {user.name}
 
             <Button
                 color="secondary"

@@ -22,3 +22,13 @@ export const cargoStuffTabs = [
         label: 'Тарифы'
     }
 ];
+
+export const mapOfRoles = new Map(
+    [
+        ['MANAGER', 'Менеджер'],
+        ['WAREHOUSEMAN', 'Завсклад'],
+        ['CASHIER', 'Касир'],
+        ['CLIENT', 'Клиент'],
+        ['ADMIN', 'Админ']
+    ]
+)

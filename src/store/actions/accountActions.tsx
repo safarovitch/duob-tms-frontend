@@ -1,8 +1,6 @@
-import axios from '../../utils/Api';
 import authService from '../../services/AuthService';
 import {Dispatch} from "redux";
 import {User} from "../../model/User";
-import {API_BASE_URL} from "../../config";
 
 export const LOGIN_REQUEST = '@account/login-request';
 export const LOGIN_SUCCESS = '@account/login-success';
@@ -47,13 +45,13 @@ export function logout() {
     };
 }
 
-export function updateProfile(update: User) {
-    const request = axios.post(API_BASE_URL + '/account/profile', { update });
-
+export function updateProfile({name, avatar}: {name?: string, avatar?: string}) {
     return (dispatch: Dispatch) => {
-        request.then((response) => dispatch({
+        let update = authService.updateSession({name, avatar})
+
+        dispatch({
             type: UPDATE_PROFILE,
-            payload: response.data
-        }));
-    };
+            payload: update
+        })
+    }
 }

@@ -35,7 +35,7 @@ const routesConfig = [
             {
                 exact: true,
                 path: '/app/profile',
-                component: lazy(() => import('./views/profile/UserProfile'))
+                component: lazy(() => import('./views/profile'))
             },
             {
                 exact: true,

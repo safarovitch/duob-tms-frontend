@@ -27,6 +27,8 @@ import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
 import {useSelector} from "react-redux";
 import {User} from "../../../model/User";
+import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
+import {mapOfRoles} from "../../../constants";
 
 const navConfig = [
     {
@@ -203,7 +205,7 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                             <Avatar
                                 alt="User"
                                 className={classes.avatar}
-                                src={user.imageUrl}
+                                src={user.avatar ? EMPLOYEES_IMAGE_BASE_URL + user.avatar: ''}
                             />
                         </RouterLink>
                     </Box>
@@ -218,13 +220,13 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                             color="textPrimary"
                             underline="none"
                         >
-                            {user.userName}
+                            {user.name}
                         </Link>
                         <Typography
                             variant="body2"
                             color="textSecondary"
                         >
-                            {user.position}
+                            {user.roles.map(r => mapOfRoles.get(r)).join(', ')}
                         </Typography>
                     </Box>
                 </Box>

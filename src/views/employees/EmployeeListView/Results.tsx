@@ -27,6 +27,8 @@ import {setSelectedEmployee} from "../../../store/actions/employeeActions";
 import useDebounce from "../../../hooks/useDebounce";
 import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
+import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
+import {mapOfRoles} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -195,9 +197,9 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                         input={<Input />}
                         renderValue={
                             (selected) => {
-                                let newSelected: string[] = (selected as number[]).map((number) => {
+                                let newSelected: (string | undefined)[] = (selected as number[]).map((number) => {
                                     let res =  roles.find((role) => role.id === number);
-                                    return res ? res.name: ''
+                                    return res ? mapOfRoles.get(res.name): ''
                                 })
 
                                 return newSelected.join(', ')
@@ -208,7 +210,7 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                         {roles.map((role) => (
                             <MenuItem key={role.id} value={role.id}>
                                 <Checkbox checked={rolesId.indexOf(role.id as number) > - 1} />
-                                <ListItemText primary={role.name} />
+                                <ListItemText primary={mapOfRoles.get(role.name)} />
                             </MenuItem>
                         ))}
                     </Select>
@@ -246,17 +248,17 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                                     <TableRow hover key={employee.id}>
                                         <TableCell>
                                             <Box display="flex" alignItems="center">
-                                                <Avatar className={classes.avatar} src={employee.avatar}>
+                                                <Avatar className={classes.avatar} src={EMPLOYEES_IMAGE_BASE_URL + employee.avatar}>
                                                     {getInitials(employee.name)}
                                                 </Avatar>
                                                 <Link color="inherit" component={RouterLink}
-                                                      to="/app/management/user/1" variant="h6">
+                                                      to={"/app/employees/" + employee.id} variant="h6">
                                                     {employee.name}
                                                 </Link>
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            {(employee.roles!).map((role: Role)=>role.name).join(', ')}
+                                            {(employee.roles!).map((role: Role)=>mapOfRoles.get(role.name)).join(', ')}
                                         </TableCell>
                                         <TableCell>
                                             {employee.warehouseDto?.name}
