@@ -148,7 +148,7 @@ const CustomCodeListView: React.FC = () => {
                                 )
                             }}
                             onChange={handleQueryChange}
-                            placeholder="Поиск клиентов"
+                            placeholder="Поиск"
                             value={query}
                             variant="outlined"
                         /></Box>

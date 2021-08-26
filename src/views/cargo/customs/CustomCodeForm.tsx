@@ -38,15 +38,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProps) => {
-    const {className, customCode} = props;
+    const {customCode} = props;
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
     const [products, setProducts] = useState<CargoProduct[]>([])
-
-
-
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomCode())
@@ -186,6 +183,20 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
                                         required
                                         value={props.values.productId}
                                         variant="outlined"
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
+                                        }}
                                     >
                                         {products.map((product) => (
                                             <MenuItem value={product.id} key={product.id}>

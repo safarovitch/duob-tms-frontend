@@ -1,6 +1,4 @@
 import {Box, Container, makeStyles} from "@material-ui/core";
-import {useHistory} from "react-router-dom";
-import {useParams} from "react-router";
 import Page from "../../../components/Page";
 import React from "react";
 import Header from "./Header";

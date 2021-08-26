@@ -12,11 +12,11 @@ import {
     makeStyles, Container
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {deleteSelectedCustomer} from "../../../store/actions/customerActions";
+import {useDispatch} from "react-redux";
 import {CargoProduct, ProductFormProps} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
 import {deleteSelectedProduct} from "../../../store/actions/cargoActions";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -31,13 +31,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
-    const {className, product} = props;
+    const {product} = props;
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
-
-
 
     useEffect(() => () => {
         dispatch(deleteSelectedProduct())
@@ -66,10 +64,8 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
@@ -88,10 +84,8 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 

@@ -17,6 +17,7 @@ import providerService from "../../../services/ProviderService";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteSelectedProvider} from "../../../store/actions/providerActions";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -67,47 +68,33 @@ const ProviderForm: React.FC<ProviderFormProps> = ({className, provider}) => {
 
     const handleAddProvider = async (values: Provider, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
-
             await providerService.postNewProvider(values)
-            enqueueSnackbar('Поставщик создан', {
-                variant: 'success',
-                action: <Button onClick={() => history.push('/app/providers')}>Поставщики</Button>
-            });
+
+            enqueueSnackbar('Поставщик создан', {variant: 'success'})
             history.go(-1);
-            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
     const handleUpdateProvider = async (values: Provider, formActions: { [key: string]: any }) => {
         try {
-            formActions.resetForm();
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.id = provider?.id;
+
             await providerService.updateProvider(values)
-            enqueueSnackbar('Поставщик обновлен', {
-                variant: 'success',
-                action: <Button onClick={() => history.push('/app/providers')}>Поставщики</Button>
-            });
+
+            enqueueSnackbar('Поставщик обновлен', {variant: 'success'});
             history.go(-1);
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 

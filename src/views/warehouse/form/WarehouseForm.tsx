@@ -17,6 +17,7 @@ import warehouseService from "../../../services/WarehouseService";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteSelectedWarehouse} from "../../../store/actions/warehouseActions";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -58,47 +59,33 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
 
     const handleAddWarehouse = async (values: Warehouse, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
-
             await warehouseService.postNewWarehouse(values)
-            enqueueSnackbar('Склад создан', {
-                variant: 'success',
-                action: <Button onClick={() => history.push('/app/warehouses')}>Склады</Button>
-            });
+
+            enqueueSnackbar('Склад создан', {variant: 'success'});
             history.go(-1);
-            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
     const handleUpdateWarehouse = async (values: Warehouse, formActions: { [key: string]: any }) => {
         try {
-            formActions.resetForm();
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.id = warehouse?.id;
+
             await warehouseService.updateWarehouse(values)
-            enqueueSnackbar('Склад обновлен', {
-                variant: 'success',
-                action: <Button onClick={() => history.push('/app/warehouses')}>Склады</Button>
-            });
+
+            enqueueSnackbar('Склад обновлен', {variant: 'success'});
             history.go(-1);
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 

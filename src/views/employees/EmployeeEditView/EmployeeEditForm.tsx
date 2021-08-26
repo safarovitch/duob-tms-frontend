@@ -8,9 +8,7 @@ import {
     Button,
     Grid,
     TextField,
-    InputLabel,
-    Select,
-    Input, MenuItem, Checkbox, ListItemText, FormControl
+    MenuItem,
 } from '@material-ui/core';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -20,6 +18,7 @@ import {useSnackbar} from "notistack";
 import employeeService from "../../../services/EmployeeService";
 import {Warehouse} from "../../../model/Warehouse";
 import {mapOfRoles} from "../../../constants";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -36,21 +35,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
 const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles: Role[], warehouses: Warehouse[]}> =
     ({ className, employee, roles, warehouses, ...rest }) => {
     const classes = useStyles();
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
 
     const initialValues: Employee = {
@@ -90,18 +78,14 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                 try {
                     await employeeService.updateEmployee(values)
 
-                    enqueueSnackbar('Сотрудник обновлен', {
-                        variant: 'success',
-                        action: <Button onClick={() => history.push('/app/employees')}>Сотрудники</Button>
-                    })
+                    enqueueSnackbar('Сотрудник обновлен', {variant: 'success'})
+                    history.go(-1);
                 } catch (error) {
                     setStatus({ success: false });
                     setErrors(error.message);
                     setSubmitting(false);
-                    enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                        variant: 'error',
-                        action: key => (<Button onClick={() => {closeSnackbar(key)}}>OK</Button>)
-                    })
+
+                    enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
                 }
             }}
         >
@@ -157,38 +141,39 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                    <FormControl className={classes.formControl} fullWidth>
-                                        <InputLabel id="roles-multiple-checkbox-label">Должность</InputLabel>
-                                        <Select
-                                            labelId="roles-multiple-checkbox-label"
-                                            id="demo-multiple-checkbox"
-                                            multiple
-                                            error={Boolean(touched.rolesId && errors.rolesId)}
-                                            value={values.rolesId}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            name="rolesId"
-                                            input={<Input />}
-                                            renderValue={
-                                                (selected) => {
-                                                    let newSelected: (string | undefined)[] = (selected as number[]).map((number) => {
-                                                        let res =  roles.find((role) => role.id === number);
-                                                        return res ? mapOfRoles.get(res.name): ''
-                                                    })
-
-                                                    return newSelected.join(', ')
-                                                }
+                                    <TextField
+                                        select
+                                        error={Boolean(touched.rolesId && errors.rolesId)}
+                                        fullWidth
+                                        helperText={touched.rolesId && errors.rolesId}
+                                        label="Должность"
+                                        name="rolesId"
+                                        onBlur={handleBlur}
+                                        value={values.rolesId}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        SelectProps={{
+                                            multiple: true,
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
                                             }
-                                            MenuProps={MenuProps}
-                                        >
-                                            {roles.map((role: Role) => (
-                                                <MenuItem key={role.id} value={role.id}>
-                                                    <Checkbox checked={values.rolesId.indexOf(role.id as never) > -1} />
-                                                    <ListItemText primary={mapOfRoles.get(role.name)} />
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
+                                        }}
+                                    >
+                                        {roles.map(role => (
+                                            <MenuItem key={role.id} value={role.id}>
+                                                {mapOfRoles.get(role.name)}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <TextField
@@ -219,11 +204,21 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                         onChange={handleChange}
                                         value={values.warehouseId}
                                         variant="outlined"
-                                        InputLabelProps={{
-                                            shrink: true,
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
                                         }}
                                     >
-                                        <MenuItem value={0} disabled>Выберите склад</MenuItem>
                                         {warehouses.map((warehouse) => (
                                             <MenuItem key={warehouse.id} value={warehouse.id}>{warehouse.name}</MenuItem>
                                         ))}
@@ -320,7 +315,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                         disabled={isSubmitting}
                                         className={classes.submitButton}
                                     >
-                                        Обновить
+                                        Сохранить
                                     </Button>
                                 </Grid>
                             </Box>

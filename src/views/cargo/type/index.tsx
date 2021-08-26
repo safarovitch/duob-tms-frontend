@@ -1,8 +1,6 @@
-import {Box, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
-import {useHistory} from "react-router-dom";
-import {useParams} from "react-router";
+import {Box, Container, makeStyles} from "@material-ui/core";
 import Page from "../../../components/Page";
-import React, {useState} from "react";
+import React from "react";
 import Header from "./Header";
 import CargoTypeForm from "./CargoTypeForm";
 import {useSelector} from "react-redux";
@@ -19,9 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CargoTypeView() {
     const classes = useStyles();
-    const history = useHistory();
-    const cargoType = useSelector((state: { cargoType: CargoType }) => state.cargoType);
-    const {stuffId} = useParams<{ stuffId: string }>();
+    const cargoType = useSelector((state: { selectedCargoType: CargoType }) => state.selectedCargoType);
 
     return (
         <Page

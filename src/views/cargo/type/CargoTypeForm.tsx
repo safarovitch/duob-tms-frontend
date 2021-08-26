@@ -15,7 +15,7 @@ import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {CargoType, CargoTypeFormProps} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
-import {deleteSelectedCargoType, deleteSelectedProduct} from "../../../store/actions/cargoActions";
+import {deleteSelectedCargoType} from "../../../store/actions/cargoActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -36,13 +36,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) => {
-    const {className, cargoType} = props;
+    const {cargoType} = props;
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
-
-
 
     useEffect(() => () => {
         dispatch(deleteSelectedCargoType())
@@ -52,7 +50,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
         name: cargoType?.name || '',
         manualPrice: cargoType?.manualPrice || false,
         negotiatedPrice: cargoType?.negotiatedPrice || false,
-        calculationRateWeight: cargoType?.calculationRateWeight || true,
+        calculationRateWeight: cargoType?.calculationRateWeight !== false,
         discount: cargoType?.discount || false,
     }
 

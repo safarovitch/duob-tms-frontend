@@ -15,7 +15,7 @@ import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {CargoTariff, CargoTariffFormProps, CargoType} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
-import {deleteSelectedProduct} from "../../../store/actions/cargoActions";
+import {deleteSelectedCargoTariff} from "../../../store/actions/cargoActions";
 import {Warehouse} from "../../../model/Warehouse";
 import warehouseService from "../../../services/WarehouseService";
 
@@ -81,7 +81,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
     }, [])
 
     useEffect(() => () => {
-        dispatch(deleteSelectedProduct())
+        dispatch(deleteSelectedCargoTariff())
     }, [])
 
     const initialValues: CargoTariff = {
@@ -226,6 +226,20 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
                                         required
                                         value={props.values.warehouseId}
                                         variant="outlined"
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
+                                        }}
                                     >
                                         {warehouses.map((warehouse) => (
                                             <MenuItem value={warehouse.id} key={warehouse.id}>
@@ -251,6 +265,20 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
                                         required
                                         value={props.values.cargoTypeId}
                                         variant="outlined"
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
+                                        }}
                                     >
                                         {cargoTypes.map((cargoType) => (
                                             <MenuItem value={cargoType.id} key={cargoType.id}>
