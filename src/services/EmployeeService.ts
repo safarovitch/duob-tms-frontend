@@ -1,6 +1,6 @@
 import api from '../utils/Api'
 import {API_BASE_URL} from "../config";
-import {Employee} from "../model/Employee";
+import {Employee, Role} from "../model/Employee";
 
 class EmployeeService {
     getEmployees = (page: number, size: number, search: string, rolesId: string) => new Promise((resolve, reject) => {
@@ -79,7 +79,7 @@ class EmployeeService {
         api
             .get(`${API_BASE_URL}/users/roles`)
             .then(response => {
-                resolve(response.data)
+                resolve((response.data as Role[]).filter(v => v.name !== 'CLIENT'))
             }).catch(error => {reject(error)})
     })
 }
