@@ -6,22 +6,19 @@ import {
     CardContent,
     Box,
     Button,
-    SvgIcon,
     Grid,
     TextField,
-    Input,
-    Checkbox,
-    Select, MenuItem, ListItemText, FormControl, InputLabel
+    MenuItem,
 } from '@material-ui/core';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import {Link as RouterLink, useHistory} from "react-router-dom";
-import {Plus as PlusIcon} from "react-feather";
 import {Employee, Role} from "../../../model/Employee";
 import employeeService from "../../../services/EmployeeService";
 import {Warehouse} from "../../../model/Warehouse";
 import {mapOfRoles} from "../../../constants";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -42,20 +39,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
 const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouses: Warehouse[]}> = ({ className, roles, warehouses, ...rest }) => {
     const classes = useStyles();
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     let history = useHistory();
 
     const initialValues: Employee = {
@@ -71,15 +57,12 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
     };
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().max(255).required('Name is required'),
-        rolesId: Yup.array().min(1).required('role is required'),
-        username: Yup.string().max(255).min(6).required('Username is required'),
-        password: Yup.string().max(255).min(6).required('Password is required'),
-        code: Yup.string().max(255).required('Code is required'),
-        birthdate: Yup.string().max(255),
-        address: Yup.string().max(255).required('Address is required'),
+        name: Yup.string().max(255),
+        username: Yup.string().max(255).min(6),
+        password: Yup.string().max(255).min(6),
+        code: Yup.string().max(255),
+        address: Yup.string().max(255),
         phoneNumber: Yup.string().max(15),
-        warehouseId: Yup.number().moreThan(0, 'Выберите склад').required('warehouse is required')
     });
 
     return (
@@ -87,7 +70,6 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={async (values, {
-                resetForm,
                 setErrors,
                 setStatus,
                 setSubmitting
@@ -95,23 +77,14 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                 try {
                     await employeeService.createEmployee(values)
 
-                    resetForm();
-                    setStatus({ success: true });
-                    setSubmitting(false);
-
-                    enqueueSnackbar('Сотрудник создан', {
-                        variant: 'success',
-                        action: <Button onClick={() => history.push('/app/employees')}>Сотрудники</Button>
-                    })
+                    enqueueSnackbar('Сотрудник создан', {variant: 'success'})
+                    history.go(-1);
                 } catch (error) {
-                    enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                        variant: 'error',
-                        action: key => (<Button onClick={() => { closeSnackbar(key) }}>ОК</Button>)
-                    })
-
                     setStatus({ success: false });
                     setErrors(error.message);
                     setSubmitting(false);
+
+                    enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
                 }
             }}
         >
@@ -147,6 +120,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="ФИО"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -164,41 +138,44 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите логин"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                    <FormControl className={classes.formControl} fullWidth>
-                                        <InputLabel id="roles-multiple-checkbox-label">Должность</InputLabel>
-                                        <Select
-                                            labelId="roles-multiple-checkbox-label"
-                                            id="demo-multiple-checkbox"
-                                            multiple
-                                            error={Boolean(touched.rolesId && errors.rolesId)}
-                                            value={values.rolesId}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            name="rolesId"
-                                            input={<Input />}
-                                            renderValue={
-                                                (selected) => {
-                                                    let newSelected: (string | undefined)[] = (selected as number[]).map((number) => {
-                                                        let res =  roles.find((role) => role.id === number);
-                                                        return res ? mapOfRoles.get(res.name): ''
-                                                    })
-
-                                                    return newSelected.join(', ')
-                                                }
+                                    <TextField
+                                        select
+                                        error={Boolean(touched.rolesId && errors.rolesId)}
+                                        fullWidth
+                                        helperText={touched.rolesId && errors.rolesId}
+                                        label="Должность"
+                                        name="rolesId"
+                                        onBlur={handleBlur}
+                                        value={values.rolesId}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        required
+                                        SelectProps={{
+                                            multiple: true,
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
                                             }
-                                            MenuProps={MenuProps}
-                                        >
-                                            {roles.map((role) => (
-                                                <MenuItem key={role.id} value={role.id}>
-                                                    <Checkbox checked={values.rolesId.indexOf(role.id as never) > -1} />
-                                                    <ListItemText primary={mapOfRoles.get(role.name)} />
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
+                                        }}
+                                    >
+                                        {roles.map(role => (
+                                            <MenuItem key={role.id} value={role.id}>
+                                                {mapOfRoles.get(role.name)}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <TextField
@@ -215,6 +192,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите пароль"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -227,13 +205,23 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                         name="warehouseId"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        value={values.warehouseId}
                                         variant="outlined"
-                                        InputLabelProps={{
-                                            shrink: true,
+                                        required
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
                                         }}
                                     >
-                                        <MenuItem value={0} disabled>Выберите склад</MenuItem>
                                         {warehouses.map((warehouse) => (
                                             <MenuItem key={warehouse.id} value={warehouse.id}>{warehouse.name}</MenuItem>
                                         ))}
@@ -254,6 +242,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите код пользователя"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -288,6 +277,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите адрес проживание"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -319,6 +309,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                         color="default"
                                         to="/app/employees"
                                         component={RouterLink}
+                                        disabled={isSubmitting}
                                         className={classes.cancelButton}
                                     >
                                         Отмена
@@ -330,12 +321,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                         disabled={isSubmitting}
                                         className={classes.submitButton}
                                     >
-                                        <SvgIcon
-                                            className={classes.plusIcon}
-                                        >
-                                            <PlusIcon />
-                                        </SvgIcon>
-                                        Добавить
+                                        Создать
                                     </Button>
                                 </Grid>
                             </Box>

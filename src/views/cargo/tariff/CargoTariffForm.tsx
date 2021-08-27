@@ -15,9 +15,10 @@ import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {CargoTariff, CargoTariffFormProps, CargoType} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
-import {deleteSelectedProduct} from "../../../store/actions/cargoActions";
+import {deleteSelectedCargoTariff} from "../../../store/actions/cargoActions";
 import {Warehouse} from "../../../model/Warehouse";
 import warehouseService from "../../../services/WarehouseService";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -81,7 +82,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
     }, [])
 
     useEffect(() => () => {
-        dispatch(deleteSelectedProduct())
+        dispatch(deleteSelectedCargoTariff())
     }, [])
 
     const initialValues: CargoTariff = {
@@ -112,45 +113,33 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
 
     const handleAddCargoTariff = async (values: CargoTariff, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             await cargoService.postCargoTariff(values)
-            enqueueSnackbar('Вид груза создан', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+
+            enqueueSnackbar('Вид груза создан', {variant: 'success'});
             history.go(-1);
-            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
     const handleUpdateCargoTariff = async (values: CargoTariff, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.id = cargoTariff?.id;
+
             await cargoService.updateCargoTariff(values)
-            enqueueSnackbar('Вид груза обновлено', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+
+            enqueueSnackbar('Вид груза обновлено', {variant: 'success'});
             history.go(-1);
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
@@ -226,6 +215,20 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
                                         required
                                         value={props.values.warehouseId}
                                         variant="outlined"
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
+                                        }}
                                     >
                                         {warehouses.map((warehouse) => (
                                             <MenuItem value={warehouse.id} key={warehouse.id}>
@@ -251,6 +254,20 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
                                         required
                                         value={props.values.cargoTypeId}
                                         variant="outlined"
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
+                                        }}
                                     >
                                         {cargoTypes.map((cargoType) => (
                                             <MenuItem value={cargoType.id} key={cargoType.id}>

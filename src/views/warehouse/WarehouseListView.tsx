@@ -3,7 +3,7 @@ import {Warehouse, WarehouseListProps} from "../../model/Warehouse";
 import {
     Box, Button,
     Card, CircularProgress,
-    Container, Dialog, DialogActions, DialogTitle, IconButton,
+    Container, IconButton,
     InputAdornment,
     makeStyles,
     SvgIcon,
@@ -22,6 +22,8 @@ import useDebounce from "../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
 import {useDispatch} from "react-redux";
 import {setSelectedWarehouse} from "../../store/actions/warehouseActions";
+import ConfirmModal from "../../components/ConfirmModal";
+import errorMessageHandler from "../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,18 +66,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WarehouseListView: React.FC<WarehouseListProps> = ({className}) => {
-    const classes = useStyles();
-    const dispatch = useDispatch();
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-    const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
-    const [total, setTotal] = useState<number>(0);
-    const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
-    const [query, setQuery] = useState('');
+    const classes = useStyles()
+    const dispatch = useDispatch()
+    const {enqueueSnackbar} = useSnackbar()
+    const [warehouses, setWarehouses] = useState<Warehouse[]>([])
+    const [total, setTotal] = useState<number>(0)
+    const [page, setPage] = useState(1)
+    const [size, setSize] = useState(10)
+    const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500);
-    const [loading, setLoading] = useState(false);
-    const [idWarehouse, setIdWarehouse] = useState(0)
-    const [openDialog, setOpenDialog] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [warehouseId, setWarehouseId] = useState(0)
+    const [isConfirmModalOpen, setOpen] = useState(false)
 
     useEffect(() => {
         getWarehouses().then(null)
@@ -112,34 +114,23 @@ const WarehouseListView: React.FC<WarehouseListProps> = ({className}) => {
     };
 
     const handleWarehouseDelete = (id: number) => {
-        setOpenDialog(true)
-        setIdWarehouse(id)
-    }
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false)
-    }
-
-    const handleAgree = () => {
-        setOpenDialog(false)
-        warehouseDelete(idWarehouse).then()
+        setWarehouseId(id)
+        setOpen(true)
     }
 
     const warehouseDelete = async (id: number) => {
+        setOpen(false)
+        setLoading(true)
+
         try {
             await warehouseService.deleteWarehouse(id);
 
             getWarehouses().then();
 
-            enqueueSnackbar('Склад удален', {
-                variant: 'success',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            enqueueSnackbar('Склад удален', {variant: 'success'})
         } catch (error) {
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            setLoading(false)
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
@@ -236,25 +227,15 @@ const WarehouseListView: React.FC<WarehouseListProps> = ({className}) => {
                                 onRowsPerPageChange={handleRowsPerPageChange}
                                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                             />
-                            <Dialog
-                                open={openDialog}
-                                onClose={handleCloseDialog}
-                                aria-labelledby="alert-dialog-title"
-                                aria-describedby="alert-dialog-description"
-                            >
-                                <DialogTitle id="alert-dialog-title">Удалить склад?</DialogTitle>
-                                <DialogActions>
-                                    <Button onClick={handleAgree} color="primary">
-                                        Да
-                                    </Button>
-                                    <Button onClick={handleCloseDialog} color="primary" autoFocus>
-                                        Нет
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
                         </Card>
                     </Box>
                 )}
+                <ConfirmModal
+                    isOpen={isConfirmModalOpen}
+                    title={'Вы уверены, что хотите удалить склад?'}
+                    description={'При удалении склада, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот склад.'}
+                    onClose={() => setOpen(false)}
+                    onAccept={() => warehouseDelete(warehouseId)}/>
             </Container>
         </Page>
     )

@@ -1,61 +1,56 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {
-  Breadcrumbs,
-  Link,
-  Typography,
-  makeStyles
-} from '@material-ui/core';
+import {Breadcrumbs, Link, makeStyles, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const useStyles = makeStyles(() => ({
-  root: {}
+    root: {}
 }));
 
-const Header: React.FC<{className?: string}> = ({ className, ...rest }) => {
-  const classes = useStyles();
+const Header: React.FC<{ className?: string }> = ({className, ...rest}) => {
+    const classes = useStyles();
 
-  return (
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-      >
-        <Link
-          variant="body1"
-          color="inherit"
-          to="/app"
-          component={RouterLink}
+    return (
+        <div
+            className={clsx(classes.root, className)}
+            {...rest}
         >
-          Настройки
-        </Link>
-        <Link
-            variant="body1"
-            color="inherit"
-            to="/app/employees"
-            component={RouterLink}
-        >
-          Сотрудники
-        </Link>
-        <Typography
-          variant="body1"
-          color="textPrimary"
-        >
-          Создание сотрудника
-        </Typography>
-      </Breadcrumbs>
-      <Typography
-        variant="h3"
-        color="textPrimary"
-      >
-        Создание сотрудника
-      </Typography>
-    </div>
-  );
+            <Breadcrumbs
+                separator={<NavigateNextIcon fontSize="small"/>}
+                aria-label="breadcrumb"
+            >
+                <Link
+                    variant="body1"
+                    color="inherit"
+                    to="/app"
+                    component={RouterLink}
+                >
+                    Главная
+                </Link>
+                <Link
+                    variant="body1"
+                    color="inherit"
+                    to="/app/employees"
+                    component={RouterLink}
+                >
+                    Сотрудники
+                </Link>
+                <Typography
+                    variant="body1"
+                    color="textPrimary"
+                >
+                    Создание сотрудника
+                </Typography>
+            </Breadcrumbs>
+            <Typography
+                variant="h3"
+                color="textPrimary"
+            >
+                Создание сотрудника
+            </Typography>
+        </div>
+    );
 }
 
 export default Header;

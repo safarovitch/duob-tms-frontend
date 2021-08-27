@@ -48,7 +48,7 @@ const Header: React.FC<{className?: string}> = ({ className, ...rest }) => {
                         to="/app"
                         component={RouterLink}
                     >
-                        Настройки
+                        Главная
                     </Link>
                     <Typography
                         variant="body1"

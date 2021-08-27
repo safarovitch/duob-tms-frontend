@@ -22,7 +22,7 @@ import {useDispatch} from "react-redux";
 import useDebounce from "../../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
 import {CargoType} from "../../../model/Cargo";
-import {setSelectedProduct} from "../../../store/actions/cargoActions";
+import {setSelectedType} from "../../../store/actions/cargoActions";
 import cargoService from "../../../services/CargoService";
 import ConfirmModal from "../../../components/ConfirmModal";
 
@@ -77,7 +77,7 @@ const CargoTypeListView: React.FC = () => {
     const handleSelectCargoType = (cargoType: CargoType, needDispatch: boolean) => {
         selectCargoType(cargoType);
         if (needDispatch) {
-            dispatch(setSelectedProduct(cargoType))
+            dispatch(setSelectedType(cargoType))
         } else {
             setOpen(true)
         }
@@ -151,7 +151,7 @@ const CargoTypeListView: React.FC = () => {
                                 )
                             }}
                             onChange={handleQueryChange}
-                            placeholder="Поиск клиентов"
+                            placeholder="Поиск"
                             value={query}
                             variant="outlined"
                         /></Box>

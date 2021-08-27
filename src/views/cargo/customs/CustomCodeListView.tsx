@@ -85,10 +85,7 @@ const CustomCodeListView: React.FC = () => {
         setLoading(true)
         try {
             await cargoService.deleteCustomCode(customCodeId);
-            enqueueSnackbar(`Успешно удалено!`, {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+            enqueueSnackbar(`Успешно удалено!`, {variant: 'success'});
             setLoading(false)
             getCustomCodes();
             setPage(1)
@@ -148,7 +145,7 @@ const CustomCodeListView: React.FC = () => {
                                 )
                             }}
                             onChange={handleQueryChange}
-                            placeholder="Поиск клиентов"
+                            placeholder="Поиск"
                             value={query}
                             variant="outlined"
                         /></Box>
@@ -253,8 +250,8 @@ const CustomCodeListView: React.FC = () => {
             )}
             <ConfirmModal
                 isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите удалить наименование?'}
-                description={'При удалении наименования, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно это наименование.'}
+                title={'Вы уверены, что хотите удалить томоженный код?'}
+                description={'При удалении таможенного кода, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот томоженный код.'}
                 onClose={() => setOpen(false)}
                 onAccept={() => handleDeleteCustomCode(selectedCustomCode?.id!!)}/>
         </>

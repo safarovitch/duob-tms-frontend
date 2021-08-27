@@ -5,11 +5,11 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Avatar,
     Box, Button,
-    Card, Checkbox, Dialog, DialogActions, DialogTitle, FormControl,
-    IconButton, Input,
-    InputAdornment, InputLabel,
-    Link, ListItemText,
-    makeStyles, MenuItem, Select,
+    Card, Chip, CircularProgress, Grid,
+    IconButton,
+    InputAdornment,
+    Link,
+    makeStyles,
     SvgIcon,
     Table,
     TableBody,
@@ -19,7 +19,8 @@ import {
     TableRow,
     TextField
 } from '@material-ui/core';
-import {Edit as EditIcon, Search as SearchIcon, Trash2 as DeleteIcon,} from 'react-feather';
+import DoneIcon from '@material-ui/icons/Done';
+import {Edit as EditIcon, Search as SearchIcon, Trash2 as DeleteIcon} from 'react-feather';
 import getInitials from '../../../utils/getInitials';
 import {Employee, Role} from "../../../model/Employee";
 import {useDispatch} from "react-redux";
@@ -29,11 +30,19 @@ import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
 import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
 import {mapOfRoles} from "../../../constants";
+import ConfirmModal from "../../../components/ConfirmModal";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
-    queryField: {
-        width: 500
+    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
+    tableProgress: {
+        color: "secondary",
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
     },
     bulkOperations: {
         position: 'relative'
@@ -61,23 +70,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
 const Results: React.FC<{className?: string, roles: Role[]}> = ({className, roles, ...rest}) => {
     const classes = useStyles();
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const [openDialog, setOpenDialog] = useState(false)
-    const [idEmployee, setIdEmployee] = useState(0)
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
@@ -85,21 +81,27 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
     const [query, setQuery] = useState('');
     const [rolesId, setRolesId] = useState<number[]>([]);
     const debouncedSearchTerm = useDebounce(query, 500);
+    const [loading, setLoading] = useState(false);
+    const [employeeId, setEmployeeId] = useState(0)
+    const [isConfirmModalOpen, setOpen] = useState(false)
 
     useEffect(() => {
         getEmployee().then(null)
     }, [page, size, debouncedSearchTerm, rolesId])
 
     const getEmployee = async () => {
+        setLoading(true);
         try {
             const data: any = await employeeService.getEmployees(page, size, query, rolesId.join(','))
             setEmployees(data.content)
             setTotal(data.totalElements)
+            setLoading(false);
         } catch (error) {
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
                 action: <Button onClick={() => getEmployee()}>Рестарт</Button>
             });
+            setLoading(false);
         }
     }
 
@@ -119,105 +121,97 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
         setPage(1);
     };
 
-    const handleRolesIdChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
-        event.persist();
-        setRolesId(event.target.value as number[]);
-        setPage(1);
-    };
-
     const handleEmployeeEdit = (employee: Employee) => {
         dispatch(setSelectedEmployee(employee))
     }
 
     const handleEmployeeDelete = (id: number) => {
-        setOpenDialog(true)
-        setIdEmployee(id)
-    }
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false)
-    }
-
-    const handleAgree = () => {
-        setOpenDialog(false)
-        employeeDelete(idEmployee).then()
+        setEmployeeId(id)
+        setOpen(true)
     }
 
     const employeeDelete = async (id: number) => {
+        setOpen(false)
+        setLoading(true)
+
         try {
             await employeeService.deleteEmployee(id);
 
             getEmployee().then();
 
-            enqueueSnackbar('Сотрудник удален', {
-                variant: 'success',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            enqueueSnackbar('Сотрудник удален', {variant: 'success'})
         } catch (error) {
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            setLoading(false)
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
+
+    const handleRolesIdChange = (id: number) => {
+        const roles = [...rolesId];
+
+        const index = rolesId.indexOf(id);
+        if (index > - 1) {
+            roles.splice(index, 1);
+        } else roles.push(id);
+
+        setRolesId(roles);
+        setPage(1);
+    };
+
+    const hasRoleInRolesId = (id: number) => rolesId.indexOf(id) > - 1
 
     return (
         <Card className={clsx(classes.root, className)} {...rest}>
             <Box p={2} minHeight={56} display="flex" alignItems="center">
-                <TextField
-                    className={classes.queryField}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SvgIcon
-                                    fontSize="small"
-                                    color="action"
-                                >
-                                    <SearchIcon/>
-                                </SvgIcon>
-                            </InputAdornment>
-                        )
-                    }}
-                    onChange={handleQueryChange}
-                    placeholder="Поиск"
-                    variant="outlined"
-                />
-
-                <Box flexGrow={1} />
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="roles-multiple-checkbox-label">Фильтр</InputLabel>
-                    <Select
-                        labelId="roles-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        multiple
-                        value={rolesId}
-                        onChange={handleRolesIdChange}
-                        name="rolesId"
-                        input={<Input />}
-                        renderValue={
-                            (selected) => {
-                                let newSelected: (string | undefined)[] = (selected as number[]).map((number) => {
-                                    let res =  roles.find((role) => role.id === number);
-                                    return res ? mapOfRoles.get(res.name): ''
-                                })
-
-                                return newSelected.join(', ')
-                            }
-                        }
-                        MenuProps={MenuProps}
-                    >
-                        {roles.map((role) => (
-                            <MenuItem key={role.id} value={role.id}>
-                                <Checkbox checked={rolesId.indexOf(role.id as number) > - 1} />
-                                <ListItemText primary={mapOfRoles.get(role.name)} />
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            fullWidth
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SvgIcon
+                                            fontSize="small"
+                                            color="action"
+                                        >
+                                            <SearchIcon/>
+                                        </SvgIcon>
+                                    </InputAdornment>
+                                )
+                            }}
+                            onChange={handleQueryChange}
+                            placeholder="Поиск"
+                            variant="outlined"
+                        />
+                    </Grid>
+                    <Grid container item xs={12} sm={6} md={8} alignItems="center" justifyContent="flex-end" spacing={1}>
+                        {roles.map(role => {
+                            return (
+                                <Grid item key={role.id}>
+                                    {hasRoleInRolesId(role.id) ? (
+                                        <Chip
+                                            label={mapOfRoles.get(role.name)}
+                                            clickable
+                                            color="primary"
+                                            onClick={() => handleRolesIdChange(role.id)}
+                                            onDelete={() => handleRolesIdChange(role.id)}
+                                            deleteIcon={<DoneIcon />}
+                                        />
+                                    ) : (
+                                        <Chip
+                                            label={mapOfRoles.get(role.name)}
+                                            clickable
+                                            onClick={() => handleRolesIdChange(role.id)}
+                                        />
+                                    )}
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
+                </Grid>
             </Box>
             <PerfectScrollbar>
-                <Box minWidth={700}>
+                <Box minWidth={700} className={loading ? classes.tableProgressBoxStyle : ''}>
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -293,6 +287,7 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                             })}
                         </TableBody>
                     </Table>
+                    {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
                 </Box>
             </PerfectScrollbar>
             <TablePagination
@@ -306,22 +301,12 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
-            <Dialog
-                open={openDialog}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">Удалить сотрудника?</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleAgree} color="primary">
-                        Да
-                    </Button>
-                    <Button onClick={handleCloseDialog} color="primary" autoFocus>
-                        Нет
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmModal
+                isOpen={isConfirmModalOpen}
+                title={'Вы уверены, что хотите удалить сотрудника?'}
+                description={'При удалении сотрудника, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этого сотрудника.'}
+                onClose={() => setOpen(false)}
+                onAccept={() => employeeDelete(employeeId)}/>
         </Card>
     );
 }

@@ -19,6 +19,7 @@ import customerService from "../../../services/CustomerService";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteSelectedCustomer} from "../../../store/actions/customerActions";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -67,7 +68,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
     const validationSchema = Yup.object().shape({
         name: Yup.string().max(255),
         phoneNumber: Yup.string().max(255),
-        birthDate: Yup.date().nullable(),
         address: Yup.string().max(255),
         code: Yup.string().max(255),
         username: Yup.string().max(255),
@@ -76,48 +76,38 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
     const handleAddCustomer = async (values: Customer, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.birthDate = moment(values.birthDate).format('DD.MM.yyyy')
+
             await customerService.postNewCustomer(values)
-            enqueueSnackbar('Клиент создан', {
-                variant: 'success',
-                action: <Button onClick={() => history.push('/app/customers')}>Клиенты</Button>
-            });
+
+            enqueueSnackbar('Клиент создан', {variant: 'success'});
             history.go(-1);
-            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
     const handleUpdateCustomer = async (values: Customer, formActions: { [key: string]: any }) => {
         try {
-            formActions.resetForm();
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.birthDate = moment(values.birthDate).format('DD.MM.yyyy')
             values.id = customer?.id;
+
             await customerService.updateCustomer(values)
-            enqueueSnackbar('Клиент обновлен', {
-                variant: 'success',
-                action: <Button onClick={() => history.push('/app/customers')}>Клиенты</Button>
-            });
-            history.go(-1);
+
+            values.birthDate = moment(values.birthDate, 'DD.MM.yyyy').toDate().toString()
+            enqueueSnackbar('Клиент обновлен', {variant: 'success'})
+            history.go(-1)
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+            values.birthDate = moment(values.birthDate, 'DD.MM.yyyy').toDate().toString()
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
@@ -304,7 +294,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                                     type="submit"
                                     disabled={props.isSubmitting}
                                 >
-                                    {customer ? 'Сохранить' : 'Добавить'}
+                                    {customer ? 'Сохранить' : 'Создать'}
                                 </Button>
                             </Box>
                         </CardContent>

@@ -15,7 +15,8 @@ import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {CargoType, CargoTypeFormProps} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
-import {deleteSelectedCargoType, deleteSelectedProduct} from "../../../store/actions/cargoActions";
+import {deleteSelectedCargoType} from "../../../store/actions/cargoActions";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -36,13 +37,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) => {
-    const {className, cargoType} = props;
+    const {cargoType} = props;
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
-
-
 
     useEffect(() => () => {
         dispatch(deleteSelectedCargoType())
@@ -52,7 +51,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
         name: cargoType?.name || '',
         manualPrice: cargoType?.manualPrice || false,
         negotiatedPrice: cargoType?.negotiatedPrice || false,
-        calculationRateWeight: cargoType?.calculationRateWeight || true,
+        calculationRateWeight: cargoType?.calculationRateWeight !== false,
         discount: cargoType?.discount || false,
     }
 
@@ -66,45 +65,33 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
 
     const handleAddCargoType = async (values: CargoType, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             await cargoService.postCargoType(values)
-            enqueueSnackbar('Вид груза создан', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+
+            enqueueSnackbar('Вид груза создан', {variant: 'success'});
             history.go(-1);
-            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
     const handleUpdateCargoType = async (values: CargoType, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.id = cargoType?.id;
+
             await cargoService.updateCargoType(values)
-            enqueueSnackbar('Вид груза обновлено', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+
+            enqueueSnackbar('Вид груза обновлено', {variant: 'success'});
             history.go(-1);
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 

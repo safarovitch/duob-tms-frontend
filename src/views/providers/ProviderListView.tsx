@@ -3,7 +3,7 @@ import {Provider, ProviderListProps} from "../../model/Provider";
 import {
     Box, Button,
     Card, CircularProgress,
-    Container, Dialog, DialogActions, DialogTitle, IconButton,
+    Container, IconButton,
     InputAdornment,
     makeStyles,
     SvgIcon,
@@ -22,6 +22,8 @@ import useDebounce from "../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
 import {useDispatch} from "react-redux";
 import {setSelectedProvider} from "../../store/actions/providerActions";
+import ConfirmModal from "../../components/ConfirmModal";
+import errorMessageHandler from "../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -66,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
 const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const [providers, setProviders] = useState<Provider[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
@@ -74,8 +76,8 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
     const [loading, setLoading] = useState(false);
-    const [idProvider, setIdProvider] = useState(0)
-    const [openDialog, setOpenDialog] = useState(false)
+    const [providerId, setProviderId] = useState(0)
+    const [isConfirmModalOpen, setOpen] = useState(false)
 
     useEffect(() => {
         getProviders().then(null)
@@ -112,34 +114,23 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
     };
 
     const handleProviderDelete = (id: number) => {
-        setOpenDialog(true)
-        setIdProvider(id)
-    }
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false)
-    }
-
-    const handleAgree = () => {
-        setOpenDialog(false)
-        providerDelete(idProvider).then()
+        setProviderId(id)
+        setOpen(true)
     }
 
     const providerDelete = async (id: number) => {
+        setOpen(false)
+        setLoading(true)
+
         try {
             await providerService.deleteProvider(id);
 
             getProviders().then();
 
-            enqueueSnackbar('Поставщик удален', {
-                variant: 'success',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            enqueueSnackbar('Поставщик удален', {variant: 'success'})
         } catch (error) {
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            setLoading(false)
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
@@ -254,25 +245,15 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
                                     onRowsPerPageChange={handleRowsPerPageChange}
                                     labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                                 />
-                                <Dialog
-                                    open={openDialog}
-                                    onClose={handleCloseDialog}
-                                    aria-labelledby="alert-dialog-title"
-                                    aria-describedby="alert-dialog-description"
-                                >
-                                    <DialogTitle id="alert-dialog-title">Удалить поставщика?</DialogTitle>
-                                    <DialogActions>
-                                        <Button onClick={handleAgree} color="primary">
-                                            Да
-                                        </Button>
-                                        <Button onClick={handleCloseDialog} color="primary" autoFocus>
-                                            Нет
-                                        </Button>
-                                    </DialogActions>
-                                </Dialog>
                             </Card>
                     </Box>
                 )}
+                <ConfirmModal
+                    isOpen={isConfirmModalOpen}
+                    title={'Вы уверены, что хотите удалить поставщика?'}
+                    description={'При удалении поставщика, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот поставщик.'}
+                    onClose={() => setOpen(false)}
+                    onAccept={() => providerDelete(providerId)}/>
             </Container>
         </Page>
     )
