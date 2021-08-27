@@ -5,7 +5,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Avatar,
     Box, Button,
-    Card, Chip, CircularProgress, Dialog, DialogActions, DialogTitle, Grid,
+    Card, Chip, CircularProgress, Grid,
     IconButton,
     InputAdornment,
     Link,
@@ -30,6 +30,8 @@ import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
 import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
 import {mapOfRoles} from "../../../constants";
+import ConfirmModal from "../../../components/ConfirmModal";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -70,10 +72,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Results: React.FC<{className?: string, roles: Role[]}> = ({className, roles, ...rest}) => {
     const classes = useStyles();
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const [openDialog, setOpenDialog] = useState(false)
-    const [idEmployee, setIdEmployee] = useState(0)
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
@@ -82,6 +82,8 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
     const [rolesId, setRolesId] = useState<number[]>([]);
     const debouncedSearchTerm = useDebounce(query, 500);
     const [loading, setLoading] = useState(false);
+    const [employeeId, setEmployeeId] = useState(0)
+    const [isConfirmModalOpen, setOpen] = useState(false)
 
     useEffect(() => {
         getEmployee().then(null)
@@ -124,34 +126,23 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
     }
 
     const handleEmployeeDelete = (id: number) => {
-        setOpenDialog(true)
-        setIdEmployee(id)
-    }
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false)
-    }
-
-    const handleAgree = () => {
-        setOpenDialog(false)
-        employeeDelete(idEmployee).then()
+        setEmployeeId(id)
+        setOpen(true)
     }
 
     const employeeDelete = async (id: number) => {
+        setOpen(false)
+        setLoading(true)
+
         try {
             await employeeService.deleteEmployee(id);
 
             getEmployee().then();
 
-            enqueueSnackbar('Сотрудник удален', {
-                variant: 'success',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            enqueueSnackbar('Сотрудник удален', {variant: 'success'})
         } catch (error) {
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: key => (<Button onClick={() => { closeSnackbar(key) }}>OK</Button>)
-            })
+            setLoading(false)
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
@@ -310,22 +301,12 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
-            <Dialog
-                open={openDialog}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">Удалить сотрудника?</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleAgree} color="primary">
-                        Да
-                    </Button>
-                    <Button onClick={handleCloseDialog} color="primary" autoFocus>
-                        Нет
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmModal
+                isOpen={isConfirmModalOpen}
+                title={'Вы уверены, что хотите удалить сотрудника?'}
+                description={'При удалении сотрудника, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этого сотрудника.'}
+                onClose={() => setOpen(false)}
+                onAccept={() => employeeDelete(employeeId)}/>
         </Card>
     );
 }

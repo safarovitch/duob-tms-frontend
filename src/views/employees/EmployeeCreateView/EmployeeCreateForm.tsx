@@ -57,15 +57,12 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
     };
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().max(255).required('Name is required'),
-        rolesId: Yup.array().min(1).required('role is required'),
-        username: Yup.string().max(255).min(6).required('Username is required'),
-        password: Yup.string().max(255).min(6).required('Password is required'),
-        code: Yup.string().max(255).required('Code is required'),
-        birthdate: Yup.string().max(255),
-        address: Yup.string().max(255).required('Address is required'),
+        name: Yup.string().max(255),
+        username: Yup.string().max(255).min(6),
+        password: Yup.string().max(255).min(6),
+        code: Yup.string().max(255),
+        address: Yup.string().max(255),
         phoneNumber: Yup.string().max(15),
-        warehouseId: Yup.number().moreThan(0, 'Выберите склад').required('warehouse is required')
     });
 
     return (
@@ -123,6 +120,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="ФИО"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -140,6 +138,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите логин"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -154,6 +153,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                         value={values.rolesId}
                                         onChange={handleChange}
                                         variant="outlined"
+                                        required
                                         SelectProps={{
                                             multiple: true,
                                             MenuProps: {
@@ -192,6 +192,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите пароль"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -205,6 +206,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         variant="outlined"
+                                        required
                                         SelectProps={{
                                             MenuProps: {
                                                 variant: "selectedMenu",
@@ -240,6 +242,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите код пользователя"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -274,6 +277,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                             shrink: true,
                                         }}
                                         placeholder="Введите адрес проживание"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -305,6 +309,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                         color="default"
                                         to="/app/employees"
                                         component={RouterLink}
+                                        disabled={isSubmitting}
                                         className={classes.cancelButton}
                                     >
                                         Отмена

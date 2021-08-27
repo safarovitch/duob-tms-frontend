@@ -1,8 +1,7 @@
-import {Box, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
+import {Box, Container, makeStyles} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
-import {useParams} from "react-router";
 import Page from "../../../components/Page";
-import React, {useState} from "react";
+import React from "react";
 import Header from "./Header";
 import ProductForm from "./ProductForm";
 import {useSelector} from "react-redux";
@@ -19,9 +18,12 @@ const useStyles = makeStyles((theme) => ({
 
 function CargoProductView() {
     const classes = useStyles();
-    const history = useHistory();
     const product = useSelector((state: { selectedProduct: CargoProduct }) => state.selectedProduct);
-    const {stuffId} = useParams<{ stuffId: string }>();
+    const history = useHistory();
+    if (!product && history.location.pathname.includes('edit')) {
+        history.go(-1);
+        return null;
+    }
 
     return (
         <Page

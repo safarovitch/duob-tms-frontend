@@ -51,15 +51,10 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
     const handleAddProduct = async (values: CargoProduct, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             await cargoService.postProduct(values)
-            enqueueSnackbar('Наименование создано', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+
+            enqueueSnackbar('Наименование создано', {variant: 'success'});
             history.go(-1);
-            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
@@ -71,14 +66,11 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
     const handleUpdateProduct = async (values: CargoProduct, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.id = product?.id;
+
             await cargoService.updateProduct(values)
-            enqueueSnackbar('Наименование обновлено', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+
+            enqueueSnackbar('Наименование обновлено', {variant: 'success'});
             history.go(-1);
         } catch (error) {
             formActions.setStatus({success: false});

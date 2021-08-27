@@ -68,7 +68,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
     const validationSchema = Yup.object().shape({
         name: Yup.string().max(255),
         phoneNumber: Yup.string().max(255),
-        birthDate: Yup.date().nullable(),
         address: Yup.string().max(255),
         code: Yup.string().max(255),
         username: Yup.string().max(255),

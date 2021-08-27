@@ -18,6 +18,7 @@ import {useDispatch} from "react-redux";
 import {CargoCustomCode, CargoProduct, CustomCodeFormProps, Units} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
 import {deleteSelectedCustomCode} from "../../../store/actions/cargoActions";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -54,7 +55,6 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
     }, [])
 
     const initialValues: CargoCustomCode = {
-        // name: customCode?.productDto.name || '',
         code: customCode?.code || '',
         price: customCode?.price || undefined,
         baseRate: customCode?.baseRate || undefined,
@@ -68,7 +68,11 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
     }
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().max(255)
+        code: Yup.string().max(255),
+        price: Yup.string().max(255),
+        baseRate: Yup.string().max(255),
+        vat: Yup.string().max(255),
+        totalRate: Yup.string().max(255),
     })
 
     const getAllProducts = async () => {
@@ -87,45 +91,33 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
 
     const handleAddCustomCode = async (values: CargoCustomCode, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             await cargoService.postCustomCode(values)
-            enqueueSnackbar('Томоженный код создан', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
+
+            enqueueSnackbar('Томоженный код создан', {variant: 'success'});
             history.go(-1);
-            formActions.resetForm();
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 
     const handleUpdateCustomCode = async (values: CargoCustomCode, formActions: { [key: string]: any }) => {
         try {
-            formActions.setStatus({success: true});
-            formActions.setSubmitting(false);
             values.id = customCode?.id;
+
             await cargoService.updateCustomCode(values)
-            enqueueSnackbar('Томоженный код обновлено', {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
-            // history.go(-1);
+
+            enqueueSnackbar('Томоженный код обновлено', {variant: 'success'});
+            history.go(-1);
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button>OK</Button>
-            });
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
 

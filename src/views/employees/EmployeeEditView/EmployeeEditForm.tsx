@@ -55,15 +55,12 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
     }
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().max(255).required('Name is required'),
-        rolesId: Yup.array().min(1).required('role is required'),
-        username: Yup.string().max(255).required('Login is required'),
+        name: Yup.string().max(255),
+        username: Yup.string().max(255),
         password: Yup.string().max(255),
-        code: Yup.string().max(255).required('UserCode is required'),
-        birthdate: Yup.string().max(255),
-        address: Yup.string().max(255).required('Address is required'),
+        code: Yup.string().max(255),
+        address: Yup.string().max(255),
         phoneNumber: Yup.string().max(15),
-        warehouseId: Yup.number().moreThan(0, 'Выберите склад').required('warehouse is required')
     });
 
     return (
@@ -121,6 +118,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                             shrink: true,
                                         }}
                                         placeholder="ФИО"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -138,6 +136,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                             shrink: true,
                                         }}
                                         placeholder="Введите логин"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -152,6 +151,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                         value={values.rolesId}
                                         onChange={handleChange}
                                         variant="outlined"
+                                        required
                                         SelectProps={{
                                             multiple: true,
                                             MenuProps: {
@@ -204,6 +204,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                         onChange={handleChange}
                                         value={values.warehouseId}
                                         variant="outlined"
+                                        required
                                         SelectProps={{
                                             MenuProps: {
                                                 variant: "selectedMenu",
@@ -239,6 +240,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                             shrink: true,
                                         }}
                                         placeholder="Введите код пользователя"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -273,6 +275,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                             shrink: true,
                                         }}
                                         placeholder="Введите адрес проживание"
+                                        required
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -304,6 +307,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                         color="default"
                                         to="/app/employees"
                                         component={RouterLink}
+                                        disabled={isSubmitting}
                                         className={classes.cancelButton}
                                     >
                                         Отмена

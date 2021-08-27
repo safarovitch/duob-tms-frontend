@@ -5,6 +5,7 @@ import Header from "./Header";
 import {useSelector} from "react-redux";
 import { CargoTariff } from "../../../model/Cargo";
 import CargoTariffForm from "./CargoTariffForm";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,6 +19,11 @@ const useStyles = makeStyles((theme) => ({
 function CargoTariffView() {
     const classes = useStyles();
     const cargoTariff = useSelector((state: { selectedCargoTariff: CargoTariff }) => state.selectedCargoTariff);
+    const history = useHistory();
+    if (!cargoTariff && history.location.pathname.includes('edit')) {
+        history.go(-1);
+        return null;
+    }
 
     return (
         <Page

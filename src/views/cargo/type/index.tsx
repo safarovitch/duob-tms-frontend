@@ -5,6 +5,7 @@ import Header from "./Header";
 import CargoTypeForm from "./CargoTypeForm";
 import {useSelector} from "react-redux";
 import {CargoType} from "../../../model/Cargo";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,6 +19,11 @@ const useStyles = makeStyles((theme) => ({
 function CargoTypeView() {
     const classes = useStyles();
     const cargoType = useSelector((state: { selectedCargoType: CargoType }) => state.selectedCargoType);
+    const history = useHistory();
+    if (!cargoType && history.location.pathname.includes('edit')) {
+        history.go(-1);
+        return null;
+    }
 
     return (
         <Page
