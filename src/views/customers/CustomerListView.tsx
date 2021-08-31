@@ -27,6 +27,8 @@ import {useDispatch} from "react-redux";
 import {setSelectedCustomer} from "../../store/actions/customerActions";
 import useDebounce from "../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
+import usePermission from "../../hooks/usePermission";
+import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -79,6 +81,8 @@ const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
     const [loading, setLoading] = useState(false);
+    const canEdit = usePermission(PERMISSIONS.CUSTOMER.EDIT)
+    const canDelete = usePermission(PERMISSIONS.CUSTOMER.DELETE)
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -171,9 +175,11 @@ const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
                                                 <TableCell>
                                                     Баланс клиента
                                                 </TableCell>
-                                                <TableCell align="right" width="12%">
-                                                    Действия
-                                                </TableCell>
+                                                {(canEdit || canDelete) && (
+                                                    <TableCell align="right" width="12%">
+                                                        Действия
+                                                    </TableCell>
+                                                )}
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -226,26 +232,32 @@ const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
                                                         <TableCell>
                                                             {customer.balance}
                                                         </TableCell>
-                                                        <TableCell align="right" width="12%">
-                                                            <IconButton
-                                                                component={RouterLink}
-                                                                to={`/app/customers/${customer.id}/edit`}
-                                                                onClick={() => dispatch(setSelectedCustomer(customer))}
-                                                            >
-                                                                <SvgIcon fontSize="small">
-                                                                    <EditIcon/>
-                                                                </SvgIcon>
-                                                            </IconButton>
-                                                            <IconButton
-                                                                component={RouterLink}
-                                                                to={`/app/customers/${customer.id}`}
-                                                                onClick={() => dispatch(setSelectedCustomer(customer))}
-                                                            >
-                                                                <SvgIcon fontSize="small">
-                                                                    <ArrowRightIcon/>
-                                                                </SvgIcon>
-                                                            </IconButton>
-                                                        </TableCell>
+                                                        {(canEdit || canDelete) && (
+                                                            <TableCell align="right" width="12%">
+                                                                {canEdit && (
+                                                                    <IconButton
+                                                                        component={RouterLink}
+                                                                        to={`/app/customers/${customer.id}/edit`}
+                                                                        onClick={() => dispatch(setSelectedCustomer(customer))}
+                                                                    >
+                                                                        <SvgIcon fontSize="small">
+                                                                            <EditIcon/>
+                                                                        </SvgIcon>
+                                                                    </IconButton>
+                                                                )}
+                                                                {canDelete && (
+                                                                    <IconButton
+                                                                        component={RouterLink}
+                                                                        to={`/app/customers/${customer.id}`}
+                                                                        onClick={() => dispatch(setSelectedCustomer(customer))}
+                                                                    >
+                                                                        <SvgIcon fontSize="small">
+                                                                        <ArrowRightIcon/>
+                                                                        </SvgIcon>
+                                                                    </IconButton>
+                                                                )}
+                                                            </TableCell>
+                                                        )}
                                                     </TableRow>
                                                 );
                                             })}

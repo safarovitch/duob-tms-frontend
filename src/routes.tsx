@@ -3,155 +3,196 @@ import React, {Fragment, Suspense, lazy} from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import AuthGuard from "./components/AuthGuard";
 import DashboardLayout from "./layouts/DashboardLayout";
+import PERMISSIONS from "./constants/permissions";
+import usePermission from "./hooks/usePermission";
+import EmployeeGuard from "./components/EmployeeGuard";
+import CustomerGuard from "./components/CustomerGuard";
 
 const routesConfig = [
     {
         exact: true,
         path: '/',
-        component: () => <Redirect to="/app" />
+        component: () => <Redirect to="/app"/>
     },
     {
         exact: true,
-        guard: AuthGuard,
         path: '/login',
         component: lazy(() => import('./views/auth/Login'))
     },
     {
         path: '/app',
         guard: AuthGuard,
-        layout: DashboardLayout,
         routes: [
             {
-                exact: true,
                 path: '/app',
-                component: () => <Redirect to="/app/reports/dashboard" />
-            },
+                guard: EmployeeGuard,
+                layout: DashboardLayout,
+                routes: [
+                    {
+                        exact: true,
+                        path: '/app',
+                        component: () => <Redirect to="/app/reports/dashboard" />
+                    },
+                    {
+                        exact: true,
+                        path: '/app/reports/dashboard',
+                        component: lazy(() => import('./views/reports/DashboardView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/profile',
+                        component: lazy(() => import('./views/profile'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/customers',
+                        perm: PERMISSIONS.CUSTOMER.LIST,
+                        component: lazy(() => import('./views/customers/CustomerListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/customers/create',
+                        perm: PERMISSIONS.CUSTOMER.CREATE,
+                        component: lazy(() => import('./views/customers/form'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/customers/:id/edit',
+                        perm: PERMISSIONS.CUSTOMER.EDIT,
+                        component: lazy(() => import('./views/customers/form'))
+                    },
+                    // {
+                    //     exact: true,
+                    //     path: '/app/customers/:id',
+                    //     component: lazy(() => import('./views/customers/profile/CustomerProfile'))
+                    // },
+                    {
+                        exact: true,
+                        path: '/app/employees',
+                        perm: PERMISSIONS.EMPLOYEE.LIST,
+                        component: lazy(() => import('./views/employees/EmployeeListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/employees/create',
+                        perm: PERMISSIONS.EMPLOYEE.CREATE,
+                        component: lazy(() => import('./views/employees/EmployeeCreateView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/employees/:id/edit',
+                        perm: PERMISSIONS.EMPLOYEE.EDIT,
+                        component: lazy(() => import('./views/employees/EmployeeEditView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/providers',
+                        perm: PERMISSIONS.PROVIDER.LIST,
+                        component: lazy(() => import('./views/providers/ProviderListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/providers/create',
+                        perm: PERMISSIONS.PROVIDER.CREATE,
+                        component: lazy(() => import('./views/providers/form'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/providers/:id/edit',
+                        perm: PERMISSIONS.PROVIDER.EDIT,
+                        component: lazy(() => import('./views/providers/form'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/warehouses',
+                        perm: PERMISSIONS.WAREHOUSE.LIST,
+                        component: lazy(() => import('./views/warehouse/WarehouseListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/warehouses/create',
+                        perm: PERMISSIONS.WAREHOUSE.CREATE,
+                        component: lazy(() => import('./views/warehouse/form'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/warehouses/:id/edit',
+                        perm: PERMISSIONS.WAREHOUSE.EDIT,
+                        component: lazy(() => import('./views/warehouse/form'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: () => <Redirect to="/app/cargo/product" />
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/:stuffId',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo')),
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/product/create',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/product'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/product/edit',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/product'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/customs/create',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/customs'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/customs/edit',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/customs'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/type/create',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/type'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/type/edit',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/type'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/tariff/create',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/tariff'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo/tariff/edit',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/tariff'))
+                    },
+                ]
+            }
+        ]
+    },
+    {
+        path: '/customer',
+        guard: AuthGuard,
+        routes: [
             {
-                exact: true,
-                path: '/app/reports/dashboard',
-                component: lazy(() => import('./views/reports/DashboardView'))
-            },
-
-            {
-                exact: true,
-                path: '/app/profile',
-                component: lazy(() => import('./views/profile'))
-            },
-            {
-                exact: true,
-                path: '/app/customers',
-                component: lazy(() => import('./views/customers/CustomerListView'))
-            },
-            {
-                exact: true,
-                path: '/app/customers/create',
-                component: lazy(() => import('./views/customers/form'))
-            },
-            {
-                exact: true,
-                path: '/app/customers/:id/edit',
-                component: lazy(() => import('./views/customers/form'))
-            },
-            {
-                exact: true,
-                path: '/app/customers/:id',
+                path: '/customer',
+                guard: CustomerGuard,
                 component: lazy(() => import('./views/customers/profile/CustomerProfile'))
-            },
-            {
-                exact: true,
-                path: '/app/employees',
-                component: lazy(() => import('./views/employees/EmployeeListView'))
-            },
-            {
-                exact: true,
-                path: '/app/employees/create',
-                component: lazy(() => import('./views/employees/EmployeeCreateView'))
-            },
-            {
-                exact: true,
-                path: '/app/employees/:id/edit',
-                component: lazy(() => import('./views/employees/EmployeeEditView'))
-            },
-            {
-                exact: true,
-                path: '/app/providers',
-                component: lazy(() => import('./views/providers/ProviderListView'))
-            },
-            {
-                exact: true,
-                path: '/app/providers/create',
-                component: lazy(() => import('./views/providers/form'))
-            },
-            {
-                exact: true,
-                path: '/app/providers/:id/edit',
-                component: lazy(() => import('./views/providers/form'))
-            },
-            {
-                exact: true,
-                path: '/app/warehouses',
-                component: lazy(() => import('./views/warehouse/WarehouseListView'))
-            },
-            {
-                exact: true,
-                path: '/app/warehouses/create',
-                component: lazy(() => import('./views/warehouse/form'))
-            },
-            {
-                exact: true,
-                path: '/app/warehouses/:id/edit',
-                component: lazy(() => import('./views/warehouse/form'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo',
-                component: () => <Redirect to="/app/cargo/product" />
-            },
-            {
-                exact: true,
-                path: '/app/cargo/:stuffId',
-                component: lazy(() => import('./views/cargo')),
-            },
-            {
-                exact: true,
-                path: '/app/cargo/product/create',
-                component: lazy(() => import('./views/cargo/product'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo/product/edit',
-                component: lazy(() => import('./views/cargo/product'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo/customs/create',
-                component: lazy(() => import('./views/cargo/customs'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo/customs/edit',
-                component: lazy(() => import('./views/cargo/customs'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo/type/create',
-                component: lazy(() => import('./views/cargo/type'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo/type/edit',
-                component: lazy(() => import('./views/cargo/type'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo/tariff/create',
-                component: lazy(() => import('./views/cargo/tariff'))
-            },
-            {
-                exact: true,
-                path: '/app/cargo/tariff/edit',
-                component: lazy(() => import('./views/cargo/tariff'))
-            },
+            }
         ]
     }
 ];
@@ -185,8 +226,20 @@ const renderRoutes = (routes: any) => (routes ? (
     </Suspense>
 ) : null);
 
-function Routes() {
-    return renderRoutes(routesConfig);
+const filterRoutesConfig = (routes: any) => {
+    return routes.filter((route: any) => {
+        if (route.routes) {
+            route.routes = filterRoutesConfig(route.routes)
+            return true
+        } else {
+            if (route.perm) return usePermission(route.perm)
+            else return true
+        }
+    })
+}
+
+const Routes: React.FC = () => {
+    return renderRoutes(filterRoutesConfig(routesConfig));
 }
 
 export default Routes;

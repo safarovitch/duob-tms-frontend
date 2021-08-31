@@ -15,6 +15,8 @@ import {
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import {ProviderListHeaderProps} from "../../model/Provider";
+import usePermission from "../../hooks/usePermission";
+import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -70,22 +72,24 @@ const Header: React.FC<ProviderListHeaderProps> = ({ className }) => {
                     Все поставщики
                 </Typography>
             </Grid>
-            <Grid item>
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={onCreateNewCustomer}
-                    className={classes.action}
-                >
-                    <SvgIcon
-                        fontSize="small"
-                        className={classes.actionIcon}
+            {usePermission(PERMISSIONS.PROVIDER.CREATE) && (
+                <Grid item>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={onCreateNewCustomer}
+                        className={classes.action}
                     >
-                        <PlusCircleIcon />
-                    </SvgIcon>
-                    Добавить
-                </Button>
-            </Grid>
+                        <SvgIcon
+                            fontSize="small"
+                            className={classes.actionIcon}
+                        >
+                            <PlusCircleIcon />
+                        </SvgIcon>
+                        Добавить
+                    </Button>
+                </Grid>
+            )}
         </Grid>
     );
 }

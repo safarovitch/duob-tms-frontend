@@ -24,6 +24,8 @@ import {useDispatch} from "react-redux";
 import {setSelectedProvider} from "../../store/actions/providerActions";
 import ConfirmModal from "../../components/ConfirmModal";
 import errorMessageHandler from "../../utils/errorMessageHandler";
+import PERMISSIONS from "../../constants/permissions";
+import usePermission from "../../hooks/usePermission";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,6 +80,8 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
     const [loading, setLoading] = useState(false);
     const [providerId, setProviderId] = useState(0)
     const [isConfirmModalOpen, setOpen] = useState(false)
+    const canEdit = usePermission(PERMISSIONS.PROVIDER.EDIT)
+    const canDelete = usePermission(PERMISSIONS.PROVIDER.DELETE)
 
     useEffect(() => {
         getProviders().then(null)
@@ -185,9 +189,11 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
                                                     <TableCell>
                                                         Телефон
                                                     </TableCell>
-                                                    <TableCell align="right" width="12%">
-                                                        Действия
-                                                    </TableCell>
+                                                    {(canEdit || canDelete) && (
+                                                        <TableCell align="right" width="12%">
+                                                            Действия
+                                                        </TableCell>
+                                                    )}
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -210,22 +216,28 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
                                                             <TableCell>
                                                                 {provider.phoneNumber}
                                                             </TableCell>
-                                                            <TableCell align="right" width="12%">
-                                                                <IconButton
-                                                                    component={RouterLink}
-                                                                    to={`/app/providers/${provider.id}/edit`}
-                                                                    onClick={() => dispatch(setSelectedProvider(provider))}
-                                                                >
-                                                                    <SvgIcon fontSize="small">
-                                                                        <EditIcon/>
-                                                                    </SvgIcon>
-                                                                </IconButton>
-                                                                <IconButton onClick={() => handleProviderDelete(provider.id!)}>
-                                                                    <SvgIcon fontSize="small">
-                                                                        <DeleteIcon/>
-                                                                    </SvgIcon>
-                                                                </IconButton>
-                                                            </TableCell>
+                                                            {(canEdit || canDelete) && (
+                                                                <TableCell align="right" width="12%">
+                                                                    {canEdit && (
+                                                                        <IconButton
+                                                                            component={RouterLink}
+                                                                            to={`/app/providers/${provider.id}/edit`}
+                                                                            onClick={() => dispatch(setSelectedProvider(provider))}
+                                                                        >
+                                                                            <SvgIcon fontSize="small">
+                                                                                <EditIcon/>
+                                                                            </SvgIcon>
+                                                                        </IconButton>
+                                                                    )}
+                                                                    {canDelete && (
+                                                                        <IconButton onClick={() => handleProviderDelete(provider.id!)}>
+                                                                            <SvgIcon fontSize="small">
+                                                                                <DeleteIcon/>
+                                                                            </SvgIcon>
+                                                                        </IconButton>
+                                                                    )}
+                                                                </TableCell>
+                                                            )}
                                                         </TableRow>
                                                     );
                                                 })}

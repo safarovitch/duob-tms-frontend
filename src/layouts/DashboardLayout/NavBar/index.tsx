@@ -14,7 +14,6 @@ import {
     Typography,
     makeStyles
 } from '@material-ui/core';
-import ReceiptIcon from '@material-ui/icons/ReceiptOutlined';
 import {
     ShoppingCart as ShoppingCartIcon,
     Folder as FolderIcon,
@@ -29,6 +28,8 @@ import {useSelector} from "react-redux";
 import {User} from "../../../model/User";
 import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
 import {mapOfRoles} from "../../../constants";
+import usePermission from "../../../hooks/usePermission";
+import PERMISSIONS from "../../../constants/permissions";
 
 const navConfig = [
     {
@@ -52,42 +53,32 @@ const navConfig = [
             {
                 title: 'Склады',
                 icon: SettingsIcon,
-                href: '/app/warehouses'
+                href: '/app/warehouses',
+                perm: PERMISSIONS.WAREHOUSE.LIST
             },
             {
                 title: 'Сотрудники',
                 icon: UsersIcon,
                 href: '/app/employees',
+                perm: PERMISSIONS.EMPLOYEE.LIST
             },
             {
                 title: 'Поставщики',
                 icon: ShoppingCartIcon,
                 href: '/app/providers',
+                perm: PERMISSIONS.PROVIDER.LIST
             },
             {
                 title: 'Клиенты',
                 icon: FolderIcon,
-                href: '/app/customers'
+                href: '/app/customers',
+                perm: PERMISSIONS.CUSTOMER.LIST
             },
             {
                 title: 'Константы груза',
                 icon: FolderIcon,
-                href: '/app/cargo'
-            },
-            {
-                title: 'Тарифы',
-                icon: ReceiptIcon,
-                href: '/app/management/invoices',
-                items: [
-                    {
-                        title: 'List Invoices',
-                        href: '/app/management/invoices'
-                    },
-                    {
-                        title: 'View Invoice',
-                        href: '/app/management/invoices/1'
-                    }
-                ]
+                href: '/app/cargo',
+                perm: PERMISSIONS.CARGO.LIST
             }
         ]
     }
@@ -165,6 +156,13 @@ const useStyles = makeStyles(() => ({
         height: 64
     }
 }));
+
+const filterNavConfig = (items: any) => {
+    return items.filter((item: any) => {
+        if (item.perm) return usePermission(item.perm)
+        else return true
+    })
+}
 
 const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ openMobile, onMobileClose, }) => {
     const classes = useStyles();
@@ -244,7 +242,7 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                                 </ListSubheader>
                             )}
                         >
-                            {renderNavItems({ items: config.items, pathname: location.pathname })}
+                            {renderNavItems({ items: filterNavConfig(config.items), pathname: location.pathname })}
                         </List>
                     ))}
                 </Box>
