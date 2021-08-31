@@ -65,6 +65,7 @@ const ProductListView: React.FC = () => {
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
         setSize(Number(event.target.value));
+        setPage(1);
     };
 
     const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
