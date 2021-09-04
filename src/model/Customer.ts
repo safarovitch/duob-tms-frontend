@@ -1,3 +1,5 @@
+import React from "react";
+import {CargoStuffTab} from "./Cargo";
 
 export interface CustomerListHeaderProps {
     className?: string;
@@ -25,4 +27,27 @@ export interface Customer {
     placeNumber?: number;
     amount?: number;
     balance?: number;
+}
+
+export interface CustomerStuffTab {
+    value: string;
+    label: string;
+}
+
+export interface CustomerTabPanelProps {
+    children?: React.ReactNode;
+    index: string;
+    value: CargoStuffTab;
+}
+
+export interface CustomerActiveCargo {
+    id?: number;
+}
+
+export interface CustomerReceivedCargo {
+    id?: number;
+}
+
+export interface CustomerReconciliationAct {
+    id?: number;
 }

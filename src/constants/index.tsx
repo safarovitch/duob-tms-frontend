@@ -23,6 +23,21 @@ export const cargoStuffTabs = [
     }
 ];
 
+export const customerStuffTabs = [
+    {
+        value: 'active-cargo',
+        label: 'Активные Грузы'
+    },
+    {
+        value: 'received-cargo',
+        label: 'Полученные Грузы'
+    },
+    {
+        value: 'reconciliation-act',
+        label: 'Акт сверки'
+    }
+];
+
 export const mapOfRoles = new Map(
     [
         ['MANAGER', 'Менеджер'],
