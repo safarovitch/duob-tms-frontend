@@ -7,16 +7,26 @@ import PERMISSIONS from "./constants/permissions";
 import usePermission from "./hooks/usePermission";
 import EmployeeGuard from "./components/EmployeeGuard";
 import CustomerGuard from "./components/CustomerGuard";
+import CustomerLayout from "./layouts/CustomerLayout";
+import GuestGuard from "./components/GuestGuard";
+import RedirectGuard from "./components/RedirectGuard";
 
 const routesConfig = [
     {
         exact: true,
         path: '/',
-        component: () => <Redirect to="/app"/>
+        guard: RedirectGuard,
+        component: () => (<></>)
+    },
+    {
+        exact: true,
+        path: '/404',
+        component: lazy(() => import('./views/Error404View'))
     },
     {
         exact: true,
         path: '/login',
+        guard: GuestGuard,
         component: lazy(() => import('./views/auth/Login'))
     },
     {
@@ -61,11 +71,16 @@ const routesConfig = [
                         perm: PERMISSIONS.CUSTOMER.EDIT,
                         component: lazy(() => import('./views/customers/form'))
                     },
-                    // {
-                    //     exact: true,
-                    //     path: '/app/customers/:id',
-                    //     component: lazy(() => import('./views/customers/profile/CustomerProfile'))
-                    // },
+                    {
+                        exact: true,
+                        path: '/app/customers/:id/',
+                        component: lazy(() => import('./views/customers/profile/RedirectToAdminCustomerDetail'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/customers/:id/:stuffId',
+                        component: lazy(() => import('./views/customers/profile/AdminCustomerDetail'))
+                    },
                     {
                         exact: true,
                         path: '/app/employees',
@@ -180,6 +195,9 @@ const routesConfig = [
                         perm: PERMISSIONS.CARGO.LIST,
                         component: lazy(() => import('./views/cargo/tariff'))
                     },
+                    {
+                        component: () => <Redirect to="/404" />
+                    }
                 ]
             }
         ]
@@ -191,9 +209,32 @@ const routesConfig = [
             {
                 path: '/customer',
                 guard: CustomerGuard,
-                component: lazy(() => import('./views/customers/profile/CustomerProfile'))
+                layout: CustomerLayout,
+                routes: [
+                    {
+                        exact: true,
+                        path: '/customer',
+                        component: () => <Redirect to="/customer/active-cargo" />
+                    },
+                    {
+                        exact: true,
+                        path: '/customer/profile',
+                        component: lazy(() => import('./views/customers/profile/CustomerProfile'))
+                    },
+                    {
+                        exact: true,
+                        path: '/customer/:stuffId',
+                        component: lazy(() => import('./views/customers/profile/CustomerDetail'))
+                    },
+                    {
+                        component: () => <Redirect to="/404" />
+                    }
+                ]
             }
         ]
+    },
+    {
+        component: () => <Redirect to="/404" />
     }
 ];
 

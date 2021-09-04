@@ -13,6 +13,10 @@ import {
 import { Menu as MenuIcon } from 'react-feather';
 import Logo from '../../../components/Logo';
 import { THEMES } from '../../../constants';
+import Profile from './Profile';
+// import Contacts from './Contacts';
+// import Notifications from './Notifications';
+// import Search from './Search';
 import Settings from './Settings';
 
 const useStyles = makeStyles((theme?: any) => ({
@@ -31,11 +35,7 @@ const useStyles = makeStyles((theme?: any) => ({
     }
 }));
 
-const TopBar: React.FC<{onMobileNavOpen: () => void, className?: string}> = ({
-                    className,
-                    onMobileNavOpen,
-                    ...rest
-                }) => {
+const TopBar: React.FC<{className?: string}> = ({className, ...rest}) => {
     const classes = useStyles();
 
     return (
@@ -44,26 +44,20 @@ const TopBar: React.FC<{onMobileNavOpen: () => void, className?: string}> = ({
             {...rest}
         >
             <Toolbar className={classes.toolbar}>
-                <Hidden lgUp>
-                    <IconButton
-                        color="inherit"
-                        onClick={onMobileNavOpen}
-                    >
-                        <SvgIcon fontSize="small">
-                            <MenuIcon />
-                        </SvgIcon>
-                    </IconButton>
-                </Hidden>
-                <Hidden mdDown>
-                    <RouterLink to="/">
-                        <Logo />
-                    </RouterLink>
-                </Hidden>
+                <RouterLink to="/">
+                    <Logo />
+                </RouterLink>
                 <Box
                     ml={2}
                     flexGrow={1}
                 />
+                {/*<Search />*/}
+                {/*<Contacts />*/}
+                {/*<Notifications />*/}
                 <Settings />
+                <Box ml={2}>
+                    <Profile />
+                </Box>
             </Toolbar>
         </AppBar>
     );
