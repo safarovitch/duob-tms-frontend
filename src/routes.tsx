@@ -194,6 +194,33 @@ const routesConfig = [
                         path: '/app/cargo/tariff/edit',
                         perm: PERMISSIONS.CARGO.LIST,
                         component: lazy(() => import('./views/cargo/tariff'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: () => <Redirect to="/app/road/driver" />
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/:stuffId',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road')),
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/driver/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/driver'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/driver/edit',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/driver'))
+                    },
+                    {
+                        component: () => <Redirect to="/404" />
                     }
                 ]
             }
@@ -222,6 +249,9 @@ const routesConfig = [
                         exact: true,
                         path: '/customer/:stuffId',
                         component: lazy(() => import('./views/customers/profile/CustomerDetail'))
+                    },
+                    {
+                        component: () => <Redirect to="/404" />
                     }
                 ]
             }
