@@ -38,6 +38,25 @@ export const customerStuffTabs = [
     }
 ];
 
+export const roadStuffTabs = [
+    {
+        value: 'driver',
+        label: 'Водители'
+    },
+    {
+        value: 'track',
+        label: 'Машины'
+    },
+    {
+        value: 'trailer',
+        label: 'Прицепы'
+    },
+    {
+        value: 'gas',
+        label: 'АЗС'
+    }
+];
+
 export const mapOfRoles = new Map(
     [
         ['MANAGER', 'Менеджер'],

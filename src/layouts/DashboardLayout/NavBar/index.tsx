@@ -83,8 +83,8 @@ const navConfig = [
             {
                 title: 'Константы рейса',
                 icon: FolderIcon,
-                href: '/app/cargo',
-                perm: PERMISSIONS.CARGO.LIST
+                href: '/app/road',
+                perm: PERMISSIONS.ROAD.LIST
             }
         ]
     }
