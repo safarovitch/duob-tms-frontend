@@ -194,9 +194,6 @@ const routesConfig = [
                         path: '/app/cargo/tariff/edit',
                         perm: PERMISSIONS.CARGO.LIST,
                         component: lazy(() => import('./views/cargo/tariff'))
-                    },
-                    {
-                        component: () => <Redirect to="/404" />
                     }
                 ]
             }
@@ -219,15 +216,12 @@ const routesConfig = [
                     {
                         exact: true,
                         path: '/customer/profile',
-                        component: lazy(() => import('./views/customers/profile/CustomerProfile'))
+                        component: lazy(() => import('./views/customers/profile/customer'))
                     },
                     {
                         exact: true,
                         path: '/customer/:stuffId',
                         component: lazy(() => import('./views/customers/profile/CustomerDetail'))
-                    },
-                    {
-                        component: () => <Redirect to="/404" />
                     }
                 ]
             }

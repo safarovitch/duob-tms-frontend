@@ -28,24 +28,9 @@ class CustomerService {
     })
 
     getCustomer = (id: string) => new Promise((resolve, reject) => {
-        resolve({
-            "id": 58,
-            "createdDate": null,
-            "updatedDate": "01.09.2021 10:25",
-            "name": "Фарход",
-            "username": "aziz",
-            "code": "Ф-2020",
-            "password": null,
-            "phoneNumber": "231312312312",
-            "birthdate": null,
-            "address": "Вяземский Переулок, 5-7",
-            "balance": 0,
-            "amount": 0,
-            "placeNumber": 0
-        });
-        // api.get(`${API_BASE_URL}/clients/${id}`)
-        //     .then(response => resolve(response.data))
-        //     .catch(error => reject(error))
+        api.get(`${API_BASE_URL}/clients/${id}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 
     deleteCustomer = (id: string) => new Promise((resolve, reject)  => {
@@ -54,6 +39,36 @@ class CustomerService {
                 resolve(response.data)
             })
             .catch((error) => {reject(error)})
+    })
+
+    updatePassword = (params: {oldPassword: string, newPassword: string}) => new Promise((resolve, reject) => {
+        api
+            .put(`${API_BASE_URL}/clients/change-password`, params)
+            .then(response => {
+                resolve(response.data)
+            }).catch(error => {reject(error)})
+    })
+
+    uploadAvatar = (file: File) => new Promise((resolve, reject) => {
+        let formData = new FormData()
+        formData.append("file", file);
+        api
+            .put(`${API_BASE_URL}/clients/avatar`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then(response => {
+                resolve(response)
+            }).catch(error => {reject(error)})
+    })
+
+    deleteAvatar = (name: string) => new Promise((resolve, reject) => {
+        api.delete(`${API_BASE_URL}/clients/avatar/${name}`)
+            .then(response => {
+                if (response.status === 200) resolve(response.data)
+                else reject(response.data.error)
+            }).catch(error => {reject(error)})
     })
 
     getActiveCargos = (id: string, page: number, size: number) => new Promise((resolve, reject) => {

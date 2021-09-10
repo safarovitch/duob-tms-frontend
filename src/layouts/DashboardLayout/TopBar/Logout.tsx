@@ -13,23 +13,13 @@ const Logout: React.FC = () => {
     const history = useHistory();
     const [isOpen, setOpen] = useState(false);
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
     const handleLogout = async () => {
         try {
-            handleClose();
-            await dispatch(logout());
-            history.push('/');
+            setOpen(false)
+            await dispatch(logout())
+            history.push('/')
         } catch (error) {
-            enqueueSnackbar('Unable to logout', {
-                variant: 'error'
-            });
+            enqueueSnackbar('Unable to logout', {variant: 'error'})
         }
     };
 
@@ -38,7 +28,7 @@ const Logout: React.FC = () => {
             <Tooltip title="Выйти">
                 <IconButton
                     color="inherit"
-                    onClick={handleOpen}
+                    onClick={() => setOpen(true)}
                 >
                     <SvgIcon>
                         <LogOutIcon />
@@ -49,7 +39,7 @@ const Logout: React.FC = () => {
                 isOpen={isOpen}
                 title="Выхода из аккаунта"
                 description="Вы действительно хотите выйти из аккаунта?"
-                onClose={handleClose}
+                onClose={() => setOpen(false)}
                 onAccept={handleLogout}
             />
         </>

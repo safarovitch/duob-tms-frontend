@@ -58,9 +58,8 @@ function Profile() {
                 {...{ ref: ref } as any}
             >
                 <Avatar
-                    alt="User"
                     className={classes.avatar}
-                    src={user.avatar}
+                    src={user.avatar ? user.avatar : undefined}
                 />
             </Box>
             <Menu

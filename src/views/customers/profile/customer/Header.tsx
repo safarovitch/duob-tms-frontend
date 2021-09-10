@@ -14,7 +14,7 @@ const Header: React.FC = () => {
                 separator={<NavigateNextIcon fontSize="small" />}
                 aria-label="breadcrumb"
             >
-                <Link color="inherit" to="/app" component={RouterLink}>
+                <Link color="inherit" to="/customer/active-cargo" component={RouterLink}>
                     Главная
                 </Link>
                 <Typography color="textPrimary">

@@ -12,21 +12,21 @@ import {
     Grid,
     TextField,
 } from '@material-ui/core';
-import {Employee} from "../../../model/Employee";
-import employeeService from "../../../services/EmployeeService";
+import customerService from "../../../../../services/CustomerService";
 import {useDispatch, useSelector} from "react-redux";
-import {updateProfile} from "../../../store/actions/accountActions";
-import {User} from "../../../model/User";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
+import {updateProfile} from "../../../../../store/actions/accountActions";
+import {User} from "../../../../../model/User";
+import errorMessageHandler from "../../../../../utils/errorMessageHandler";
+import {Customer} from "../../../../../model/Customer";
 
-const GeneralSettings: React.FC<{employee: Employee}> = ({ employee}) =>  {
+const GeneralSettings: React.FC<{customer: Customer}> = ({ customer}) =>  {
     const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
     const user = useSelector((state: {user: User}) => state.user);
 
-    async function updateProfileState(values: Employee, formActions: { [key: string]: any }) {
+    async function updateProfileState(values: Customer, formActions: { [key: string]: any }) {
         try {
-            await employeeService.updateEmployee(values)
+            await customerService.updateCustomer(values)
             enqueueSnackbar('Профиль обновлен', {variant: 'success'})
 
             dispatch(updateProfile({...user, name: values.name}))
@@ -39,16 +39,15 @@ const GeneralSettings: React.FC<{employee: Employee}> = ({ employee}) =>  {
         }
     }
 
-    const initialValues: Employee = {
-        id: employee.id,
+    const initialValues: Customer = {
+        id: customer.id,
         name: user.name,
-        rolesId: [],
-        username: employee.username,
+        username: customer.username,
         password: null,
-        code: employee.code,
-        birthdate: employee.birthdate,
-        address: employee.address,
-        phoneNumber: employee.phoneNumber,
+        code: customer.code,
+        birthdate: customer.birthdate,
+        address: customer.address,
+        phoneNumber: customer.phoneNumber,
     }
     const validationSchema = Yup.object().shape({
         name: Yup.string().max(255),
@@ -166,6 +165,9 @@ const GeneralSettings: React.FC<{employee: Employee}> = ({ employee}) =>  {
                                         required
                                         value={values.birthdate}
                                         variant="outlined"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
                                     />
                                 </Grid>
                                 <Grid

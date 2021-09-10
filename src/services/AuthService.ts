@@ -35,7 +35,11 @@ class AuthService {
     }
 
     loginWithUsernameAndPassword = (username: string, password: string) => new Promise((resolve, reject) => {
-        axios.post(API_BASE_URL + '/authenticate', {username, password})
+        const params = new URLSearchParams();
+        params.append('username', username);
+        params.append('password', password);
+
+        axios.post(API_BASE_URL + '/authenticate', params)
             .then((response) => {
                 if (response.data) {
                     this.setSession(response.data.jwt, response.data);
@@ -66,15 +70,8 @@ class AuthService {
         }
     }
 
-    updateSession = ({name, avatar}: {name?: string, avatar?: string}): User => {
-        const user: User = JSON.parse(localStorage.getItem('user')!);
-
-        if (name) user.name = name;
-        if (avatar !== undefined) user.avatar = avatar;
-
+    updateUserParams = (user: User) => {
         localStorage.setItem('user', JSON.stringify(user));
-
-        return user
     }
 
     getAccessToken = () => localStorage.getItem('accessToken');

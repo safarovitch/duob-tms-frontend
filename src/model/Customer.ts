@@ -20,10 +20,10 @@ export interface Customer {
     avatar?: string;
     phoneNumber: string;
     code: string;
-    birthDate: Date | null | string;
+    birthdate: string | null;
     address: string;
     username: string;
-    password?: string;
+    password?: string | null;
     placeNumber?: number;
     amount?: number;
     balance?: number;

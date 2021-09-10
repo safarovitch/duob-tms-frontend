@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => {
     }
 });
 
-const DashboardLayout: React.FC = ({ children }) => {
+const MainLayout: React.FC = ({ children }) => {
     const classes = useStyles();
     const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -56,4 +56,4 @@ const DashboardLayout: React.FC = ({ children }) => {
     );
 }
 
-export default DashboardLayout;
+export default MainLayout;
