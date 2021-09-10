@@ -4,19 +4,12 @@ import clsx from 'clsx';
 import {
     AppBar,
     Box,
-    Hidden,
-    IconButton,
     Toolbar,
     makeStyles,
-    SvgIcon
 } from '@material-ui/core';
-import { Menu as MenuIcon } from 'react-feather';
 import Logo from '../../../components/Logo';
 import { THEMES } from '../../../constants';
 import Profile from './Profile';
-// import Contacts from './Contacts';
-// import Notifications from './Notifications';
-// import Search from './Search';
 import Settings from './Settings';
 
 const useStyles = makeStyles((theme?: any) => ({
@@ -51,13 +44,10 @@ const TopBar: React.FC<{className?: string}> = ({className, ...rest}) => {
                     ml={2}
                     flexGrow={1}
                 />
-                {/*<Search />*/}
-                {/*<Contacts />*/}
-                {/*<Notifications />*/}
-                <Settings />
                 <Box ml={2}>
                     <Profile />
                 </Box>
+                <Settings />
             </Toolbar>
         </AppBar>
     );

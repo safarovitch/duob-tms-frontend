@@ -8,11 +8,11 @@ import { Moon as MoonIcon, Sun as SunIcon } from 'react-feather';
 import useSettings from '../../../hooks/useSettings';
 import { THEMES } from '../../../constants';
 
-function Settings() {
+const Settings: React.FC = () => {
     const { settings, saveSettings } = useSettings();
 
     const handleChange = () => {
-        saveSettings({theme: settings.theme === THEMES.LIGHT ? THEMES.ONE_DARK : THEMES.LIGHT})
+        saveSettings({...settings, theme: settings.theme === THEMES.LIGHT ? THEMES.ONE_DARK : THEMES.LIGHT})
     };
 
     return (

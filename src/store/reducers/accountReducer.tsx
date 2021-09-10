@@ -8,7 +8,7 @@ import {
 } from '../actions/accountActions';
 import {User} from "../../model/User";
 
-const accountReducer = (state = null, action: { type: any; payload:  User; }) => {
+const accountReducer = (state = null, action: { type: any; payload: User; }) => {
     switch (action.type) {
         case LOGIN_REQUEST: {
             return null;

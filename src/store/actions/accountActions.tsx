@@ -31,7 +31,6 @@ export function setUserData(user: User | null) {
     return (dispatch: Dispatch) => dispatch({
         type: SILENT_LOGIN,
         payload: user
-
     });
 }
 
@@ -45,13 +44,10 @@ export function logout() {
     };
 }
 
-export function updateProfile({name, avatar}: {name?: string, avatar?: string}) {
-    return (dispatch: Dispatch) => {
-        let update = authService.updateSession({name, avatar})
-
-        dispatch({
-            type: UPDATE_PROFILE,
-            payload: update
-        })
+export const updateProfile = (user: User) => {
+    authService.updateUserParams(user)
+    return {
+        type: UPDATE_PROFILE,
+        payload: {...user}
     }
 }

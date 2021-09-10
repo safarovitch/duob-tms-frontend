@@ -1,7 +1,7 @@
 export interface User {
-    userId: number;
+    avatar: string | null;
+    jwt: string | null;
     name: string;
     roles: string[];
-    avatar: string;
-    jwt: string | null;
+    userId: number;
 }

@@ -7,7 +7,7 @@ import {
     Tabs,
     makeStyles
 } from '@material-ui/core';
-import Page from '../../components/Page';
+import Page from '../../../../components/Page';
 import Header from './Header';
 import General from './General';
 import Security from './Security';

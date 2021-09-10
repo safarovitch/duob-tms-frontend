@@ -12,8 +12,8 @@ import {
     Grid,
     TextField,
 } from '@material-ui/core';
-import employeeService from "../../services/EmployeeService";
-import errorMessageHandler from "../../utils/errorMessageHandler";
+import customerService from "../../../../services/CustomerService";
+import errorMessageHandler from "../../../../utils/errorMessageHandler";
 
 const Security: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -34,7 +34,7 @@ const Security: React.FC = () => {
                 setSubmitting
             }) => {
                 try {
-                    await employeeService.updatePassword(values)
+                    await customerService.updatePassword(values)
 
                     resetForm();
                     setStatus({ success: true });

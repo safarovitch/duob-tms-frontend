@@ -1,10 +1,9 @@
-import {useSelector} from "react-redux";
 import {User} from "../model/User";
 
 export default function usePermission(permissions: string[]) {
-    const roles = useSelector(({user}: {user: User}) => user === null ? null : user.roles)
+    const user = (JSON.parse(localStorage.getItem('user')!) as User)
 
-    if (roles === null) return true
+    if (user === null) return true
 
-    return roles.findIndex(r => permissions.indexOf(r) > -1) > -1;
+    return user.roles.findIndex(r => permissions.indexOf(r) > -1) > -1;
 }

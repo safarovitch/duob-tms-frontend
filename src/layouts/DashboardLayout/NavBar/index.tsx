@@ -79,6 +79,12 @@ const navConfig = [
                 icon: FolderIcon,
                 href: '/app/cargo',
                 perm: PERMISSIONS.CARGO.LIST
+            },
+            {
+                title: 'Константы рейса',
+                icon: FolderIcon,
+                href: '/app/cargo',
+                perm: PERMISSIONS.CARGO.LIST
             }
         ]
     }
@@ -201,9 +207,8 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                     >
                         <RouterLink to="/app/profile">
                             <Avatar
-                                alt="User"
                                 className={classes.avatar}
-                                src={user.avatar ? EMPLOYEES_IMAGE_BASE_URL + user.avatar: ''}
+                                src={user.avatar ? EMPLOYEES_IMAGE_BASE_URL + user.avatar: undefined}
                             />
                         </RouterLink>
                     </Box>

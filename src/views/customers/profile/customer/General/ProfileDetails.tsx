@@ -10,14 +10,14 @@ import {
     makeStyles,
     CircularProgress
 } from '@material-ui/core';
-import employeeService from "../../../services/EmployeeService";
 import {useSnackbar} from "notistack";
-import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
 import {useDispatch, useSelector} from "react-redux";
-import {User} from "../../../model/User";
-import {mapOfRoles} from "../../../constants";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
-import {updateProfile} from "../../../store/actions/accountActions";
+import {User} from "../../../../../model/User";
+import {mapOfRoles} from "../../../../../constants";
+import errorMessageHandler from "../../../../../utils/errorMessageHandler";
+import {updateProfile} from "../../../../../store/actions/accountActions";
+import customerService from "../../../../../services/CustomerService";
+import {CUSTOMERS_IMAGE_BASE_URL} from "../../../../../config";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -50,7 +50,7 @@ const ProfileDetails: React.FC = () => {
     const [currentFile, setCurrentFile] = useState<File>()
     const [selectedAvatar, setSelectedAvatar] = useState<string>()
     const [loading, setLoading] = useState(false)
-    const pathToAvatar = user.avatar ? EMPLOYEES_IMAGE_BASE_URL + user.avatar : undefined
+    const pathToAvatar = user.avatar ? CUSTOMERS_IMAGE_BASE_URL + user.avatar : undefined
 
     const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.persist();
@@ -72,7 +72,7 @@ const ProfileDetails: React.FC = () => {
     const handleDeleteAvatar = async () => {
         setLoading(true);
         try {
-            await employeeService.deleteAvatar(user.avatar!);
+            await customerService.deleteAvatar(user.avatar!);
 
             enqueueSnackbar('Изображения удален', {variant: 'success'})
             user.avatar = null
@@ -92,9 +92,9 @@ const ProfileDetails: React.FC = () => {
         setLoading(true);
 
         try {
-            if (user.avatar) await employeeService.deleteAvatar(user.avatar);
+            if (user.avatar) await customerService.deleteAvatar(user.avatar);
 
-            const avatar: any = await employeeService.uploadAvatar(currentFile!)
+            const avatar: any = await customerService.uploadAvatar(currentFile!)
 
             resetFile()
             user.avatar = avatar.data.name;

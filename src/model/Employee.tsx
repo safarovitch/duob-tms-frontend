@@ -6,7 +6,7 @@ export type Employee = {
     roles?: [],
     rolesId: number[],
     username: string,
-    password: string,
+    password: string | null,
     code: string,
     birthdate: string,
     address: string,

@@ -13,8 +13,6 @@ import {
     makeStyles
 } from '@material-ui/core';
 import {Customer, CustomerFormProps} from "../../../model/Customer";
-import {KeyboardDatePicker} from "@material-ui/pickers";
-import moment from "moment";
 import customerService from "../../../services/CustomerService";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -35,11 +33,11 @@ const useStyles = makeStyles((theme) => ({
 interface CustomerFormValues {
     name: string;
     phoneNumber: string;
-    birthDate: Date | null | string;
+    birthdate: Date | null | string;
     address: string;
     code: string;
     username: string;
-    password?: string;
+    password?: string | null;
 }
 
 const CustomerForm: React.FC<CustomerFormProps> = ({
@@ -58,7 +56,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
     const initialValues: Customer = {
         name: customer?.name || '',
         phoneNumber: customer?.phoneNumber || '',
-        birthDate: customer ? moment(customer?.birthDate, 'DD.MM.yyyy').toDate().toString() : null,
+        birthdate: customer?.birthdate || null,
         address: customer?.address || '',
         code: customer?.code || '',
         username: customer?.username || '',
@@ -76,8 +74,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
     const handleAddCustomer = async (values: Customer, formActions: { [key: string]: any }) => {
         try {
-            values.birthDate = moment(values.birthDate).format('DD.MM.yyyy')
-
             await customerService.postNewCustomer(values)
 
             enqueueSnackbar('Клиент создан', {variant: 'success'});
@@ -93,20 +89,16 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
     const handleUpdateCustomer = async (values: Customer, formActions: { [key: string]: any }) => {
         try {
-            values.birthDate = moment(values.birthDate).format('DD.MM.yyyy')
             values.id = customer?.id;
 
             await customerService.updateCustomer(values)
 
-            values.birthDate = moment(values.birthDate, 'DD.MM.yyyy').toDate().toString()
             enqueueSnackbar('Клиент обновлен', {variant: 'success'})
             history.go(-1)
         } catch (error) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
-            values.birthDate = moment(values.birthDate, 'DD.MM.yyyy').toDate().toString()
-
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
@@ -184,22 +176,20 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
-                                    <KeyboardDatePicker
-                                        id="date-picker-dialog"
-                                        label="Дата рождения"
+                                <Grid item md={6} xs={12}>
+                                    <TextField
+                                        error={Boolean(props.touched.birthdate && props.errors.birthdate)}
                                         fullWidth
-                                        required
-                                        inputVariant="outlined"
-                                        format="DD.MM.yyyy"
-                                        value={props.values.birthDate ? props.values.birthDate : null}
-                                        onChange={value => props.setFieldValue("birthDate", value)}
-                                        KeyboardButtonProps={{
-                                            "aria-label": "change date"
+                                        type="date"
+                                        helperText={props.touched.birthdate && props.errors.birthdate}
+                                        label="Дата рождение"
+                                        name="birthdate"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.birthdate}
+                                        variant="outlined"
+                                        InputLabelProps={{
+                                            shrink: true,
                                         }}
                                     />
                                 </Grid>

@@ -6,6 +6,7 @@ import {useSnackbar} from 'notistack';
 import {Avatar, Box, makeStyles, Menu, MenuItem, IconButton} from '@material-ui/core';
 import {logout} from '../../../store/actions/accountActions';
 import {User} from "../../../model/User";
+import ConfirmModal from "../../../components/ConfirmModal";
 
 const useStyles = makeStyles(() => ({
     avatar: {
@@ -25,6 +26,7 @@ function Profile() {
     const user = useSelector(({user}: { user: User }) => user);
     const {enqueueSnackbar} = useSnackbar();
     const [isOpen, setOpen] = useState(false);
+    const [isOpenModal, setOpenModal] = useState(false);
 
     const handleOpen = () => {
         setOpen(true);
@@ -56,9 +58,8 @@ function Profile() {
                 {...{ ref: ref } as any}
             >
                 <Avatar
-                    alt="User"
                     className={classes.avatar}
-                    src={user.avatar}
+                    src={user.avatar ? user.avatar : undefined}
                 />
             </Box>
             <Menu
@@ -80,10 +81,17 @@ function Profile() {
                 >
                     Профиль
                 </MenuItem>
-                <MenuItem onClick={handleLogout}>
+                <MenuItem onClick={() => setOpenModal(true)}>
                     Выход
                 </MenuItem>
             </Menu>
+            <ConfirmModal
+                isOpen={isOpenModal}
+                title="Выхода из аккаунта"
+                description="Вы действительно хотите выйти из аккаунта?"
+                onClose={() => {setOpenModal(false); setOpen(false)}}
+                onAccept={handleLogout}
+            />
         </>
     );
 }

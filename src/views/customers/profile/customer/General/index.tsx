@@ -2,10 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {CircularProgress, Grid, makeStyles} from '@material-ui/core';
 import ProfileDetails from './ProfileDetails';
 import GeneralSettings from './GeneralSettings';
-import {Employee} from "../../../model/Employee";
-import employeeService from "../../../services/EmployeeService";
+import {Customer} from "../../../../../model/Customer";
+import customerService from "../../../../../services/CustomerService";
 import {useSnackbar} from "notistack";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
+import errorMessageHandler from "../../../../../utils/errorMessageHandler";
+import {useSelector} from "react-redux";
+import {User} from "../../../../../model/User";
 
 const useStyles = makeStyles(() => ({
     root: {},
@@ -20,15 +22,16 @@ const useStyles = makeStyles(() => ({
 const General: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
-    const [employee, setEmployee] = useState<Employee>()
+    const [customer, setCustomer] = useState<Customer>()
     const [loading, setLoading] = useState(false)
+    const user = useSelector((state: {user: User}) => state.user);
 
     useEffect(() => {
         (async function() {
             try {
                 setLoading(true)
-                const employee: any = await employeeService.getEmployee();
-                setEmployee(employee);
+                const customer: any = await customerService.getCustomer(user.userId.toString());
+                setCustomer(customer);
             } catch (error) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'});
             } finally {
@@ -44,7 +47,7 @@ const General: React.FC = () => {
             spacing={3}
         >
             {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
-            {employee && (
+            {customer && (
                 <>
                     <Grid item
                           lg={4}
@@ -60,7 +63,7 @@ const General: React.FC = () => {
                     xl={9}
                     xs={12}
                     >
-                        <GeneralSettings employee={employee} />
+                        <GeneralSettings customer={customer} />
                     </Grid>
                 </>
             )}

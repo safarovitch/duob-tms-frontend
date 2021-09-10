@@ -13,7 +13,8 @@ import {
 import { Menu as MenuIcon } from 'react-feather';
 import Logo from '../../../components/Logo';
 import { THEMES } from '../../../constants';
-import Settings from './Settings';
+import Settings from '../../CustomerLayout/TopBar/Settings';
+import Logout from "./Logout";
 
 const useStyles = makeStyles((theme?: any) => ({
     root: {
@@ -64,6 +65,7 @@ const TopBar: React.FC<{onMobileNavOpen: () => void, className?: string}> = ({
                     flexGrow={1}
                 />
                 <Settings />
+                <Logout />
             </Toolbar>
         </AppBar>
     );

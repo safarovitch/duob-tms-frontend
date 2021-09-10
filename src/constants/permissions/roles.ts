@@ -6,8 +6,7 @@ export const ADMIN = 'ADMIN';
 export const ENGINEER = 'ENGINEER';
 
 export const CUSTOMER_GUARD = [
-    CLIENT,
-    ADMIN
+    CLIENT
 ]
 
 export const EMPLOYEE_GUARD = [
