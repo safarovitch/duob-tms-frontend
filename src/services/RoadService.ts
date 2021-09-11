@@ -1,6 +1,6 @@
 import api from "../utils/Api";
 import {API_BASE_URL} from "../config";
-import {Driver, Truck} from "../model/Road";
+import {Driver, Trailer, Truck} from "../model/Road";
 
 class RoadService {
     getFilteredDrivers = (page: number, size: number) => new Promise((resolve, reject) => {
@@ -47,6 +47,30 @@ class RoadService {
 
     deleteTruck = (truckId: number) => new Promise((resolve, reject)  => {
         api.delete(`${API_BASE_URL}/trucks/${truckId}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    getFilteredTrailers = (page: number, size: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/trailers?page=${page}&size=${size}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    postTrailer = (trailer: Trailer) => new Promise((resolve, reject)  => {
+        api.post(`${API_BASE_URL}/trailers`, trailer)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    updateTrailer = (trailer: Trailer) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/trailers/${trailer.id}`, trailer)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    deleteTrailer = (trailerId: number) => new Promise((resolve, reject)  => {
+        api.delete(`${API_BASE_URL}/trailers/${trailerId}`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
     })

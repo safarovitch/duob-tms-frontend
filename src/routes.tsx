@@ -232,6 +232,18 @@ const routesConfig = [
                         component: lazy(() => import('./views/road/truck'))
                     },
                     {
+                        exact: true,
+                        path: '/app/road/trailer/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/trailer'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/trailer/edit',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/trailer'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]

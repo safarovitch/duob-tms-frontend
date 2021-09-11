@@ -3,9 +3,9 @@ import {useHistory} from "react-router-dom";
 import Page from "../../../components/Page";
 import React from "react";
 import Header from "./Header";
-import TruckForm from "./TruckForm";
+import TrailerForm from "./TrailerForm";
 import {useSelector} from "react-redux";
-import {Truck} from "../../../model/Road";
+import {Trailer} from "../../../model/Road";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,12 +16,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function RoadTruckView() {
+function RoadTrailerView() {
     const classes = useStyles();
     const history = useHistory();
-    const truck = useSelector((state: { selectedRoadTruck: Truck }) => state.selectedRoadTruck);
+    const trailer = useSelector((state: { selectedRoadTrailer: Trailer }) => state.selectedRoadTrailer);
 
-    if (!truck && history.location.pathname.includes('edit')) {
+    if (!trailer && history.location.pathname.includes('edit')) {
         history.go(-1);
         return null;
     }
@@ -29,16 +29,16 @@ function RoadTruckView() {
     return (
         <Page
             className={classes.root}
-            title={'Машина'}
+            title={'Прицеп'}
         >
             <Container maxWidth="md">
-                <Header truck={truck}/>
+                <Header trailer={trailer}/>
                 <Box mt={3}>
-                    <TruckForm truck={truck}/>
+                    <TrailerForm trailer={trailer}/>
                 </Box>
             </Container>
         </Page>
     );
 }
 
-export default RoadTruckView;
+export default RoadTrailerView;

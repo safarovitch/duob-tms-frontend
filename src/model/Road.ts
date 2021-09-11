@@ -37,3 +37,15 @@ export interface TruckFormProps {
     className?: string;
     truck: Truck;
 }
+
+export interface Trailer {
+    id?: number;
+    trailerNumber: string;
+    liftingCapacity: number;
+    totalBodyCapacity: number;
+}
+
+export interface TrailerFormProps {
+    className?: string;
+    trailer: Trailer;
+}

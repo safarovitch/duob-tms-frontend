@@ -132,13 +132,14 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
                                         error={Boolean(props.touched.truckType && props.errors.truckType)}
                                         fullWidth
                                         helperText={props.touched.truckType && props.errors.truckType}
-                                        label="Введите вид"
+                                        label="Введите вид машины"
                                         name="truckType"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         value={props.values.truckType}
                                         variant="outlined"
                                         required
+                                        autoFocus
                                     />
                                 </Grid>
                                 <Grid
