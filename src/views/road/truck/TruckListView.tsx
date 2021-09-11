@@ -11,8 +11,8 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {useSnackbar} from "notistack";
-import {Driver} from "../../../model/Road";
-import {setSelectedDriver} from "../../../store/actions/roadActions";
+import {Truck} from "../../../model/Road";
+import {setSelectedTruck} from "../../../store/actions/roadActions";
 import roadService from "../../../services/RoadService";
 import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const DriverListView: React.FC = () => {
+const TruckListView: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
@@ -42,8 +42,8 @@ const DriverListView: React.FC = () => {
     const [size, setSize] = useState(5);
     const [loading, setLoading] = useState(false);
     const [isConfirmModalOpen, setOpen] = useState(false);
-    const [drivers, setDrivers] = useState<Driver[]>([]);
-    const [selectedDriver, selectDriver] = useState<Driver>();
+    const [trucks, setTrucks] = useState<Truck[]>([]);
+    const [selectedTruck, selectTruck] = useState<Truck>();
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -55,24 +55,24 @@ const DriverListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectDriver = (driver: Driver, needDispatch: boolean) => {
-        selectDriver(driver);
+    const handleSelectTruck = (truck: Truck, needDispatch: boolean) => {
+        selectTruck(truck);
 
         if (needDispatch) {
-            dispatch(setSelectedDriver(driver))
+            dispatch(setSelectedTruck(truck))
         } else {
             setOpen(true)
         }
     };
 
-    const handleDeleteDriver = async (driverId: number) => {
+    const handleDeleteTruck = async (truckId: number) => {
         setOpen(false)
         setLoading(true)
 
         try {
-            await roadService.deleteDriver(driverId);
+            await roadService.deleteTruck(truckId);
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
-            getDrivers().then(null)
+            getTrucks().then(null)
             setPage(1)
         } catch (error) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -81,12 +81,12 @@ const DriverListView: React.FC = () => {
         }
     };
 
-    const getDrivers = async () => {
+    const getTrucks = async () => {
         setLoading(true)
 
         try {
-            const result: any = await roadService.getFilteredDrivers(page, size)
-            setDrivers(result.content)
+            const result: any = await roadService.getFilteredTrucks(page, size)
+            setTrucks(result.content)
             setTotal(result.totalElements)
         } catch (error) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -96,13 +96,13 @@ const DriverListView: React.FC = () => {
     };
 
     useEffect(() => {
-        getDrivers().then(null)
+        getTrucks().then(null)
     }, [page, size]);
 
     return (
         <>
             {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
-            {drivers?.length > 0 && (
+            {trucks?.length > 0 && (
                 <>
                     <Card
                         className={classes.root}
@@ -113,13 +113,22 @@ const DriverListView: React.FC = () => {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>
-                                                Водитель
+                                                Вид машины
                                             </TableCell>
                                             <TableCell>
-                                                Номер телефона
+                                                Объём бака (л)
                                             </TableCell>
                                             <TableCell>
-                                                Адрес проживание
+                                                Грузо подъёмность (кг)
+                                            </TableCell>
+                                            <TableCell>
+                                                Номер машины
+                                            </TableCell>
+                                            <TableCell>
+                                                Общий объём кузова (м3)
+                                            </TableCell>
+                                            <TableCell>
+                                                Остаток бака
                                             </TableCell>
                                             <TableCell align="center" width="12%">
                                                 Действия
@@ -127,34 +136,43 @@ const DriverListView: React.FC = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {drivers.map((driver: Driver) => {
+                                        {trucks.map((truck: Truck) => {
 
                                             return (
                                                 <TableRow
                                                     hover
-                                                    key={driver.id}
+                                                    key={truck.id}
                                                 >
                                                     <TableCell>
-                                                        {driver.name}
+                                                        {truck.truckType}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {driver.phoneNumber}
+                                                        {truck.tankCapacity}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {driver.address}
+                                                        {truck.liftingCapacity}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {truck.truckNumber}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {truck.totalBodyCapacity}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {truck.residueOfTank}
                                                     </TableCell>
                                                     <TableCell align="center" width="12%">
                                                         <IconButton
                                                             component={RouterLink}
-                                                            to={`/app/road/driver/edit`}
-                                                            onClick={() => handleSelectDriver(driver, true)}
+                                                            to={`/app/road/truck/edit`}
+                                                            onClick={() => handleSelectTruck(truck, true)}
                                                         >
                                                             <SvgIcon fontSize="small">
                                                                 <EditIcon/>
                                                             </SvgIcon>
                                                         </IconButton>
                                                         <IconButton
-                                                            onClick={() => handleSelectDriver(driver, false)}
+                                                            onClick={() => handleSelectTruck(truck, false)}
                                                         >
                                                             <SvgIcon fontSize="small">
                                                                 <TrashIcon/>
@@ -182,14 +200,14 @@ const DriverListView: React.FC = () => {
                     </Card>
                     <ConfirmModal
                         isOpen={isConfirmModalOpen}
-                        title={'Вы уверены, что хотите удалить водителя?'}
-                        description={'При удалении водителя, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этого водителя.'}
+                        title={'Вы уверены, что хотите удалить машину?'}
+                        description={'При удалении машины, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно эту машину.'}
                         onClose={() => setOpen(false)}
-                        onAccept={() => handleDeleteDriver(selectedDriver?.id!!)} />
+                        onAccept={() => handleDeleteTruck(selectedTruck?.id!!)} />
                 </>
             )}
         </>
     );
 }
 
-export default DriverListView;
+export default TruckListView;

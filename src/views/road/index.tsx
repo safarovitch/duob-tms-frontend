@@ -8,6 +8,7 @@ import {roadStuffTabs as tabs} from '../../constants'
 import {RoadStuffTab} from "../../model/Road";
 import CargoTabPanel from "./CargoTabPanel";
 import DriverListView from "./driver/DriverListView";
+import TruckListView from "./truck/TruckListView";
 
 const getCurrentTab = (stuffId: string) => {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -63,11 +64,11 @@ const RoadStuffView: React.FC = () => {
                         </Tabs>
                         <Divider/>
                         <CargoTabPanel index={'driver'} value={currentTab}>
-                            <DriverListView/>
+                            <DriverListView />
                         </CargoTabPanel>
-                        {/*<CargoTabPanel index={'customs'} value={currentTab}>*/}
-                        {/*    <CustomCodeListView/>*/}
-                        {/*</CargoTabPanel>*/}
+                        <CargoTabPanel index={'truck'} value={currentTab}>
+                            <TruckListView />
+                        </CargoTabPanel>
                         {/*<CargoTabPanel index={'type'} value={currentTab}>*/}
                         {/*    <CargoTypeListView/>*/}
                         {/*</CargoTabPanel>*/}

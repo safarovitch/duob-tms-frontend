@@ -44,16 +44,12 @@ export const roadStuffTabs = [
         label: 'Водители'
     },
     {
-        value: 'track',
+        value: 'truck',
         label: 'Машины'
     },
     {
         value: 'trailer',
         label: 'Прицепы'
-    },
-    {
-        value: 'gas',
-        label: 'АЗС'
     }
 ];
 
