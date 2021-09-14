@@ -1,10 +1,16 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+import React, {useEffect, useState,} from 'react';
 import {
-    Box, Card, CircularProgress, IconButton,
-    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow,
+    Box,
+    Card,
+    IconButton,
+    makeStyles,
+    SvgIcon,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TablePagination,
+    TableRow,
 } from '@material-ui/core';
 import {Edit as EditIcon, Trash as TrashIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -16,6 +22,7 @@ import {setSelectedDriver} from "../../../store/actions/roadActions";
 import roadService from "../../../services/RoadService";
 import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
+import NoFoundTableBody from "../../../components/NoFoundTableBody";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,14 +30,6 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
     },
-    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-    }
 }));
 
 const DriverListView: React.FC = () => {
@@ -39,7 +38,7 @@ const DriverListView: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(10);
     const [loading, setLoading] = useState(false);
     const [isConfirmModalOpen, setOpen] = useState(false);
     const [drivers, setDrivers] = useState<Driver[]>([]);
@@ -100,95 +99,89 @@ const DriverListView: React.FC = () => {
     }, [page, size]);
 
     return (
-        <>
-            {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
-            {drivers?.length > 0 && (
-                <>
-                    <Card
-                        className={classes.root}
-                    >
-                        <PerfectScrollbar>
-                            <Box minWidth={700} className={loading ? classes.tableProgressBoxStyle : ''}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
+        <Card
+            className={classes.root}
+        >
+            <PerfectScrollbar>
+                <Box minWidth={700}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>
+                                    Водитель
+                                </TableCell>
+                                <TableCell>
+                                    Номер телефона
+                                </TableCell>
+                                <TableCell>
+                                    Адрес проживание
+                                </TableCell>
+                                <TableCell align="center" width="12%">
+                                    Действия
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        {
+                            drivers?.length > 0
+                                ? drivers.map((driver: Driver) => (
+                                    <TableBody>
+                                        <TableRow
+                                            hover
+                                            key={driver.id}
+                                        >
                                             <TableCell>
-                                                Водитель
+                                                {driver.name}
                                             </TableCell>
                                             <TableCell>
-                                                Номер телефона
+                                                {driver.phoneNumber}
                                             </TableCell>
                                             <TableCell>
-                                                Адрес проживание
+                                                {driver.address}
                                             </TableCell>
                                             <TableCell align="center" width="12%">
-                                                Действия
+                                                <IconButton
+                                                    component={RouterLink}
+                                                    to={`/app/road/driver/edit`}
+                                                    onClick={() => handleSelectDriver(driver, true)}
+                                                >
+                                                    <SvgIcon fontSize="small">
+                                                        <EditIcon/>
+                                                    </SvgIcon>
+                                                </IconButton>
+                                                <IconButton
+                                                    onClick={() => handleSelectDriver(driver, false)}
+                                                >
+                                                    <SvgIcon fontSize="small">
+                                                        <TrashIcon/>
+                                                    </SvgIcon>
+                                                </IconButton>
                                             </TableCell>
                                         </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {drivers.map((driver: Driver) => {
-
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    key={driver.id}
-                                                >
-                                                    <TableCell>
-                                                        {driver.name}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {driver.phoneNumber}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {driver.address}
-                                                    </TableCell>
-                                                    <TableCell align="center" width="12%">
-                                                        <IconButton
-                                                            component={RouterLink}
-                                                            to={`/app/road/driver/edit`}
-                                                            onClick={() => handleSelectDriver(driver, true)}
-                                                        >
-                                                            <SvgIcon fontSize="small">
-                                                                <EditIcon/>
-                                                            </SvgIcon>
-                                                        </IconButton>
-                                                        <IconButton
-                                                            onClick={() => handleSelectDriver(driver, false)}
-                                                        >
-                                                            <SvgIcon fontSize="small">
-                                                                <TrashIcon/>
-                                                            </SvgIcon>
-                                                        </IconButton>
-                                                    </TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table>
-                            </Box>
-                        </PerfectScrollbar>
-                        <TablePagination
-                            component="div"
-                            count={total}
-                            onPageChange={handlePageChange}
-                            page={page - 1}
-                            labelRowsPerPage={'Строк на странице:'}
-                            rowsPerPage={size}
-                            rowsPerPageOptions={[5, 10, 25]}
-                            onRowsPerPageChange={handleRowsPerPageChange}
-                            labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
-                        />
-                    </Card>
-                    <ConfirmModal
-                        isOpen={isConfirmModalOpen}
-                        title={'Вы уверены, что хотите удалить водителя?'}
-                        description={'При удалении водителя, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этого водителя.'}
-                        onClose={() => setOpen(false)}
-                        onAccept={() => handleDeleteDriver(selectedDriver?.id!!)} />
-                </>
-            )}
-        </>
+                                    </TableBody>)
+                                )
+                                : <NoFoundTableBody loading={loading}/>
+                        }
+                    </Table>
+                </Box>
+            </PerfectScrollbar>
+            <TablePagination
+                component="div"
+                count={total}
+                onPageChange={handlePageChange}
+                page={page - 1}
+                labelRowsPerPage={'Строк на странице:'}
+                rowsPerPage={size}
+                rowsPerPageOptions={[5, 10, 25]}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
+            />
+            <ConfirmModal
+                isOpen={isConfirmModalOpen}
+                title={'Вы уверены, что хотите удалить водителя?'}
+                description={'При удалении водителя, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этого водителя.'}
+                onClose={() => setOpen(false)}
+                onAccept={() => handleDeleteDriver(selectedDriver?.id!!)}/>
+        </Card>
     );
 }
 

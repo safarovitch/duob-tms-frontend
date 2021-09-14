@@ -42,13 +42,13 @@ const TrailerForm: React.FC<TrailerFormProps> = (props: TrailerFormProps) => {
     }, [])
 
     const initialValues: Trailer = {
-        trailerNumber: trailer?.trailerNumber || '',
+        number: trailer?.number || '',
         liftingCapacity: trailer?.liftingCapacity,
         totalBodyCapacity: trailer?.totalBodyCapacity
     }
 
     const validationSchema = Yup.object().shape({
-        trailerNumber: Yup.string().max(255),
+        number: Yup.string().max(255),
         liftingCapacity: Yup.number().typeError('Значение должно быть числом'),
         totalBodyCapacity: Yup.number().typeError('Значение должно быть числом')
     })
@@ -125,14 +125,14 @@ const TrailerForm: React.FC<TrailerFormProps> = (props: TrailerFormProps) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.trailerNumber && props.errors.trailerNumber)}
+                                        error={Boolean(props.touched.number && props.errors.number)}
                                         fullWidth
-                                        helperText={props.touched.trailerNumber && props.errors.trailerNumber}
+                                        helperText={props.touched.number && props.errors.number}
                                         label="Введите Номер прицепа"
-                                        name="trailerNumber"
+                                        name="number"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.trailerNumber}
+                                        value={props.values.number}
                                         variant="outlined"
                                         required
                                         autoFocus

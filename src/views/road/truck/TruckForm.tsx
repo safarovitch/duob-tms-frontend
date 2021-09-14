@@ -42,18 +42,18 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
     }, [])
 
     const initialValues: Truck = {
-        truckType: truck?.truckType || '',
+        type: truck?.type || '',
         tankCapacity: truck?.tankCapacity,
         liftingCapacity: truck?.liftingCapacity,
-        truckNumber: truck?.truckNumber || '',
+        number: truck?.number || '',
         totalBodyCapacity: truck?.totalBodyCapacity,
     }
 
     const validationSchema = Yup.object().shape({
-        truckType: Yup.string().max(255),
+        type: Yup.string().max(255),
         tankCapacity: Yup.number().typeError('Значение должно быть числом'),
         liftingCapacity: Yup.number().typeError('Значение должно быть числом'),
-        truckNumber: Yup.string().max(255),
+        number: Yup.string().max(255),
         totalBodyCapacity: Yup.number().typeError('Значение должно быть числом'),
     })
 
@@ -129,14 +129,14 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.truckType && props.errors.truckType)}
+                                        error={Boolean(props.touched.type && props.errors.type)}
                                         fullWidth
-                                        helperText={props.touched.truckType && props.errors.truckType}
+                                        helperText={props.touched.type && props.errors.type}
                                         label="Введите вид машины"
-                                        name="truckType"
+                                        name="type"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.truckType}
+                                        value={props.values.type}
                                         variant="outlined"
                                         required
                                         autoFocus
@@ -181,14 +181,14 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.truckNumber && props.errors.truckNumber)}
+                                        error={Boolean(props.touched.number && props.errors.number)}
                                         fullWidth
-                                        helperText={props.touched.truckNumber && props.errors.truckNumber}
+                                        helperText={props.touched.number && props.errors.number}
                                         label="Введите номер машины"
-                                        name="truckNumber"
+                                        name="number"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.truckNumber}
+                                        value={props.values.number}
                                         variant="outlined"
                                         required
                                     />

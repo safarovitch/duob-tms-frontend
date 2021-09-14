@@ -25,10 +25,10 @@ export interface DriverFormProps {
 
 export interface Truck {
     id?: number;
-    truckType: string;
+    type: string;
     tankCapacity: number;
     liftingCapacity: number;
-    truckNumber: string;
+    number: string;
     totalBodyCapacity: number;
     residueOfTank?: number;
 }
@@ -40,7 +40,7 @@ export interface TruckFormProps {
 
 export interface Trailer {
     id?: number;
-    trailerNumber: string;
+    number: string;
     liftingCapacity: number;
     totalBodyCapacity: number;
 }

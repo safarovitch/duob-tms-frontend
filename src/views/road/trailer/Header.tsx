@@ -48,7 +48,7 @@ const Header: React.FC<{className?: string, trailer: Trailer}> = ({ className, t
                     variant="body1"
                     color="textPrimary"
                 >
-                    {trailer ? trailer.trailerNumber : 'Создание'}
+                    {trailer ? trailer.id : 'Создание'}
                 </Typography>
             </Breadcrumbs>
             <Typography
