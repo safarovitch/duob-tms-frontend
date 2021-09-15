@@ -80,9 +80,9 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
             const resProducts: any = await cargoService.getAllProducts();
             setProducts(resProducts)
 
-        } catch (error) {
+        } catch (error: any) {
 
-            enqueueSnackbar(`Произошла ошибка. Не получилось получить список всех Наименований. ${(error as Error).message}`, {
+            enqueueSnackbar(`Произошла ошибка. Не получилось получить список всех Наименований. ${error.message}`, {
                 variant: 'error',
                 action: <Button onClick={() => getAllProducts()}>Рестарт</Button>
             });
@@ -95,7 +95,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
 
             enqueueSnackbar('Томоженный код создан', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -112,7 +112,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
 
             enqueueSnackbar('Томоженный код обновлено', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
