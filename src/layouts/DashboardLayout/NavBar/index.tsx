@@ -85,6 +85,12 @@ const navConfig = [
                 icon: FolderIcon,
                 href: '/app/road',
                 perm: PERMISSIONS.ROAD.LIST
+            },
+            {
+                title: 'Рейсы',
+                icon: FolderIcon,
+                href: '/app/roads',
+                perm: PERMISSIONS.ROAD.LIST
             }
         ]
     }

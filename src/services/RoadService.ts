@@ -3,6 +3,12 @@ import {API_BASE_URL} from "../config";
 import {Driver, Trailer, Truck} from "../model/Road";
 
 class RoadService {
+    getFilteredRoads = (page: number, size: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/roads?page=${page}&size=${size}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
     getFilteredDrivers = (page: number, size: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/drivers?page=${page}&size=${size}`)
             .then((response) => {resolve(response.data)})
