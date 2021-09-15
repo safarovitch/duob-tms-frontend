@@ -29,7 +29,7 @@ const EmployeeCreateView: React.FC = () => {
             try {
                 const roles = await employeeService.getRoles();
                 setRoles(roles as Role[]);
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                     variant: 'error',
                     action: <Button onClick={() => getRoles()}>Рестарт</Button>
@@ -41,7 +41,7 @@ const EmployeeCreateView: React.FC = () => {
             try {
                 const warehouses = await warehouseService.getAllWarehouse()
                 setWarehouses(warehouses as Warehouse[])
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                     variant: 'error',
                     action: <Button onClick={() => getWarehouses()}>Рестарт</Button>

@@ -77,7 +77,7 @@ const ProfileDetails: React.FC = () => {
             enqueueSnackbar('Изображения удален', {variant: 'success'})
             user.avatar = null
             dispatch(updateProfile(user))
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
             setLoading(false);
@@ -100,7 +100,7 @@ const ProfileDetails: React.FC = () => {
             user.avatar = avatar.data.name;
             dispatch(updateProfile(user))
             enqueueSnackbar('Изображения добавлен', {variant: 'success'})
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
             setLoading(false);

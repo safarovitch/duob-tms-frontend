@@ -93,7 +93,7 @@ const ProductListView: React.FC = () => {
             setLoading(false)
             getProducts();
             setPage(1)
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
@@ -109,7 +109,7 @@ const ProductListView: React.FC = () => {
             setProducts(productObj.content)
             setTotal(productObj.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',

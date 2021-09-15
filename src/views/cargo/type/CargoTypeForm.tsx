@@ -69,7 +69,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
 
             enqueueSnackbar('Вид груза создан', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -86,7 +86,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
 
             enqueueSnackbar('Вид груза обновлено', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);

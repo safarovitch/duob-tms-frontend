@@ -63,7 +63,7 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
 
             enqueueSnackbar('Машина создано', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -80,7 +80,7 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
 
             enqueueSnackbar('Машина обновлено', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);

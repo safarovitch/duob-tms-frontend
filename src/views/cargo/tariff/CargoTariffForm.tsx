@@ -53,7 +53,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
             const resCargoTypes: any = await cargoService.getAllCargoTypes();
             setCargoTypes(resCargoTypes)
 
-        } catch (error) {
+        } catch (error: any) {
 
             enqueueSnackbar(`Произошла ошибка. Не получилось получить список всех видов грузов. ${error.message}`, {
                 variant: 'error',
@@ -67,7 +67,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
             const resWarehouses: any = await warehouseService.getAllWarehouse();
             setWarehouses(resWarehouses)
 
-        } catch (error) {
+        } catch (error: any) {
 
             enqueueSnackbar(`Произошла ошибка. Не получилось получить список складов. ${error.message}`, {
                 variant: 'error',
@@ -117,7 +117,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
 
             enqueueSnackbar('Вид груза создан', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -134,7 +134,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormP
 
             enqueueSnackbar('Вид груза обновлено', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);

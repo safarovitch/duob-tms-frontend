@@ -79,7 +79,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
 
                     enqueueSnackbar('Сотрудник создан', {variant: 'success'})
                     history.go(-1);
-                } catch (error) {
+                } catch (error: any) {
                     setStatus({ success: false });
                     setErrors(error.message);
                     setSubmitting(false);

@@ -41,7 +41,7 @@ const Security: React.FC = () => {
                     setSubmitting(false);
 
                     enqueueSnackbar('Пароль обнавлен', {variant: 'success'});
-                } catch (error) {
+                } catch (error: any) {
                     enqueueSnackbar(errorMessageHandler(error), {variant: 'error'});
                     setStatus({ success: false });
                     setSubmitting(false);

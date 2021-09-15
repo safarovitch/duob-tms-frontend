@@ -18,7 +18,7 @@ const Logout: React.FC = () => {
             setOpen(false)
             await dispatch(logout())
             history.push('/')
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar('Unable to logout', {variant: 'error'})
         }
     };

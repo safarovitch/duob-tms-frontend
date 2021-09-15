@@ -47,7 +47,7 @@ const CustomerDetail: React.FC = () => {
             const customer: any = await customerService.getCustomer(userId.toString());
             setCustomer(customer)
             setLoading(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

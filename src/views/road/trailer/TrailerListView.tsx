@@ -73,7 +73,7 @@ const TrailerListView: React.FC = () => {
 
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
             getTrailers().then(null)
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     };
@@ -86,7 +86,7 @@ const TrailerListView: React.FC = () => {
             const result: any = await roadService.getFilteredTrailers(page, size)
             setTrailers(result.content)
             setTotal(result.totalElements)
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
             setLoading(false)
