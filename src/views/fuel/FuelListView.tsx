@@ -4,7 +4,6 @@ import Page from "../../components/Page";
 import {
     Box,
     Card,
-    CircularProgress,
     Container,
     Grid,
     InputAdornment,
@@ -18,7 +17,7 @@ import {
     TableRow,
     TextField
 } from "@material-ui/core";
-import {Fuel} from "../../model/Fuel";
+import {Fuel, TotalBalance} from "../../model/Fuel";
 import fuelService from "../../services/FuelService";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
@@ -27,6 +26,7 @@ import moment from "moment";
 import {Search as SearchIcon} from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {mapOfRoles, mapOfTypeFuelTransactions} from "../../constants";
+import NoFoundTableBody from "../../components/NoFoundTableBody";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,14 +37,7 @@ const useStyles = makeStyles((theme) => ({
     queryField: {
         width: 400
     },
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-    },
-    remainderBox: {
+    totalBalance: {
         paddingLeft: theme.spacing(3),
         paddingTop: theme.spacing(2),
     }
@@ -54,6 +47,7 @@ const FuelListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar();
     const [fuels, setFuels] = useState<Fuel[]>([])
+    const [totalBalance, setTotalBalance] = useState<TotalBalance>()
     const [loading, setLoading] = useState(false)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
@@ -66,7 +60,20 @@ const FuelListView: React.FC = () => {
     useEffect(() => {
         (async () => {
             try {
+                const result: any = await fuelService.getTotalBalance()
+
+                setTotalBalance(result)
+            } catch (error) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            }
+        })()
+    }, [])
+
+    useEffect(() => {
+        (async () => {
+            try {
                 setLoading(true)
+                setFuels([])
 
                 const result: any = await fuelService.getFilteredFuels(page, size, query, startDate, endDate)
 
@@ -81,37 +88,36 @@ const FuelListView: React.FC = () => {
     }, [page, size, debouncedSearchTerm, startDate, endDate])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist();
-        setQuery(event.target.value);
+        event.persist()
+        setQuery(event.target.value)
     }
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist();
-        setSize(Number(event.target.value));
-        setPage(1);
+        event.persist()
+        setSize(Number(event.target.value))
+        setPage(1)
     };
 
     const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage + 1);
+        setPage(newPage + 1)
     };
 
     const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist();
-        setStartDate(event.target.value);
-        setPage(1);
+        event.persist()
+        setStartDate(event.target.value)
+        setPage(1)
     }
 
     const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist();
-        setEndDate(event.target.value);
-        setPage(1);
+        event.persist()
+        setEndDate(event.target.value)
+        setPage(1)
     }
 
     return (
         <Page className={classes.root} title="АЗС">
             <Container maxWidth="lg">
                 <Header/>
-                {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
                 <Box mt={3}>
                     <Card className={classes.root}>
                         <Box
@@ -204,57 +210,63 @@ const FuelListView: React.FC = () => {
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
-                                    {(fuels.length > 0) && (
-                                        <TableBody>
-                                        {fuels.map((fuel: Fuel) => (
-                                            <TableRow
-                                                hover
-                                                key={fuel.id}
-                                            >
-                                                <TableCell>
-                                                    {fuel.id}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {fuel.createdDate}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {fuel.type ? mapOfTypeFuelTransactions.get(fuel.type) : null}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {fuel.roles ? fuel.roles.map((role: string)=> mapOfRoles.get(role)).join(', ') : null}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {fuel.volume}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {fuel.fromTruck || ('-')}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {fuel.toTruck || ('-')}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {fuel.description}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                    )}
+                                    {
+                                        fuels.length > 0
+                                            ? (
+                                                <TableBody>
+                                                    {fuels.map((fuel: Fuel) => (
+                                                        <TableRow
+                                                            hover
+                                                            key={fuel.id}
+                                                        >
+                                                            <TableCell>
+                                                                {fuel.id}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {fuel.createdDate}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {fuel.type ? mapOfTypeFuelTransactions.get(fuel.type) : null}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {fuel.roles ? fuel.roles.map((role: string) => mapOfRoles.get(role)).join(', ') : null}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {fuel.volume}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {fuel.fromTruck || ('-')}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {fuel.toTruck || ('-')}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {fuel.description}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </TableBody>
+                                            )
+                                            : <NoFoundTableBody loading={loading}/>
+                                    }
                                 </Table>
                             </Box>
                         </PerfectScrollbar>
                         <Grid container justifyContent="space-between">
-                            <Grid item className={classes.remainderBox}>
-                                <Grid container spacing={2}>
-                                    <Grid item>
-                                        Остаток в машинах: <b>2000 л</b>
+                            <Grid item className={classes.totalBalance}>
+                                {totalBalance && (
+                                    <Grid container spacing={2}>
+                                        <Grid item>
+                                            Остаток в машинах: <b>{totalBalance.fuelTrucks} л</b>
+                                        </Grid>
+                                        <Grid item>
+                                            Остаток в складе: <b>{totalBalance.fuelBalanceWarehouse} л</b>
+                                        </Grid>
+                                        <Grid item>
+                                            Общий остаток: <b>{totalBalance.fuelTotal} л</b>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item>
-                                        Остаток в складе: <b>200 л</b>
-                                    </Grid>
-                                    <Grid item>
-                                        Общий остаток: <b>2200 л</b>
-                                    </Grid>
-                                </Grid>
+                                )}
                             </Grid>
                             <Grid item>
                                 <TablePagination

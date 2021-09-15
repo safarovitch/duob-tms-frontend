@@ -65,25 +65,24 @@ const TrailerListView: React.FC = () => {
     };
 
     const handleDeleteTrailer = async (trailerId: number) => {
-        setOpen(false)
-        setLoading(true)
-
         try {
+            setOpen(false)
+            setPage(1)
+
             await roadService.deleteTrailer(trailerId);
+
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
             getTrailers().then(null)
-            setPage(1)
         } catch (error) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
         }
     };
 
     const getTrailers = async () => {
-        setLoading(true)
-
         try {
+            setLoading(true)
+            setTrailers([])
+
             const result: any = await roadService.getFilteredTrailers(page, size)
             setTrailers(result.content)
             setTotal(result.totalElements)
@@ -121,38 +120,40 @@ const TrailerListView: React.FC = () => {
                         </TableHead>
                         {
                             trailers?.length > 0
-                                ? trailers.map((trailer: Trailer) => (
+                                ? (
                                     <TableBody>
-                                        <TableRow hover key={trailer.id}>
-                                            <TableCell>
-                                                {trailer.number}
-                                            </TableCell>
-                                            <TableCell>
-                                                {trailer.liftingCapacity}
-                                            </TableCell>
-                                            <TableCell>
-                                                {trailer.totalBodyCapacity}
-                                            </TableCell>
-                                            <TableCell align="center" width="12%">
-                                                <IconButton
-                                                    component={RouterLink}
-                                                    to={`/app/road/trailer/edit`}
-                                                    onClick={() => handleSelectTrailer(trailer, true)}
-                                                >
-                                                    <SvgIcon fontSize="small">
-                                                        <EditIcon/>
-                                                    </SvgIcon>
-                                                </IconButton>
-                                                <IconButton
-                                                    onClick={() => handleSelectTrailer(trailer, false)}
-                                                >
-                                                    <SvgIcon fontSize="small">
-                                                        <TrashIcon/>
-                                                    </SvgIcon>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>)
+                                        {trailers.map((trailer: Trailer) => (
+                                            <TableRow hover key={trailer.id}>
+                                                <TableCell>
+                                                    {trailer.number}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {trailer.liftingCapacity}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {trailer.totalBodyCapacity}
+                                                </TableCell>
+                                                <TableCell align="center" width="12%">
+                                                    <IconButton
+                                                        component={RouterLink}
+                                                        to={`/app/road/trailer/edit`}
+                                                        onClick={() => handleSelectTrailer(trailer, true)}
+                                                    >
+                                                        <SvgIcon fontSize="small">
+                                                            <EditIcon/>
+                                                        </SvgIcon>
+                                                    </IconButton>
+                                                    <IconButton
+                                                        onClick={() => handleSelectTrailer(trailer, false)}
+                                                    >
+                                                        <SvgIcon fontSize="small">
+                                                            <TrashIcon/>
+                                                        </SvgIcon>
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
                                 )
                                 : <NoFoundTableBody loading={loading}/>
                         }

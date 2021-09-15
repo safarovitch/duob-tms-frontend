@@ -10,3 +10,9 @@ export interface Fuel {
     description: string;
     createdDate?: string;
 }
+
+export interface TotalBalance {
+    fuelTrucks: number;
+    fuelBalanceWarehouse: number;
+    fuelTotal: number;
+}

@@ -12,6 +12,12 @@ class FuelService {
                 .catch((error) => {reject(error)})
     })
 
+    getTotalBalance = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/fuels/total-balance`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
     postIncome = (fuel: Fuel) => new Promise((resolve, reject)  => {
         api.post(`${API_BASE_URL}/fuels/income`, fuel)
             .then((response) => {resolve(response.data)})
