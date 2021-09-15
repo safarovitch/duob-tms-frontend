@@ -82,7 +82,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
 
         } catch (error) {
 
-            enqueueSnackbar(`Произошла ошибка. Не получилось получить список всех Наименований. ${error?.message}`, {
+            enqueueSnackbar(`Произошла ошибка. Не получилось получить список всех Наименований. ${(error as Error).message}`, {
                 variant: 'error',
                 action: <Button onClick={() => getAllProducts()}>Рестарт</Button>
             });
