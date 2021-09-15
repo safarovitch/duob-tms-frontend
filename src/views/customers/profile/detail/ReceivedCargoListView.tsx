@@ -59,7 +59,7 @@ const ReceivedCargoListView: React.FC = () => {
             setReceivedCargos(receivedCargos.content)
             setTotal(receivedCargos.totalElements)
             setLoading(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

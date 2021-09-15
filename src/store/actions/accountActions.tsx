@@ -20,7 +20,7 @@ export function login(username: string, password: string) {
                 type: LOGIN_SUCCESS,
                 payload: user
             });
-        } catch (error) {
+        } catch (error: any) {
             dispatch({ type: LOGIN_FAILURE, payload: error });
             throw error;
         }

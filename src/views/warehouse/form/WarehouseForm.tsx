@@ -63,7 +63,7 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
 
             enqueueSnackbar('Склад создан', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -80,7 +80,7 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
 
             enqueueSnackbar('Склад обновлен', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);

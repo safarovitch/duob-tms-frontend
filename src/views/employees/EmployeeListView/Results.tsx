@@ -96,7 +96,7 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
             setEmployees(data.content)
             setTotal(data.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
                 action: <Button onClick={() => getEmployee()}>Рестарт</Button>
@@ -140,7 +140,7 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
             getEmployee().then();
 
             enqueueSnackbar('Сотрудник удален', {variant: 'success'})
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

@@ -90,7 +90,7 @@ const CustomCodeListView: React.FC = () => {
             setLoading(false)
             getCustomCodes();
             setPage(1)
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
@@ -106,7 +106,7 @@ const CustomCodeListView: React.FC = () => {
             setCustomCodes(productObj.content)
             setTotal(productObj.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',

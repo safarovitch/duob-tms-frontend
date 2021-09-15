@@ -59,7 +59,7 @@ const ActiveCargoListView: React.FC = () => {
             setActiveCargos(activeCargos.content)
             setTotal(activeCargos.totalElements)
             setLoading(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

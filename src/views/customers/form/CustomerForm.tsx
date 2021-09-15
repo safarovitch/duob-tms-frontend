@@ -78,7 +78,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
             enqueueSnackbar('Клиент создан', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -95,7 +95,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
             enqueueSnackbar('Клиент обновлен', {variant: 'success'})
             history.go(-1)
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);

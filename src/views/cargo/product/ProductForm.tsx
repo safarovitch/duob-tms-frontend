@@ -55,7 +55,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
             enqueueSnackbar('Наименование создано', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -72,7 +72,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
             enqueueSnackbar('Наименование обновлено', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);

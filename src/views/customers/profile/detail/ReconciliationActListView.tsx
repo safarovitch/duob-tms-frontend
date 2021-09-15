@@ -58,7 +58,7 @@ const ReconciliationActListView: React.FC = () => {
             setReconciliationActs(reconciliationActs.content)
             setTotal(reconciliationActs.totalElements)
             setLoading(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

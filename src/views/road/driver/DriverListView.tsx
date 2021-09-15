@@ -73,7 +73,7 @@ const DriverListView: React.FC = () => {
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
             getDrivers().then(null)
             setPage(1)
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
             setLoading(false)
@@ -87,7 +87,7 @@ const DriverListView: React.FC = () => {
             const result: any = await roadService.getFilteredDrivers(page, size)
             setDrivers(result.content)
             setTotal(result.totalElements)
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
             setLoading(false)

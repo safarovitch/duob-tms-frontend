@@ -77,7 +77,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
 
                     enqueueSnackbar('Сотрудник обновлен', {variant: 'success'})
                     history.go(-1);
-                } catch (error) {
+                } catch (error: any) {
                     setStatus({ success: false });
                     setErrors(error.message);
                     setSubmitting(false);

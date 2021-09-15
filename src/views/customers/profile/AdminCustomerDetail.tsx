@@ -47,7 +47,7 @@ const AdminCustomerDetail: React.FC = () => {
             const customer: any = await customerService.getCustomer(id);
             setCustomer(customer)
             setLoading(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

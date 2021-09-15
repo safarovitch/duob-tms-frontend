@@ -59,7 +59,7 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
 
             enqueueSnackbar('Водитель создан', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
@@ -76,7 +76,7 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
 
             enqueueSnackbar('Водитель обновлен', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);

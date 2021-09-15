@@ -30,7 +30,7 @@ const GeneralSettings: React.FC<{employee: Employee}> = ({ employee}) =>  {
             enqueueSnackbar('Профиль обновлен', {variant: 'success'})
 
             dispatch(updateProfile({...user, name: values.name}))
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({ success: false });
             formActions.setErrors(error.message);
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'});

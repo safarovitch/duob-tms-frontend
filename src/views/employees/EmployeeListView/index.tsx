@@ -32,7 +32,7 @@ const EmployeeListView = () => {
             try {
                 const roles = await employeeService.getRoles();
                 setRoles(roles as Role[]);
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                     variant: 'error',
                     action: <Button onClick={() => getRoles()}>Рестарт</Button>

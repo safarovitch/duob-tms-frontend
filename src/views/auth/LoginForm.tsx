@@ -59,17 +59,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ className, onSubmitSuccess, onSub
                 try {
                     await dispatch(login(values.username, values.password));
                     onSubmitSuccess();
-                } catch (error) {
-                    // let message: string;
-                    //
-                    // switch (error.response.status) {
-                    //     case 400: message = 'Что-то пошло не так. Попробуйте снова.'; break;
-                    //     case 403: message = 'Имя пользователя или пароль недействительны. Попробуйте еще раз!'; break;
-                    //     default : message = error.message;
-                    // }
-                    // setStatus({ success: false });
-                    // onSubmitFailure(message)
-                    // setSubmitting(false);
+                } catch (error: any) {
+                    let message: string;
+
+                    switch (error.response.status) {
+                        case 400: message = 'Что-то пошло не так. Попробуйте снова.'; break;
+                        case 403: message = 'Имя пользователя или пароль недействительны. Попробуйте еще раз!'; break;
+                        default : message = error.message;
+                    }
+                    setStatus({ success: false });
+                    onSubmitFailure(message)
+                    setSubmitting(false);
                 }
             }}
         >

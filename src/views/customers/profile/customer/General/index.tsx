@@ -32,7 +32,7 @@ const General: React.FC = () => {
                 setLoading(true)
                 const customer: any = await customerService.getCustomer(user.userId.toString());
                 setCustomer(customer);
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'});
             } finally {
                 setLoading(false)

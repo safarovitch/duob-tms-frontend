@@ -93,7 +93,7 @@ const CargoTariffListView: React.FC = () => {
             getCargoTariffs();
             setLoading(false);
             setPage(1);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
@@ -109,7 +109,7 @@ const CargoTariffListView: React.FC = () => {
             setCargoTariffs(cargoTariffObj.content)
             setTotal(cargoTariffObj.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',

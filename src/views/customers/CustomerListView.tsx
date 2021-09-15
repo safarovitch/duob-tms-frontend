@@ -106,7 +106,7 @@ const CustomerListView: React.FC<CustomerListProps> = ({className}) => {
             setCustomers(customerObj.content)
             setTotal(customerObj.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',

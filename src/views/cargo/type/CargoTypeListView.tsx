@@ -96,7 +96,7 @@ const CargoTypeListView: React.FC = () => {
             getCargoTypes();
             setLoading(false);
             setPage(1);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
@@ -112,7 +112,7 @@ const CargoTypeListView: React.FC = () => {
             setCargoTypes(cargoTypeObj.content)
             setTotal(cargoTypeObj.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',

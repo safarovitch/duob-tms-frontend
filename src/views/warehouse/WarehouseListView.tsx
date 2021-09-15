@@ -90,7 +90,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = ({className}) => {
             setWarehouses(warehousesObj.content)
             setTotal(warehousesObj.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
@@ -129,7 +129,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = ({className}) => {
             getWarehouses().then();
 
             enqueueSnackbar('Склад удален', {variant: 'success'})
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

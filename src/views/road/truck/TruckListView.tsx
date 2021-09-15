@@ -73,7 +73,7 @@ const TruckListView: React.FC = () => {
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
             getTrucks().then(null)
             setPage(1)
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
             setLoading(false)
@@ -87,7 +87,7 @@ const TruckListView: React.FC = () => {
             const result: any = await roadService.getFilteredTrucks(page, size)
             setTrucks(result.content)
             setTotal(result.totalElements)
-        } catch (error) {
+        } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
             setLoading(false)

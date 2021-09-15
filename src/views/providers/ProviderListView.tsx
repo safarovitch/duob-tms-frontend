@@ -94,7 +94,7 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
             setProviders(providersObj.content)
             setTotal(providersObj.totalElements)
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
             enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
                 variant: 'error',
@@ -133,7 +133,7 @@ const ProviderListView: React.FC<ProviderListProps> = ({className}) => {
             getProviders().then();
 
             enqueueSnackbar('Поставщик удален', {variant: 'success'})
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }

@@ -29,7 +29,7 @@ const General: React.FC = () => {
                 setLoading(true)
                 const employee: any = await employeeService.getEmployee();
                 setEmployee(employee);
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'});
             } finally {
                 setLoading(false)
