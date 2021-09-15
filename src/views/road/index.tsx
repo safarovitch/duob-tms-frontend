@@ -6,8 +6,10 @@ import React, {useState} from "react";
 import Header from "./Header";
 import {roadStuffTabs as tabs} from '../../constants'
 import {RoadStuffTab} from "../../model/Road";
-import CargoTabPanel from "./CargoTabPanel";
+import RoadTabPanel from "./RoadTabPanel";
 import DriverListView from "./driver/DriverListView";
+import TruckListView from "./truck/TruckListView";
+import TrailerListView from "./trailer/TrailerListView";
 
 const getCurrentTab = (stuffId: string) => {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -62,18 +64,15 @@ const RoadStuffView: React.FC = () => {
                             ))}
                         </Tabs>
                         <Divider/>
-                        <CargoTabPanel index={'driver'} value={currentTab}>
-                            <DriverListView/>
-                        </CargoTabPanel>
-                        {/*<CargoTabPanel index={'customs'} value={currentTab}>*/}
-                        {/*    <CustomCodeListView/>*/}
-                        {/*</CargoTabPanel>*/}
-                        {/*<CargoTabPanel index={'type'} value={currentTab}>*/}
-                        {/*    <CargoTypeListView/>*/}
-                        {/*</CargoTabPanel>*/}
-                        {/*<CargoTabPanel index={'tariff'} value={currentTab}>*/}
-                        {/*    <CargoTariffListView/>*/}
-                        {/*</CargoTabPanel>*/}
+                        <RoadTabPanel index={'driver'} value={currentTab}>
+                            <DriverListView />
+                        </RoadTabPanel>
+                        <RoadTabPanel index={'truck'} value={currentTab}>
+                            <TruckListView />
+                        </RoadTabPanel>
+                        <RoadTabPanel index={'trailer'} value={currentTab}>
+                            <TrailerListView/>
+                        </RoadTabPanel>
                     </Card>
 
                 </Box>

@@ -13,9 +13,9 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {Driver, DriverFormProps} from "../../../model/Road";
+import {Trailer, TrailerFormProps} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
-import {deleteSelectedDriver} from "../../../store/actions/roadActions";
+import {deleteSelectedTrailer} from "../../../store/actions/roadActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,32 +30,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
-    const {driver} = props;
+const TrailerForm: React.FC<TrailerFormProps> = (props: TrailerFormProps) => {
+    const {trailer} = props;
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
 
     useEffect(() => () => {
-        dispatch(deleteSelectedDriver())
+        dispatch(deleteSelectedTrailer())
     }, [])
 
-    const initialValues: Driver = {
-        name: driver?.name || '',
-        phoneNumber: driver?.phoneNumber || '',
-        address: driver?.address || ''
+    const initialValues: Trailer = {
+        number: trailer?.number || '',
+        liftingCapacity: trailer?.liftingCapacity,
+        totalBodyCapacity: trailer?.totalBodyCapacity
     }
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().max(255),
-        phoneNumber: Yup.string().max(255),
-        address: Yup.string().max(255)
+        number: Yup.string().max(255),
+        liftingCapacity: Yup.number().typeError('Значение должно быть числом'),
+        totalBodyCapacity: Yup.number().typeError('Значение должно быть числом')
     })
 
-    const handleAddProduct = async (values: Driver, formActions: { [key: string]: any }) => {
+    const handleAddProduct = async (values: Trailer, formActions: { [key: string]: any }) => {
         try {
-            await roadService.postDriver(values)
+            await roadService.postTrailer(values)
 
             enqueueSnackbar('Водитель создан', {variant: 'success'});
             history.go(-1);
@@ -68,11 +68,11 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
         }
     }
 
-    const handleUpdateProduct = async (values: Driver, formActions: { [key: string]: any }) => {
+    const handleUpdateProduct = async (values: Trailer, formActions: { [key: string]: any }) => {
         try {
-            values.id = driver?.id;
+            values.id = trailer?.id;
 
-            await roadService.updateDriver(values)
+            await roadService.updateTrailer(values)
 
             enqueueSnackbar('Водитель обновлен', {variant: 'success'});
             history.go(-1);
@@ -88,7 +88,7 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={!driver ? validationSchema : null}
+            validationSchema={!trailer ? validationSchema : null}
             onSubmit={async (values, {
                 resetForm,
                 setErrors,
@@ -96,7 +96,7 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
                 setSubmitting
             }) => {
                 setSubmitting(true)
-                driver ? await handleUpdateProduct(values, {
+                trailer ? await handleUpdateProduct(values, {
                     resetForm,
                     setErrors,
                     setStatus,
@@ -109,7 +109,7 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
                 })
             }}
         >
-            {(props: FormikProps<Driver>) => (
+            {(props: FormikProps<Trailer>) => (
                 <form
                     className={classes.root}
                     onSubmit={props.handleSubmit}
@@ -125,14 +125,14 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.name && props.errors.name)}
+                                        error={Boolean(props.touched.number && props.errors.number)}
                                         fullWidth
-                                        helperText={props.touched.name && props.errors.name}
-                                        label="Введите название"
-                                        name="name"
+                                        helperText={props.touched.number && props.errors.number}
+                                        label="Введите Номер прицепа"
+                                        name="number"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.name}
+                                        value={props.values.number}
                                         variant="outlined"
                                         required
                                         autoFocus
@@ -143,14 +143,14 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.phoneNumber && props.errors.phoneNumber)}
+                                        error={Boolean(props.touched.liftingCapacity && props.errors.liftingCapacity)}
                                         fullWidth
-                                        helperText={props.touched.phoneNumber && props.errors.phoneNumber}
-                                        label="Введите номер телефона"
-                                        name="phoneNumber"
+                                        helperText={props.touched.liftingCapacity && props.errors.liftingCapacity}
+                                        label="Введите грузо подъёмность (кг)"
+                                        name="liftingCapacity"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.phoneNumber}
+                                        value={props.values.liftingCapacity}
                                         variant="outlined"
                                         required
                                     />
@@ -160,14 +160,14 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.address && props.errors.address)}
+                                        error={Boolean(props.touched.totalBodyCapacity && props.errors.totalBodyCapacity)}
                                         fullWidth
-                                        helperText={props.touched.address && props.errors.address}
-                                        label="Введите адрес проживание"
-                                        name="address"
+                                        helperText={props.touched.totalBodyCapacity && props.errors.totalBodyCapacity}
+                                        label="Введите общий объём кузова (м3)"
+                                        name="totalBodyCapacity"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.address}
+                                        value={props.values.totalBodyCapacity}
                                         variant="outlined"
                                         required
                                     />
@@ -191,7 +191,7 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
                                     type="submit"
                                     disabled={props.isSubmitting}
                                 >
-                                    {driver ? 'Сохранить' : 'Добавить'}
+                                    {trailer ? 'Сохранить' : 'Добавить'}
                                 </Button>
                             </Box>
                         </CardContent>
@@ -202,4 +202,4 @@ const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
     );
 }
 
-export default DriverForm;
+export default TrailerForm;
