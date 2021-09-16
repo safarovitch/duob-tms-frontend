@@ -108,6 +108,9 @@ const TrailerListView: React.FC = () => {
                                     Номер прицепа
                                 </TableCell>
                                 <TableCell>
+                                    Номер машины
+                                </TableCell>
+                                <TableCell>
                                     Грузо подъёмность (кг)
                                 </TableCell>
                                 <TableCell>
@@ -126,6 +129,9 @@ const TrailerListView: React.FC = () => {
                                             <TableRow hover key={trailer.id}>
                                                 <TableCell>
                                                     {trailer.number}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {trailer.truckNumber}
                                                 </TableCell>
                                                 <TableCell>
                                                     {trailer.liftingCapacity}

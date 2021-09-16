@@ -41,6 +41,8 @@ export interface TruckFormProps {
 export interface Trailer {
     id?: number;
     number: string;
+    truckNumber?: string;
+    truckId?: number;
     liftingCapacity: number;
     totalBodyCapacity: number;
 }
@@ -48,4 +50,5 @@ export interface Trailer {
 export interface TrailerFormProps {
     className?: string;
     trailer: Trailer;
+    trucks: Truck[];
 }
