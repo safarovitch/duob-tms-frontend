@@ -63,7 +63,7 @@ const FuelListView: React.FC = () => {
                 const result: any = await fuelService.getTotalBalance()
 
                 setTotalBalance(result)
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             }
         })()
@@ -79,7 +79,7 @@ const FuelListView: React.FC = () => {
 
                 setFuels(result.content)
                 setTotal(result.totalElements)
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
                 setLoading(false)

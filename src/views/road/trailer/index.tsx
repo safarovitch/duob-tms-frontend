@@ -34,7 +34,7 @@ function RoadTrailerView() {
                 setLoading(true)
                 const result: any = await roadService.getTrucks()
                 setTrucks(result)
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
                 setLoading(false)

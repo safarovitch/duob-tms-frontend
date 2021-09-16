@@ -65,7 +65,7 @@ const TransfusionForm: React.FC = () => {
                 setLoading(true)
                 const result: any = await roadService.getTrucks()
                 setTrucks(result)
-            } catch (error) {
+            } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
                 setLoading(false)
@@ -79,7 +79,7 @@ const TransfusionForm: React.FC = () => {
 
             enqueueSnackbar('Переливание создан', {variant: 'success'});
             history.go(-1);
-        } catch (error) {
+        } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});
             formActions.setSubmitting(false);
