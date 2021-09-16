@@ -244,6 +244,30 @@ const routesConfig = [
                         component: lazy(() => import('./views/road/trailer'))
                     },
                     {
+                        exact: true,
+                        path: '/app/fuels',
+                        perm: PERMISSIONS.FUEL.LIST,
+                        component: lazy(() => import('./views/fuel/FuelListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/fuels/income',
+                        perm: PERMISSIONS.FUEL.LIST,
+                        component: lazy(() => import('./views/fuel/IncomeForm'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/fuels/transfusion',
+                        perm: PERMISSIONS.FUEL.LIST,
+                        component: lazy(() => import('./views/fuel/TransfusionForm'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/fuels/outcome',
+                        perm: PERMISSIONS.FUEL.LIST,
+                        component: lazy(() => import('./views/fuel/OutcomeForm'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]

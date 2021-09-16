@@ -65,25 +65,24 @@ const DriverListView: React.FC = () => {
     };
 
     const handleDeleteDriver = async (driverId: number) => {
-        setOpen(false)
-        setLoading(true)
-
         try {
+            setOpen(false)
+            setPage(1)
+
             await roadService.deleteDriver(driverId);
+
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
             getDrivers().then(null)
-            setPage(1)
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
         }
     };
 
     const getDrivers = async () => {
-        setLoading(true)
-
         try {
+            setLoading(true)
+            setDrivers([])
+
             const result: any = await roadService.getFilteredDrivers(page, size)
             setDrivers(result.content)
             setTotal(result.totalElements)
@@ -123,41 +122,43 @@ const DriverListView: React.FC = () => {
                         </TableHead>
                         {
                             drivers?.length > 0
-                                ? drivers.map((driver: Driver) => (
+                                ? (
                                     <TableBody>
-                                        <TableRow
-                                            hover
-                                            key={driver.id}
-                                        >
-                                            <TableCell>
-                                                {driver.name}
-                                            </TableCell>
-                                            <TableCell>
-                                                {driver.phoneNumber}
-                                            </TableCell>
-                                            <TableCell>
-                                                {driver.address}
-                                            </TableCell>
-                                            <TableCell align="center" width="12%">
-                                                <IconButton
-                                                    component={RouterLink}
-                                                    to={`/app/road/driver/edit`}
-                                                    onClick={() => handleSelectDriver(driver, true)}
-                                                >
-                                                    <SvgIcon fontSize="small">
-                                                        <EditIcon/>
-                                                    </SvgIcon>
-                                                </IconButton>
-                                                <IconButton
-                                                    onClick={() => handleSelectDriver(driver, false)}
-                                                >
-                                                    <SvgIcon fontSize="small">
-                                                        <TrashIcon/>
-                                                    </SvgIcon>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>)
+                                        {drivers.map((driver: Driver) => (
+                                            <TableRow
+                                                hover
+                                                key={driver.id}
+                                            >
+                                                <TableCell>
+                                                    {driver.name}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {driver.phoneNumber}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {driver.address}
+                                                </TableCell>
+                                                <TableCell align="center" width="12%">
+                                                    <IconButton
+                                                        component={RouterLink}
+                                                        to={`/app/road/driver/edit`}
+                                                        onClick={() => handleSelectDriver(driver, true)}
+                                                    >
+                                                        <SvgIcon fontSize="small">
+                                                            <EditIcon/>
+                                                        </SvgIcon>
+                                                    </IconButton>
+                                                    <IconButton
+                                                        onClick={() => handleSelectDriver(driver, false)}
+                                                    >
+                                                        <SvgIcon fontSize="small">
+                                                            <TrashIcon/>
+                                                        </SvgIcon>
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
                                 )
                                 : <NoFoundTableBody loading={loading}/>
                         }
