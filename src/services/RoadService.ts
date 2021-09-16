@@ -33,6 +33,12 @@ class RoadService {
             .catch((error) => {reject(error)})
     })
 
+    getTrucks = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/trucks/all`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
     getFilteredTrucks = (page: number, size: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/trucks?page=${page}&size=${size}`)
             .then((response) => {resolve(response.data)})

@@ -63,3 +63,11 @@ export const mapOfRoles = new Map(
         ['ENGINEER', 'Инженер'],
     ]
 )
+
+export const mapOfTypeFuelTransactions = new Map(
+    [
+        ['INCOME', 'Приход'],
+        ['TRANSFUSION', 'Переливание'],
+        ['OUTCOME', 'Расход'],
+    ]
+)

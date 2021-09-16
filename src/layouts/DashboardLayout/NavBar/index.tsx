@@ -15,12 +15,13 @@ import {
     makeStyles
 } from '@material-ui/core';
 import {
-    ShoppingCart as ShoppingCartIcon,
-    Folder as FolderIcon,
     BarChart as BarChartIcon,
     PieChart as PieChartIcon,
     Users as UsersIcon,
-    Settings as SettingsIcon
+    Settings as SettingsIcon,
+    Flag as FlagIcon,
+    Truck as TruckIcon,
+    Box as BoxIcon,
 } from 'react-feather';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
@@ -64,34 +65,40 @@ const navConfig = [
             },
             {
                 title: 'Поставщики',
-                icon: ShoppingCartIcon,
+                icon: UsersIcon,
                 href: '/app/providers',
                 perm: PERMISSIONS.PROVIDER.LIST
             },
             {
                 title: 'Клиенты',
-                icon: FolderIcon,
+                icon: UsersIcon,
                 href: '/app/customers',
                 perm: PERMISSIONS.CUSTOMER.LIST
             },
             {
                 title: 'Константы груза',
-                icon: FolderIcon,
+                icon: BoxIcon,
                 href: '/app/cargo',
                 perm: PERMISSIONS.CARGO.LIST
             },
             {
                 title: 'Константы рейса',
-                icon: FolderIcon,
+                icon: TruckIcon,
                 href: '/app/road',
                 perm: PERMISSIONS.ROAD.LIST
             },
             {
                 title: 'Рейсы',
-                icon: FolderIcon,
+                icon: FlagIcon,
                 href: '/app/roads',
                 perm: PERMISSIONS.ROAD.LIST
-            }
+            },
+            {
+                title: 'АЗС',
+                icon: FlagIcon,
+                href: '/app/fuels',
+                perm: PERMISSIONS.FUEL.LIST
+            },
         ]
     }
 ];
