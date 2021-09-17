@@ -245,6 +245,18 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/road/truck-type/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/truck-type'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/truck-type/edit',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/truck-type'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/fuels',
                         perm: PERMISSIONS.FUEL.LIST,
                         component: lazy(() => import('./views/fuel/FuelListView'))

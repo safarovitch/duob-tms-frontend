@@ -1,10 +1,12 @@
-import {Driver, Trailer, Truck} from "../../model/Road";
+import {Driver, Trailer, Truck, TruckType} from "../../model/Road";
 export const SET_DRIVER = '@road/set-selected-driver';
 export const DELETE_DRIVER = '@road/delete-selected-driver';
 export const SET_TRUCK = '@road/set-selected-truck';
 export const DELETE_TRUCK = '@road/delete-selected-truck';
 export const SET_TRAILER = '@road/set-selected-trailer';
 export const DELETE_TRAILER = '@road/delete-selected-trailer';
+export const SET_TRUCK_TYPE = '@road/set-selected-truck-type';
+export const DELETE_TRUCK_TYPE = '@road/delete-selected-truck-type';
 
 export const setSelectedDriver = (driver: Driver) => {
     return {
@@ -44,6 +46,20 @@ export const setSelectedTrailer = (trailer: Trailer) => {
 export const deleteSelectedTrailer = () => {
     return {
         type: DELETE_TRAILER,
+        payload: null
+    }
+}
+
+export const setSelectedTruckType = (truckType: TruckType) => {
+    return {
+        type: SET_TRUCK_TYPE,
+        payload: truckType
+    }
+}
+
+export const deleteSelectedTruckType = () => {
+    return {
+        type: DELETE_TRUCK_TYPE,
         payload: null
     }
 }
