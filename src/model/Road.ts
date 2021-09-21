@@ -159,6 +159,7 @@ export interface DriverFormProps {
 export interface Truck {
     id?: number;
     type: string;
+    typeId: number;
     tankCapacity: number;
     liftingCapacity: number;
     number: string;
@@ -170,6 +171,7 @@ export interface Truck {
 export interface TruckFormProps {
     className?: string;
     truck: Truck;
+    truckTypes: TruckType[];
 }
 
 export interface Trailer {
