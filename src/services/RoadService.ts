@@ -7,7 +7,8 @@ import {
     RoadMoneyRequest,
     RoadRequest,
     Trailer,
-    Truck
+    Truck,
+    TruckType
 } from "../model/Road";
 
 class RoadService {
@@ -133,6 +134,36 @@ class RoadService {
 
     deleteTrailer = (trailerId: number) => new Promise((resolve, reject)  => {
         api.delete(`${API_BASE_URL}/trailers/${trailerId}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    getTruckTypes = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/truck-types/all`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    getFilteredTruckTypes = (page: number, size: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/truck-types?page=${page}&size=${size}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    postTruckType = (truckType: TruckType) => new Promise((resolve, reject)  => {
+        api.post(`${API_BASE_URL}/truck-types`, truckType)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    updateTruckType = (truckType: TruckType) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/truck-types/${truckType.id}`, truckType)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    deleteTruckType = (truckTypeId: number) => new Promise((resolve, reject)  => {
+        api.delete(`${API_BASE_URL}/truck-types/${truckTypeId}`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
     })

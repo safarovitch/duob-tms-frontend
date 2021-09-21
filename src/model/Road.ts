@@ -186,3 +186,19 @@ export interface TrailerFormProps {
     trailer: Trailer;
     trucks: Truck[];
 }
+
+export interface TruckType {
+    id?: number;
+    name: string;
+    shippingNormWithoutCargo: number;
+    shippingNormWithCargo: number;
+    shippingNormTrailer: number;
+    returnNormWithoutCargo: number;
+    returnNormWithCargo: number;
+    returnNormTrailerWithCargo: number;
+}
+
+export interface TruckTypeFormProps {
+    className?: string;
+    truckType: TruckType;
+}

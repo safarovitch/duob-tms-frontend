@@ -50,6 +50,10 @@ export const roadStuffTabs = [
     {
         value: 'trailer',
         label: 'Прицепы'
+    },
+    {
+        value: 'truck-type',
+        label: 'Тип машины'
     }
 ];
 
