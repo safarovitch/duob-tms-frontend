@@ -1,25 +1,52 @@
 import React from "react";
 
-export interface Road {
+export interface RoadList {
+    id: number;
+    road: string;
+    truck: {id: number, number: string};
+    status: number | boolean;
+}
+
+export interface RoadsStuffTab {
+    value: string;
+    label: string;
+    privateTruck: boolean;
+}
+
+export interface RoadRequest {
     id?: number;
-    truckId: number;
-    trailerId: number;
-    driverId: number;
+    road: string;
+    truck?: {id: number, number: string};
+    truckId?: number;
+    driver?: {id: number, name: string};
+    driverId?: number;
     departureDate: string;
     arrivalDate: string;
-    road: string;
     description: string;
-    refuelingOnWay: number;
-    refuelingOnBase: number;
+    privateTruck?: boolean;
+    withTrailer?: boolean;
+    status: number | boolean;
+}
+
+export interface RoadMileageRequest {
+    id?: number;
     speedometerBefore: number;
     speedometerAfter: number;
     totalKmDeparture: number;
     totalKmArrival: number;
     kmDepartureWithCargo: number;
-    arrivalCargoWeight: number;
+    kmArrivalWithCargo: number;
     departureCargoWeight: number;
-    arrivalTrailerCargoWeight: number;
+    arrivalCargoWeight: number;
     departureTrailerCargoWeight: number;
+    arrivalTrailerCargoWeight: number;
+    totalKmInFact?: number;
+    totalKmInSpeedometer?: number;
+    speedometerDifference?: number;
+}
+
+export interface RoadMoneyRequest {
+    id?: number;
     contractPriceUsd: number;
     contractPriceTjs: number;
     driverPriceUsd: number;
@@ -30,6 +57,80 @@ export interface Road {
     roadPriceTjs: number;
     retentionUsd: number;
     retentionTjs: number;
+    totalContractPriceUsd?: number;
+    totalContractPriceTjs?: number;
+}
+
+export interface RoadFuelRequest {
+    id?: number;
+    fuelBalanceBeforeDeparture?: number;
+    refuelingOnBase: number;
+    refuelingOnWay: number;
+    totalRefueling?: number;
+    fuelOutcomeDepartureWithoutCargo?: number;
+    fuelOutcomeDepartureWithCargo?: number;
+    fuelOutcomeDepartureWithTrailer?: number;
+    totalFuelOutcomeDeparture?: number;
+    fuelOutcomeArrivalWithoutCargo?: number;
+    fuelOutcomeArrivalWithCargo?: number;
+    fuelOutcomeArrivalWithCargoAndTrailer?: number;
+    totalFuelOutcomeArrival?: number;
+    totalFuelOutcome?: number;
+    additionalFuelOutcome: number;
+    tankBalanceAfterArrival?: number;
+}
+
+export interface Road {
+    id?: number;
+    road: string;
+    truck: {id: number, number: string};
+    driver?: {id: number, name: string};
+    departureDate: string;
+    arrivalDate: string;
+    description: string;
+    privateTruck: boolean;
+    withTrailer: boolean;
+    status: number | boolean;
+    speedometerBefore: number;
+    speedometerAfter: number;
+    totalKmDeparture: number;
+    totalKmArrival: number;
+    kmDepartureWithCargo: number;
+    kmArrivalWithCargo: number;
+    departureCargoWeight: number;
+    arrivalCargoWeight: number;
+    departureTrailerCargoWeight: number;
+    arrivalTrailerCargoWeight: number;
+    totalKmInFact: number;
+    totalKmInSpeedometer: number;
+    speedometerDifference: number;
+    contractPriceUsd: number;
+    contractPriceTjs: number;
+    driverPriceUsd: number;
+    driverPriceTjs: number;
+    roadCostsUsd: number;
+    roadCostsTjs: number;
+    roadPriceUsd: number;
+    roadPriceTjs: number;
+    retentionUsd: number;
+    retentionTjs: number;
+    totalContractPriceUsd:number;
+    totalContractPriceTjs: number;
+    fuelBalanceBeforeDeparture: number;
+    refuelingOnBase: number;
+    refuelingOnWay: number;
+    totalRefueling: number;
+    fuelOutcomeDepartureWithoutCargo: number;
+    fuelOutcomeDepartureWithCargo: number;
+    fuelOutcomeDepartureWithTrailer: number;
+    totalFuelOutcomeDeparture: number;
+    fuelOutcomeArrivalWithoutCargo: number;
+    fuelOutcomeArrivalWithCargo: number;
+    fuelOutcomeArrivalWithCargoAndTrailer: number;
+    totalFuelOutcomeArrival: number;
+    totalFuelOutcome: number;
+    additionalFuelOutcome: number;
+    tankBalanceAfterArrival: number;
 }
 
 export interface RoadStuffTab {
@@ -61,6 +162,7 @@ export interface Truck {
     tankCapacity: number;
     liftingCapacity: number;
     number: string;
+    trailerNumber?: string;
     totalBodyCapacity: number;
     residueOfTank?: number;
 }

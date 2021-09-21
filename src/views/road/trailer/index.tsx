@@ -25,6 +25,7 @@ function RoadTrailerView() {
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
     const [loading, setLoading] = useState(false)
+    const [hasError, setHasError] = useState(false)
     const [trucks, setTrucks] = useState<Truck[]>([]);
     const trailer = useSelector((state: { selectedRoadTrailer: Trailer }) => state.selectedRoadTrailer);
 
@@ -35,6 +36,7 @@ function RoadTrailerView() {
                 const result: any = await roadService.getTrucks()
                 setTrucks(result)
             } catch (error: any) {
+                setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
                 setLoading(false)
@@ -58,7 +60,7 @@ function RoadTrailerView() {
                         </Box>
                     </Container>
                 )
-                : <LoadingLayout loading={loading} />
+                : <LoadingLayout loading={loading} hasError={hasError} />
             }
         </Page>
     );

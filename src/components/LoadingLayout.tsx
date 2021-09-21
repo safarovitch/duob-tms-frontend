@@ -8,10 +8,11 @@ const useStyles = makeStyles((theme) => ({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        minHeight: '250px',
     },
 }));
 
-const LoadingLayout: React.FC<{loading: boolean}> = ({loading}) => {
+const LoadingLayout: React.FC<{loading: boolean, hasError: boolean}> = ({loading, hasError}) => {
     const classes = useStyles();
 
     useEffect(() => {
@@ -24,11 +25,8 @@ const LoadingLayout: React.FC<{loading: boolean}> = ({loading}) => {
 
     return (
         <div className={classes.root}>
-            {
-                loading
-                    ? <CircularProgress size={48} />
-                    : (<Typography>Произошла непредвиденная ошибка. Повторите попытку позже</Typography>)
-            }
+            {loading && <CircularProgress size={48} />}
+            {hasError && <Typography>Произошла непредвиденная ошибка. Повторите попытку позже</Typography>}
         </div>
     );
 }

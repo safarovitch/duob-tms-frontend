@@ -203,6 +203,18 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/roads/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads/RoadCreateView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/roads/:id/:stuffId',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/road',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: () => <Redirect to="/app/road/driver" />

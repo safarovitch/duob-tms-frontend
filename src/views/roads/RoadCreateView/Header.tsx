@@ -1,14 +1,13 @@
-import {Breadcrumbs, Grid, Link, Typography} from "@material-ui/core";
-import React from "react";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import {NavLink as RouterLink} from "react-router-dom";
+import React from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import {Breadcrumbs, Link, Typography} from '@material-ui/core';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-const Header: React.FC<{id: string, title: string}> = ({id, title}) => {
-
+const Header: React.FC = () => {
     return (
-        <Grid>
+        <>
             <Breadcrumbs
-                separator={<NavigateNextIcon fontSize="small" />}
+                separator={<NavigateNextIcon fontSize="small"/>}
                 aria-label="breadcrumb"
             >
                 <Link
@@ -31,16 +30,16 @@ const Header: React.FC<{id: string, title: string}> = ({id, title}) => {
                     variant="body1"
                     color="textPrimary"
                 >
-                    Рейс № {id}
+                    Создание
                 </Typography>
             </Breadcrumbs>
             <Typography
                 variant="h3"
                 color="textPrimary"
             >
-                {title}
+                Создание рейса
             </Typography>
-        </Grid>
+        </>
     );
 }
 
