@@ -1,8 +1,65 @@
 import api from "../utils/Api";
 import {API_BASE_URL} from "../config";
-import {Driver, Trailer, Truck, TruckType} from "../model/Road";
+import {
+    Driver,
+    RoadFuelRequest,
+    RoadMileageRequest,
+    RoadMoneyRequest,
+    RoadRequest,
+    Trailer,
+    Truck,
+    TruckType
+} from "../model/Road";
 
 class RoadService {
+    getFilteredRoads = (page: number, size: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/roads?page=${page}&size=${size}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    getRoadById = (id: string) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/roads/${id}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    postRoad = (road: RoadRequest) => new Promise((resolve, reject)  => {
+        api.post(`${API_BASE_URL}/roads`, road)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    updateRoad = (road: RoadRequest) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/roads/1`, road)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    updateRoadMileage = (road: RoadMileageRequest) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/roads/4`, road)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    updateRoadMoney = (road: RoadMoneyRequest) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/roads/3`, road)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    updateRoadFuel = (road: RoadFuelRequest) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/roads/2`, road)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    deleteRoad = (roadId: number) => new Promise((resolve, reject)  => {
+        api.delete(`${API_BASE_URL}/roads/${roadId}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
     getFilteredDrivers = (page: number, size: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/drivers?page=${page}&size=${size}`)
             .then((response) => {resolve(response.data)})

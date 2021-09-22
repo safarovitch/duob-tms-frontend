@@ -57,6 +57,34 @@ export const roadStuffTabs = [
     }
 ];
 
+export const roadsStuffTabs = [
+    {
+        value: 'main',
+        label: 'Основные',
+        privateTruck: true,
+    },
+    {
+        value: 'mileage',
+        label: 'Километраж',
+        privateTruck: false,
+    },
+    {
+        value: 'money',
+        label: 'Денежные расходы',
+        privateTruck: true,
+    },
+    {
+        value: 'fuel',
+        label: 'Топливо',
+        privateTruck: false,
+    },
+    {
+        value: 'cargos',
+        label: 'Грузы',
+        privateTruck: true,
+    },
+]
+
 export const mapOfRoles = new Map(
     [
         ['MANAGER', 'Менеджер'],

@@ -3,8 +3,7 @@ import {CircularProgress, makeStyles, TableBody, TableCell, TableRow, Typography
 
 const useStyles = makeStyles((theme) => ({
     noRecordsFound: {
-        paddingTop: theme.spacing(10),
-        paddingBottom: theme.spacing(10),
+        height: '250px',
     },
 }));
 

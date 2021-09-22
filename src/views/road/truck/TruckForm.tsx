@@ -13,10 +13,11 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {Truck, TruckFormProps} from "../../../model/Road";
+import {Truck, TruckFormProps, TruckType} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import {deleteSelectedTruck} from "../../../store/actions/roadActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
+import {Autocomplete} from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
-    const {truck} = props;
+    const {truck, truckTypes} = props;
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
@@ -43,6 +44,7 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
 
     const initialValues: Truck = {
         type: truck?.type || '',
+        typeId: truck?.typeId,
         tankCapacity: truck?.tankCapacity,
         liftingCapacity: truck?.liftingCapacity,
         number: truck?.number || '',
@@ -128,18 +130,59 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
                                     item
                                     xs={12}
                                 >
+                                    <Autocomplete
+                                        options={truckTypes}
+                                        getOptionLabel={option => option.name}
+                                        value={truckTypes.find((truckType: TruckType) => truckType.id === props.values.typeId)}
+                                        onChange={(e, value) => {
+                                            props.setFieldValue("typeId", value?.id);
+                                        }}
+                                        renderInput={params => (
+                                            <TextField
+                                                error={Boolean(props.touched.typeId && props.errors.typeId)}
+                                                helperText={props.touched.typeId && props.errors.typeId}
+                                                label="Выберите тип машины"
+                                                name="typeId"
+                                                variant="outlined"
+                                                onBlur={props.handleBlur}
+                                                required
+                                                {...params}
+                                            />
+                                        )}
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(props.touched.number && props.errors.number)}
+                                        fullWidth
+                                        helperText={props.touched.number && props.errors.number}
+                                        label="Введите номер машины"
+                                        name="number"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.number}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                >
                                     <TextField
                                         error={Boolean(props.touched.type && props.errors.type)}
                                         fullWidth
                                         helperText={props.touched.type && props.errors.type}
-                                        label="Введите вид машины"
+                                        label="Введите модель машины"
                                         name="type"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         value={props.values.type}
                                         variant="outlined"
                                         required
-                                        autoFocus
                                     />
                                 </Grid>
                                 <Grid
@@ -172,23 +215,6 @@ const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         value={props.values.liftingCapacity}
-                                        variant="outlined"
-                                        required
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                >
-                                    <TextField
-                                        error={Boolean(props.touched.number && props.errors.number)}
-                                        fullWidth
-                                        helperText={props.touched.number && props.errors.number}
-                                        label="Введите номер машины"
-                                        name="number"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.number}
                                         variant="outlined"
                                         required
                                     />

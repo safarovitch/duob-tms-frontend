@@ -88,6 +88,12 @@ const navConfig = [
                 perm: PERMISSIONS.ROAD.LIST
             },
             {
+                title: 'Рейсы',
+                icon: FlagIcon,
+                href: '/app/roads',
+                perm: PERMISSIONS.ROAD.LIST
+            },
+            {
                 title: 'АЗС',
                 icon: FlagIcon,
                 href: '/app/fuels',
