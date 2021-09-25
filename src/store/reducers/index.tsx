@@ -6,6 +6,7 @@ import providerReducer from "./providerReducer";
 import warehouseReducer from "./warehouseReducer";
 import {cargoTariffReducer, cargoTypeReducer, customCodeReducer, productReducer} from "./cargoReducer";
 import {roadDriverReducer, roadTrailerReducer, roadTruckReducer, roadTruckTypeReducer} from "./roadReducer";
+import {articleIncomeReducer, articleOutcomeReducer} from "./articleReducer";
 
 const rootReducer = combineReducers({
     user: accountReducer,
@@ -21,6 +22,8 @@ const rootReducer = combineReducers({
     selectedRoadTruck: roadTruckReducer,
     selectedRoadTrailer: roadTrailerReducer,
     selectedRoadTruckType: roadTruckTypeReducer,
+    selectedArticleIncome: articleIncomeReducer,
+    selectedArticleOutcome: articleOutcomeReducer,
 });
 
 export default rootReducer;
