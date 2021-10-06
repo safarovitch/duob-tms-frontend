@@ -4,6 +4,13 @@ export const THEMES = {
     UNICORN: 'UNICORN'
 }
 
+export const ARTICLES = {
+    INCOME: 'INCOME',
+    INCOME_POSTFIX: 'income',
+    OUTCOME: 'OUTCOME',
+    OUTCOME_POSTFIX: 'outcome',
+}
+
 export const cargoStuffTabs = [
     {
         value: 'product',
@@ -83,6 +90,17 @@ export const roadsStuffTabs = [
         label: 'Грузы',
         privateTruck: true,
     },
+]
+
+export const articleStuffTabs = [
+    {
+        value: 'income',
+        label: 'Приход'
+    },
+    {
+        value: 'outcome',
+        label: 'Расход'
+    }
 ]
 
 export const mapOfRoles = new Map(

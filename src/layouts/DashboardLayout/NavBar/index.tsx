@@ -99,6 +99,12 @@ const navConfig = [
                 href: '/app/fuels',
                 perm: PERMISSIONS.FUEL.LIST
             },
+            {
+                title: 'Статьи',
+                icon: FlagIcon,
+                href: '/app/article',
+                perm: PERMISSIONS.ARTICLE.LIST
+            },
         ]
     }
 ];

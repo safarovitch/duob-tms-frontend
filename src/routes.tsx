@@ -298,6 +298,42 @@ const routesConfig = [
                         component: lazy(() => import('./views/fuel/OutcomeForm'))
                     },
                     {
+                        exact: true,
+                        path: '/app/article',
+                        perm: PERMISSIONS.ARTICLE.LIST,
+                        component: () => <Redirect to="/app/article/income" />
+                    },
+                    {
+                        exact: true,
+                        path: '/app/article/:stuffId',
+                        perm: PERMISSIONS.ARTICLE.LIST,
+                        component: lazy(() => import('./views/article')),
+                    },
+                    {
+                        exact: true,
+                        path: '/app/article/income/create',
+                        perm: PERMISSIONS.ARTICLE.LIST,
+                        component: lazy(() => import('./views/article/income'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/article/income/edit',
+                        perm: PERMISSIONS.ARTICLE.LIST,
+                        component: lazy(() => import('./views/article/income'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/article/outcome/create',
+                        perm: PERMISSIONS.ARTICLE.LIST,
+                        component: lazy(() => import('./views/article/outcome'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/article/outcome/edit',
+                        perm: PERMISSIONS.ARTICLE.LIST,
+                        component: lazy(() => import('./views/article/outcome'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]
