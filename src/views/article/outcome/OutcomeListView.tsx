@@ -24,6 +24,7 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {ARTICLES} from "../../../constants";
+import LoadingDeleteButton from "../../../components/LoadingDeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,8 +43,8 @@ const OutcomeListView: React.FC = () => {
     const [size, setSize] = useState(10);
     const [loading, setLoading] = useState(false);
     const [isConfirmModalOpen, setOpen] = useState(false);
-    const [articleOutcomes, setArticleOutcomes] = useState<Article[]>([]);
-    const [selectedArticleOutcome, selectArticleOutcome] = useState<Article>();
+    const [rows, setRows] = useState<Article[]>([]);
+    const [selectedRow, selectRow] = useState<Article>();
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -55,37 +56,39 @@ const OutcomeListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectArticleOutcome = (articleOutcome: Article, needDispatch: boolean) => {
-        selectArticleOutcome(articleOutcome);
+    const handleSelectRow = (row: Article, needDispatch: boolean) => {
+        selectRow(row);
 
         if (needDispatch) {
-            dispatch(setSelectedArticleOutcome(articleOutcome))
+            dispatch(setSelectedArticleOutcome(row))
         } else {
             setOpen(true)
         }
     };
 
-    const handleDeleteArticleOutcome = async (articleOutcomeId: number) => {
+    const handleDeleteRow = async (rowId: number) => {
         try {
             setOpen(false)
+            setLoading(true)
+
+            await articleService.deleteArticle(rowId);
+
             setPage(1)
-
-            await articleService.deleteArticle(articleOutcomeId);
-
+            getRows().then(null)
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
-            getArticleOutcomes().then(null)
         } catch (error: any) {
+            setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     };
 
-    const getArticleOutcomes = async () => {
+    const getRows = async () => {
         try {
             setLoading(true)
-            setArticleOutcomes([])
+            setRows([])
 
             const result: any = await articleService.getFilteredArticles(ARTICLES.OUTCOME, page, size)
-            setArticleOutcomes(result.content)
+            setRows(result.content)
             setTotal(result.totalElements)
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -95,8 +98,10 @@ const OutcomeListView: React.FC = () => {
     };
 
     useEffect(() => {
-        getArticleOutcomes().then(null)
+        getRows().then(null)
     }, [page, size]);
+
+    const hasDeleteLoading = (id: number) => loading && selectedRow?.id === id;
 
     return (
         <Card
@@ -113,43 +118,48 @@ const OutcomeListView: React.FC = () => {
                                 <TableCell>
                                     Наименование
                                 </TableCell>
-                                <TableCell align="center" width="12%">
+                                <TableCell align="center" width="15%">
                                     Действия
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         {
-                            articleOutcomes?.length > 0
+                            rows?.length > 0
                                 ? (
                                     <TableBody>
-                                        {articleOutcomes.map((articleOutcome: Article) => (
+                                        {rows.map((row: Article) => (
                                             <TableRow
                                                 hover
-                                                key={articleOutcome.id}
+                                                key={row.id}
                                             >
                                                 <TableCell>
-                                                    {articleOutcome.id}
+                                                    {row.id}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {articleOutcome.name}
+                                                    {row.name}
                                                 </TableCell>
-                                                <TableCell align="center" width="12%">
+                                                <TableCell align="center">
                                                     <IconButton
                                                         component={RouterLink}
                                                         to={`/app/article/outcome/edit`}
-                                                        onClick={() => handleSelectArticleOutcome(articleOutcome, true)}
+                                                        onClick={() => handleSelectRow(row, true)}
+                                                        disabled={hasDeleteLoading(row.id!)}
                                                     >
                                                         <SvgIcon fontSize="small">
                                                             <EditIcon/>
                                                         </SvgIcon>
                                                     </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleSelectArticleOutcome(articleOutcome, false)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <TrashIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
+                                                    <Box sx={{ m: 1, position: 'relative', display: 'inline-block' }}>
+                                                        <IconButton
+                                                            onClick={() => handleSelectRow(row, false)}
+                                                            disabled={hasDeleteLoading(row.id!)}
+                                                        >
+                                                            <SvgIcon fontSize="small">
+                                                                <TrashIcon/>
+                                                            </SvgIcon>
+                                                        </IconButton>
+                                                        {hasDeleteLoading(row.id!) && <LoadingDeleteButton />}
+                                                    </Box>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -176,7 +186,7 @@ const OutcomeListView: React.FC = () => {
                 title={'Вы уверены, что хотите удалить статью?'}
                 description={'При удалении статье, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно эту статью.'}
                 onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteArticleOutcome(selectedArticleOutcome?.id!!)}/>
+                onAccept={() => handleDeleteRow(selectedRow?.id!!)}/>
         </Card>
     );
 }

@@ -24,6 +24,7 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {ARTICLES} from '../../../constants';
+import LoadingDeleteButton from "../../../components/LoadingDeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,8 +43,8 @@ const IncomeListView: React.FC = () => {
     const [size, setSize] = useState(10);
     const [loading, setLoading] = useState(false);
     const [isConfirmModalOpen, setOpen] = useState(false);
-    const [articleIncomes, setArticleIncomes] = useState<Article[]>([]);
-    const [selectedArticleIncome, selectArticleIncome] = useState<Article>();
+    const [rows, setRows] = useState<Article[]>([]);
+    const [selectedRow, selectRow] = useState<Article>();
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -55,37 +56,39 @@ const IncomeListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectArticleIncome = (articleIncome: Article, needDispatch: boolean) => {
-        selectArticleIncome(articleIncome);
+    const handleSelectRow = (row: Article, needDispatch: boolean) => {
+        selectRow(row);
 
         if (needDispatch) {
-            dispatch(setSelectedArticleIncome(articleIncome))
+            dispatch(setSelectedArticleIncome(row))
         } else {
             setOpen(true)
         }
     };
 
-    const handleDeleteArticleIncome = async (articleIncomeId: number) => {
+    const handleDeleteRow = async (rowId: number) => {
         try {
             setOpen(false)
+            setLoading(true)
+
+            await articleService.deleteArticle(rowId);
+
             setPage(1)
-
-            await articleService.deleteArticle(articleIncomeId);
-
+            getRows().then(null)
             enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
-            getArticleIncomes().then(null)
         } catch (error: any) {
+            setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     };
 
-    const getArticleIncomes = async () => {
+    const getRows = async () => {
         try {
             setLoading(true)
-            setArticleIncomes([])
+            setRows([])
 
             const result: any = await articleService.getFilteredArticles(ARTICLES.INCOME, page, size)
-            setArticleIncomes(result.content)
+            setRows(result.content)
             setTotal(result.totalElements)
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -95,8 +98,10 @@ const IncomeListView: React.FC = () => {
     };
 
     useEffect(() => {
-        getArticleIncomes().then(null)
+        getRows().then(null)
     }, [page, size]);
+
+    const hasDeleteLoading = (id: number) => loading && selectedRow?.id === id;
 
     return (
         <Card
@@ -113,43 +118,48 @@ const IncomeListView: React.FC = () => {
                                 <TableCell>
                                     Наименование
                                 </TableCell>
-                                <TableCell align="center" width="12%">
+                                <TableCell align="center" width="15%">
                                     Действия
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         {
-                            articleIncomes?.length > 0
+                            rows?.length > 0
                                 ? (
                                     <TableBody>
-                                        {articleIncomes.map((articleIncome: Article) => (
+                                        {rows.map((row: Article) => (
                                             <TableRow
                                                 hover
-                                                key={articleIncome.id}
+                                                key={row.id}
                                             >
                                                 <TableCell>
-                                                    {articleIncome.id}
+                                                    {row.id}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {articleIncome.name}
+                                                    {row.name}
                                                 </TableCell>
-                                                <TableCell align="center" width="12%">
+                                                <TableCell align="center">
                                                     <IconButton
                                                         component={RouterLink}
                                                         to={`/app/article/income/edit`}
-                                                        onClick={() => handleSelectArticleIncome(articleIncome, true)}
+                                                        onClick={() => handleSelectRow(row, true)}
+                                                        disabled={hasDeleteLoading(row.id!)}
                                                     >
                                                         <SvgIcon fontSize="small">
                                                             <EditIcon/>
                                                         </SvgIcon>
                                                     </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleSelectArticleIncome(articleIncome, false)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <TrashIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
+                                                    <Box sx={{ m: 1, position: 'relative', display: 'inline-block' }}>
+                                                        <IconButton
+                                                            onClick={() => handleSelectRow(row, false)}
+                                                            disabled={hasDeleteLoading(row.id!)}
+                                                        >
+                                                            <SvgIcon fontSize="small">
+                                                                <TrashIcon/>
+                                                            </SvgIcon>
+                                                        </IconButton>
+                                                        {hasDeleteLoading(row.id!) && <LoadingDeleteButton />}
+                                                    </Box>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -176,7 +186,7 @@ const IncomeListView: React.FC = () => {
                 title={'Вы уверены, что хотите удалить статью?'}
                 description={'При удалении статье, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно эту статью.'}
                 onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteArticleIncome(selectedArticleIncome?.id!!)}/>
+                onAccept={() => handleDeleteRow(selectedRow?.id!!)}/>
         </Card>
     );
 }
