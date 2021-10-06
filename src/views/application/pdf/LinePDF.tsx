@@ -3,12 +3,14 @@ import {View, StyleSheet} from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
     root: {
+        marginTop: 24,
+        marginBottom: 24,
         borderBottomColor: 'black',
-        borderBottomStyle: 'dotted',
+        borderBottomStyle: 'solid',
         borderBottomWidth: 1
     }
 })
 
-const DividerPDF: React.FC = () => <View style={styles.root} />
+const LinePDF: React.FC = () => <View style={styles.root} />
 
-export default DividerPDF
+export default LinePDF

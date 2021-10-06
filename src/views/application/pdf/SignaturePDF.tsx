@@ -3,7 +3,7 @@ import {View, StyleSheet, Text} from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
     title: {
-        minWidth: '100px',
+        minWidth: '150px',
         fontSize: 10,
         fontWeight: 500,
         marginBottom: 20

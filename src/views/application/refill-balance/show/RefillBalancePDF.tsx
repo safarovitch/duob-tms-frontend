@@ -5,6 +5,7 @@ import {mapOfActionTypeApplication} from "../../../../constants";
 import DividerPDF from "../../pdf/DividerPDF";
 import SignaturePDF from "../../pdf/SignaturePDF";
 import HeaderPDF from "../../pdf/HeaderPDF";
+import LinePDF from "../../pdf/LinePDF";
 
 Font.register({
     family: "Roboto",
@@ -24,80 +25,90 @@ const styles = StyleSheet.create({
     page: {
         fontFamily: "Roboto",
         backgroundColor: '#fff',
+    },
+    main: {
         padding: 24
     },
-    h4: {
-        fontSize: 14,
-        fontWeight: 500
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    body1: {
-        fontSize: 10,
+    titleContainer: {
+        width: '250px'
+    },
+    title: {
+        fontSize: 16
+    },
+    body: {
+        fontSize: 12,
         lineHeight: 1.8
     },
-    body2: {
-        fontSize: 10,
-        lineHeight: 1.8,
+    fontBold: {
         fontStyle: 'bold'
     },
-    mb2: {
-        marginBottom: 8
+    mt: {
+        marginTop: 24
     },
-    details: {
-        marginTop: 32,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    mt1: {
+        marginTop: 40
+    },
+    mb: {
+      marginBottom: 24
     },
     signatures: {
-        marginTop: 32,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    divider: {
-        marginBottom: 32,
-        marginTop: 32
-    }
 });
 
 const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({refillBalance}) => {
-
     const mainContent = (
-        <View>
+        <View style={styles.main}>
             <HeaderPDF id={refillBalance.id!} />
-            <View style={styles.details}>
-                <View>
-                    <Text style={[styles.h4, styles.mb2]}>
-                        {mapOfActionTypeApplication.get(refillBalance.actionType)}
-                    </Text>
-                    <Text style={styles.body1}>
-                        Сумма: {`${refillBalance.amount} ${refillBalance.moneyUnit}`}
-                    </Text>
-                    <Text style={styles.body1}>
-                        Курс конвертации: {refillBalance.currency}
-                    </Text>
-                    <Text style={styles.body2}>
-                        Итого: {refillBalance.totalUSD} $
+            <View style={[styles.row, styles.mt1]}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>
+                        Дата заявки:
                     </Text>
                 </View>
                 <View>
-                    <Text style={[styles.h4, styles.mb2]}>
-                        Клиент
-                    </Text>
-                    <Text style={styles.body1}>
-                        Идентификатор клиента: #{refillBalance.client?.id}
-                    </Text>
-                    <Text style={styles.body1}>
-                        Дата заявки: {refillBalance.createdDate}
-                    </Text>
-                </View>
-                <View>
-                    <Text style={[styles.h4, styles.mb2]}>
-                        Коментарии
-                    </Text>
-                    <Text style={styles.body1}>
-                        {refillBalance.description}
+                    <Text style={styles.body}>
+                        {refillBalance.createdDate}
                     </Text>
                 </View>
             </View>
+            <View style={[styles.row, styles.mt]}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>
+                        Клиент:
+                    </Text>
+                </View>
+                <View>
+                    <Text style={styles.body}>
+                        {refillBalance.client?.name} #{refillBalance.client?.id}
+                    </Text>
+                </View>
+            </View>
+            <LinePDF />
+            <View style={styles.row}>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.title}>
+                            {mapOfActionTypeApplication.get(refillBalance.actionType)}:
+                        </Text>
+                    </View>
+                    <View>
+                        <Text style={styles.body}>
+                            Сумма: {`${refillBalance.amount} ${refillBalance.moneyUnit}`}
+                        </Text>
+                        <Text style={styles.body}>
+                            Курс конвертации: {refillBalance.currency}
+                        </Text>
+                        <Text style={[styles.body, styles.fontBold]}>
+                            Итого: {refillBalance.totalUSD} $
+                        </Text>
+                    </View>
+                </View>
+            <LinePDF />
             <View style={styles.signatures}>
                 <SignaturePDF title={`Менеджер: ${refillBalance.employeeName}`} />
                 <SignaturePDF title={`Клиент: ${refillBalance.client?.name}`} />
@@ -110,9 +121,7 @@ const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({
         <Document>
             <Page size="A4" style={styles.page}>
                 {mainContent}
-                <View style={styles.divider}>
-                    <DividerPDF/>
-                </View>
+                <DividerPDF/>
                 {mainContent}
             </Page>
         </Document>

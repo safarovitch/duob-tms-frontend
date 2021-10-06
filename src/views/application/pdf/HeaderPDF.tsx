@@ -1,5 +1,5 @@
 import React from "react";
-import {View, StyleSheet, Text} from '@react-pdf/renderer';
+import {View, StyleSheet, Text, Image} from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
     root: {
@@ -7,26 +7,51 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: "center",
     },
-    h1: {
+    brandContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    brandLogo: {
+        height: 50,
+        width: 50
+    },
+    titleContent: {
+        marginLeft: '10px'
+    },
+    title: {
         fontSize: 24,
         fontWeight: 500
     },
-    h3: {
-        fontSize: 14,
+    subTitle: {
+        marginLeft: 17,
+        fontSize: 18,
         fontWeight: 500
     },
+    applicantId: {
+        fontSize: 12,
+        fontWeight: 500
+    }
 })
 
 const HeaderPDF: React.FC<{id: number}> = ({id}) => {
     return (
         <View style={styles.root}>
-            <View>
-                <Text style={styles.h1}>
-                    DUOB Logistic
-                </Text>
+            <View style={styles.brandContent}>
+                <Image
+                    source="/static/logoPDF.png"
+                    style={styles.brandLogo}
+                />
+                <View style={styles.titleContent}>
+                    <Text style={styles.title}>
+                        DUOB
+                    </Text>
+                    <Text style={styles.subTitle}>
+                        Logistic
+                    </Text>
+                </View>
             </View>
             <View>
-                <Text style={styles.h3}>
+                <Text style={styles.applicantId}>
                     ЗАЯВКА #{id}
                 </Text>
             </View>
