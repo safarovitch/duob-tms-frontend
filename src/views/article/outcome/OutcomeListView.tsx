@@ -75,7 +75,7 @@ const OutcomeListView: React.FC = () => {
 
             setPage(1)
             getRows().then(null)
-            enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
+            enqueueSnackbar(`Успешно удалено`, {variant: 'success'})
         } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

@@ -71,11 +71,11 @@ const IncomeListView: React.FC = () => {
             setOpen(false)
             setLoading(true)
 
-            await articleService.deleteArticle(rowId);
+            await articleService.deleteArticle(rowId)
 
             setPage(1)
             getRows().then(null)
-            enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
+            enqueueSnackbar(`Успешно удалено`, {variant: 'success'})
         } catch (error: any) {
             setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
