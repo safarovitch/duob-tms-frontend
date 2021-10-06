@@ -11,6 +11,13 @@ export const ARTICLES = {
     OUTCOME_POSTFIX: 'outcome',
 }
 
+export const moneyUnitApplication = [
+    'TJS',
+    'RUB',
+    'USD',
+    'CNY'
+]
+
 export const cargoStuffTabs = [
     {
         value: 'product',
@@ -103,6 +110,21 @@ export const articleStuffTabs = [
     }
 ]
 
+export const applicationStuffTabs = [
+    {
+        value: 'refill-balance',
+        label: 'Пополнение баланса'
+    },
+    {
+        value: 'income-article',
+        label: 'Приход по статьям '
+    },
+    {
+        value: 'outcome-article',
+        label: 'Расход по сатьям'
+    }
+]
+
 export const mapOfRoles = new Map(
     [
         ['MANAGER', 'Менеджер'],
@@ -119,5 +141,19 @@ export const mapOfTypeFuelTransactions = new Map(
         ['INCOME', 'Приход'],
         ['TRANSFUSION', 'Переливание'],
         ['OUTCOME', 'Расход'],
+    ]
+)
+
+export const mapOfActionTypeApplication = new Map(
+    [
+        ['REFILL', 'Пополнение'],
+        ['RETURN', 'Возврат'],
+    ]
+)
+
+export const mapOfStatusApplication = new Map<string, string>(
+    [
+        ['WAITING', 'Ожидается'],
+        ['PAID', 'Оплачено'],
     ]
 )

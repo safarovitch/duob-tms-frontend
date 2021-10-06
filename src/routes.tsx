@@ -334,6 +334,66 @@ const routesConfig = [
                         component: lazy(() => import('./views/article/outcome'))
                     },
                     {
+                        exact: true,
+                        path: '/app/application',
+                        perm: PERMISSIONS.APPLICATION.LIST,
+                        component: () => <Redirect to="/app/application/refill-balance" />
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/:stuffId',
+                        perm: PERMISSIONS.APPLICATION.LIST,
+                        component: lazy(() => import('./views/application')),
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/refill-balance/create',
+                        perm: PERMISSIONS.APPLICATION.REFILL_BALANCE.CREATE,
+                        component: lazy(() => import('./views/application/refill-balance'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/refill-balance/edit',
+                        perm: PERMISSIONS.APPLICATION.REFILL_BALANCE.EDIT,
+                        component: lazy(() => import('./views/application/refill-balance'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/refill-balance/show',
+                        perm: PERMISSIONS.APPLICATION.LIST,
+                        component: lazy(() => import('./views/application/refill-balance/show'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/income-article/create',
+                        perm: PERMISSIONS.APPLICATION.INCOME_ARTICLE.CREATE,
+                        component: lazy(() => import('./views/application/income-article'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/income-article/edit',
+                        perm: PERMISSIONS.APPLICATION.INCOME_ARTICLE.EDIT,
+                        component: lazy(() => import('./views/application/income-article'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/income-article/show',
+                        perm: PERMISSIONS.APPLICATION.LIST,
+                        component: lazy(() => import('./views/application/income-article/show'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/outcome-article/create',
+                        perm: PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.CREATE,
+                        component: lazy(() => import('./views/application/outcome-article'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/outcome-article/show',
+                        perm: PERMISSIONS.APPLICATION.LIST,
+                        component: lazy(() => import('./views/application/outcome-article/show'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]

@@ -92,7 +92,7 @@ const Results: React.FC<{className?: string, roles: Role[]}> = ({className, role
     const getEmployee = async () => {
         setLoading(true);
         try {
-            const data: any = await employeeService.getEmployees(page, size, query, rolesId.join(','))
+            const data: any = await employeeService.getFilteredEmployees(page, size, query, rolesId.join(','))
             setEmployees(data.content)
             setTotal(data.totalElements)
             setLoading(false);

@@ -3,6 +3,12 @@ import {API_BASE_URL} from "../config";
 import {Article} from "../model/Article";
 
 class ArticleService{
+    getArticles = (type: string) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/articles/all/${type}`)
+            .then(response => {resolve(response.data)})
+            .catch(error => {reject(error)})
+    })
+
     getFilteredArticles = (type: string, page: number, size: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/articles?type=${type}&page=${page}&size=${size}`)
             .then((response) => {resolve(response.data)})
@@ -21,8 +27,8 @@ class ArticleService{
             .catch((error) => {reject(error)})
     })
 
-    deleteArticle = (articleOutcomeId: number) => new Promise((resolve, reject)  => {
-        api.delete(`${API_BASE_URL}/articles/${articleOutcomeId}`)
+    deleteArticle = (articleId: number) => new Promise((resolve, reject)  => {
+        api.delete(`${API_BASE_URL}/articles/${articleId}`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
     })

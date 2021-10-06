@@ -19,6 +19,12 @@ class CustomerService {
             .catch((error) => {reject(error)})
     })
 
+    getCustomers = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/clients/all`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
     getFilteredCustomers = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(API_BASE_URL + `/clients?page=${page}&size=${size}&search=${query}`)
             .then((response) => {

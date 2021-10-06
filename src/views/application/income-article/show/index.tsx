@@ -1,0 +1,138 @@
+import React, {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {useSnackbar} from "notistack";
+import {
+    Box,
+    Card,
+    Container,
+    Divider,
+    Grid,
+    makeStyles,
+    Typography
+} from "@material-ui/core";
+import Page from "../../../../components/Page";
+import Header from "./Header";
+import {IncomeByArticleApplication} from "../../../../model/Application";
+import {mapOfStatusApplication} from "../../../../constants";
+import PERMISSIONS from "../../../../constants/permissions";
+import errorMessageHandler from "../../../../utils/errorMessageHandler";
+import applicationService from "../../../../services/Application";
+import {deleteSelectedIncomeArticle, setSelectedIncomeArticle} from "../../../../store/actions/applicationAction";
+import usePermission from "../../../../hooks/usePermission";
+import UploadImage from "../../components/UploadImage";
+import ApproveApplication from "../../components/ApproveApplication";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        backgroundColor: theme.palette.background.default,
+        minHeight: '100%',
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(3)
+    },
+    mainContent: {
+        marginTop: theme.spacing(3),
+        padding: theme.spacing(3),
+    },
+    mb1: {
+        marginBottom: '8px',
+    }
+}));
+
+const ShowView: React.FC = () => {
+    const classes = useStyles()
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
+    const dispatch = useDispatch()
+    const canApprove = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.APPROVE)
+    const canAddPhoto = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.ADD_PHOTO)
+    const [loading, setLoading] = useState(false)
+    const incomeArticle = useSelector((state: { selectedApplicationIncomeArticle: IncomeByArticleApplication }) => state.selectedApplicationIncomeArticle)
+
+    useEffect(() => () => {
+        dispatch(deleteSelectedIncomeArticle())
+    }, [])
+
+    if (!incomeArticle) {
+        history.go(-1);
+        return null;
+    }
+
+    const handleApproveApplication = async () => {
+        try {
+            setLoading(true)
+
+            const fetchIncomeArticle: any = await applicationService.approveIncomeArticle(incomeArticle.id!)
+
+            dispatch(setSelectedIncomeArticle(fetchIncomeArticle))
+            enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
+        } catch (error: any) {
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        }
+    }
+
+    const handleAddImage = (images: string) => {
+        const newIncomeArticle = {...incomeArticle, images}
+        dispatch(setSelectedIncomeArticle(newIncomeArticle))
+    }
+
+    const isPaidApplication = (row: IncomeByArticleApplication): boolean => row.status === 'PAID';
+
+    return (
+        <Page title={`Заявка №${incomeArticle.id}`}>
+            <Container className={classes.root} maxWidth="md">
+                <Header incomeArticle={incomeArticle}/>
+                <Card className={classes.mainContent}>
+                    <Box mb={2}>
+                        <ApproveApplication isPaid={isPaidApplication(incomeArticle)} canApprove={canApprove} loading={loading} onApproveApplication={handleApproveApplication} />
+                    </Box>
+                    <Divider />
+                    <Box mt={3} mb={4}>
+                        <Grid
+                            container
+                            justifyContent="space-between"
+                        >
+                            <Grid item>
+                                <Typography variant="h3" className={classes.mb1}>
+                                    Приход по статьям
+                                </Typography>
+                                <Typography variant="body1" >
+                                    Статья: {incomeArticle.article?.name}
+                                    <br/>
+                                    Менеджер: {incomeArticle.employeeName}
+                                    <br/>
+                                    <b>Сумма: {incomeArticle.amount}</b>
+                                    <br/>
+                                    <b>Валюта: {incomeArticle.moneyUnit}</b>
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h3" className={classes.mb1}>
+                                    Заявка
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textPrimary"
+                                >
+                                    Дата заявки: {incomeArticle.createdDate}
+                                    <br/>
+                                    Дата оплаты: {isPaidApplication(incomeArticle) ? incomeArticle.updatedDate : "-"}
+                                    <br/>
+                                    Статус: {mapOfStatusApplication.get(incomeArticle.status!)}
+                                    <br/>
+                                    Коментарии: {incomeArticle.description}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Divider />
+                    <Box my={4}>
+                        <UploadImage images={incomeArticle.images!} canAddPhoto={canAddPhoto} applicationId={incomeArticle.id!} onAddImage={handleAddImage} />
+                    </Box>
+                </Card>
+            </Container>
+        </Page>
+    );
+}
+
+export default ShowView;
