@@ -37,31 +37,30 @@ const styles = StyleSheet.create({
         width: '250px'
     },
     title: {
-        fontSize: 16
+        fontSize: 14
     },
     body: {
-        fontSize: 12,
+        fontSize: 10,
         lineHeight: 1.8
     },
     fontBold: {
         fontStyle: 'bold'
     },
     mt: {
-        marginTop: 24
+        marginTop: 14
     },
     mt1: {
         marginTop: 40
     },
-    mb: {
-      marginBottom: 24
-    },
-    signatures: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
 });
 
 const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({refillBalance}) => {
+    const signatures = [
+        `Менеджер: ${refillBalance.employeeName}`,
+        `Клиент: ${refillBalance.client?.name}`,
+        `Кассир: ${refillBalance.casherName}`
+    ]
+
     const mainContent = (
         <View style={styles.main}>
             <HeaderPDF id={refillBalance.id!} />
@@ -90,6 +89,7 @@ const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({
                 </View>
             </View>
             <LinePDF />
+
             <View style={styles.row}>
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}>
@@ -109,11 +109,7 @@ const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({
                     </View>
                 </View>
             <LinePDF />
-            <View style={styles.signatures}>
-                <SignaturePDF title={`Менеджер: ${refillBalance.employeeName}`} />
-                <SignaturePDF title={`Клиент: ${refillBalance.client?.name}`} />
-                <SignaturePDF title={`Кассир: ${refillBalance.casherName}`} />
-            </View>
+            <SignaturePDF signatures={signatures} />
         </View>
     )
 

@@ -4,6 +4,7 @@ import {OutcomeByArticleApplication} from "../../../../model/Application";
 import DividerPDF from "../../pdf/DividerPDF";
 import SignaturePDF from "../../pdf/SignaturePDF";
 import HeaderPDF from "../../pdf/HeaderPDF";
+import LinePDF from "../../pdf/LinePDF";
 
 Font.register({
     family: "Roboto",
@@ -23,85 +24,90 @@ const styles = StyleSheet.create({
     page: {
         fontFamily: "Roboto",
         backgroundColor: '#fff',
+    },
+    main: {
         padding: 24
     },
-    h4: {
-        fontSize: 14,
-        fontWeight: 500
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    body1: {
+    titleContainer: {
+        width: '250px'
+    },
+    title: {
+        fontSize: 14
+    },
+    body: {
         fontSize: 10,
         lineHeight: 1.8
     },
-    body2: {
-        fontSize: 10,
-        lineHeight: 1.8,
+    fontBold: {
         fontStyle: 'bold'
     },
-    mb2: {
-        marginBottom: 8
+    mt: {
+        marginTop: 14
     },
-    details: {
-        marginTop: 32,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    mt1: {
+        marginTop: 40
     },
-    signatures: {
-        marginTop: 32,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    divider: {
-        marginBottom: 32,
-        marginTop: 32
-    }
 });
 
 const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcomeArticle}) => {
+    const signatures = [
+        `Менеджер: ${outcomeArticle.createdBy}`,
+        `Сотрудник: ${outcomeArticle.employeeName}`,
+        `Кассир:`
+    ]
 
     const mainContent = (
-        <View>
+        <View style={styles.main}>
             <HeaderPDF id={outcomeArticle.id!} />
-            <View style={styles.details}>
-                <View>
-                    <Text style={[styles.h4, styles.mb2]}>
-                        Расход по сатьям
+            <View style={[styles.row, styles.mt1]}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>
+                        Дата заявки:
                     </Text>
-                    <Text style={styles.body1}>
+                </View>
+                <View>
+                    <Text style={styles.body}>
+                        {outcomeArticle.createdDate}
+                    </Text>
+                </View>
+            </View>
+            <View style={[styles.row, styles.mt]}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>
+                        Сотрудник:
+                    </Text>
+                </View>
+                <View>
+                    <Text style={styles.body}>
+                        {outcomeArticle.employeeName} #1234
+                    </Text>
+                </View>
+            </View>
+            <LinePDF />
+            <View style={styles.row}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>
+                        Расход по сатьям:
+                    </Text>
+                </View>
+                <View>
+                    <Text style={styles.body}>
                         Статья: {outcomeArticle.articleName}
                     </Text>
-                    <Text style={styles.body2}>
+                    <Text style={[styles.body, styles.fontBold]}>
                         Сумма: {outcomeArticle.amount}
                     </Text>
-                    <Text style={styles.body2}>
+                    <Text style={[styles.body, styles.fontBold]}>
                         Валюта: {outcomeArticle.moneyUnit}
                     </Text>
                 </View>
-                <View>
-                    <Text style={[styles.h4, styles.mb2]}>
-                        Сотрудник
-                    </Text>
-                    <Text style={styles.body1}>
-                        Идентификатор сотрудник: #123456
-                    </Text>
-                    <Text style={styles.body1}>
-                        Дата заявки: {outcomeArticle.createdDate}
-                    </Text>
-                </View>
-                <View>
-                    <Text style={[styles.h4, styles.mb2]}>
-                        Коментарии
-                    </Text>
-                    <Text style={styles.body1}>
-                        {outcomeArticle.description}
-                    </Text>
-                </View>
             </View>
-            <View style={styles.signatures}>
-                <SignaturePDF title={`Менеджер: ${outcomeArticle.createdBy}`} />
-                <SignaturePDF title={`Клиент: ${outcomeArticle.employeeName}`} />
-                <SignaturePDF title={`Кассир:`} />
-            </View>
+            <LinePDF />
+            <SignaturePDF signatures={signatures} />
         </View>
     )
 
@@ -109,9 +115,7 @@ const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}>
         <Document>
             <Page size="A4" style={styles.page}>
                 {mainContent}
-                <View style={styles.divider}>
-                    <DividerPDF/>
-                </View>
+                <DividerPDF/>
                 {mainContent}
             </Page>
         </Document>

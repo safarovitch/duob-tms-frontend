@@ -55,7 +55,7 @@ const Header: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcom
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app/application/income-article"
+                        to="/app/application/outcome-article"
                         component={RouterLink}
                     >
                         Приход по статьям
