@@ -171,7 +171,7 @@ const Results: React.FC<{roles: Role[]}> = ({roles}) => {
                                 <TableCell>Код пользователя</TableCell>
                                 <TableCell>Логин</TableCell>
                                 <TableCell>Телефон</TableCell>
-                                <TableCell align="center" width="15%"/>
+                                <TableCell align="center" width="15%">Действия</TableCell>
                             </TableRow>
                         </TableHead>
                         {

@@ -1,6 +1,5 @@
 import React from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import clsx from 'clsx';
+import {Link as RouterLink} from 'react-router-dom';
 import {
     Breadcrumbs,
     Button,
@@ -11,15 +10,11 @@ import {
     makeStyles
 } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-    PlusCircle as PlusCircleIcon,
-} from 'react-feather';
-import {CustomerListHeaderProps} from "../../model/Customer";
+import {PlusCircle as PlusCircleIcon} from 'react-feather';
 import usePermission from "../../hooks/usePermission";
 import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
     action: {
         marginBottom: theme.spacing(1),
         '& + &': {
@@ -31,16 +26,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<CustomerListHeaderProps> = ({ className }) => {
+const Header: React.FC = () => {
     const classes = useStyles();
-    const history = useHistory();
 
-    const onCreateNewCustomer = () => {
-        history?.push("/app/customers/create")
-    }
     return (
         <Grid
-            className={clsx(classes.root, className)}
             container
             justifyContent="space-between"
             spacing={3}
@@ -77,7 +67,8 @@ const Header: React.FC<CustomerListHeaderProps> = ({ className }) => {
                     <Button
                         color="secondary"
                         variant="contained"
-                        onClick={onCreateNewCustomer}
+                        component={RouterLink}
+                        to={'/app/customers/create'}
                         className={classes.action}
                     >
                         <SvgIcon
