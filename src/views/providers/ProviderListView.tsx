@@ -74,6 +74,7 @@ const ProviderListView: React.FC<ProviderListProps> = () => {
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
         setQuery(event.target.value);
+        setPage(1);
     };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -168,7 +169,7 @@ const ProviderListView: React.FC<ProviderListProps> = () => {
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
-                                        ): <NoFoundTableBody loading={loading}/>
+                                        ) : <NoFoundTableBody loading={loading}/>
                                     }
                                 </Table>
                             </Box>

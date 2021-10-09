@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import clsx from 'clsx';
 import {
     Breadcrumbs,
     Button,
@@ -26,16 +25,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<{className?: string}> = ({ className, ...rest }) => {
+const Header: React.FC = () => {
     const classes = useStyles();
 
     return (
         <Grid
-            className={clsx(classes.root, className)}
             container
             justifyContent="space-between"
             spacing={3}
-            {...rest}
         >
             <Grid item>
                 <Breadcrumbs
