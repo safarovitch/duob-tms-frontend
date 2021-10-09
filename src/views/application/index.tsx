@@ -10,6 +10,7 @@ import ApplicationTabPanel from "./ApplicationTabPanel";
 import RefillBalanceListView from "./refill-balance/RefillBalanceListView";
 import IncomeArticleListView from "./income-article/IncomeArticleListView";
 import OutcomeArticleListView from "./outcome-article/OutcomeArticleListView";
+import OutcomeTransferWarehouseListView from "./outcome-transfer-warehouse/OutcomeTransferWarehouseListView";
 
 const getCurrentTab = (stuffId: string) => {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -71,6 +72,9 @@ const RoadStuffView: React.FC = () => {
                         </ApplicationTabPanel>
                         <ApplicationTabPanel index={'outcome-article'} value={currentTab.value}>
                             <OutcomeArticleListView />
+                        </ApplicationTabPanel>
+                        <ApplicationTabPanel index={'outcome-transfer-warehouse'} value={currentTab.value}>
+                            <OutcomeTransferWarehouseListView />
                         </ApplicationTabPanel>
                     </Card>
 

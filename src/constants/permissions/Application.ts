@@ -59,6 +59,30 @@ const APPLICATION = {
             ADMIN,
             MANAGER,
         ],
+        ADMIN_APPROVE: [
+            ADMIN,
+        ],
+        APPROVE: [
+            ADMIN,
+            CASHIER,
+        ],
+        ADD_PHOTO: [
+            ADMIN,
+            CASHIER,
+        ]
+    },
+    OUTCOME_TRANSFER_WAREHOUSE: {
+        CREATE: [
+            ADMIN,
+            MANAGER,
+        ],
+        DELETE: [
+            ADMIN,
+            MANAGER,
+        ],
+        ADMIN_APPROVE: [
+            ADMIN,
+        ],
         APPROVE: [
             ADMIN,
             CASHIER,

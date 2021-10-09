@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import {combineReducers} from "redux";
 import accountReducer from "./accountReducer";
 import customerReducer from "./customerReducer";
 import employeeReducer from './employeeReducer';
@@ -10,6 +10,7 @@ import {articleIncomeReducer, articleOutcomeReducer} from "./articleReducer";
 import {
     applicationIncomeArticleReducer,
     applicationOutcomeArticleReducer,
+    applicationOutcomeTransferWarehouseReducer,
     refillBalanceReducer
 } from "./applicationReducer";
 
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     selectedRefillBalance: refillBalanceReducer,
     selectedApplicationIncomeArticle: applicationIncomeArticleReducer,
     selectedApplicationOutcomeArticle: applicationOutcomeArticleReducer,
+    selectedApplicationOutcomeTransferWarehouse: applicationOutcomeTransferWarehouseReducer,
 });
 
 export default rootReducer;

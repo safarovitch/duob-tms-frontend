@@ -14,7 +14,6 @@ import {
 import Page from "../../../../components/Page";
 import Header from "./Header";
 import {OutcomeByArticleApplication} from "../../../../model/Application";
-import {mapOfStatusApplication} from "../../../../constants";
 import PERMISSIONS from "../../../../constants/permissions";
 import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import applicationService from "../../../../services/Application";
@@ -68,6 +67,8 @@ const ShowView: React.FC = () => {
             enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -87,40 +88,51 @@ const ShowView: React.FC = () => {
                         <ApproveApplication isPaid={isPaidApplication(outcomeArticle)} canApprove={canApprove} loading={loading} onApproveApplication={handleApproveApplication} />
                     </Box>
                     <Divider />
-                    <Box mt={3} mb={4}>
-                        <Grid
-                            container
-                            justifyContent="space-between"
-                        >
-                            <Grid item>
-                                <Typography variant="h3" className={classes.mb1}>
-                                    Расход по сатьям
-                                </Typography>
-                                <Typography variant="body1" >
-                                    Статья: {outcomeArticle.articleName}
-                                    <br/>
-                                    Сотрудник: {outcomeArticle.employeeName}
-                                    <br/>
-                                    <b>Сумма: {outcomeArticle.amount}</b>
-                                    <br/>
-                                    <b>Валюта: {outcomeArticle.moneyUnit}</b>
+                    <Box mt={3}>
+                        <Grid container alignItems="center">
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="h4">
+                                    Дата заявки:
                                 </Typography>
                             </Grid>
-                            <Grid item>
-                                <Typography variant="h3" className={classes.mb1}>
-                                    Заявка
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    {outcomeArticle.createdDate}
                                 </Typography>
-                                <Typography
-                                    variant="body1"
-                                    color="textPrimary"
-                                >
-                                    Дата заявки: {outcomeArticle.createdDate}
-                                    <br/>
-                                    Дата оплаты: {isPaidApplication(outcomeArticle) ? outcomeArticle.updatedDate : "-"}
-                                    <br/>
-                                    Статус: {mapOfStatusApplication.get(outcomeArticle.status!)}
-                                    <br/>
-                                    Коментарии: {outcomeArticle.description}
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box my={3}>
+                        <Grid container alignItems="center">
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="h4">
+                                    Сотрудник:
+                                </Typography>
+                            </Grid>
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    {`${outcomeArticle.employee?.name} #${outcomeArticle.employee?.id}`}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Divider />
+                    <Box mt={3} mb={4}>
+                        <Grid container alignItems="center">
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="h4">
+                                    Расход по сатьям:
+                                </Typography>
+                            </Grid>
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    Статья: {outcomeArticle.articleName}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <b>Сумма: {outcomeArticle.amount}</b>
+                                </Typography>
+                                <Typography variant="body1">
+                                    <b>Валюта: {outcomeArticle.moneyUnit}</b>
                                 </Typography>
                             </Grid>
                         </Grid>

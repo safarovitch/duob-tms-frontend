@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 
 const IncomeArticlePDF: React.FC<{incomeArticle: IncomeByArticleApplication}> = ({incomeArticle}) => {
     const signatures = [
-        `Менеджер: ${incomeArticle.employeeName}`,
+        `Менеджер: ${incomeArticle.createdBy?.name}`,
         `Кассир:`
     ]
 
@@ -82,7 +82,7 @@ const IncomeArticlePDF: React.FC<{incomeArticle: IncomeByArticleApplication}> = 
                 </View>
                 <View>
                     <Text style={styles.body}>
-                        {incomeArticle.employeeName} #1234
+                        {`${incomeArticle.createdBy?.name} #${incomeArticle.createdBy?.id}`}
                     </Text>
                 </View>
             </View>

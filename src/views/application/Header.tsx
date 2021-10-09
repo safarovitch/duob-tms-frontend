@@ -36,6 +36,9 @@ const Header: React.FC<{ title: string, linkName: string }> = ({title, linkName}
             case "outcome-article": {
                 return canCreateOutcomeArticle
             }
+            case "outcome-transfer-warehouse": {
+                return canCreateOutcomeArticle
+            }
             default: return false
         }
     }

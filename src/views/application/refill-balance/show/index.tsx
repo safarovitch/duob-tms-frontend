@@ -14,7 +14,7 @@ import {
 import Page from "../../../../components/Page";
 import Header from "./Header";
 import {RefillBalanceApplication} from "../../../../model/Application";
-import {mapOfActionTypeApplication, mapOfStatusApplication} from "../../../../constants";
+import {mapOfActionTypeApplication} from "../../../../constants";
 import PERMISSIONS from "../../../../constants/permissions";
 import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import applicationService from "../../../../services/Application";
@@ -68,6 +68,8 @@ const ShowView: React.FC = () => {
             enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -87,42 +89,51 @@ const ShowView: React.FC = () => {
                         <ApproveApplication isPaid={isPaidApplication(refillBalance)} canApprove={canApprove} loading={loading} onApproveApplication={handleApproveApplication} />
                     </Box>
                     <Divider />
-                    <Box mt={3} mb={4}>
-                        <Grid
-                            container
-                            justifyContent="space-between"
-                        >
-                            <Grid item>
-                                <Typography variant="h3" className={classes.mb1}>
-                                    {mapOfActionTypeApplication.get(refillBalance.actionType)}
-                                </Typography>
-                                <Typography variant="body1" >
-                                    Клиент: {refillBalance.client?.name}
-                                    <br/>
-                                    Идентификатор клиента: #{refillBalance.client?.id}
-                                    <br/>
-                                    Сумма: {`${refillBalance.amount} ${refillBalance.moneyUnit}`}
-                                    <br/>
-                                    Курс конвертации: {refillBalance.currency}
-                                    <br/>
-                                    <b>Итого: {refillBalance.totalUSD} $</b>
+                    <Box mt={3}>
+                        <Grid container alignItems="center">
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="h4">
+                                    Дата заявки:
                                 </Typography>
                             </Grid>
-                            <Grid item>
-                                <Typography variant="h3" className={classes.mb1}>
-                                    Заявка
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    {refillBalance.createdDate}
                                 </Typography>
-                                <Typography
-                                    variant="body1"
-                                    color="textPrimary"
-                                >
-                                    Дата заявки: {refillBalance.createdDate}
-                                    <br/>
-                                    Дата оплаты: {isPaidApplication(refillBalance) ? refillBalance.updatedDate : "-"}
-                                    <br/>
-                                    Статус: {mapOfStatusApplication.get(refillBalance.status!)}
-                                    <br/>
-                                    Коментарии: {refillBalance.description}
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box my={3}>
+                        <Grid container alignItems="center">
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="h4">
+                                    Клиент:
+                                </Typography>
+                            </Grid>
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    {`${refillBalance.client?.name} #${refillBalance.client?.id}`}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Divider />
+                    <Box mt={3} mb={4}>
+                        <Grid container alignItems="center">
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="h4">
+                                    {mapOfActionTypeApplication.get(refillBalance.actionType)}:
+                                </Typography>
+                            </Grid>
+                            <Grid xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    Сумма: {`${refillBalance.amount} ${refillBalance.moneyUnit}`}
+                                </Typography>
+                                <Typography variant="body1">
+                                    Курс конвертации: {refillBalance.currency}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <b>Итого: {refillBalance.totalUSD} $</b>
                                 </Typography>
                             </Grid>
                         </Grid>

@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
 
 const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({refillBalance}) => {
     const signatures = [
-        `Менеджер: ${refillBalance.employeeName}`,
+        `Менеджер: ${refillBalance.createdBy?.name}`,
         `Клиент: ${refillBalance.client?.name}`,
-        `Кассир: ${refillBalance.casherName}`
+        `Кассир:`
     ]
 
     const mainContent = (

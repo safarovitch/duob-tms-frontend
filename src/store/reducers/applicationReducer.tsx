@@ -1,6 +1,6 @@
 import {
     IncomeByArticleApplication,
-    OutcomeByArticleApplication,
+    OutcomeByArticleApplication, OutcomeTransferWarehouseApplication,
     RefillBalanceApplication
 } from "../../model/Application";
 import {
@@ -9,7 +9,9 @@ import {
     SET_INCOME_ARTICLE,
     DELETE_INCOME_ARTICLE,
     SET_OUTCOME_ARTICLE,
-    DELETE_OUTCOME_ARTICLE
+    DELETE_OUTCOME_ARTICLE,
+    SET_OUTCOME_TRANSFER_WAREHOUSE,
+    DELETE_OUTCOME_TRANSFER_WAREHOUSE
 } from "../actions/applicationAction";
 
 export const refillBalanceReducer = (state = null, action: {type: any, payload: RefillBalanceApplication | any}) => {
@@ -42,6 +44,18 @@ export const applicationOutcomeArticleReducer = (state = null, action: {type: an
             return action.payload
         }
         case DELETE_OUTCOME_ARTICLE: {
+            return action.payload
+        }
+        default: return state
+    }
+}
+
+export const applicationOutcomeTransferWarehouseReducer = (state = null, action: {type: any, payload: OutcomeTransferWarehouseApplication | any}) => {
+    switch (action.type) {
+        case SET_OUTCOME_TRANSFER_WAREHOUSE: {
+            return action.payload
+        }
+        case DELETE_OUTCOME_TRANSFER_WAREHOUSE: {
             return action.payload
         }
         default: return state

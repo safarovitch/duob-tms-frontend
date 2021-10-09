@@ -1,6 +1,6 @@
 import {
     IncomeByArticleApplication,
-    OutcomeByArticleApplication,
+    OutcomeByArticleApplication, OutcomeTransferWarehouseApplication,
     RefillBalanceApplication
 } from "../../model/Application";
 
@@ -10,6 +10,10 @@ export const SET_INCOME_ARTICLE = '@application/set-selected-income-article';
 export const DELETE_INCOME_ARTICLE = '@application/delete-selected-income-article';
 export const SET_OUTCOME_ARTICLE = '@application/set-selected-outcome-article';
 export const DELETE_OUTCOME_ARTICLE = '@application/delete-selected-outcome-article';
+export const SET_OUTCOME_TRANSFER_WAREHOUSE = '@application/set-selected-outcome-transfer-warehouse';
+export const DELETE_OUTCOME_TRANSFER_WAREHOUSE = '@application/delete-selected-outcome-transfer-warehouse';
+
+
 
 export const setSelectedRefillBalance = (refillBalance: RefillBalanceApplication) => {
     return {
@@ -49,6 +53,20 @@ export const setSelectedOutcomeArticle = (outcomeArticle: OutcomeByArticleApplic
 export const deleteSelectedOutcomeArticle = () => {
     return {
         type: DELETE_OUTCOME_ARTICLE,
+        payload: null
+    }
+}
+
+export const setSelectedOutcomeTransferWarehouse = (outcomeTransferWarehouse: OutcomeTransferWarehouseApplication) => {
+    return {
+        type: SET_OUTCOME_TRANSFER_WAREHOUSE,
+        payload: outcomeTransferWarehouse
+    }
+}
+
+export const deleteSelectedOutcomeTransferWarehouse = () => {
+    return {
+        type: DELETE_OUTCOME_TRANSFER_WAREHOUSE,
         payload: null
     }
 }

@@ -394,6 +394,18 @@ const routesConfig = [
                         component: lazy(() => import('./views/application/outcome-article/show'))
                     },
                     {
+                        exact: true,
+                        path: '/app/application/outcome-transfer-warehouse/create',
+                        perm: PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.CREATE,
+                        component: lazy(() => import('./views/application/outcome-transfer-warehouse'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/outcome-transfer-warehouse/show',
+                        perm: PERMISSIONS.APPLICATION.LIST,
+                        component: lazy(() => import('./views/application/outcome-transfer-warehouse/show'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Font, Document, Page, Text, View, StyleSheet} from '@react-pdf/renderer';
-import {OutcomeByArticleApplication} from "../../../../model/Application";
+import {OutcomeTransferWarehouseApplication} from "../../../../model/Application";
 import DividerPDF from "../../pdf/DividerPDF";
 import SignaturePDF from "../../pdf/SignaturePDF";
 import HeaderPDF from "../../pdf/HeaderPDF";
@@ -53,16 +53,16 @@ const styles = StyleSheet.create({
     },
 });
 
-const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcomeArticle}) => {
+const OutcomeTransferWarehousePDF: React.FC<{outcomeTransferWarehouse: OutcomeTransferWarehouseApplication}> = ({outcomeTransferWarehouse}) => {
     const signatures = [
-        `Менеджер: ${outcomeArticle.createdBy?.name}`,
-        `Сотрудник: ${outcomeArticle.employee?.name}`,
-        `Кассир:`
+        `Менеджер: ${outcomeTransferWarehouse.createdBy?.name}`,
+        `Кассир отправителя:`,
+        `Кассир получателя:`
     ]
 
     const mainContent = (
         <View style={styles.main}>
-            <HeaderPDF id={outcomeArticle.id!} />
+            <HeaderPDF id={outcomeTransferWarehouse.id!} />
             <View style={[styles.row, styles.mt1]}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
@@ -71,19 +71,19 @@ const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}>
                 </View>
                 <View>
                     <Text style={styles.body}>
-                        {outcomeArticle.createdDate}
+                        {outcomeTransferWarehouse.createdDate}
                     </Text>
                 </View>
             </View>
             <View style={[styles.row, styles.mt]}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Сотрудник:
+                        Склад:
                     </Text>
                 </View>
                 <View>
                     <Text style={styles.body}>
-                        {`${outcomeArticle.employee?.name} # ${outcomeArticle.employee?.id}`}
+                        {`${outcomeTransferWarehouse.toWarehouse?.name} #${outcomeTransferWarehouse.toWarehouse?.id}`}
                     </Text>
                 </View>
             </View>
@@ -91,18 +91,15 @@ const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}>
             <View style={styles.row}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Расход по сатьям:
+                        Перевод денег:
                     </Text>
                 </View>
                 <View>
-                    <Text style={styles.body}>
-                        Статья: {outcomeArticle.articleName}
+                    <Text style={[styles.body, styles.fontBold]}>
+                        Сумма: {outcomeTransferWarehouse.amount}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {outcomeArticle.amount}
-                    </Text>
-                    <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {outcomeArticle.moneyUnit}
+                        Валюта: {outcomeTransferWarehouse.moneyUnit}
                     </Text>
                 </View>
             </View>
@@ -122,4 +119,4 @@ const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}>
     )
 }
 
-export default OutcomeArticlePDF
+export default OutcomeTransferWarehousePDF

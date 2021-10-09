@@ -16,7 +16,7 @@ import {DoneAll as DoneAllIcon, Close as CloseIcon} from "@material-ui/icons";
 import {ArrowRight as ArrowRightIcon, Trash as TrashIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {useSnackbar} from "notistack";
-import {OutcomeByArticleApplication} from "../../../model/Application";
+import {OutcomeTransferWarehouseApplication} from "../../../model/Application";
 import applicationService from "../../../services/Application";
 import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -25,7 +25,7 @@ import {mapOfStatusApplication} from "../../../constants";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import {NavLink as RouterLink} from "react-router-dom";
-import {setSelectedOutcomeArticle} from "../../../store/actions/applicationAction";
+import {setSelectedOutcomeTransferWarehouse} from "../../../store/actions/applicationAction";
 import {useDispatch} from "react-redux";
 import AdminApproveButton from "../components/AdminApproveButton";
 
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const OutcomeArticleListView: React.FC = () => {
+const OutcomeTransferWarehouseListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
@@ -54,10 +54,10 @@ const OutcomeArticleListView: React.FC = () => {
     const [size, setSize] = useState(10)
     const [loading, setLoading] = useState(false)
     const [isConfirmModalOpen, setOpen] = useState(false)
-    const [rows, setRows] = useState<OutcomeByArticleApplication[]>([])
-    const [selectedRow, selectRow] = useState<OutcomeByArticleApplication>()
-    const canDelete = usePermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.DELETE)
-    const canAdminApprove = usePermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.ADMIN_APPROVE)
+    const [rows, setRows] = useState<OutcomeTransferWarehouseApplication[]>([])
+    const [selectedRow, selectRow] = useState<OutcomeTransferWarehouseApplication>()
+    const canDelete = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.DELETE)
+    const canAdminApprove = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.ADMIN_APPROVE)
 
     useEffect(() => {
         getRows().then(null)
@@ -73,11 +73,11 @@ const OutcomeArticleListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectRow = (row: OutcomeByArticleApplication, needDispatch: boolean) => {
+    const handleSelectRow = (row: OutcomeTransferWarehouseApplication, needDispatch: boolean) => {
         selectRow(row)
 
         if (needDispatch) {
-            dispatch(setSelectedOutcomeArticle(row))
+            dispatch(setSelectedOutcomeTransferWarehouse(row))
         } else {
             setOpen(true)
         }
@@ -88,7 +88,7 @@ const OutcomeArticleListView: React.FC = () => {
             setOpen(false)
             setPage(1)
 
-            await applicationService.deleteOutcomeArticle(rowId);
+            await applicationService.deleteOutcomeTransferWarehouse(rowId);
 
             enqueueSnackbar('Успешно удалено', {variant: 'success'})
             getRows().then(null)
@@ -107,7 +107,7 @@ const OutcomeArticleListView: React.FC = () => {
             setLoading(true)
             setRows([])
 
-            const data: any = await applicationService.getFilteredOutcomeArticles(page, size)
+            const data: any = await applicationService.getFilteredOutcomeTransferWarehouses(page, size)
             setRows(data.content)
             setTotal(data.totalElements)
         } catch (error: any) {
@@ -117,7 +117,7 @@ const OutcomeArticleListView: React.FC = () => {
         }
     }
 
-    const isPaidApplication = (row: OutcomeByArticleApplication): boolean => row.status === 'PAID';
+    const isPaidApplication = (row: OutcomeTransferWarehouseApplication): boolean => row.status === 'PAID';
 
     return (
         <Card className={classes.root}>
@@ -128,9 +128,9 @@ const OutcomeArticleListView: React.FC = () => {
                             <TableRow>
                                 <TableCell>Дата заявки</TableCell>
                                 <TableCell>Менеджер</TableCell>
-                                <TableCell>Сотрудник</TableCell>
-                                <TableCell>Кассир</TableCell>
-                                <TableCell>Статья</TableCell>
+                                <TableCell>Кассир отправителя</TableCell>
+                                <TableCell>Кассир получателя</TableCell>
+                                <TableCell>Склад</TableCell>
                                 <TableCell>Сумма</TableCell>
                                 <TableCell>Валюта</TableCell>
                                 <TableCell align="center">Админ</TableCell>
@@ -144,13 +144,13 @@ const OutcomeArticleListView: React.FC = () => {
                         {
                             rows.length > 0 ? (
                                 <TableBody>
-                                    {rows.map((row: OutcomeByArticleApplication, index) => (
+                                    {rows.map((row: OutcomeTransferWarehouseApplication, index) => (
                                         <TableRow hover key={row.id}>
                                             <TableCell>{row.createdDate}</TableCell>
                                             <TableCell>{row.createdBy?.name}</TableCell>
-                                            <TableCell>{row.employee?.name}</TableCell>
-                                            <TableCell>{row.cashierName}</TableCell>
-                                            <TableCell>{row.articleName}</TableCell>
+                                            <TableCell>{row.fromCashierName|| '-'}</TableCell>
+                                            <TableCell>{row.toCashierName || '-'}</TableCell>
+                                            <TableCell>{row.toWarehouse?.name}</TableCell>
                                             <TableCell>{row.amount}</TableCell>
                                             <TableCell>{row.moneyUnit}</TableCell>
                                             <TableCell align="center">
@@ -185,7 +185,7 @@ const OutcomeArticleListView: React.FC = () => {
                                                 }
                                                 <IconButton
                                                     component={RouterLink}
-                                                    to={`/app/application/outcome-article/show`}
+                                                    to={`/app/application/outcome-transfer-warehouse/show`}
                                                     onClick={() => handleSelectRow(row, true)}
                                                 >
                                                     <SvgIcon fontSize="small">
@@ -222,4 +222,4 @@ const OutcomeArticleListView: React.FC = () => {
     )
 }
 
-export default OutcomeArticleListView;
+export default OutcomeTransferWarehouseListView;

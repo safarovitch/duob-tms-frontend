@@ -122,6 +122,10 @@ export const applicationStuffTabs = [
     {
         value: 'outcome-article',
         label: 'Расход по сатьям'
+    },
+    {
+        value: 'outcome-transfer-warehouse',
+        label: 'Перевод денег'
     }
 ]
 

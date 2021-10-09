@@ -223,9 +223,9 @@ const RefillBalanceListView: React.FC = () => {
                                     {rows.map((row: RefillBalanceApplication) => (
                                         <TableRow hover key={row.id}>
                                             <TableCell>{row.createdDate}</TableCell>
-                                            <TableCell>{row.employeeName}</TableCell>
+                                            <TableCell>{row.createdBy?.name}</TableCell>
                                             <TableCell>{row.client?.name}</TableCell>
-                                            <TableCell>{isPaidApplication(row) ? row.casherName : "-"}
+                                            <TableCell>{isPaidApplication(row) ? row.cashierName : "-"}
                                             </TableCell>
                                             <TableCell>{row.totalUSD} $</TableCell>
                                             <TableCell className={isPaidApplication(row) ? classes.statusPaid : classes.statusWaiting}>

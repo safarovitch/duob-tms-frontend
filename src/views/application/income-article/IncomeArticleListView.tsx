@@ -133,14 +133,14 @@ const IncomeArticleListView: React.FC = () => {
                             </TableRow>
                         </TableHead>
                         {
-                            rows?.length > 0
+                            rows.length > 0
                                 ? (
                                     <TableBody>
                                         {rows.map((row: IncomeByArticleApplication) => (
                                             <TableRow hover key={row.id}>
                                                 <TableCell>{row.createdDate}</TableCell>
-                                                <TableCell>{row.employeeName}</TableCell>
-                                                <TableCell>Кассир</TableCell>
+                                                <TableCell>{row.createdBy?.name}</TableCell>
+                                                <TableCell>{row.cashierName}</TableCell>
                                                 <TableCell>{row.article?.name}</TableCell>
                                                 <TableCell>{row.amount}</TableCell>
                                                 <TableCell>{row.moneyUnit}</TableCell>
