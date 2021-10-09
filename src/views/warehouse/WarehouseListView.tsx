@@ -14,17 +14,16 @@ import {
 import Page from "../../components/Page";
 import Header from "./Header";
 import warehouseService from "../../services/WarehouseService";
-import {Edit as EditIcon, Search as SearchIcon, Trash as TrashIcon} from "react-feather";
+import {Edit as EditIcon, Search as SearchIcon} from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {NavLink as RouterLink} from "react-router-dom";
 import useDebounce from "../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
 import {useDispatch} from "react-redux";
 import {setSelectedWarehouse} from "../../store/actions/warehouseActions";
-import ConfirmModal from "../../components/ConfirmModal";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../components/NoFoundTableBody";
-import LoadingDeleteButton from "../../components/LoadingDeleteButton";
+import DeleteButton from "../../components/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,9 +46,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
     const debouncedSearchTerm = useDebounce(query, 500)
     const [total, setTotal] = useState<number>(0)
     const [loading, setLoading] = useState(false)
-    const [isConfirmModalOpen, setOpen] = useState(false)
     const [rows, setRows] = useState<Warehouse[]>([])
-    const [selectedRow, selectRow] = useState<Warehouse>()
 
     useEffect(() => {
         getRows().then(null)
@@ -60,9 +57,9 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
             setLoading(true)
             setRows([])
 
-            const result: any = await warehouseService.getFilteredWarehouse(page, size, query);
-            setRows(result.content)
-            setTotal(result.totalElements)
+            const data: any = await warehouseService.getFilteredWarehouse(page, size, query);
+            setRows(data.content)
+            setTotal(data.totalElements)
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
@@ -85,39 +82,16 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectRow = (row: Warehouse, needDispatch: boolean) => {
-        selectRow(row);
-
-        if (needDispatch) {
-            dispatch(setSelectedWarehouse(row))
-        } else {
-            setOpen(true)
-        }
-    };
-
-    const handleDeleteRow = async (rowId: number) => {
-        try {
-            setOpen(false)
-            setLoading(true)
-
-            await warehouseService.deleteWarehouse(rowId)
-
-            setPage(1)
-            getRows().then(null)
-            enqueueSnackbar(`Успешно удалено`, {variant: 'success'})
-        } catch (error: any) {
-            setLoading(false)
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        }
+    const handleDeleteRow = () => {
+        setPage(1)
+        getRows().then(null)
     }
-
-    const hasDeleteLoading = (id: number) => loading && selectedRow?.id === id;
 
     return (
         <Page className={classes.root} title="Склады">
             <Container maxWidth="md">
                 <Header/>
-                <Box mt={3} >
+                <Box mt={3}>
                     <Card>
                         <Box py={3} pl={2}>
                             <TextField
@@ -136,7 +110,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                     )
                                 }}
                                 onChange={handleQueryChange}
-                                placeholder="Поиск складов"
+                                placeholder="Поиск"
                                 value={query}
                                 variant="outlined"
                             />
@@ -146,47 +120,32 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>
-                                                Название
-                                            </TableCell>
-                                            <TableCell align="center" width="15%">
-                                                Действия
-                                            </TableCell>
+                                            <TableCell>Название</TableCell>
+                                            <TableCell align="center" width="15%">Действия</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     {
                                         rows.length > 0 ? (
                                             <TableBody>
-                                                {rows.map((row: Warehouse) => (
-                                                    <TableRow
-                                                        hover
-                                                        key={row.id}
-                                                    >
-                                                        <TableCell>
-                                                            {row.name}
-                                                        </TableCell>
+                                                {rows.map((row: Warehouse, index) => (
+                                                    <TableRow hover key={row.id}>
+                                                        <TableCell>{row.name}</TableCell>
                                                         <TableCell align="center">
                                                             <IconButton
                                                                 component={RouterLink}
                                                                 to={`/app/warehouses/${row.id}/edit`}
-                                                                onClick={() => handleSelectRow(row, true)}
-                                                                disabled={hasDeleteLoading(row.id!)}
+                                                                onClick={() => dispatch(setSelectedWarehouse(row))}
                                                             >
                                                                 <SvgIcon fontSize="small">
                                                                     <EditIcon/>
                                                                 </SvgIcon>
                                                             </IconButton>
-                                                            <Box sx={{ m: 1, position: 'relative', display: 'inline-block' }}>
-                                                                <IconButton
-                                                                    onClick={() => handleSelectRow(row, false)}
-                                                                    disabled={hasDeleteLoading(row.id!)}
-                                                                >
-                                                                    <SvgIcon fontSize="small">
-                                                                        <TrashIcon/>
-                                                                    </SvgIcon>
-                                                                </IconButton>
-                                                                {hasDeleteLoading(row.id!) && <LoadingDeleteButton />}
-                                                            </Box>
+                                                            <DeleteButton
+                                                                index={index}
+                                                                rowId={row.id!}
+                                                                onDelete={warehouseService.deleteWarehouse}
+                                                                handleDelete={handleDeleteRow}
+                                                            />
                                                         </TableCell>
                                                     </TableRow>
                                                 ))}
@@ -209,12 +168,6 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                         />
                     </Card>
                 </Box>
-                <ConfirmModal
-                    isOpen={isConfirmModalOpen}
-                    title={'Вы уверены, что хотите удалить склад?'}
-                    description={'При удалении склада, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот склад.'}
-                    onClose={() => setOpen(false)}
-                    onAccept={() => handleDeleteRow(selectedRow?.id!!)}/>
             </Container>
         </Page>
     )
