@@ -56,7 +56,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: Truck[], d
         description: road?.description || '',
         privateTruck: road?.privateTruck || false,
         withTrailer: road?.withTrailer || false,
-        status: (road?.status ? 1 : 0) || 1,
+        status: road?.status === undefined ? 1 : +road.status,
     }
 
     const validationSchema = Yup.object().shape({

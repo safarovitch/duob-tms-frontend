@@ -129,7 +129,7 @@ const RoadListView: React.FC = () => {
                                                             {row.road}
                                                         </TableCell>
                                                         <TableCell>
-                                                            {row.truck?.number}
+                                                            {row.truck?.number || '-'}
                                                         </TableCell>
                                                         <TableCell>
                                                             0

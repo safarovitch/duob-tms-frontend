@@ -94,12 +94,12 @@ const ShowView: React.FC = () => {
                     <Divider />
                     <Box mt={3}>
                         <Grid container alignItems="center">
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="h4">
                                     Дата заявки:
                                 </Typography>
                             </Grid>
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
                                     {outcomeTransferWarehouse.createdDate}
                                 </Typography>
@@ -108,12 +108,12 @@ const ShowView: React.FC = () => {
                     </Box>
                     <Box my={3}>
                         <Grid container alignItems="center">
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="h4">
                                     Склад:
                                 </Typography>
                             </Grid>
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
                                     {`${outcomeTransferWarehouse.toWarehouse?.name} #${outcomeTransferWarehouse.toWarehouse?.id}`}
                                 </Typography>
@@ -123,12 +123,12 @@ const ShowView: React.FC = () => {
                     <Divider />
                     <Box mt={3} mb={4}>
                         <Grid container alignItems="center">
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="h4">
                                     Перевод денег:
                                 </Typography>
                             </Grid>
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
                                     <b>Сумма: {outcomeTransferWarehouse.amount}</b>
                                 </Typography>

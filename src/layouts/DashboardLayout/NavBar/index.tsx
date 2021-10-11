@@ -15,7 +15,6 @@ import {
     makeStyles
 } from '@material-ui/core';
 import {
-    BarChart as BarChartIcon,
     PieChart as PieChartIcon,
     Users as UsersIcon,
     Settings as SettingsIcon,
@@ -41,11 +40,6 @@ const navConfig = [
                 icon: PieChartIcon,
                 href: '/app/reports/dashboard'
             },
-            {
-                title: 'Другое',
-                icon: BarChartIcon,
-                href: '/app/reports/dashboard-alternative'
-            }
         ]
     },
     {

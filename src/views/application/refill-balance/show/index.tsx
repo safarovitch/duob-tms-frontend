@@ -91,12 +91,12 @@ const ShowView: React.FC = () => {
                     <Divider />
                     <Box mt={3}>
                         <Grid container alignItems="center">
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="h4">
                                     Дата заявки:
                                 </Typography>
                             </Grid>
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
                                     {refillBalance.createdDate}
                                 </Typography>
@@ -105,12 +105,12 @@ const ShowView: React.FC = () => {
                     </Box>
                     <Box my={3}>
                         <Grid container alignItems="center">
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="h4">
                                     Клиент:
                                 </Typography>
                             </Grid>
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
                                     {`${refillBalance.client?.name} #${refillBalance.client?.id}`}
                                 </Typography>
@@ -120,12 +120,12 @@ const ShowView: React.FC = () => {
                     <Divider />
                     <Box mt={3} mb={4}>
                         <Grid container alignItems="center">
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="h4">
                                     {mapOfActionTypeApplication.get(refillBalance.actionType)}:
                                 </Typography>
                             </Grid>
-                            <Grid xs={12} sm={6}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
                                     Сумма: {`${refillBalance.amount} ${refillBalance.moneyUnit}`}
                                 </Typography>
