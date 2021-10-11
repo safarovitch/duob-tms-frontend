@@ -1,12 +1,10 @@
 import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from "@material-ui/core";
 import React from "react";
-import clsx from "clsx";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {NavLink as RouterLink} from "react-router-dom";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
     action: {
         marginBottom: theme.spacing(1),
         '& + &': {
@@ -18,12 +16,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<{className?: string, title: string, linkName: string}> = ({ className, title, linkName }) => {
+const Header: React.FC<{title: string, linkName: string}> = ({title, linkName}) => {
     const classes = useStyles();
 
     return (
         <Grid
-            className={clsx(classes.root, className)}
             container
             justifyContent="space-between"
             spacing={3}

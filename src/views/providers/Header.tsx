@@ -38,6 +38,7 @@ const Header: React.FC<ProviderListHeaderProps> = ({ className }) => {
     const onCreateNewCustomer = () => {
         history?.push("/app/providers/create")
     }
+
     return (
         <Grid
             className={clsx(classes.root, className)}

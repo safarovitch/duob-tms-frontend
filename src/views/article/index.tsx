@@ -41,8 +41,7 @@ const ArticleStuffView: React.FC = () => {
             className={classes.root}
             title={'Статьи'}
         >
-            <Container maxWidth="lg">
-
+            <Container maxWidth="md">
                 <Header title={currentTab.label} linkName={currentTab.value}/>
                 <Box mt={3}>
                     <Card>

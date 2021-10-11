@@ -31,9 +31,7 @@ function CargoTypeView() {
             title={'Вид груза'}
         >
             <Container maxWidth="lg">
-
                 <Header cargoType={cargoType}/>
-
                 <Box mt={3}>
                     <CargoTypeForm cargoType={cargoType}/>
                 </Box>

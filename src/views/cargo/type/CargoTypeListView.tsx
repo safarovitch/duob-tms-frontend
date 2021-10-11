@@ -1,20 +1,8 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
-import {
-    Box, Button, Card, CircularProgress,
-    IconButton, InputAdornment,
+import React, {useState, useEffect} from 'react';
+import {Box, Card, IconButton, InputAdornment,
     makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField
 } from '@material-ui/core';
-import {
-    Search as SearchIcon,
-    Edit as EditIcon,
-    Trash as TrashIcon,
-    Check as CheckIcon,
-    X as XIcon,
-
-} from 'react-feather';
+import {Search as SearchIcon, Edit as EditIcon, Check as CheckIcon, X as XIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import 'moment/locale/ru';
@@ -24,45 +12,51 @@ import {useSnackbar} from "notistack";
 import {CargoType} from "../../../model/Cargo";
 import {setSelectedType} from "../../../store/actions/cargoActions";
 import cargoService from "../../../services/CargoService";
-import ConfirmModal from "../../../components/ConfirmModal";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
+import DeleteButton from "../../../components/DeleteButton";
+import NoFoundTableBody from "../../../components/NoFoundTableBody";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        minHeight: '100%',
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3)
-    },
+const useStyles = makeStyles(() => ({
     queryField: {
-        width: 500
+        width: 400
     },
-    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
 }));
 
 const CargoTypeListView: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
-    const [cargoTypes, setCargoTypes] = useState<CargoType[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(5);
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
+    const [rows, setRows] = useState<CargoType[]>([]);
     const [loading, setLoading] = useState(false);
-    const [isConfirmModalOpen, setOpen] = useState(false);
-    const [selectedCargoType, selectCargoType] = useState<CargoType>();
+
+    useEffect(() => {
+        getRows().then(null)
+    }, [page, debouncedSearchTerm, size]);
+
+    const getRows = async () => {
+        try {
+            setLoading(true)
+            setRows([])
+
+            const data: any = await cargoService.getFilteredCargoTypes(page, size, query);
+            setRows(data.content)
+            setTotal(data.totalElements)
+        } catch (error: any) {
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
         setQuery(event.target.value);
+        setPage(1);
     };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -75,181 +69,103 @@ const CargoTypeListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectCargoType = (cargoType: CargoType, needDispatch: boolean) => {
-        selectCargoType(cargoType);
-        if (needDispatch) {
-            dispatch(setSelectedType(cargoType))
-        } else {
-            setOpen(true)
-        }
+    const handleDeleteRow = () => {
+        setPage(1)
+        getRows().then(null)
     };
-
-    const handleDeleteCargoType = async (cargoTypeId: number) => {
-        setOpen(false);
-        setLoading(true)
-        try {
-            await cargoService.deleteCargoType(cargoTypeId);
-            enqueueSnackbar(`Успешно удалено!`, {
-                variant: 'success',
-                action: <Button>ОК</Button>
-            });
-            getCargoTypes();
-            setLoading(false);
-            setPage(1);
-        } catch (error: any) {
-            setLoading(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button onClick={() => getCargoTypes()}>Рестарт</Button>
-            });
-        }
-    };
-
-    const getCargoTypes = async () => {
-        setLoading(true);
-        try {
-            const cargoTypeObj: any = await cargoService.getFilteredCargoTypes(page, size, query);
-            setCargoTypes(cargoTypeObj.content)
-            setTotal(cargoTypeObj.totalElements)
-            setLoading(false);
-        } catch (error: any) {
-            setLoading(false);
-            enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                variant: 'error',
-                action: <Button onClick={() => getCargoTypes()}>Рестарт</Button>
-            });
-        }
-    };
-
-    useEffect(() => {
-        getCargoTypes()
-    }, [page, debouncedSearchTerm, size]);
 
     return (
-        <>
-            {cargoTypes && (
-                <Card
-                    className={classes.root}
-                >
-                    <Box
-                        p={2}
-                        minHeight={56}
-                        display="flex"
-                        alignItems="center"
-                    >
-                        <TextField
-                            className={classes.queryField}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SvgIcon
-                                            fontSize="small"
-                                            color="action"
-                                        >
-                                            <SearchIcon/>
-                                        </SvgIcon>
-                                    </InputAdornment>
-                                )
-                            }}
-                            onChange={handleQueryChange}
-                            placeholder="Поиск"
-                            value={query}
-                            variant="outlined"
-                        /></Box>
-                    <PerfectScrollbar>
-                        <Box minWidth={700} className={loading ? classes.tableProgressBoxStyle : ''}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            Название
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            Ручная цена
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            Договорная цена
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            Расчет по норме и весу
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            Учитывать скидку
-                                        </TableCell>
-                                        <TableCell align="right" width="12%">
-                                            Действия
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
+        <Card>
+            <Box pt={4} pb={2} pl={2}>
+                <TextField
+                    className={classes.queryField}
+                    size="small"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SvgIcon
+                                    fontSize="small"
+                                    color="action"
+                                >
+                                    <SearchIcon/>
+                                </SvgIcon>
+                            </InputAdornment>
+                        )
+                    }}
+                    onChange={handleQueryChange}
+                    placeholder="Поиск"
+                    value={query}
+                    variant="outlined"
+                />
+            </Box>
+            <PerfectScrollbar>
+                <Box minWidth={700}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Название</TableCell>
+                                <TableCell align="center">Ручная цена</TableCell>
+                                <TableCell align="center">Договорная цена</TableCell>
+                                <TableCell align="center">Расчет по норме и весу</TableCell>
+                                <TableCell align="center">Учитывать скидку</TableCell>
+                                <TableCell align="center" width="15%">Действия</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        {
+                            rows.length > 0 ? (
                                 <TableBody>
-                                    {cargoTypes.map((cargoType: CargoType) => {
-
-                                        return (
-                                            <TableRow
-                                                hover
-                                                key={cargoType.id}
-                                            >
-                                                <TableCell>
-                                                    {cargoType.name}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.manualPrice ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.negotiatedPrice ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.calculationRateWeight ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {cargoType.discount ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
-                                                </TableCell>
-                                                <TableCell align="right" width="12%">
-                                                    <IconButton
-                                                        component={RouterLink}
-                                                        to={`/app/cargo/type/edit`}
-                                                        onClick={() => handleSelectCargoType(cargoType, true)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <EditIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleSelectCargoType(cargoType, false)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <TrashIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
+                                    {rows.map((row: CargoType, index) => (
+                                        <TableRow hover key={row.id}>
+                                            <TableCell>{row.name}</TableCell>
+                                            <TableCell align="center">
+                                                {row.manualPrice ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {row.negotiatedPrice ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {row.calculationRateWeight ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {row.discount ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    component={RouterLink}
+                                                    to={`/app/cargo/type/edit`}
+                                                    onClick={() => dispatch(setSelectedType(row))}
+                                                >
+                                                    <SvgIcon fontSize="small">
+                                                        <EditIcon/>
+                                                    </SvgIcon>
+                                                </IconButton>
+                                                <DeleteButton
+                                                    index={index}
+                                                    rowId={row.id!}
+                                                    onDelete={cargoService.deleteCargoType}
+                                                    handleDelete={handleDeleteRow}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
-                            </Table>
-                            {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
-                        </Box>
-                    </PerfectScrollbar>
-                    <TablePagination
-                        component="div"
-                        count={total}
-                        onPageChange={handlePageChange}
-                        page={page - 1}
-                        labelRowsPerPage={'Количество наименований:'}
-                        rowsPerPage={size}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        onRowsPerPageChange={handleRowsPerPageChange}
-                        labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
-                    />
-                </Card>
-            )}
-            <ConfirmModal
-                isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите удалить вид груза?'}
-                description={'При удалении вида груза, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот вид груза.'}
-                onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteCargoType(selectedCargoType?.id!!)}/>
-        </>
+                            ) : <NoFoundTableBody loading={loading}/>
+                        }
+                    </Table>
+                </Box>
+            </PerfectScrollbar>
+            <TablePagination
+                component="div"
+                count={total}
+                onPageChange={handlePageChange}
+                page={page - 1}
+                labelRowsPerPage={'Количество наименований:'}
+                rowsPerPage={size}
+                rowsPerPageOptions={[5, 10, 25]}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
+            />
+        </Card>
     );
 }
 

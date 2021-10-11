@@ -1,14 +1,6 @@
 import React from "react";
 import {CargoStuffTab} from "./Cargo";
 
-export interface CustomerListHeaderProps {
-    className?: string;
-}
-
-export interface CustomerListProps {
-    className?: string;
-}
-
 export interface CustomerFormProps {
     className?: string;
     customer?: Customer;
