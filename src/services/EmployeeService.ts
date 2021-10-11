@@ -3,7 +3,13 @@ import {API_BASE_URL} from "../config";
 import {Employee, Role} from "../model/Employee";
 
 class EmployeeService {
-    getEmployees = (page: number, size: number, search: string, rolesId: string) => new Promise((resolve, reject) => {
+    getEmployees = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/employees/all`)
+            .then(response => {resolve(response.data)})
+            .catch(error => {reject(error)})
+    })
+
+    getFilteredEmployees = (page: number, size: number, search: string, rolesId: string) => new Promise((resolve, reject) => {
         api
             .get(`${API_BASE_URL}/employees`, {params: {page, size, search, rolesId}})
             .then(response => {

@@ -105,6 +105,12 @@ const navConfig = [
                 href: '/app/article',
                 perm: PERMISSIONS.ARTICLE.LIST
             },
+            {
+                title: 'Заявки',
+                icon: FlagIcon,
+                href: '/app/application',
+                perm: PERMISSIONS.APPLICATION.LIST
+            },
         ]
     }
 ];
@@ -227,7 +233,7 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                         <RouterLink to="/app/profile">
                             <Avatar
                                 className={classes.avatar}
-                                src={user.avatar ? EMPLOYEES_IMAGE_BASE_URL + user.avatar: undefined}
+                                src={user.avatar ? EMPLOYEES_IMAGE_BASE_URL + user.avatar : undefined}
                             />
                         </RouterLink>
                     </Box>

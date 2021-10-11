@@ -6,6 +6,7 @@ import CARGO from "./Cargo";
 import ROAD from "./Road";
 import FUEL from "./Fuel";
 import ARTICLE from "./Article";
+import APPLICATION from "./Application";
 
 const PERMISSIONS = {
     EMPLOYEE,
@@ -16,6 +17,7 @@ const PERMISSIONS = {
     ROAD,
     FUEL,
     ARTICLE,
+    APPLICATION,
 }
 
 export default PERMISSIONS;

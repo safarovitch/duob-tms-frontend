@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import {combineReducers} from "redux";
 import accountReducer from "./accountReducer";
 import customerReducer from "./customerReducer";
 import employeeReducer from './employeeReducer';
@@ -7,6 +7,12 @@ import warehouseReducer from "./warehouseReducer";
 import {cargoTariffReducer, cargoTypeReducer, customCodeReducer, productReducer} from "./cargoReducer";
 import {roadDriverReducer, roadTrailerReducer, roadTruckReducer, roadTruckTypeReducer} from "./roadReducer";
 import {articleIncomeReducer, articleOutcomeReducer} from "./articleReducer";
+import {
+    applicationIncomeArticleReducer,
+    applicationOutcomeArticleReducer,
+    applicationOutcomeTransferWarehouseReducer,
+    refillBalanceReducer
+} from "./applicationReducer";
 
 const rootReducer = combineReducers({
     user: accountReducer,
@@ -24,6 +30,10 @@ const rootReducer = combineReducers({
     selectedRoadTruckType: roadTruckTypeReducer,
     selectedArticleIncome: articleIncomeReducer,
     selectedArticleOutcome: articleOutcomeReducer,
+    selectedRefillBalance: refillBalanceReducer,
+    selectedApplicationIncomeArticle: applicationIncomeArticleReducer,
+    selectedApplicationOutcomeArticle: applicationOutcomeArticleReducer,
+    selectedApplicationOutcomeTransferWarehouse: applicationOutcomeTransferWarehouseReducer,
 });
 
 export default rootReducer;

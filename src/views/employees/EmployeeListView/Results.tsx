@@ -63,7 +63,7 @@ const Results: React.FC<{roles: Role[]}> = ({roles}) => {
             setLoading(true)
             setRows([])
 
-            const data: any = await employeeService.getEmployees(page, size, query, rolesId.join(','))
+            const data: any = await employeeService.getFilteredEmployees(page, size, query, rolesId.join(','))
             setRows(data.content)
             setTotal(data.totalElements)
         } catch (error: any) {
