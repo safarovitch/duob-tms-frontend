@@ -15,6 +15,7 @@ import CargoTariffListView from "./tariff/CargoTariffListView";
 function getCurrentTab(stuffId: string) {
     return tabs.filter(v => v.value === stuffId)[0];
 }
+
 function a11yProps(tab: CargoStuffTab) {
     return {
         id: `cargo-tab-${tab.value}`,
@@ -48,7 +49,6 @@ function CargoStuffView() {
             title={'Константы груза'}
         >
             <Container maxWidth="lg">
-
                 <Header title={currentTab.label} linkName={currentTab.value}/>
                 <Box mt={3}>
                     <Card>

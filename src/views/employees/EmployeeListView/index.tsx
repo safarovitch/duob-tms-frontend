@@ -1,17 +1,13 @@
-import React, {
-    useEffect, useState,
-} from 'react';
-import {
-    Box, Button,
-    Container,
-    makeStyles
-} from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+import {Box, Container, makeStyles} from '@material-ui/core';
 import Page from '../../../components/Page';
 import Header from './Header';
 import Results from './Results';
 import {Role} from "../../../model/Employee";
 import {useSnackbar} from "notistack";
 import employeeService from "../../../services/EmployeeService";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
+import LoadingLayout from "../../../components/LoadingLayout";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,40 +15,44 @@ const useStyles = makeStyles((theme) => ({
         minHeight: '100%',
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
-    },
+    }
 }));
 
-const EmployeeListView = () => {
-    const classes = useStyles();
-    const {enqueueSnackbar} = useSnackbar();
-    const [roles, setRoles] = useState<[] | Role[]>([]);
+const EmployeeListView: React.FC = () => {
+    const classes = useStyles()
+    const {enqueueSnackbar} = useSnackbar()
+    const [roles, setRoles] = useState<Role[]>([])
+    const [loading, setLoading] = useState(false)
+    const [hasError, setHasError] = useState(false)
 
     useEffect(() => {
-        const getRoles = async () => {
+        (async () => {
             try {
-                const roles = await employeeService.getRoles();
-                setRoles(roles as Role[]);
+                setLoading(true)
+                const data: any = await employeeService.getRoles()
+
+                setRoles(data)
             } catch (error: any) {
-                enqueueSnackbar(`Произошла ошибка. ${error.message}`, {
-                    variant: 'error',
-                    action: <Button onClick={() => getRoles()}>Рестарт</Button>
-                });
+                setHasError(true)
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
             }
-        }
-
-        getRoles().then(null)
-    }, [enqueueSnackbar])
-
-    if (roles.length === 0) return null
+        })()
+    }, [])
 
     return (
-        <Page className={classes.root} title="Сотрудники">
-            <Container maxWidth={false}>
-                <Header />
-                    <Box mt={3}>
-                        <Results roles={roles} />
-                    </Box>
-            </Container>
+        <Page title="Сотрудники">
+            {
+                roles.length > 0 ? (
+                    <Container className={classes.root} maxWidth="lg">
+                        <Header />
+                        <Box mt={3}>
+                            <Results roles={roles} />
+                        </Box>
+                    </Container>
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
+            }
         </Page>
     );
 }

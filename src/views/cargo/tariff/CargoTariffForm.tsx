@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import * as Yup from 'yup';
 import {Formik, FormikProps} from 'formik';
 import {useSnackbar} from 'notistack';
@@ -13,11 +13,9 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {CargoTariff, CargoTariffFormProps, CargoType} from "../../../model/Cargo";
+import {CargoTariff, CargoTariffFormProps} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
 import {deleteSelectedCargoTariff} from "../../../store/actions/cargoActions";
-import {Warehouse} from "../../../model/Warehouse";
-import warehouseService from "../../../services/WarehouseService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,49 +35,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-const CargoTariffForm: React.FC<CargoTariffFormProps> = (props: CargoTariffFormProps) => {
-    const {cargoTariff} = props;
+const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, cargoTypes, warehouses}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
-
-    const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
-    const [cargoTypes, setCargoTypes] = useState<CargoType[]>([]);
-
-    const getAllCargoTypes = async () => {
-        try {
-            const resCargoTypes: any = await cargoService.getAllCargoTypes();
-            setCargoTypes(resCargoTypes)
-
-        } catch (error: any) {
-
-            enqueueSnackbar(`Произошла ошибка. Не получилось получить список всех видов грузов. ${error.message}`, {
-                variant: 'error',
-                action: <Button onClick={() => getAllCargoTypes()}>Рестарт</Button>
-            });
-        }
-    }
-
-    const getAllWarehouses = async () => {
-        try {
-            const resWarehouses: any = await warehouseService.getAllWarehouse();
-            setWarehouses(resWarehouses)
-
-        } catch (error: any) {
-
-            enqueueSnackbar(`Произошла ошибка. Не получилось получить список складов. ${error.message}`, {
-                variant: 'error',
-                action: <Button onClick={() => getAllWarehouses()}>Рестарт</Button>
-            });
-        }
-    }
-
-    useEffect(() => {
-        getAllCargoTypes();
-        getAllWarehouses();
-    }, [])
 
     useEffect(() => () => {
         dispatch(deleteSelectedCargoTariff())

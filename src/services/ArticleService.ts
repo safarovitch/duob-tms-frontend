@@ -21,8 +21,8 @@ class ArticleService{
             .catch((error) => {reject(error)})
     })
 
-    deleteArticle = (articleOutcomeId: number) => new Promise((resolve, reject)  => {
-        api.delete(`${API_BASE_URL}/articles/${articleOutcomeId}`)
+    deleteArticle = (articleId: number) => new Promise((resolve, reject)  => {
+        api.delete(`${API_BASE_URL}/articles/${articleId}`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
     })
