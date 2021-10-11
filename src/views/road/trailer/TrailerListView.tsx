@@ -12,7 +12,7 @@ import {
     TablePagination,
     TableRow,
 } from '@material-ui/core';
-import {Edit as EditIcon, Trash as TrashIcon} from 'react-feather';
+import {Edit as EditIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -20,9 +20,9 @@ import {useSnackbar} from "notistack";
 import {Trailer} from "../../../model/Road";
 import {setSelectedTrailer} from "../../../store/actions/roadActions";
 import roadService from "../../../services/RoadService";
-import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import DeleteButton from "../../../components/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,9 +40,26 @@ const TrailerListView: React.FC = () => {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
     const [loading, setLoading] = useState(false);
-    const [isConfirmModalOpen, setOpen] = useState(false);
-    const [trailers, setTrailers] = useState<Trailer[]>([]);
-    const [selectedTrailer, selectTrailer] = useState<Trailer>();
+    const [rows, setRows] = useState<Trailer[]>([]);
+
+    useEffect(() => {
+        getRows().then(null)
+    }, [page, size]);
+
+    const getRows = async () => {
+        try {
+            setLoading(true)
+            setRows([])
+
+            const result: any = await roadService.getFilteredTrailers(page, size)
+            setRows(result.content)
+            setTotal(result.totalElements)
+        } catch (error: any) {
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -54,48 +71,10 @@ const TrailerListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectTrailer = (trailer: Trailer, needDispatch: boolean) => {
-        selectTrailer(trailer);
-
-        if (needDispatch) {
-            dispatch(setSelectedTrailer(trailer))
-        } else {
-            setOpen(true)
-        }
+    const handleDeleteRow = () => {
+        setPage(1)
+        getRows().then(null)
     };
-
-    const handleDeleteTrailer = async (trailerId: number) => {
-        try {
-            setOpen(false)
-            setPage(1)
-
-            await roadService.deleteTrailer(trailerId);
-
-            enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
-            getTrailers().then(null)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        }
-    };
-
-    const getTrailers = async () => {
-        try {
-            setLoading(true)
-            setTrailers([])
-
-            const result: any = await roadService.getFilteredTrailers(page, size)
-            setTrailers(result.content)
-            setTotal(result.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
-
-    useEffect(() => {
-        getTrailers().then(null)
-    }, [page, size]);
 
     return (
         <Card className={classes.root}>
@@ -116,52 +95,49 @@ const TrailerListView: React.FC = () => {
                                 <TableCell>
                                     Общий объём кузова (м3)
                                 </TableCell>
-                                <TableCell align="center" width="12%">
+                                <TableCell align="center" width="15%">
                                     Действия
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         {
-                            trailers?.length > 0
-                                ? (
-                                    <TableBody>
-                                        {trailers.map((trailer: Trailer) => (
-                                            <TableRow hover key={trailer.id}>
-                                                <TableCell>
-                                                    {trailer.number}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {trailer.truckNumber}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {trailer.liftingCapacity}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {trailer.totalBodyCapacity}
-                                                </TableCell>
-                                                <TableCell align="center" width="12%">
-                                                    <IconButton
-                                                        component={RouterLink}
-                                                        to={`/app/road/trailer/edit`}
-                                                        onClick={() => handleSelectTrailer(trailer, true)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <EditIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleSelectTrailer(trailer, false)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <TrashIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                )
-                                : <NoFoundTableBody loading={loading}/>
+                            rows?.length > 0 ? (
+                                <TableBody>
+                                    {rows.map((row: Trailer, index) => (
+                                        <TableRow hover key={row.id}>
+                                            <TableCell>
+                                                {row.number}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.truckNumber}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.liftingCapacity}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.totalBodyCapacity}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    component={RouterLink}
+                                                    to={`/app/road/trailer/edit`}
+                                                    onClick={() => dispatch(setSelectedTrailer(row))}
+                                                >
+                                                    <SvgIcon fontSize="small">
+                                                        <EditIcon/>
+                                                    </SvgIcon>
+                                                </IconButton>
+                                                <DeleteButton
+                                                    index={index}
+                                                    rowId={row.id!}
+                                                    onDelete={roadService.deleteTrailer}
+                                                    handleDelete={handleDeleteRow}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            ) : <NoFoundTableBody loading={loading}/>
                         }
                     </Table>
                 </Box>
@@ -177,12 +153,6 @@ const TrailerListView: React.FC = () => {
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
-            <ConfirmModal
-                isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите удалить прицеп?'}
-                description={'При удалении прицепа, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этого прицепа.'}
-                onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteTrailer(selectedTrailer?.id!!)}/>
         </Card>
     )
 }

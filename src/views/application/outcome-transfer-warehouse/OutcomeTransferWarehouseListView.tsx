@@ -125,7 +125,7 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
                                         <TableRow hover key={row.id}>
                                             <TableCell>{row.createdDate}</TableCell>
                                             <TableCell>{row.createdBy?.name}</TableCell>
-                                            <TableCell>{row.fromCashierName|| '-'}</TableCell>
+                                            <TableCell>{row.fromCashier?.name || '-'}</TableCell>
                                             <TableCell>{row.toCashierName || '-'}</TableCell>
                                             <TableCell>{row.toWarehouse?.name}</TableCell>
                                             <TableCell>{row.amount}</TableCell>
@@ -150,7 +150,7 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
                                             <TableCell>{isPaidApplication(row) ? row.updatedDate : "-"}</TableCell>
                                             <TableCell align="center">
                                                 {
-                                                    !isPaidApplication(row) && canDelete && (
+                                                    row.status === 'WAITING' && canDelete && (
                                                         <DeleteButton
                                                             index={index}
                                                             rowId={row.id!}

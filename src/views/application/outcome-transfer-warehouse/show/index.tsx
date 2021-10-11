@@ -21,6 +21,7 @@ import {deleteSelectedOutcomeTransferWarehouse, setSelectedOutcomeTransferWareho
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
 import ApproveApplication from "../../components/ApproveApplication";
+import {User} from "../../../../model/User";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,7 +47,8 @@ const ShowView: React.FC = () => {
     const canApprove = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.APPROVE)
     const canAddPhoto = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.ADD_PHOTO)
     const [loading, setLoading] = useState(false)
-    const outcomeTransferWarehouse = useSelector((state: { selectedApplicationOutcomeTransferWarehouse: OutcomeTransferWarehouseApplication }) => state.selectedApplicationOutcomeTransferWarehouse)
+    const {selectedApplicationOutcomeTransferWarehouse: outcomeTransferWarehouse, user} =
+        useSelector((state: {selectedApplicationOutcomeTransferWarehouse: OutcomeTransferWarehouseApplication, user: User}) => state)
 
     useEffect(() => () => {
         dispatch(deleteSelectedOutcomeTransferWarehouse())
@@ -79,13 +81,15 @@ const ShowView: React.FC = () => {
 
     const isPaidApplication = (row: OutcomeTransferWarehouseApplication): boolean => row.status === 'PAID';
 
+    const hasApproved = () => canApprove && (outcomeTransferWarehouse.fromCashier === undefined ? true : user.userId !== outcomeTransferWarehouse.fromCashier?.id);
+
     return (
         <Page title={`Заявка №${outcomeTransferWarehouse.id}`}>
             <Container className={classes.root} maxWidth="md">
                 <Header outcomeTransferWarehouse={outcomeTransferWarehouse}/>
                 <Card className={classes.mainContent}>
                     <Box mb={2}>
-                        <ApproveApplication isPaid={isPaidApplication(outcomeTransferWarehouse)} canApprove={canApprove} loading={loading} onApproveApplication={handleApproveApplication} />
+                        <ApproveApplication isPaid={isPaidApplication(outcomeTransferWarehouse)} canApprove={hasApproved()} loading={loading} onApproveApplication={handleApproveApplication} />
                     </Box>
                     <Divider />
                     <Box mt={3}>

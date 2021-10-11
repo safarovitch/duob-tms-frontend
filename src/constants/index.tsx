@@ -159,5 +159,6 @@ export const mapOfStatusApplication = new Map<string, string>(
     [
         ['WAITING', 'Ожидается'],
         ['PAID', 'Оплачено'],
+        ['ON_ROAD', 'В пути'],
     ]
 )

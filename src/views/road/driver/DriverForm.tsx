@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {Driver, DriverFormProps} from "../../../model/Road";
+import {Driver} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import {deleteSelectedDriver} from "../../../store/actions/roadActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -29,9 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-const DriverForm: React.FC<DriverFormProps> = (props: DriverFormProps) => {
-    const {driver} = props;
+const DriverForm: React.FC<{driver: Driver}> = ({driver}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();

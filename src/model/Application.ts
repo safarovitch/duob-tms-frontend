@@ -15,7 +15,7 @@ export interface ApplicationTabPanelProps {
     children?: React.ReactNode;
 }
 
-type StatusApplication = 'WAITING' | 'PAID';
+type StatusApplication = 'WAITING' | 'PAID' | 'ON_ROAD';
 type MoneyUnitApplication = 'TJS' | 'RUB' | 'USD' | 'CNY';
 type RefillBalanceTypeAction = 'REFILL' | 'RETURN';
 
@@ -95,7 +95,10 @@ export interface OutcomeTransferWarehouseApplication {
     createdBy?: CreatedBy;
     toWarehouseId?: number;
     toWarehouse?: Warehouse;
-    fromCashierName?: string;
+    fromCashier?: {
+        id: number;
+        name: string;
+    };
     toCashierName?: string;
     adminApproval?: boolean;
     amount: number;

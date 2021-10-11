@@ -12,7 +12,7 @@ import {
     TablePagination,
     TableRow,
 } from '@material-ui/core';
-import {Edit as EditIcon, Trash as TrashIcon} from 'react-feather';
+import {Edit as EditIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -20,9 +20,9 @@ import {useSnackbar} from "notistack";
 import {Truck} from "../../../model/Road";
 import {setSelectedTruck} from "../../../store/actions/roadActions";
 import roadService from "../../../services/RoadService";
-import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import DeleteButton from "../../../components/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,9 +40,26 @@ const TruckListView: React.FC = () => {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
     const [loading, setLoading] = useState(false);
-    const [isConfirmModalOpen, setOpen] = useState(false);
-    const [trucks, setTrucks] = useState<Truck[]>([]);
-    const [selectedTruck, selectTruck] = useState<Truck>();
+    const [rows, setRows] = useState<Truck[]>([]);
+
+    useEffect(() => {
+        getRows().then(null)
+    }, [page, size]);
+
+    const getRows = async () => {
+        try {
+            setLoading(true)
+            setRows([])
+
+            const result: any = await roadService.getFilteredTrucks(page, size)
+            setRows(result.content)
+            setTotal(result.totalElements)
+        } catch (error: any) {
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -54,48 +71,10 @@ const TruckListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectTruck = (truck: Truck, needDispatch: boolean) => {
-        selectTruck(truck);
-
-        if (needDispatch) {
-            dispatch(setSelectedTruck(truck))
-        } else {
-            setOpen(true)
-        }
+    const handleDeleteRow = () => {
+        setPage(1)
+        getRows().then(null)
     };
-
-    const handleDeleteTruck = async (truckId: number) => {
-        try {
-            setOpen(false)
-            setPage(1)
-
-            await roadService.deleteTruck(truckId);
-
-            enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
-            getTrucks().then(null)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        }
-    };
-
-    const getTrucks = async () => {
-        try {
-            setLoading(true)
-            setTrucks([])
-
-            const result: any = await roadService.getFilteredTrucks(page, size)
-            setTrucks(result.content)
-            setTotal(result.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
-
-    useEffect(() => {
-        getTrucks().then(null)
-    }, [page, size]);
 
     return (
         <Card className={classes.root}>
@@ -122,61 +101,58 @@ const TruckListView: React.FC = () => {
                                 <TableCell>
                                     Остаток бака
                                 </TableCell>
-                                <TableCell align="center" width="12%">
+                                <TableCell align="center" width="15%">
                                     Действия
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         {
-                            trucks?.length > 0
-                                ? (
-                                    <TableBody>
-                                        {trucks.map((truck: Truck) => (
-                                            <TableRow
-                                                hover
-                                                key={truck.id}
-                                            >
-                                                <TableCell>
-                                                    {truck.type}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truck.tankCapacity}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truck.liftingCapacity}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truck.number}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truck.totalBodyCapacity}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truck.residueOfTank}
-                                                </TableCell>
-                                                <TableCell align="center" width="12%">
-                                                    <IconButton
-                                                        component={RouterLink}
-                                                        to={`/app/road/truck/edit`}
-                                                        onClick={() => handleSelectTruck(truck, true)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <EditIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleSelectTruck(truck, false)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <TrashIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                )
-                                : <NoFoundTableBody loading={loading}/>
+                            rows?.length > 0 ? (
+                                <TableBody>
+                                    {rows.map((row: Truck, index) => (
+                                        <TableRow
+                                            hover
+                                            key={row.id}
+                                        >
+                                            <TableCell>
+                                                {row.type}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.tankCapacity}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.liftingCapacity}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.number}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.totalBodyCapacity}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.residueOfTank}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    component={RouterLink}
+                                                    to={`/app/road/truck/edit`}
+                                                    onClick={() => dispatch(setSelectedTruck(row))}
+                                                >
+                                                    <SvgIcon fontSize="small">
+                                                        <EditIcon/>
+                                                    </SvgIcon>
+                                                </IconButton>
+                                                <DeleteButton
+                                                    index={index}
+                                                    rowId={row.id!}
+                                                    onDelete={roadService.deleteTruck}
+                                                    handleDelete={handleDeleteRow}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            ) : <NoFoundTableBody loading={loading}/>
                         }
                     </Table>
                 </Box>
@@ -192,12 +168,6 @@ const TruckListView: React.FC = () => {
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
-            <ConfirmModal
-                isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите удалить машину?'}
-                description={'При удалении машины, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно эту машину.'}
-                onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteTruck(selectedTruck?.id!!)}/>
         </Card>
     )
 }
