@@ -1,8 +1,9 @@
-import {ADMIN} from "./roles";
+import {ADMIN, ENGINEER} from "./roles";
 
 const ROAD = {
     LIST: [
-        ADMIN
+        ADMIN,
+        ENGINEER
     ]
 }
 export default ROAD

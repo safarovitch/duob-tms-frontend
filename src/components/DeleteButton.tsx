@@ -30,7 +30,6 @@ const DeleteButton: React.FC<{ index: number, rowId: number, onDelete: Function,
                 handleDelete(selectedIndex)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-            } finally {
                 setLoading(false)
             }
         }
