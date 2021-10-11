@@ -86,7 +86,7 @@ const OutcomeArticleListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleDeleteRow = async () => {
+    const handleDeleteRow = () => {
         setPage(1)
         getRows().then(null)
     };
