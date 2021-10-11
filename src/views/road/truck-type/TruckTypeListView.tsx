@@ -12,7 +12,7 @@ import {
     TablePagination,
     TableRow,
 } from '@material-ui/core';
-import {Edit as EditIcon, Trash as TrashIcon} from 'react-feather';
+import {Edit as EditIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -20,9 +20,9 @@ import {useSnackbar} from "notistack";
 import {TruckType} from "../../../model/Road";
 import {setSelectedTruckType} from "../../../store/actions/roadActions";
 import roadService from "../../../services/RoadService";
-import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import DeleteButton from "../../../components/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,9 +40,26 @@ const TruckTypeListView: React.FC = () => {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
     const [loading, setLoading] = useState(false);
-    const [isConfirmModalOpen, setOpen] = useState(false);
-    const [truckTypes, setTruckTypes] = useState<TruckType[]>([]);
-    const [selectedTruckType, selectTruckType] = useState<TruckType>();
+    const [rows, setRows] = useState<TruckType[]>([]);
+
+    useEffect(() => {
+        getRows().then(null)
+    }, [page, size]);
+
+    const getRows = async () => {
+        try {
+            setLoading(true)
+            setRows([])
+
+            const data: any = await roadService.getFilteredTruckTypes(page, size)
+            setRows(data.content)
+            setTotal(data.totalElements)
+        } catch (error: any) {
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -54,53 +71,13 @@ const TruckTypeListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectTruckType = (truckType: TruckType, needDispatch: boolean) => {
-        selectTruckType(truckType);
-
-        if (needDispatch) {
-            dispatch(setSelectedTruckType(truckType))
-        } else {
-            setOpen(true)
-        }
+    const handleDeleteRow = () => {
+        setPage(1)
+        getRows().then(null)
     };
-
-    const handleDeleteTruckType = async (truckTypeId: number) => {
-        try {
-            setOpen(false)
-            setPage(1)
-
-            await roadService.deleteTruckType(truckTypeId);
-
-            enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
-            getTruckTypes().then(null)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        }
-    };
-
-    const getTruckTypes = async () => {
-        try {
-            setLoading(true)
-            setTruckTypes([])
-
-            const result: any = await roadService.getFilteredTruckTypes(page, size)
-            setTruckTypes(result.content)
-            setTotal(result.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
-
-    useEffect(() => {
-        getTruckTypes().then(null)
-    }, [page, size]);
 
     return (
-        <Card
-            className={classes.root}
-        >
+        <Card className={classes.root}>
             <PerfectScrollbar>
                 <Box minWidth={700}>
                     <Table>
@@ -127,64 +104,61 @@ const TruckTypeListView: React.FC = () => {
                                 <TableCell>
                                     Норма возврата прицепа с грузом
                                 </TableCell>
-                                <TableCell align="center" width="12%">
+                                <TableCell align="center" width="15%">
                                     Действия
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         {
-                            truckTypes?.length > 0
-                                ? (
-                                    <TableBody>
-                                        {truckTypes.map((truckType: TruckType) => (
-                                            <TableRow
-                                                hover
-                                                key={truckType.id}
-                                            >
-                                                <TableCell>
-                                                    {truckType.name}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truckType.shippingNormWithoutCargo}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truckType.shippingNormWithCargo}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truckType.shippingNormTrailer}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truckType.returnNormWithoutCargo}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truckType.returnNormWithCargo}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {truckType.returnNormTrailerWithCargo}
-                                                </TableCell>
-                                                <TableCell align="center" width="12%">
-                                                    <IconButton
-                                                        component={RouterLink}
-                                                        to={`/app/road/truck-type/edit`}
-                                                        onClick={() => handleSelectTruckType(truckType, true)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <EditIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleSelectTruckType(truckType, false)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <TrashIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                )
-                                : <NoFoundTableBody loading={loading}/>
+                            rows?.length > 0 ? (
+                                <TableBody>
+                                    {rows.map((row: TruckType, index) => (
+                                        <TableRow
+                                            hover
+                                            key={row.id}
+                                        >
+                                            <TableCell>
+                                                {row.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.shippingNormWithoutCargo}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.shippingNormWithCargo}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.shippingNormTrailer}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.returnNormWithoutCargo}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.returnNormWithCargo}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.returnNormTrailerWithCargo}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    component={RouterLink}
+                                                    to={`/app/road/truck-type/edit`}
+                                                    onClick={() => dispatch(setSelectedTruckType(row))}
+                                                >
+                                                    <SvgIcon fontSize="small">
+                                                        <EditIcon/>
+                                                    </SvgIcon>
+                                                </IconButton>
+                                                <DeleteButton
+                                                    index={index}
+                                                    rowId={row.id!}
+                                                    onDelete={roadService.deleteTruckType}
+                                                    handleDelete={handleDeleteRow}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            ) : <NoFoundTableBody loading={loading}/>
                         }
                     </Table>
                 </Box>
@@ -200,12 +174,6 @@ const TruckTypeListView: React.FC = () => {
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
-            <ConfirmModal
-                isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите удалить тип машины?'}
-                description={'При удалении тип машины, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этот тип машины.'}
-                onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteTruckType(selectedTruckType?.id!!)}/>
         </Card>
     );
 }

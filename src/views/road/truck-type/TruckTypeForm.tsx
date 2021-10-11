@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {TruckType, TruckTypeFormProps} from "../../../model/Road";
+import {TruckType} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import {deleteSelectedTruckType} from "../../../store/actions/roadActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -29,9 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-const TruckTypeForm: React.FC<TruckTypeFormProps> = (props: TruckTypeFormProps) => {
-    const {truckType} = props;
+const TruckTypeForm: React.FC<{ truckType: TruckType }> = ({ truckType }) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();

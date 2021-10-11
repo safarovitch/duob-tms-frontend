@@ -12,7 +12,7 @@ import {
     TablePagination,
     TableRow,
 } from '@material-ui/core';
-import {Edit as EditIcon, Trash as TrashIcon} from 'react-feather';
+import {Edit as EditIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -20,9 +20,9 @@ import {useSnackbar} from "notistack";
 import {Driver} from "../../../model/Road";
 import {setSelectedDriver} from "../../../store/actions/roadActions";
 import roadService from "../../../services/RoadService";
-import ConfirmModal from "../../../components/ConfirmModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import DeleteButton from "../../../components/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,9 +40,26 @@ const DriverListView: React.FC = () => {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
     const [loading, setLoading] = useState(false);
-    const [isConfirmModalOpen, setOpen] = useState(false);
-    const [drivers, setDrivers] = useState<Driver[]>([]);
-    const [selectedDriver, selectDriver] = useState<Driver>();
+    const [rows, setRows] = useState<Driver[]>([]);
+
+    useEffect(() => {
+        getRows().then(null)
+    }, [page, size]);
+
+    const getRows = async () => {
+        try {
+            setLoading(true)
+            setRows([])
+
+            const result: any = await roadService.getFilteredDrivers(page, size)
+            setRows(result.content)
+            setTotal(result.totalElements)
+        } catch (error: any) {
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -54,53 +71,13 @@ const DriverListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
-    const handleSelectDriver = (driver: Driver, needDispatch: boolean) => {
-        selectDriver(driver);
-
-        if (needDispatch) {
-            dispatch(setSelectedDriver(driver))
-        } else {
-            setOpen(true)
-        }
+    const handleDeleteRow = () => {
+        setPage(1)
+        getRows().then(null)
     };
-
-    const handleDeleteDriver = async (driverId: number) => {
-        try {
-            setOpen(false)
-            setPage(1)
-
-            await roadService.deleteDriver(driverId);
-
-            enqueueSnackbar(`Успешно удалено!`, {variant: 'success'})
-            getDrivers().then(null)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        }
-    };
-
-    const getDrivers = async () => {
-        try {
-            setLoading(true)
-            setDrivers([])
-
-            const result: any = await roadService.getFilteredDrivers(page, size)
-            setDrivers(result.content)
-            setTotal(result.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
-
-    useEffect(() => {
-        getDrivers().then(null)
-    }, [page, size]);
 
     return (
-        <Card
-            className={classes.root}
-        >
+        <Card className={classes.root}>
             <PerfectScrollbar>
                 <Box minWidth={700}>
                     <Table>
@@ -115,52 +92,49 @@ const DriverListView: React.FC = () => {
                                 <TableCell>
                                     Адрес проживание
                                 </TableCell>
-                                <TableCell align="center" width="12%">
+                                <TableCell align="center" width="15%">
                                     Действия
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         {
-                            drivers?.length > 0
-                                ? (
-                                    <TableBody>
-                                        {drivers.map((driver: Driver) => (
-                                            <TableRow
-                                                hover
-                                                key={driver.id}
-                                            >
-                                                <TableCell>
-                                                    {driver.name}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {driver.phoneNumber}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {driver.address}
-                                                </TableCell>
-                                                <TableCell align="center" width="12%">
-                                                    <IconButton
-                                                        component={RouterLink}
-                                                        to={`/app/road/driver/edit`}
-                                                        onClick={() => handleSelectDriver(driver, true)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <EditIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleSelectDriver(driver, false)}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <TrashIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                )
-                                : <NoFoundTableBody loading={loading}/>
+                            rows?.length > 0 ? (
+                                <TableBody>
+                                    {rows.map((row: Driver, index) => (
+                                        <TableRow
+                                            hover
+                                            key={row.id}
+                                        >
+                                            <TableCell>
+                                                {row.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.phoneNumber}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.address}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    component={RouterLink}
+                                                    to={`/app/road/driver/edit`}
+                                                    onClick={() => dispatch(setSelectedDriver(row))}
+                                                >
+                                                    <SvgIcon fontSize="small">
+                                                        <EditIcon/>
+                                                    </SvgIcon>
+                                                </IconButton>
+                                                <DeleteButton
+                                                    index={index}
+                                                    rowId={row.id!}
+                                                    onDelete={roadService.deleteDriver}
+                                                    handleDelete={handleDeleteRow}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            ) : <NoFoundTableBody loading={loading}/>
                         }
                     </Table>
                 </Box>
@@ -176,12 +150,6 @@ const DriverListView: React.FC = () => {
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
-            <ConfirmModal
-                isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите удалить водителя?'}
-                description={'При удалении водителя, его нельзя будет восстановить. Пожалуйста, убедитесь, что вы хотите удалить именно этого водителя.'}
-                onClose={() => setOpen(false)}
-                onAccept={() => handleDeleteDriver(selectedDriver?.id!!)}/>
         </Card>
     );
 }

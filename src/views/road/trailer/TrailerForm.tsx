@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const TrailerForm: React.FC<TrailerFormProps> = (props: TrailerFormProps) => {
-    const {trailer, trucks} = props;
+const TrailerForm: React.FC<TrailerFormProps> = ({trailer, trucks}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();

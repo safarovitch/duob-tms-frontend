@@ -33,8 +33,9 @@ function RoadTruckView() {
         (async () => {
             try {
                 setLoading(true)
-                const result: any = await roadService.getTruckTypes()
-                setTruckTypes(result)
+                const data: any = await roadService.getTruckTypes()
+
+                setTruckTypes(data)
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -50,20 +51,16 @@ function RoadTruckView() {
     }
 
     return (
-        <Page
-            title={'Машина'}
-        >
+        <Page title={'Машина'}>
             {
-                truckTypes.length > 0
-                    ? (
-                        <Container className={classes.root} maxWidth="md">
-                            <Header truck={truck}/>
-                            <Box mt={3}>
-                                <TruckForm truck={truck} truckTypes={truckTypes}/>
-                            </Box>
-                        </Container>
-                    )
-                    : <LoadingLayout loading={loading} hasError={hasError}/>
+                truckTypes.length > 0 ? (
+                    <Container className={classes.root} maxWidth="md">
+                        <Header truck={truck}/>
+                        <Box mt={3}>
+                            <TruckForm truck={truck} truckTypes={truckTypes}/>
+                        </Box>
+                    </Container>
+                ) : <LoadingLayout loading={loading} hasError={hasError}/>
             }
         </Page>
     );

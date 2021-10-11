@@ -151,11 +151,6 @@ export interface Driver {
     address: string;
 }
 
-export interface DriverFormProps {
-    className?: string;
-    driver: Driver;
-}
-
 export interface Truck {
     id?: number;
     type: string;
@@ -169,7 +164,6 @@ export interface Truck {
 }
 
 export interface TruckFormProps {
-    className?: string;
     truck: Truck;
     truckTypes: TruckType[];
 }
@@ -184,7 +178,6 @@ export interface Trailer {
 }
 
 export interface TrailerFormProps {
-    className?: string;
     trailer: Trailer;
     trucks: Truck[];
 }
@@ -198,9 +191,4 @@ export interface TruckType {
     returnNormWithoutCargo: number;
     returnNormWithCargo: number;
     returnNormTrailerWithCargo: number;
-}
-
-export interface TruckTypeFormProps {
-    className?: string;
-    truckType: TruckType;
 }

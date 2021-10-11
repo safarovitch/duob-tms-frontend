@@ -51,16 +51,15 @@ function RoadTrailerView() {
 
     return (
         <Page title={'Прицеп'}>
-            {trucks.length > 0
-                ? (
+            {
+                trucks.length > 0 ? (
                     <Container className={classes.root} maxWidth="md">
                         <Header trailer={trailer}/>
                         <Box mt={3}>
                             <TrailerForm trailer={trailer} trucks={trucks}/>
                         </Box>
                     </Container>
-                )
-                : <LoadingLayout loading={loading} hasError={hasError} />
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
             }
         </Page>
     );

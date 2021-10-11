@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const TruckForm: React.FC<TruckFormProps> = (props: TruckFormProps) => {
-    const {truck, truckTypes} = props;
+const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
