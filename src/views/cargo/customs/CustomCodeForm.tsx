@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import * as Yup from 'yup';
 import {Formik, FormikProps} from 'formik';
 import {useSnackbar} from 'notistack';
@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {CargoCustomCode, CargoProduct, CustomCodeFormProps, Units} from "../../../model/Cargo";
+import {CargoCustomCode, CustomCodeFormProps, Units} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
 import {deleteSelectedCustomCode} from "../../../store/actions/cargoActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -38,20 +38,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProps) => {
-    const {customCode} = props;
+const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
-    const [products, setProducts] = useState<CargoProduct[]>([])
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomCode())
-    }, [])
-
-    useEffect(() => {
-        getAllProducts()
     }, [])
 
     const initialValues: CargoCustomCode = {
@@ -74,20 +68,6 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = (props: CustomCodeFormProp
         vat: Yup.string().max(255),
         totalRate: Yup.string().max(255),
     })
-
-    const getAllProducts = async () => {
-        try {
-            const resProducts: any = await cargoService.getAllProducts();
-            setProducts(resProducts)
-
-        } catch (error: any) {
-
-            enqueueSnackbar(`Произошла ошибка. Не получилось получить список всех Наименований. ${error.message}`, {
-                variant: 'error',
-                action: <Button onClick={() => getAllProducts()}>Рестарт</Button>
-            });
-        }
-    }
 
     const handleAddCustomCode = async (values: CargoCustomCode, formActions: { [key: string]: any }) => {
         try {

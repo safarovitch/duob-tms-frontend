@@ -1,11 +1,15 @@
 import {Box, Container, makeStyles} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import Page from "../../../components/Page";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Header from "./Header";
 import {useSelector} from "react-redux";
-import {CargoCustomCode} from "../../../model/Cargo";
+import {CargoCustomCode, CargoProduct} from "../../../model/Cargo";
 import CustomCodeForm from "./CustomCodeForm";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
+import {useSnackbar} from "notistack";
+import cargoService from "../../../services/CargoService";
+import LoadingLayout from "../../../components/LoadingLayout";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,28 +20,49 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CargoProductView() {
-    const classes = useStyles();
-    const customCode = useSelector((state: { selectedCustomCode: CargoCustomCode }) => state.selectedCustomCode);
-    const history = useHistory();
+const CargoProductView: React.FC = () => {
+    const classes = useStyles()
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
+    const [loading, setLoading] = useState(false)
+    const [hasError, setHasError] = useState(false)
+    const [products, setProducts] = useState<CargoProduct[]>([])
+    const customCode = useSelector((state: { selectedCustomCode: CargoCustomCode }) => state.selectedCustomCode)
+
+    useEffect(() => {
+        (async () => {
+            try {
+                setLoading(true)
+
+                const data: any = await cargoService.getAllProducts()
+                setProducts(data)
+            } catch (error: any) {
+                setHasError(true)
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [])
+
+
     if (!customCode && history.location.pathname.includes('edit')) {
         history.go(-1);
         return null;
     }
 
     return (
-        <Page
-            className={classes.root}
-            title={'Томоженный код'}
-        >
-            <Container maxWidth="lg">
-
-                <Header customCode={customCode}/>
-
-                <Box mt={3}>
-                    <CustomCodeForm customCode={customCode}/>
-                </Box>
-            </Container>
+        <Page title={'Томоженный код'}>
+            {
+                products.length > 0 ? (
+                    <Container className={classes.root} maxWidth="lg">
+                        <Header customCode={customCode}/>
+                        <Box mt={3}>
+                            <CustomCodeForm customCode={customCode} products={products} />
+                        </Box>
+                    </Container>
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
+            }
         </Page>
     );
 }

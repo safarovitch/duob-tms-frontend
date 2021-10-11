@@ -23,8 +23,8 @@ export interface ProductFormProps {
 }
 
 export interface CustomCodeFormProps {
-    className?: string;
     customCode: CargoCustomCode;
+    products: CargoProduct[];
 }
 
 export interface CargoCustomCode {
@@ -86,6 +86,7 @@ export interface CargoTariff {
     cargoTypeDto?: CargoType;
 }
 export interface CargoTariffFormProps {
-    className?: string;
     cargoTariff: CargoTariff;
+    cargoTypes: CargoType[];
+    warehouses: Warehouse[];
 }
