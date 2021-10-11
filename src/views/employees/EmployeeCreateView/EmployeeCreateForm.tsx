@@ -205,6 +205,7 @@ const EmployeeCreateForm: React.FC<{className?: string, roles: Role[], warehouse
                                         name="warehouseId"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
+                                        value={values.warehouseId || ''}
                                         variant="outlined"
                                         required
                                         SelectProps={{
