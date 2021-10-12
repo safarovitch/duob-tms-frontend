@@ -34,6 +34,16 @@ export interface CustomerTabPanelProps {
 
 export interface CustomerActiveCargo {
     id?: number;
+    amount: number;
+    barcode: string;
+    cargoTypeName: string;
+    heightCargo: number;
+    lengthCargo: number;
+    productName: string;
+    status: boolean;
+    totalVolume: number;
+    totalWeight: number;
+    widthCargo: number;
 }
 
 export interface CustomerReceivedCargo {

@@ -56,6 +56,7 @@ const ActiveCargoListView: React.FC = () => {
 
         try {
             const activeCargos: any = await customerService.getActiveCargos(id, page, size)
+            console.log(activeCargos)
             setActiveCargos(activeCargos.content)
             setTotal(activeCargos.totalElements)
             setLoading(false)
@@ -121,9 +122,36 @@ const ActiveCargoListView: React.FC = () => {
                                         hover
                                         key={activeCargo.id}
                                     >
-                                        {/*<TableCell>*/}
-                                        {/*    {activeCargo.name}*/}
-                                        {/*</TableCell>*/}
+                                        <TableCell>
+                                            {activeCargo.productName}
+                                        </TableCell>
+                                        <TableCell>
+                                            {activeCargo.cargoTypeName}
+                                        </TableCell>
+                                        <TableCell>
+                                            -
+                                        </TableCell>
+                                        <TableCell>
+                                            {activeCargo.lengthCargo}/{activeCargo.widthCargo}/{activeCargo.heightCargo}
+                                        </TableCell>
+                                        <TableCell>
+                                            {activeCargo.totalVolume}
+                                        </TableCell>
+                                        <TableCell>
+                                            {activeCargo.totalWeight}
+                                        </TableCell>
+                                        <TableCell>
+                                            {activeCargo.amount}
+                                        </TableCell>
+                                        <TableCell>
+                                            {activeCargo.status.toString()}
+                                        </TableCell>
+                                        <TableCell>
+                                            -
+                                        </TableCell>
+                                        <TableCell>
+                                            {activeCargo.barcode}
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
