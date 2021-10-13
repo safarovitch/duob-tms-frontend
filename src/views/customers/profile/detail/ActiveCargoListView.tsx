@@ -90,7 +90,6 @@ const ActiveCargoListView: React.FC = () => {
                             <TableRow>
                                 <TableCell>Груз</TableCell>
                                 <TableCell>Вид груза</TableCell>
-                                <TableCell>Номер рейса</TableCell>
                                 <TableCell>Д/Ш/В</TableCell>
                                 <TableCell>Обьем(м3)</TableCell>
                                 <TableCell>Вес(кг)</TableCell>
@@ -120,9 +119,6 @@ const ActiveCargoListView: React.FC = () => {
                                                 {row.cargoTypeName}
                                             </TableCell>
                                             <TableCell>
-                                                -
-                                            </TableCell>
-                                            <TableCell>
                                                 {row.lengthCargo}/{row.widthCargo}/{row.heightCargo}
                                             </TableCell>
                                             <TableCell>
@@ -141,7 +137,7 @@ const ActiveCargoListView: React.FC = () => {
                                                 -
                                             </TableCell>
                                             <TableCell>
-                                                {row.barcode}
+                                                {row.barcode === '-' ? 'Сборный': row.barcode}
                                             </TableCell>
                                         </TableRow>
                                     ))}

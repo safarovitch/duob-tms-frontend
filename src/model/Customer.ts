@@ -48,6 +48,7 @@ export interface CustomerCargo {
 }
 
 interface CargoGeneral{
+    description: string;
     barcode: string;
 }
 

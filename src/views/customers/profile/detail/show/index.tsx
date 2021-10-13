@@ -45,7 +45,7 @@ const CargoShow: React.FC = () => {
 
     return (
         <Page title={`Груз: ${customerCargo.productName}`}>
-            <Container className={classes.root} maxWidth="lg">
+            <Container className={classes.root} maxWidth="xl">
                 <Header customerCargo={customerCargo} />
                 <Box mt={3}>
                     <Grid container spacing={3}>
@@ -107,7 +107,7 @@ const CargoShow: React.FC = () => {
                                                     <TableCell>
                                                         Текущая местоположение
                                                     </TableCell>
-                                                    <TableCell>
+                                                    <TableCell width="30%">
                                                         Путь груза
                                                     </TableCell>
                                                     <TableCell>
@@ -127,9 +127,7 @@ const CargoShow: React.FC = () => {
                                                         <TableCell>5 дней</TableCell>
                                                         <TableCell>ok</TableCell>
                                                         <TableCell>Душанбе</TableCell>
-                                                        <TableCell>
-                                                            Склад - Урумчи
-                                                        </TableCell>
+                                                        <TableCell>{row.description}</TableCell>
                                                         <TableCell>{row.barcode}</TableCell>
                                                     </TableRow>
                                                 ))}
