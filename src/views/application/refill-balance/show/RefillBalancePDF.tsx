@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     main: {
-        padding: 24
+        paddingVertical: 10,
+        paddingHorizontal: 24
     },
     row: {
         flexDirection: 'row',
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
         width: '250px'
     },
     title: {
-        fontSize: 14
+        fontSize: 13
     },
     body: {
         fontSize: 10,
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
         marginTop: 14
     },
     mt1: {
-        marginTop: 40
+        marginTop: 24
     },
 });
 
@@ -89,7 +90,6 @@ const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({
                 </View>
             </View>
             <LinePDF />
-
             <View style={styles.row}>
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}>
@@ -116,6 +116,8 @@ const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({
     return (
         <Document>
             <Page size="A4" style={styles.page}>
+                {mainContent}
+                <DividerPDF/>
                 {mainContent}
                 <DividerPDF/>
                 {mainContent}

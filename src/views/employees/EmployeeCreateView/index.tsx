@@ -10,6 +10,7 @@ import {Role} from "../../../model/Employee";
 import {Warehouse} from "../../../model/Warehouse";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import LoadingLayout from "../../../components/LoadingLayout";
+import {useHistory} from "react-router";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 const EmployeeCreateView: React.FC = () => {
     const classes = useStyles();
+    const history = useHistory()
     const {enqueueSnackbar} = useSnackbar();
     const [roles, setRoles] = useState<Role[]>([]);
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
@@ -35,8 +37,13 @@ const EmployeeCreateView: React.FC = () => {
                 const dataRoles: any = await employeeService.getRoles()
                 const dataWarehouses: any = await warehouseService.getAllWarehouse()
 
-                setRoles(dataRoles)
-                setWarehouses(dataWarehouses)
+                if (dataWarehouses.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
+                } else {
+                    setRoles(dataRoles)
+                    setWarehouses(dataWarehouses)
+                }
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

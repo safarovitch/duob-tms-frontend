@@ -8,6 +8,7 @@ import {useSnackbar} from "notistack";
 import LoadingLayout from "../../../components/LoadingLayout";
 import warehouseService from "../../../services/WarehouseService";
 import {Warehouse} from "../../../model/Warehouse";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,8 +20,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Index() {
-    const classes = useStyles();
-    const {enqueueSnackbar} = useSnackbar();
+    const classes = useStyles()
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [warehouses, setWarehouses] = useState<Warehouse[]>([])
@@ -31,7 +33,10 @@ function Index() {
                 setLoading(true)
                 const data: any = await warehouseService.getAllWarehouse()
 
-                setWarehouses(data)
+                if (data.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
+                } else setWarehouses(data)
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

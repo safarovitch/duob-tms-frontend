@@ -39,8 +39,14 @@ function CargoTariffView() {
 
                 const dataCargoTypes: any = await cargoService.getAllCargoTypes();
                 const dataWarehouses: any = await warehouseService.getAllWarehouse();
-                setCargoTypes(dataCargoTypes)
-                setWarehouses(dataWarehouses)
+
+                if (dataCargoTypes.length === 0 || dataWarehouses.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала склад и виды груза', {variant: 'info'})
+                } else {
+                    setCargoTypes(dataCargoTypes)
+                    setWarehouses(dataWarehouses)
+                }
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
