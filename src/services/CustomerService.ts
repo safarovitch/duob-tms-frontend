@@ -78,7 +78,7 @@ class CustomerService {
     })
 
     getActiveCargos = (id: string, page: number, size: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/clients/income-cargos?page=${page}&size=${size}`)
+        api.get(`${API_BASE_URL}/clients/income-cargos/${id ? `${id}/` : ``}?page=${page}&size=${size}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

@@ -32,7 +32,7 @@ export interface CustomerTabPanelProps {
     value: CargoStuffTab;
 }
 
-export interface CustomerActiveCargo {
+export interface CustomerCargo {
     id?: number;
     amount: number;
     barcode: string;
@@ -44,6 +44,11 @@ export interface CustomerActiveCargo {
     totalVolume: number;
     totalWeight: number;
     widthCargo: number;
+    cargos?: CargoGeneral[]
+}
+
+interface CargoGeneral{
+    barcode: string;
 }
 
 export interface CustomerReceivedCargo {
