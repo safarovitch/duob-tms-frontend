@@ -16,6 +16,7 @@ import cargoService from "../../../services/CargoService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import DeleteButton from "../../../components/DeleteButton";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import {mapOfUnits} from "../../../constants";
 
 const useStyles = makeStyles(() => ({
     queryField: {
@@ -34,6 +35,7 @@ const CustomCodeListView: React.FC = () => {
     const debouncedSearchTerm = useDebounce(query, 500);
     const [rows, setRows] = useState<CargoCustomCode[]>([]);
     const [loading, setLoading] = useState(false);
+    const units = mapOfUnits
 
     useEffect(() => {
         getRows().then(null)
@@ -125,7 +127,7 @@ const CustomCodeListView: React.FC = () => {
                                             <TableCell>{row.baseRate}</TableCell>
                                             <TableCell>{row.vat}</TableCell>
                                             <TableCell>{row.totalRate}</TableCell>
-                                            <TableCell>{row.unit}</TableCell>
+                                            <TableCell>{units.get(row.unit)}</TableCell>
                                             <TableCell align="center">
                                                 <IconButton
                                                     component={RouterLink}

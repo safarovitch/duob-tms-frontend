@@ -11,7 +11,8 @@ import {
     Grid,
     makeStyles,
     MenuItem,
-    TextField, Typography
+    TextField,
+    Typography
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -71,6 +72,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
 
     const handleAddCustomCode = async (values: CargoCustomCode, formActions: { [key: string]: any }) => {
         try {
+            values.unit = values.isUnitThing ? Units.thing : Units.ton
             await cargoService.postCustomCode(values)
 
             enqueueSnackbar('Томоженный код создан', {variant: 'success'});
@@ -87,6 +89,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
     const handleUpdateCustomCode = async (values: CargoCustomCode, formActions: { [key: string]: any }) => {
         try {
             values.id = customCode?.id;
+            values.unit = values.isUnitThing ? Units.thing : Units.ton
 
             await cargoService.updateCustomCode(values)
 
