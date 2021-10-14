@@ -83,6 +83,11 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/customers/:id/:stuffId/show',
+                        component: lazy(() => import('./views/customers/profile/detail/show'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/employees',
                         perm: PERMISSIONS.EMPLOYEE.LIST,
                         component: lazy(() => import('./views/employees/EmployeeListView'))
@@ -435,6 +440,11 @@ const routesConfig = [
                         exact: true,
                         path: '/customer/:stuffId',
                         component: lazy(() => import('./views/customers/profile/CustomerDetail'))
+                    },
+                    {
+                        exact: true,
+                        path: '/customer/:stuffId/show',
+                        component: lazy(() => import('./views/customers/profile/detail/show'))
                     },
                     {
                         component: () => <Redirect to="/404" />

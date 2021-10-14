@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
 import accountReducer from "./accountReducer";
-import customerReducer from "./customerReducer";
+import {customerReducer, customerCargoReducer} from "./customerReducer";
 import employeeReducer from './employeeReducer';
 import providerReducer from "./providerReducer";
 import warehouseReducer from "./warehouseReducer";
@@ -34,6 +34,7 @@ const rootReducer = combineReducers({
     selectedApplicationIncomeArticle: applicationIncomeArticleReducer,
     selectedApplicationOutcomeArticle: applicationOutcomeArticleReducer,
     selectedApplicationOutcomeTransferWarehouse: applicationOutcomeTransferWarehouseReducer,
+    selectedCustomerCargo: customerCargoReducer,
 });
 
 export default rootReducer;

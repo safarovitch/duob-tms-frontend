@@ -1,6 +1,7 @@
 export interface Warehouse {
-    id?: number
-    name: string
+    id?: number;
+    name: string;
+    destination: boolean;
 }
 
 export interface WarehouseListProps {

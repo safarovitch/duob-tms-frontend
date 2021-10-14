@@ -133,7 +133,7 @@ export const mapOfRoles = new Map(
     [
         ['MANAGER', 'Менеджер'],
         ['WAREHOUSEMAN', 'Завсклад'],
-        ['CASHIER', 'Касир'],
+        ['CASHIER', 'Кассир'],
         ['CLIENT', 'Клиент'],
         ['ADMIN', 'Админ'],
         ['ENGINEER', 'Инженер'],

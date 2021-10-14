@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {
     Box,
-    Card, CircularProgress,
+    Card,
     makeStyles,
     Table,
     TableBody,
@@ -10,11 +10,15 @@ import {
     TableRow,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {CustomerActiveCargo} from "../../../../model/Customer";
+import {CustomerCargo} from "../../../../model/Customer";
 import customerService from "../../../../services/CustomerService";
 import {useSnackbar} from "notistack";
 import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import {useParams} from "react-router";
+import {useDispatch} from "react-redux";
+import NoFoundTableBody from "../../../../components/NoFoundTableBody";
+import {useHistory} from "react-router-dom";
+import {setSelectedCustomerCargo} from "../../../../store/actions/customerActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,38 +40,36 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 const ActiveCargoListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
-    const [activeCargos, setActiveCargos] = useState<CustomerActiveCargo[]>([])
+    const history = useHistory()
+    const dispatch = useDispatch()
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(5)
+    const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
     const {id} = useParams<{id: string}>()
 
     useEffect(() => {
-        getActiveCargos().then(null)
+        getRows().then(null)
     }, [page, size])
 
-    const getActiveCargos = async () => {
-        setLoading(true)
-
+    const getRows = async () => {
         try {
-            const activeCargos: any = await customerService.getActiveCargos(id, page, size)
-            setActiveCargos(activeCargos.content)
-            setTotal(activeCargos.totalElements)
-            setLoading(false)
+            setLoading(true)
+            setRows([])
+
+            const data: any = await customerService.getActiveCargos(id, page, size)
+            setRows(data.content)
+            setTotal(data.totalElements)
         } catch (error: any) {
-            setLoading(false)
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
+            setLoading(false)
         }
     }
-
-    const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage + 1);
-    };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -75,61 +77,74 @@ const ActiveCargoListView: React.FC = () => {
         setPage(1);
     };
 
-    return activeCargos && (
+    const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+        setPage(newPage + 1);
+    };
+
+    return rows && (
         <Card className={classes.root}>
             <PerfectScrollbar>
-                <Box minWidth={700} className={loading ? classes.tableProgressBoxStyle : ''}>
+                <Box minWidth={700}>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>
-                                    Груз
-                                </TableCell>
-                                <TableCell>
-                                    Вид груза
-                                </TableCell>
-                                <TableCell>
-                                    Номер рейса
-                                </TableCell>
-                                <TableCell>
-                                    Д/Ш/В
-                                </TableCell>
-                                <TableCell>
-                                    Обьем(м3)
-                                </TableCell>
-                                <TableCell>
-                                    Вес(кг)
-                                </TableCell>
-                                <TableCell>
-                                    Стоимост $
-                                </TableCell>
-                                <TableCell>
-                                    Статус
-                                </TableCell>
-                                <TableCell>
-                                    Просроченно дней
-                                </TableCell>
-                                <TableCell>
-                                    Штрих-код
-                                </TableCell>
+                                <TableCell>Груз</TableCell>
+                                <TableCell>Вид груза</TableCell>
+                                <TableCell>Д/Ш/В</TableCell>
+                                <TableCell>Обьем(м3)</TableCell>
+                                <TableCell>Вес(кг)</TableCell>
+                                <TableCell>Стоимост $</TableCell>
+                                <TableCell>Статус</TableCell>
+                                <TableCell>Просроченно дней</TableCell>
+                                <TableCell>Штрих-код</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
-                            {activeCargos.map((activeCargo: CustomerActiveCargo) => {
-                                return (
-                                    <TableRow
-                                        hover
-                                        key={activeCargo.id}
-                                    >
-                                        {/*<TableCell>*/}
-                                        {/*    {activeCargo.name}*/}
-                                        {/*</TableCell>*/}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
+                        {
+                            rows.length > 0 ? (
+                                <TableBody>
+                                    {rows.map((row: CustomerCargo) => (
+                                        <TableRow
+                                            hover
+                                            style={{cursor: 'pointer'}}
+                                            key={row.id}
+                                            onClick={() => {
+                                                dispatch(setSelectedCustomerCargo(row))
+                                                history.push(`${window.location.pathname}/show`)
+                                            }}
+                                        >
+                                            <TableCell>
+                                                {row.productName}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.cargoTypeName}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.lengthCargo}/{row.widthCargo}/{row.heightCargo}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.totalVolume}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.totalWeight}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.amount}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.status.toString()}
+                                            </TableCell>
+                                            <TableCell>
+                                                -
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.barcode === '-' ? 'Сборный': row.barcode}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            ) : <NoFoundTableBody loading={loading}/>
+                        }
                     </Table>
-                    {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
                 </Box>
             </PerfectScrollbar>
             <TablePagination

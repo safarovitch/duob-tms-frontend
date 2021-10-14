@@ -121,6 +121,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Название</TableCell>
+                                            <TableCell>Склад назначения</TableCell>
                                             <TableCell align="center" width="15%">Действия</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -130,6 +131,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                                 {rows.map((row: Warehouse, index) => (
                                                     <TableRow hover key={row.id}>
                                                         <TableCell>{row.name}</TableCell>
+                                                        <TableCell>{row.destination ? 'Да' : 'Нет'}</TableCell>
                                                         <TableCell align="center">
                                                             <IconButton
                                                                 component={RouterLink}
