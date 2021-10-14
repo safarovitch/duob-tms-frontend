@@ -12,6 +12,7 @@ import {Driver, Truck} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import LoadingLayout from "../../../components/LoadingLayout";
 import MainForm from "./MainForm";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RoadCreateView: React.FC = () => {
     const classes = useStyles()
+    const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
@@ -37,8 +39,14 @@ const RoadCreateView: React.FC = () => {
 
                 const fetchTrucks: any = await roadService.getTrucks()
                 const fetchDrivers: any = await roadService.getFilteredDrivers(1, 1000)
-                setTrucks(fetchTrucks)
-                setDrivers(fetchDrivers.content)
+
+                if (fetchTrucks.length === 0 || fetchDrivers.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала машину и водителя', {variant: 'info'})
+                } else {
+                    setTrucks(fetchTrucks)
+                    setDrivers(fetchDrivers.content)
+                }
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

@@ -33,8 +33,12 @@ function RoadTrailerView() {
         (async () => {
             try {
                 setLoading(true)
-                const result: any = await roadService.getTrucks()
-                setTrucks(result)
+                const data: any = await roadService.getTrucks()
+
+                if (data.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала машину', {variant: 'info'})
+                } else setTrucks(data)
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

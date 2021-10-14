@@ -11,6 +11,7 @@ import {Employee} from "../../../model/Employee";
 import articleService from "../../../services/ArticleService";
 import {ARTICLES} from "../../../constants";
 import employeeService from "../../../services/EmployeeService";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,8 +23,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function RoadTrailerView() {
-    const classes = useStyles();
-    const {enqueueSnackbar} = useSnackbar();
+    const classes = useStyles()
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [articles, setArticles] = useState<Article[]>([])
@@ -33,11 +35,16 @@ function RoadTrailerView() {
         (async () => {
             try {
                 setLoading(true)
-                const fetchArticles: any = await articleService.getArticles(ARTICLES.OUTCOME)
-                const fetchEmployees: any = await employeeService.getEmployees()
+                const dataArticles: any = await articleService.getArticles(ARTICLES.OUTCOME)
+                const dataEmployees: any = await employeeService.getEmployees()
 
-                setArticles(fetchArticles)
-                setEmployees(fetchEmployees)
+                if (dataArticles.length === 0 || dataEmployees.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала статью и сотрудника', {variant: 'info'})
+                } else {
+                    setArticles(dataArticles)
+                    setEmployees(dataEmployees)
+                }
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

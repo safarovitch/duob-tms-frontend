@@ -35,7 +35,11 @@ const CargoProductView: React.FC = () => {
                 setLoading(true)
 
                 const data: any = await cargoService.getAllProducts()
-                setProducts(data)
+
+                if (data.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала наименования', {variant: 'info'})
+                } else setProducts(data)
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

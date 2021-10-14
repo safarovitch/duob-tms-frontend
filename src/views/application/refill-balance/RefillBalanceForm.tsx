@@ -96,7 +96,7 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
         amount = isNaN(amount) ? 0 : amount
         currency = isNaN(currency) ? 0 : currency
 
-        return (amount * currency).toFixed(2);
+        return (amount / currency).toFixed(2);
     }
 
     return (
@@ -232,7 +232,10 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
                                         label="Выберите валюту"
                                         name="moneyUnit"
                                         onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
+                                        onChange={(e) => {
+                                            props.setFieldValue('currency', e.target.value === 'USD' ? 1 : 0)
+                                            props.handleChange(e)
+                                        }}
                                         value={props.values.moneyUnit}
                                         variant="outlined"
                                         required
