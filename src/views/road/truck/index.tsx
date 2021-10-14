@@ -34,8 +34,10 @@ function RoadTruckView() {
             try {
                 setLoading(true)
                 const data: any = await roadService.getTruckTypes()
-
-                setTruckTypes(data)
+                if (data.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала тип машины', {variant: 'info'})
+                } else setTruckTypes(data)
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

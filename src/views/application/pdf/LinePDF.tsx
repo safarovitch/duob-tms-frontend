@@ -3,8 +3,8 @@ import {View, StyleSheet} from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
     root: {
-        marginTop: 24,
-        marginBottom: 24,
+        marginTop: 10,
+        marginBottom: 10,
         borderBottomColor: 'black',
         borderBottomStyle: 'solid',
         borderBottomWidth: 1

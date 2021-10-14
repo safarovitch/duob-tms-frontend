@@ -162,3 +162,10 @@ export const mapOfStatusApplication = new Map<string, string>(
         ['ON_ROAD', 'В пути'],
     ]
 )
+
+export const mapOfUnits = new Map<string, string>(
+    [
+        ['THING', 'штука'],
+        ['TON', 'тонна'],
+    ]
+)

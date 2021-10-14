@@ -34,9 +34,12 @@ function RoadTrailerView() {
         (async () => {
             try {
                 setLoading(true)
-                const fetchCustomers: any = await customerService.getCustomers()
+                const data: any = await customerService.getCustomers()
 
-                setCustomers(fetchCustomers)
+                if (data.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала клиента', {variant: 'info'})
+                } else setCustomers(data)
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

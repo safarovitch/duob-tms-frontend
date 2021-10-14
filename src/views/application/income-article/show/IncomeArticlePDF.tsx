@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     main: {
-        padding: 24
+        paddingVertical: 10,
+        paddingHorizontal: 24
     },
     row: {
         flexDirection: 'row',
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
         width: '250px'
     },
     title: {
-        fontSize: 14
+        fontSize: 13
     },
     body: {
         fontSize: 10,
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
         marginTop: 14
     },
     mt1: {
-        marginTop: 40
+        marginTop: 24
     },
 });
 
@@ -113,6 +114,8 @@ const IncomeArticlePDF: React.FC<{incomeArticle: IncomeByArticleApplication}> = 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
+                {mainContent}
+                <DividerPDF/>
                 {mainContent}
                 <DividerPDF/>
                 {mainContent}

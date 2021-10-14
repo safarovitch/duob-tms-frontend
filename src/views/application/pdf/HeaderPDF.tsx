@@ -12,23 +12,23 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     brandLogo: {
-        height: 50,
-        width: 50
+        height: 48,
+        width: 48
     },
     titleContent: {
         marginLeft: '10px'
     },
     title: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 500
     },
     subTitle: {
         marginLeft: 17,
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 500
     },
     applicantId: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: 500
     }
 })
