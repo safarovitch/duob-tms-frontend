@@ -3,6 +3,12 @@ import {Customer} from "../model/Customer";
 import {API_BASE_URL} from "../config";
 
 class CustomerService {
+    getBalance = () => new Promise((resolve, reject) => {
+        api.get(API_BASE_URL + '/clients/balance')
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     postNewCustomer = (customer: Customer) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + '/clients', customer)
             .then((response) => {

@@ -10,7 +10,7 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles
+    makeStyles, Checkbox, Typography
 } from '@material-ui/core';
 import {Warehouse, WarehouseFormProps} from "../../../model/Warehouse";
 import warehouseService from "../../../services/WarehouseService";
@@ -31,12 +31,14 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonsWidth: {
         width: 177
+    },
+    checkbox: {
+        display: 'flex'
+    },
+    checkboxLabel: {
+        marginTop: 8
     }
 }));
-
-interface WarehouseFormValues {
-    name: string;
-}
 
 const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => {
     const classes = useStyles();
@@ -46,6 +48,7 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
 
     const initialValues: Warehouse = {
         name: warehouse?.name || '',
+        destination: warehouse?.destination || false
     }
 
     const validationSchema = Yup.object().shape({
@@ -113,7 +116,7 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
                 })
             }}
         >
-            {(props: FormikProps<WarehouseFormValues>) => (
+            {(props: FormikProps<Warehouse>) => (
                 <form
                     className={clsx(classes.root, className)}
                     onSubmit={props.handleSubmit}
@@ -139,6 +142,19 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
                                             shrink: true,
                                         }}
                                     />
+                                </Grid>
+                                <Grid item md={12} xs={12}>
+                                    <label onClick={props.handleChange} className={classes.checkbox}>
+                                        <Checkbox
+                                            checked={props.values.destination}
+                                            name="destination"
+                                            color="primary"
+                                            onChange={props.handleChange}
+                                        />
+                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
+                                            Склад назначения
+                                        </Typography>
+                                    </label>
                                 </Grid>
                             </Grid>
                             <Box mt={2} pb={1} className={classes.buttons}>
