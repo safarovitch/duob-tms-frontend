@@ -10,15 +10,14 @@ import {
     TableRow,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {CustomerCargo} from "../../../../model/Customer";
-import customerService from "../../../../services/CustomerService";
+import {CustomerCargo} from "../../model/Customer";
 import {useSnackbar} from "notistack";
-import errorMessageHandler from "../../../../utils/errorMessageHandler";
-import {useParams} from "react-router";
+import errorMessageHandler from "../../utils/errorMessageHandler";
 import {useDispatch} from "react-redux";
-import NoFoundTableBody from "../../../../components/NoFoundTableBody";
+import NoFoundTableBody from "../../components/NoFoundTableBody";
 import {useHistory} from "react-router-dom";
-import {setSelectedCustomerCargo} from "../../../../store/actions/customerActions";
+import {setSelectedCustomerCargo} from "../../store/actions/customerActions";
+import roadService from "../../services/RoadService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ActiveCargoListView: React.FC = () => {
+const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
@@ -50,7 +49,6 @@ const ActiveCargoListView: React.FC = () => {
     const [size, setSize] = useState(5)
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
-    const {id} = useParams<{id: string}>()
 
     useEffect(() => {
         getRows().then(null)
@@ -61,7 +59,7 @@ const ActiveCargoListView: React.FC = () => {
             setLoading(true)
             setRows([])
 
-            const data: any = await customerService.getActiveCargos(id, page, size)
+            const data: any = await roadService.getRoadCargos(roadId, page, size)
             setRows(data.content)
             setTotal(data.totalElements)
         } catch (error: any) {
@@ -81,6 +79,8 @@ const ActiveCargoListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
+    const isGroupCargo = (barcode: string) => barcode === '-';
+
     return rows && (
         <Card className={classes.root}>
             <PerfectScrollbar>
@@ -94,8 +94,6 @@ const ActiveCargoListView: React.FC = () => {
                                 <TableCell>Обьем(м3)</TableCell>
                                 <TableCell>Вес(кг)</TableCell>
                                 <TableCell>Стоимост $</TableCell>
-                                <TableCell>Статус</TableCell>
-                                <TableCell>Просроченно дней</TableCell>
                                 <TableCell>Штрих-код</TableCell>
                             </TableRow>
                         </TableHead>
@@ -131,13 +129,7 @@ const ActiveCargoListView: React.FC = () => {
                                                 {row.amount}
                                             </TableCell>
                                             <TableCell>
-                                                {row.status.toString()}
-                                            </TableCell>
-                                            <TableCell>
-                                                -
-                                            </TableCell>
-                                            <TableCell>
-                                                {row.barcode === '-' ? 'Сборный': row.barcode}
+                                                {isGroupCargo(row.barcode) ? 'Сборный': row.barcode}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -162,4 +154,4 @@ const ActiveCargoListView: React.FC = () => {
     )
 }
 
-export default ActiveCargoListView
+export default RoadCargos

@@ -15,6 +15,7 @@ import RoadMain from "./RoadMain";
 import RoadFuel from "./RoadFuel";
 import RoadMileage from "./RoadMileage";
 import RoadMoney from "./RoadMoney";
+import RoadCargos from "./RoadCargos";
 
 const getCurrentTab = (stuffId: string) => {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -106,6 +107,9 @@ const RoadsStuffView: React.FC = () => {
                                     </RoadsTabPanel>
                                     <RoadsTabPanel index={'fuel'} value={currentTab}>
                                         <RoadFuel road={road} updateRoad={getRoad} />
+                                    </RoadsTabPanel>
+                                    <RoadsTabPanel index={'cargos'} value={currentTab}>
+                                        <RoadCargos roadId={road.id!} />
                                     </RoadsTabPanel>
                                 </Card>
                             </Box>

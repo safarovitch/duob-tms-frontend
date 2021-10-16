@@ -47,9 +47,15 @@ export interface CustomerCargo {
     cargos?: CargoGeneral[]
 }
 
+type CargoStatus = 'FORMALIZED' | 'ONROAD' | 'ARRIVED' | 'ISSUED';
+
 interface CargoGeneral{
+    roadId: number;
+    warehouseId: number;
     description: string;
     barcode: string;
+    status: CargoStatus;
+    dueDays: number;
 }
 
 export interface CustomerReceivedCargo {

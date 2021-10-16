@@ -24,6 +24,12 @@ class RoadService {
             .catch((error) => {reject(error)})
     })
 
+    getRoadCargos = (id: number, page: number, size: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/roads/${id}/income-cargos/?page=${page}&size=${size}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     postRoad = (road: RoadRequest) => new Promise((resolve, reject)  => {
         api.post(`${API_BASE_URL}/roads`, road)
             .then((response) => {resolve(response.data)})

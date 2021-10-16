@@ -13,12 +13,11 @@ import {
 } from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import Header from "./Header";
-import Page from "../../../../../components/Page";
+import Page from "../../../components/Page";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {useDispatch, useSelector} from "react-redux";
-import {CustomerCargo} from "../../../../../model/Customer";
-import {deleteSelectedCustomerCargo} from "../../../../../store/actions/customerActions";
-import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../../../constants";
+import {CustomerCargo} from "../../../model/Customer";
+import {deleteSelectedCustomerCargo} from "../../../store/actions/customerActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,7 +44,7 @@ const CargoShow: React.FC = () => {
     }
 
     return (
-        <Page title={`Груз: ${customerCargo.productName}`}>
+        <Page title={customerCargo.productName}>
             <Container className={classes.root} maxWidth="xl">
                 <Header customerCargo={customerCargo} />
                 <Box mt={3}>
@@ -94,8 +93,6 @@ const CargoShow: React.FC = () => {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>№</TableCell>
-                                                    <TableCell>Статус</TableCell>
-                                                    <TableCell>Просроченно дней</TableCell>
                                                     <TableCell>Текущая местоположение</TableCell>
                                                     <TableCell width="30%">Путь груза</TableCell>
                                                     <TableCell>Штрих-код</TableCell>
@@ -105,10 +102,6 @@ const CargoShow: React.FC = () => {
                                                 {customerCargo.cargos!.map((row, index) => (
                                                     <TableRow key={index}>
                                                         <TableCell>{++index}</TableCell>
-                                                        <TableCell style={{color: mapOfColorStatusCargo.get(row.status)}}>
-                                                            <b>{mapOfStatusCargo.get(row.status)}</b>
-                                                        </TableCell>
-                                                        <TableCell>{row.dueDays} дней</TableCell>
                                                         <TableCell>
                                                             {row.roadId !== 0 && `Рейс ${row.roadId}`}
                                                             {row.warehouseId !== 0 && `Склад ${row.warehouseId}`}

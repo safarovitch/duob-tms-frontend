@@ -191,8 +191,8 @@ const CustomerListView: React.FC = () => {
                                                         </TableCell>
                                                         <TableCell>{row.code}</TableCell>
                                                         <TableCell>{row.placeNumber}</TableCell>
-                                                        <TableCell>{row.amount}</TableCell>
-                                                        <TableCell>{row.balance}</TableCell>
+                                                        <TableCell>{row.amount} $</TableCell>
+                                                        <TableCell>{row.balance} $</TableCell>
                                                         {(canEdit || canDelete) && (
                                                             <TableCell align="center" width="15%">
                                                                 {canEdit && (
