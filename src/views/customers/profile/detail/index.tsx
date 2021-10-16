@@ -5,9 +5,8 @@ import {useHistory} from "react-router-dom";
 import {CargoStuffTab} from "../../../../model/Cargo";
 import {CustomerStuffTab} from "../../../../model/Customer";
 import CustomerTabPanel from "./CustomerTabPanel";
-import ActiveCargoListView from "./ActiveCargoListView";
-import ReceivedCargoListView from "./ReceivedCargoListView";
 import ReconciliationActListView from "./ReconciliationActListView";
+import CargoListView from "./CargoListView";
 
 function getCurrentTab(stuffId: string) {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -50,10 +49,10 @@ const Detail: React.FC<{stuffId: string, tabPath: string}> = ({stuffId, tabPath}
                 </Tabs>
                 <Divider/>
                 <CustomerTabPanel index={'active-cargo'} value={currentTab}>
-                    <ActiveCargoListView/>
+                    <CargoListView cargoStatus={'ACTIVE'} />
                 </CustomerTabPanel>
                 <CustomerTabPanel index={'received-cargo'} value={currentTab}>
-                    <ReceivedCargoListView/>
+                    <CargoListView cargoStatus={'ISSUED'}/>
                 </CustomerTabPanel>
                 <CustomerTabPanel index={'reconciliation-act'} value={currentTab}>
                     <ReconciliationActListView/>

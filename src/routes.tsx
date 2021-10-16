@@ -220,6 +220,11 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/roads/:id/:stuffId/show',
+                        component: lazy(() => import('./views/roads/cargo-show'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/road',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: () => <Redirect to="/app/road/driver" />

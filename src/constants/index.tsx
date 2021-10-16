@@ -163,6 +163,25 @@ export const mapOfStatusApplication = new Map<string, string>(
     ]
 )
 
+
+export const mapOfStatusCargo = new Map<string, string>(
+    [
+        ['FORMALIZED', 'Оформлен'],
+        ['ONROAD', 'В пути'],
+        ['ARRIVED', 'Прибыл'],
+        ['ISSUED', 'Выдано'],
+    ]
+)
+
+export const mapOfColorStatusCargo = new Map<string, string>(
+    [
+        ['FORMALIZED', '#000000'],
+        ['ONROAD', '#FDD231'],
+        ['ARRIVED', '#2196F3'],
+        ['ISSUED', '#03A075'],
+    ]
+)
+
 export const mapOfUnits = new Map<string, string>(
     [
         ['THING', 'штука'],
