@@ -114,11 +114,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                 setStatus,
                 setSubmitting
             }) => {
-                // values.totalPrice = ((values.baseRate+values.vat)*values.price/100).toFixed(2).toString()
                 setSubmitting(true)
-                if (!isNaN(Number(values.baseRate)) && !isNaN(Number(values.price)) && !isNaN(Number(values.vat))) {
-                    values.totalPrice = ((Number(values.baseRate)+Number(values.vat))*Number(values.price))/100
-                }
                 customCode ? await handleUpdateCustomCode(values, {
                     resetForm,
                     setErrors,
