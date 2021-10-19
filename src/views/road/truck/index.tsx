@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import Header from "./Header";
 import TruckForm from "./TruckForm";
 import {useSelector} from "react-redux";
-import {Truck, TruckType} from "../../../model/Road";
+import {Driver, Trailer, Truck, TruckType} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
@@ -21,23 +21,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function RoadTruckView() {
-    const classes = useStyles();
-    const history = useHistory();
-    const {enqueueSnackbar} = useSnackbar();
+    const classes = useStyles()
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
+    const [trailers, setTrailers] = useState<Trailer[]>([])
+    const [drivers, setDrivers] = useState<Driver[]>([])
     const [truckTypes, setTruckTypes] = useState<TruckType[]>([])
-    const truck = useSelector((state: { selectedRoadTruck: Truck }) => state.selectedRoadTruck);
+    const truck = useSelector((state: { selectedRoadTruck: Truck }) => state.selectedRoadTruck)
 
     useEffect(() => {
         (async () => {
             try {
                 setLoading(true)
-                const data: any = await roadService.getTruckTypes()
-                if (data.length === 0) {
+                const dataTruckTypes: any = await roadService.getTruckTypes()
+                const dataTrailer: any = await roadService.getTrailers()
+                const dataDrivers: any = await roadService.getDrivers()
+
+                if (dataTruckTypes.length === 0 || dataTrailer.length === 0 || dataDrivers.length === 0) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала тип машины', {variant: 'info'})
-                } else setTruckTypes(data)
+                    enqueueSnackbar('Добавьте с начала тип машины, прицеп и водитель ', {variant: 'info'})
+                } else {
+                    setTruckTypes(dataTruckTypes)
+                    setTrailers(dataTrailer)
+                    setDrivers(dataDrivers)
+                }
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -55,11 +64,11 @@ function RoadTruckView() {
     return (
         <Page title={'Машина'}>
             {
-                truckTypes.length > 0 ? (
+                trailers.length > 0 ? (
                     <Container className={classes.root} maxWidth="md">
                         <Header truck={truck}/>
                         <Box mt={3}>
-                            <TruckForm truck={truck} truckTypes={truckTypes}/>
+                            <TruckForm truck={truck} truckTypes={truckTypes} trailers={trailers} drivers={drivers}/>
                         </Box>
                     </Container>
                 ) : <LoadingLayout loading={loading} hasError={hasError}/>

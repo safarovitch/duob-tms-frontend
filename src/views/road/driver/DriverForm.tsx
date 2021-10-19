@@ -126,7 +126,7 @@ const DriverForm: React.FC<{driver: Driver}> = ({driver}) => {
                                         error={Boolean(props.touched.name && props.errors.name)}
                                         fullWidth
                                         helperText={props.touched.name && props.errors.name}
-                                        label="Введите название"
+                                        label="Введите ФИО"
                                         name="name"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}

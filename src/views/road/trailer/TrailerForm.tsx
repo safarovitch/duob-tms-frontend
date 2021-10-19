@@ -13,11 +13,10 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {Trailer, TrailerFormProps, Truck} from "../../../model/Road";
+import {Trailer} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import {deleteSelectedTrailer} from "../../../store/actions/roadActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
-import {Autocomplete} from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -30,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-const TrailerForm: React.FC<TrailerFormProps> = ({trailer, trucks}) => {
+const TrailerForm: React.FC<{trailer: Trailer}> = ({trailer}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
@@ -43,7 +41,6 @@ const TrailerForm: React.FC<TrailerFormProps> = ({trailer, trucks}) => {
 
     const initialValues: Trailer = {
         number: trailer?.number || '',
-        truckId: trailer?.truckId,
         liftingCapacity: trailer?.liftingCapacity,
         totalBodyCapacity: trailer?.totalBodyCapacity
     }
@@ -121,31 +118,6 @@ const TrailerForm: React.FC<TrailerFormProps> = ({trailer, trucks}) => {
                                 container
                                 spacing={3}
                             >
-                                <Grid
-                                    item
-                                    xs={12}
-                                >
-                                    <Autocomplete
-                                        options={trucks}
-                                        getOptionLabel={option => option.number}
-                                        value={trucks.find((truck: Truck) => truck.id === props.values.truckId)}
-                                        onChange={(e, value) => {
-                                            props.setFieldValue("truckId", value?.id);
-                                        }}
-                                        renderInput={params => (
-                                            <TextField
-                                                error={Boolean(props.touched.truckId && props.errors.truckId)}
-                                                helperText={props.touched.truckId && props.errors.truckId}
-                                                label="Выберите машину"
-                                                name="truckId"
-                                                variant="outlined"
-                                                onBlur={props.handleBlur}
-                                                required
-                                                {...params}
-                                            />
-                                        )}
-                                    />
-                                </Grid>
                                 <Grid
                                     item
                                     xs={12}
