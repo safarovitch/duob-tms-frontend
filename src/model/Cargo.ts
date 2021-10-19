@@ -33,7 +33,7 @@ export interface CargoCustomCode {
     price?: number;
     baseRate?: number;
     vat?: number;
-    totalRate?: number;
+    totalPrice?: number;
     description?: string;
     unit: Units | Units.ton;
     productId?: number;

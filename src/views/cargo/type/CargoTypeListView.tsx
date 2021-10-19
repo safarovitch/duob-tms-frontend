@@ -100,7 +100,7 @@ const CargoTypeListView: React.FC = () => {
             </Box>
             <PerfectScrollbar>
                 <Box minWidth={700}>
-                    <Table>
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Название</TableCell>
