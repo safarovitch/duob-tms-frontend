@@ -90,6 +90,8 @@ export interface Road {
     id?: number;
     road: string;
     truck: RoadTruck;
+    trailer: {id: number, number: string};
+    driver: {id: number, name: string};
     departureDate: string;
     arrivalDate: string;
     description: string;

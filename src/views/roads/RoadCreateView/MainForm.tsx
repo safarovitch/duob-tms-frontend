@@ -37,8 +37,8 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
-    const [trailerNumber, setTrailerNumber] = useState('')
-    const [driverName, setDriverName] = useState('')
+    const [trailerNumber, setTrailerNumber] = useState(road?.trailer?.number || '')
+    const [driverName, setDriverName] = useState(road?.driver?.name || '')
     const [privateTruck, setPrivateTruck] = useState<boolean>(road?.privateTruck || false)
 
     const initialValues: RoadRequest = {
@@ -50,7 +50,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
         description: road?.description || '',
         privateTruck: road?.privateTruck || false,
         withTrailer: road?.withTrailer || false,
-        status: road?.status === undefined ? 1 : +road.status,
+        status: road?.status === undefined ? 0 : +road.status,
     }
 
     const validationSchema = Yup.object().shape({
@@ -153,6 +153,46 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                     xs={12}
                                     md={4}
                                 >
+                                    <TextField
+                                        error={Boolean(props.touched.departureDate && props.errors.departureDate)}
+                                        fullWidth
+                                        type="date"
+                                        helperText={props.touched.departureDate && props.errors.departureDate}
+                                        label="Дата отправки"
+                                        InputLabelProps={{shrink: true}}
+                                        name="departureDate"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.departureDate}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={4}
+                                >
+                                    <TextField
+                                        error={Boolean(props.touched.arrivalDate && props.errors.arrivalDate)}
+                                        fullWidth
+                                        type="date"
+                                        helperText={props.touched.arrivalDate && props.errors.arrivalDate}
+                                        label="Дата возврата"
+                                        InputLabelProps={{shrink: true}}
+                                        name="arrivalDate"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.arrivalDate}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={4}
+                                >
                                     <Autocomplete
                                         options={trucks}
                                         getOptionLabel={option => option.number}
@@ -190,46 +230,6 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                         value={trailerNumber}
                                         variant="outlined"
                                         disabled
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
-                                    <TextField
-                                        error={Boolean(props.touched.departureDate && props.errors.departureDate)}
-                                        fullWidth
-                                        type="date"
-                                        helperText={props.touched.departureDate && props.errors.departureDate}
-                                        label="Дата отправки"
-                                        InputLabelProps={{shrink: true}}
-                                        name="departureDate"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.departureDate}
-                                        variant="outlined"
-                                        required
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
-                                    <TextField
-                                        error={Boolean(props.touched.arrivalDate && props.errors.arrivalDate)}
-                                        fullWidth
-                                        type="date"
-                                        helperText={props.touched.arrivalDate && props.errors.arrivalDate}
-                                        label="Дата возврата"
-                                        InputLabelProps={{shrink: true}}
-                                        name="arrivalDate"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.arrivalDate}
-                                        variant="outlined"
-                                        required
                                     />
                                 </Grid>
                                 <Grid
@@ -339,8 +339,8 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                             }
                                         }}
                                     >
-                                        <MenuItem key={0} value={1}>Активный</MenuItem>
-                                        <MenuItem key={1} value={0}>Завершенный</MenuItem>
+                                        <MenuItem key={0} value={0}>Активный</MenuItem>
+                                        <MenuItem key={1} value={1}>Завершенный</MenuItem>
                                     </TextField>
                                 </Grid>
                             </Grid>
