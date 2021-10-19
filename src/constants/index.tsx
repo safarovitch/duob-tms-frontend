@@ -54,12 +54,12 @@ export const customerStuffTabs = [
 
 export const roadStuffTabs = [
     {
-        value: 'driver',
-        label: 'Водители'
-    },
-    {
         value: 'truck',
         label: 'Машины'
+    },
+    {
+        value: 'driver',
+        label: 'Водители'
     },
     {
         value: 'trailer',

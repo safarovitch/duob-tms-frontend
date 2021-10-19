@@ -227,25 +227,13 @@ const routesConfig = [
                         exact: true,
                         path: '/app/road',
                         perm: PERMISSIONS.ROAD.LIST,
-                        component: () => <Redirect to="/app/road/driver" />
+                        component: () => <Redirect to="/app/road/truck" />
                     },
                     {
                         exact: true,
                         path: '/app/road/:stuffId',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/road')),
-                    },
-                    {
-                        exact: true,
-                        path: '/app/road/driver/create',
-                        perm: PERMISSIONS.ROAD.LIST,
-                        component: lazy(() => import('./views/road/driver'))
-                    },
-                    {
-                        exact: true,
-                        path: '/app/road/driver/edit',
-                        perm: PERMISSIONS.ROAD.LIST,
-                        component: lazy(() => import('./views/road/driver'))
                     },
                     {
                         exact: true,
@@ -258,6 +246,18 @@ const routesConfig = [
                         path: '/app/road/truck/edit',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/road/truck'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/driver/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/driver'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/driver/edit',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/driver'))
                     },
                     {
                         exact: true,
