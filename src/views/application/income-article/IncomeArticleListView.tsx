@@ -1,18 +1,9 @@
 import React, {useEffect, useState,} from 'react';
 import {
-    Box,
-    Card,
-    IconButton,
-    makeStyles,
-    SvgIcon,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
+    Box, Card, Chip, Grid, IconButton, InputAdornment, makeStyles, SvgIcon, Table, TableBody, TableCell,
+    TableHead, TablePagination, TableRow, TextField,
 } from '@material-ui/core';
-import {ArrowRight as ArrowRightIcon, Edit as EditIcon} from 'react-feather';
+import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -26,12 +17,18 @@ import {mapOfStatusApplication} from "../../../constants";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
+import DoneIcon from "@material-ui/icons/Done";
+import useDebounce from "../../../hooks/useDebounce";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         minHeight: '100%',
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
+    },
+    queryField: {
+        width: 350
     },
     statusPaid: {
         color: 'green',
@@ -50,6 +47,12 @@ const IncomeArticleListView: React.FC = () => {
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
+    const [query, setQuery] = useState('')
+    const debouncedSearchTerm = useDebounce(query, 500)
+    const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
+    const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
+    const statuses = ['PAID', 'WAITING']
+    const [selectedStatus, setSelectedStatus] = useState<string>('')
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<IncomeByArticleApplication[]>([])
     const canEdit = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.EDIT)
@@ -57,14 +60,14 @@ const IncomeArticleListView: React.FC = () => {
 
     useEffect(() => {
         getRows().then(null)
-    }, [page, size])
+    }, [page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const getRows = async () => {
         try {
             setLoading(true)
             setRows([])
 
-            const data: any = await applicationService.getFilteredIncomeArticles(page, size)
+            const data: any = await applicationService.getFilteredIncomeArticles(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
             setRows(data.content)
             setTotal(data.totalElements)
         } catch (error: any) {
@@ -84,15 +87,122 @@ const IncomeArticleListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
+    const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setQuery(event.target.value)
+        setPage(1);
+    }
+
+    const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setStartDate(event.target.value)
+        setPage(1)
+    }
+
+    const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setEndDate(event.target.value)
+        setPage(1)
+    }
+
+    const handleSelectStatus = (status: string) => {
+        if (selectedStatus === status) setSelectedStatus('')
+        else setSelectedStatus(status)
+
+        setPage(1)
+    }
+
     const handleDeleteRow = () => {
         setPage(1)
         getRows().then(null)
     }
 
-    const isPaidApplication = (row: IncomeByArticleApplication): boolean => row.status === 'PAID';
+    const isPaidApplication = (row: IncomeByArticleApplication): boolean => (row.status === 'PAID');
 
     return (
         <Card className={classes.root}>
+            <Box py={3} px={2}>
+                <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+                    <Grid item>
+                        <Grid container spacing={2}>
+                            <Grid item>
+                                <TextField
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SvgIcon
+                                                    fontSize="small"
+                                                    color="action"
+                                                >
+                                                    <SearchIcon/>
+                                                </SvgIcon>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                    onChange={handleQueryChange}
+                                    placeholder="Поиск"
+                                    value={query}
+                                    variant="outlined"
+                                    size="small"
+                                    className={classes.queryField}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    label="От"
+                                    onChange={handleStartDateChange}
+                                    value={startDate}
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    label="До"
+                                    onChange={handleEndDateChange}
+                                    value={endDate}
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    size="small"
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+                        <Grid container spacing={1}>
+                            {statuses.map((status, index) => (
+                                <Grid item key={index}>
+                                    {selectedStatus === status ? (
+                                        <Chip
+                                            label={mapOfStatusApplication.get(status)}
+                                            clickable
+                                            color="primary"
+                                            onClick={() => handleSelectStatus(status)}
+                                            onDelete={() => handleSelectStatus(status)}
+                                            deleteIcon={<DoneIcon />}
+                                        />
+                                    ) : (
+                                        <Chip
+                                            label={mapOfStatusApplication.get(status)}
+                                            clickable
+                                            onClick={() => handleSelectStatus(status)}
+                                        />
+                                    )}
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Box>
             <PerfectScrollbar>
                 <Box minWidth={700}>
                     <Table>

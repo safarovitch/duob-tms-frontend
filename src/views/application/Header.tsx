@@ -24,6 +24,7 @@ const Header: React.FC<{ title: string, linkName: string }> = ({title, linkName}
     const canCreateRefillBalance = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.CREATE)
     const canCreateIncomeArticle = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.CREATE)
     const canCreateOutcomeArticle = usePermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.CREATE)
+    const canCreateOutcomeTransferWarehouse = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.CREATE)
 
     const canCreate = (): boolean => {
         switch (linkName) {
@@ -37,7 +38,7 @@ const Header: React.FC<{ title: string, linkName: string }> = ({title, linkName}
                 return canCreateOutcomeArticle
             }
             case "outcome-transfer-warehouse": {
-                return canCreateOutcomeArticle
+                return canCreateOutcomeTransferWarehouse
             }
             default: return false
         }

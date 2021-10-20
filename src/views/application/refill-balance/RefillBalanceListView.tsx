@@ -1,6 +1,6 @@
 import React, {useEffect, useState,} from 'react';
 import {
-    Box, Card, Grid, IconButton, InputAdornment, makeStyles, SvgIcon, Table, TableBody, TableCell,
+    Box, Card, Chip, Grid, IconButton, InputAdornment, makeStyles, SvgIcon, Table, TableBody, TableCell,
     TableHead, TablePagination, TableRow, TextField,
 } from '@material-ui/core';
 import {Edit as EditIcon, ArrowRight as ArrowRightIcon, Search as SearchIcon} from 'react-feather';
@@ -19,6 +19,7 @@ import moment from "moment";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
+import DoneIcon from "@material-ui/icons/Done";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,20 +52,22 @@ const RefillBalanceListView: React.FC = () => {
     const debouncedSearchTerm = useDebounce(query, 500)
     const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
+    const statuses = ['PAID', 'WAITING']
+    const [selectedStatus, setSelectedStatus] = useState<string>('')
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<RefillBalanceApplication[]>([])
     const [total, setTotal] = useState<number>(0)
 
     useEffect(() => {
         getRows().then(null)
-    }, [page, size, debouncedSearchTerm, startDate, endDate])
+    }, [page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const getRows = async () => {
         try {
             setLoading(true)
             setRows([])
 
-            const result: any = await applicationService.getFilteredRefillBalances(page, size, debouncedSearchTerm, startDate, endDate)
+            const result: any = await applicationService.getFilteredRefillBalances(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
             setRows(result.content)
             setTotal(result.totalElements)
         } catch (error: any) {
@@ -72,12 +75,6 @@ const RefillBalanceListView: React.FC = () => {
         } finally {
             setLoading(false)
         }
-    }
-
-    const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setQuery(event.target.value)
-        setPage(1);
     }
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -88,6 +85,12 @@ const RefillBalanceListView: React.FC = () => {
 
     const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage + 1);
+    }
+
+    const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setQuery(event.target.value)
+        setPage(1);
     }
 
     const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -102,70 +105,101 @@ const RefillBalanceListView: React.FC = () => {
         setPage(1)
     }
 
+    const handleSelectStatus = (status: string) => {
+        if (selectedStatus === status) setSelectedStatus('')
+        else setSelectedStatus(status)
+
+        setPage(1)
+    }
+
     const handleDeleteRow = () => {
         setPage(1)
         getRows().then(null)
     };
 
-    const isPaidApplication = (row: RefillBalanceApplication): boolean => row.status === 'PAID';
+    const isPaidApplication = (row: RefillBalanceApplication): boolean => (row.status === 'PAID');
 
     return (
         <Card className={classes.root}>
-            <Box
-                p={2}
-                display="flex"
-                alignItems="center"
-            >
-                <Grid container spacing={4}>
+            <Box py={3} px={2}>
+                <Grid container spacing={2} alignItems="center" justifyContent="space-between">
                     <Grid item>
-                        <TextField
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SvgIcon
-                                            fontSize="small"
-                                            color="action"
-                                        >
-                                            <SearchIcon/>
-                                        </SvgIcon>
-                                    </InputAdornment>
-                                )
-                            }}
-                            onChange={handleQueryChange}
-                            placeholder="Поиск"
-                            value={query}
-                            variant="outlined"
-                            size="small"
-                            className={classes.queryField}
-                        />
+                        <Grid container spacing={2}>
+                            <Grid item>
+                                <TextField
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SvgIcon
+                                                    fontSize="small"
+                                                    color="action"
+                                                >
+                                                    <SearchIcon/>
+                                                </SvgIcon>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                    onChange={handleQueryChange}
+                                    placeholder="Поиск"
+                                    value={query}
+                                    variant="outlined"
+                                    size="small"
+                                    className={classes.queryField}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    label="От"
+                                    onChange={handleStartDateChange}
+                                    value={startDate}
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    label="До"
+                                    onChange={handleEndDateChange}
+                                    value={endDate}
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    size="small"
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            label="От"
-                            onChange={handleStartDateChange}
-                            value={startDate}
-                            variant="outlined"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            size="small"
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            label="До"
-                            onChange={handleEndDateChange}
-                            value={endDate}
-                            variant="outlined"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            size="small"
-                        />
+                        <Grid container spacing={1}>
+                            {statuses.map((status, index) => (
+                                <Grid item key={index}>
+                                    {selectedStatus === status ? (
+                                        <Chip
+                                            label={mapOfStatusApplication.get(status)}
+                                            clickable
+                                            color="primary"
+                                            onClick={() => handleSelectStatus(status)}
+                                            onDelete={() => handleSelectStatus(status)}
+                                            deleteIcon={<DoneIcon />}
+                                        />
+                                    ) : (
+                                        <Chip
+                                            label={mapOfStatusApplication.get(status)}
+                                            clickable
+                                            onClick={() => handleSelectStatus(status)}
+                                        />
+                                    )}
+                                </Grid>
+                            ))}
+                        </Grid>
                     </Grid>
                 </Grid>
             </Box>
