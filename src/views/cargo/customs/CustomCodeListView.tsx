@@ -103,16 +103,16 @@ const CustomCodeListView: React.FC = () => {
             </Box>
             <PerfectScrollbar>
                 <Box minWidth={700}>
-                    <Table>
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Наименование</TableCell>
                                 <TableCell>Код</TableCell>
+                                <TableCell>Цена</TableCell>
+                                <TableCell>Итоговая ставка %</TableCell>
                                 <TableCell>Стоимость</TableCell>
-                                <TableCell>Базовая ставка %</TableCell>
-                                <TableCell>НДС %</TableCell>
-                                <TableCell>Итоговая стоимость</TableCell>
-                                <TableCell>Единица расчета</TableCell>
+                                <TableCell>Ед. расчета</TableCell>
+                                <TableCell>Описание</TableCell>
                                 <TableCell align="center" width="15%">Действия</TableCell>
                             </TableRow>
                         </TableHead>
@@ -124,10 +124,10 @@ const CustomCodeListView: React.FC = () => {
                                             <TableCell>{row.productDto?.name}</TableCell>
                                             <TableCell>{row.code}</TableCell>
                                             <TableCell>{row.price}</TableCell>
-                                            <TableCell>{row.baseRate}</TableCell>
-                                            <TableCell>{row.vat}</TableCell>
-                                            <TableCell>{row.totalRate}</TableCell>
+                                            <TableCell>{Number(row.baseRate) + Number(row.vat)}</TableCell>
+                                            <TableCell>{row.totalPrice}</TableCell>
                                             <TableCell>{units.get(row.unit)}</TableCell>
+                                            <TableCell>{row.description}</TableCell>
                                             <TableCell align="center">
                                                 <IconButton
                                                     component={RouterLink}

@@ -66,6 +66,12 @@ class RoadService {
             .catch((error) => {reject(error)})
     })
 
+    getDrivers = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/drivers/all`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
     getFilteredDrivers = (page: number, size: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/drivers?page=${page}&size=${size}`)
             .then((response) => {resolve(response.data)})
@@ -116,6 +122,12 @@ class RoadService {
 
     deleteTruck = (truckId: number) => new Promise((resolve, reject)  => {
         api.delete(`${API_BASE_URL}/trucks/${truckId}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    getTrailers = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/trailers/all`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
     })

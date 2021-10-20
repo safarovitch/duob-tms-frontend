@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Formik, FormikProps} from "formik";
-import {Driver, Road, RoadRequest, Truck} from "../../../model/Road";
+import {Road, RoadRequest, RoadTruck} from "../../../model/Road";
 import {
     Box,
     Button,
@@ -33,16 +33,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const getTrailerNumber = (trucks: Truck[], truckId: number) => {
-    const truck = trucks.find(truck => truck.id === truckId)
-    return truck?.trailerNumber || ''
-}
-
-const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: Truck[], drivers: Driver[]}> = ({road, updateRoad, trucks, drivers}) => {
+const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[]}> = ({road, updateRoad, trucks}) => {
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
-    const [trailerNumber, setTrailerNumber] = useState<string>(getTrailerNumber(trucks, road?.truck?.id || 0))
+    const [trailerNumber, setTrailerNumber] = useState(road?.trailer?.number || '')
+    const [driverName, setDriverName] = useState(road?.driver?.name || '')
     const [privateTruck, setPrivateTruck] = useState<boolean>(road?.privateTruck || false)
 
     const initialValues: RoadRequest = {
@@ -51,12 +47,10 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: Truck[], d
         truckId: road?.truck?.id || 0,
         departureDate: road?.departureDate || '',
         arrivalDate: road?.arrivalDate || '',
-        driverId: road?.driver?.id || 0,
-        driver: road?.driver,
         description: road?.description || '',
         privateTruck: road?.privateTruck || false,
         withTrailer: road?.withTrailer || false,
-        status: road?.status === undefined ? 1 : +road.status,
+        status: road?.status === undefined ? 0 : +road.status,
     }
 
     const validationSchema = Yup.object().shape({
@@ -159,49 +153,6 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: Truck[], d
                                     xs={12}
                                     md={4}
                                 >
-                                    <Autocomplete
-                                        options={trucks}
-                                        getOptionLabel={option => option.number}
-                                        getOptionSelected={(option, value) => option.number === value.number}
-                                        onChange={(e, value) => {
-                                            setTrailerNumber(value?.trailerNumber || '')
-                                            props.setFieldValue("truckId", value?.id || 0);
-                                            props.setFieldValue("truck", value);
-                                        }}
-                                        disabled={road ? true : privateTruck}
-                                        value={road ? props.values.truck as Truck : undefined}
-                                        renderInput={params => (
-                                            <TextField
-                                                error={Boolean(props.touched.truckId && props.errors.truckId)}
-                                                helperText={props.touched.truckId && props.errors.truckId}
-                                                label="Выберите машину"
-                                                name="truckId"
-                                                variant="outlined"
-                                                onBlur={props.handleBlur}
-                                                required
-                                                {...params}
-                                            />
-                                        )}
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
-                                    <TextField
-                                        fullWidth
-                                        label="Прицеп"
-                                        value={trailerNumber}
-                                        variant="outlined"
-                                        disabled
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
                                     <TextField
                                         error={Boolean(props.touched.departureDate && props.errors.departureDate)}
                                         fullWidth
@@ -243,27 +194,55 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: Truck[], d
                                     md={4}
                                 >
                                     <Autocomplete
-                                        options={drivers}
-                                        getOptionLabel={option => option.name}
-                                        getOptionSelected={(option, value) => option.name === value.name}
+                                        options={trucks}
+                                        getOptionLabel={option => option.number}
+                                        getOptionSelected={(option, value) => option.number === value.number}
                                         onChange={(e, value) => {
-                                            props.setFieldValue("driverId", value?.id || 0);
-                                            props.setFieldValue("driver", value);
+                                            props.setFieldValue("truckId", value?.id);
+                                            props.setFieldValue("truck", value);
+                                            setTrailerNumber(value?.trailerNumber || '')
+                                            setDriverName(value?.driverName || '')
                                         }}
-                                        value={road ? props.values.driver as Driver : undefined}
                                         disabled={road ? true : privateTruck}
+                                        value={road ? props.values.truck as RoadTruck : undefined}
                                         renderInput={params => (
                                             <TextField
-                                                error={Boolean(props.touched.driverId && props.errors.driverId)}
-                                                helperText={props.touched.driverId && props.errors.driverId}
-                                                label="Выберите водителя"
-                                                name="driverId"
+                                                error={Boolean(props.touched.truckId && props.errors.truckId)}
+                                                helperText={props.touched.truckId && props.errors.truckId}
+                                                label="Выберите машину"
+                                                name="truckId"
                                                 variant="outlined"
                                                 onBlur={props.handleBlur}
                                                 required
                                                 {...params}
                                             />
                                         )}
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={4}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Прицеп"
+                                        value={trailerNumber}
+                                        variant="outlined"
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={4}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Водитель"
+                                        value={driverName}
+                                        variant="outlined"
+                                        disabled
                                     />
                                 </Grid>
                                 <Grid
@@ -360,8 +339,8 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: Truck[], d
                                             }
                                         }}
                                     >
-                                        <MenuItem key={0} value={1}>Активный</MenuItem>
-                                        <MenuItem key={1} value={0}>Завершенный</MenuItem>
+                                        <MenuItem key={0} value={0}>Активный</MenuItem>
+                                        <MenuItem key={1} value={1}>Завершенный</MenuItem>
                                     </TextField>
                                 </Grid>
                             </Grid>

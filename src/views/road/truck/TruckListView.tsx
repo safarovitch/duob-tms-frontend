@@ -84,22 +84,28 @@ const TruckListView: React.FC = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>
-                                    Вид машины
+                                    Модель
                                 </TableCell>
                                 <TableCell>
-                                    Объём бака (л)
+                                    Машина
+                                </TableCell>
+                                <TableCell>
+                                    Прицеп
+                                </TableCell>
+                                <TableCell>
+                                    Водитель
                                 </TableCell>
                                 <TableCell>
                                     Грузо подъёмность (кг)
                                 </TableCell>
                                 <TableCell>
-                                    Номер машины
-                                </TableCell>
-                                <TableCell>
                                     Общий объём кузова (м3)
                                 </TableCell>
                                 <TableCell>
-                                    Остаток бака
+                                    Объём бака (л)
+                                </TableCell>
+                                <TableCell>
+                                    Остаток топлива в баке
                                 </TableCell>
                                 <TableCell align="center" width="15%">
                                     Действия
@@ -115,19 +121,25 @@ const TruckListView: React.FC = () => {
                                             key={row.id}
                                         >
                                             <TableCell>
-                                                {row.type}
-                                            </TableCell>
-                                            <TableCell>
-                                                {row.tankCapacity}
-                                            </TableCell>
-                                            <TableCell>
-                                                {row.liftingCapacity}
+                                                {row.model}
                                             </TableCell>
                                             <TableCell>
                                                 {row.number}
                                             </TableCell>
                                             <TableCell>
+                                                {row.trailer?.number || '-'}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.driver?.name || '-'}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.liftingCapacity}
+                                            </TableCell>
+                                            <TableCell>
                                                 {row.totalBodyCapacity}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.tankCapacity}
                                             </TableCell>
                                             <TableCell>
                                                 {row.residueOfTank}

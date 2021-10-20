@@ -36,7 +36,7 @@ const DeleteButton: React.FC<{ index: number, rowId: number, onDelete: Function,
 
         return (
             <>
-                <Box sx={{m: 1, position: 'relative', display: 'inline-block'}}>
+                <Box sx={{position: 'relative', display: 'inline-block'}}>
                     <IconButton
                         onClick={() => handleClick(index)}
                         disabled={loading && index === selectedIndex}

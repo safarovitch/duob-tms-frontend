@@ -13,13 +13,19 @@ export interface RoadsStuffTab {
     privateTruck: boolean;
 }
 
+
+export interface RoadTruck {
+    id: number;
+    number: string;
+    trailerNumber: string;
+    driverName: string;
+}
+
 export interface RoadRequest {
     id?: number;
     road: string;
-    truck?: {id: number, number: string};
+    truck?: RoadTruck;
     truckId?: number;
-    driver?: {id: number, name: string};
-    driverId?: number;
     departureDate: string;
     arrivalDate: string;
     description: string;
@@ -83,8 +89,9 @@ export interface RoadFuelRequest {
 export interface Road {
     id?: number;
     road: string;
-    truck: {id: number, number: string};
-    driver?: {id: number, name: string};
+    truck: RoadTruck;
+    trailer: {id: number, number: string};
+    driver: {id: number, name: string};
     departureDate: string;
     arrivalDate: string;
     description: string;
@@ -144,6 +151,22 @@ export interface RoadTabPanelProps {
     value: RoadStuffTab;
 }
 
+export interface Truck {
+    id?: number;
+    type?: {id: number, name: string};
+    typeId?: number;
+    number: string;
+    trailer?: {id: number, number: string};
+    trailerId?: number;
+    driver?: {id: number, name: string};
+    driverId?: number;
+    model: string;
+    tankCapacity: number;
+    liftingCapacity: number;
+    totalBodyCapacity: number;
+    residueOfTank?: number;
+}
+
 export interface Driver {
     id?: number;
     name: string;
@@ -151,35 +174,11 @@ export interface Driver {
     address: string;
 }
 
-export interface Truck {
-    id?: number;
-    type: string;
-    typeId: number;
-    tankCapacity: number;
-    liftingCapacity: number;
-    number: string;
-    trailerNumber?: string;
-    totalBodyCapacity: number;
-    residueOfTank?: number;
-}
-
-export interface TruckFormProps {
-    truck: Truck;
-    truckTypes: TruckType[];
-}
-
 export interface Trailer {
     id?: number;
     number: string;
-    truckNumber?: string;
-    truckId?: number;
     liftingCapacity: number;
     totalBodyCapacity: number;
-}
-
-export interface TrailerFormProps {
-    trailer: Trailer;
-    trucks: Truck[];
 }
 
 export interface TruckType {
