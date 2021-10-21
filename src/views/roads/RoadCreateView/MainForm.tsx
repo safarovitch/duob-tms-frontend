@@ -40,6 +40,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
     const [trailerNumber, setTrailerNumber] = useState(road?.trailer?.number || '')
     const [driverName, setDriverName] = useState(road?.driver?.name || '')
     const [privateTruck, setPrivateTruck] = useState<boolean>(road?.privateTruck || false)
+    const [hasTrailer, setHasTrailer] = useState<boolean>(false)
 
     const initialValues: RoadRequest = {
         road: road?.road || '',
@@ -198,10 +199,12 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                         getOptionLabel={option => option.number}
                                         getOptionSelected={(option, value) => option.number === value.number}
                                         onChange={(e, value) => {
-                                            props.setFieldValue("truckId", value?.id);
-                                            props.setFieldValue("truck", value);
+                                            props.setFieldValue("truckId", value?.id)
+                                            props.setFieldValue("truck", value)
                                             setTrailerNumber(value?.trailerNumber || '')
                                             setDriverName(value?.driverName || '')
+                                            setHasTrailer(Boolean(value?.trailerNumber))
+                                            !Boolean(value?.trailerNumber) && props.setFieldValue("withTrailer", false)
                                         }}
                                         disabled={road ? true : privateTruck}
                                         value={road ? props.values.truck as RoadTruck : undefined}
@@ -300,7 +303,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                                 onBlur={props.handleBlur}
                                                 onChange={props.handleChange}
                                                 checked={props.values.withTrailer}
-                                                disabled={road ? true : privateTruck}
+                                                disabled={!!road || (privateTruck || !hasTrailer)}
                                             />
                                         }
                                         label="C прицепом"

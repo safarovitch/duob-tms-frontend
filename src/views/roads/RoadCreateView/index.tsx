@@ -36,11 +36,11 @@ const RoadCreateView: React.FC = () => {
             try {
                 setLoading(true)
 
-                const fetchTrucks: any = await roadService.getTrucks()
+                const fetchTrucks: any = await roadService.getActiveTrucks()
 
                 if (fetchTrucks.length === 0) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала машину и водителя', {variant: 'info'})
+                    enqueueSnackbar('Нет свободной машины', {variant: 'info'})
                 } else setTrucks(fetchTrucks)
             } catch (error: any) {
                 setHasError(true)

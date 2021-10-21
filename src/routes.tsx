@@ -214,9 +214,27 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/roads/:id',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads/RedirectToRoadMain'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/roads/:id/:stuffId',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/roads'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/roads/:id/:stuffId/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads/fuel-detail'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/roads/:id/:stuffId/edit',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads/fuel-detail'))
                     },
                     {
                         exact: true,
