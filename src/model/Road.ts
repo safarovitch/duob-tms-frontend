@@ -1,4 +1,5 @@
 import React from "react";
+import {MoneyUnitApplication} from "./Application";
 
 export interface RoadList {
     id: number;
@@ -12,7 +13,6 @@ export interface RoadsStuffTab {
     label: string;
     privateTruck: boolean;
 }
-
 
 export interface RoadTruck {
     id: number;
@@ -86,6 +86,20 @@ export interface RoadFuelRequest {
     tankBalanceAfterArrival?: number;
 }
 
+export type RoadFuelType = 'ON_BASE' | 'ON_ROAD' | 'ADDITIONAL_OUTCOME';
+
+export interface RoadFuelDetail {
+    id?: number;
+    refuelingDate: string;
+    liter: number;
+    unit?: MoneyUnitApplication;
+    price?: number;
+    totalPrice?: number;
+    description: string;
+    type: RoadFuelType;
+    roadId: number;
+}
+
 export interface Road {
     id?: number;
     road: string;
@@ -117,6 +131,8 @@ export interface Road {
     driverPriceTjs: number;
     roadCostsUsd: number;
     roadCostsTjs: number;
+    refuelingOnRoadPriceTjs: number;
+    refuelingOnRoadPriceUsd: number;
     roadPriceUsd: number;
     roadPriceTjs: number;
     retentionUsd: number;

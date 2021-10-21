@@ -97,6 +97,21 @@ export const roadsStuffTabs = [
         label: 'Грузы',
         privateTruck: true,
     },
+    {
+        value: 'on-base',
+        label: 'Заправка на базе',
+        privateTruck: true,
+    },
+    {
+        value: 'on-road',
+        label: 'Заправка в пути',
+        privateTruck: true,
+    },
+    {
+        value: 'additional-outcome',
+        label: 'Дополнительный расход',
+        privateTruck: true,
+    },
 ]
 
 export const articleStuffTabs = [

@@ -16,6 +16,7 @@ import RoadFuel from "./RoadFuel";
 import RoadMileage from "./RoadMileage";
 import RoadMoney from "./RoadMoney";
 import RoadCargos from "./RoadCargos";
+import FuelDetailList from "./fuel-detail/FuelDetailList";
 
 const getCurrentTab = (stuffId: string) => {
     return tabs.filter(v => v.value === stuffId)[0];
@@ -72,50 +73,57 @@ const RoadsStuffView: React.FC = () => {
     return (
         <Page title={`Рейс № ${id}`}>
             {
-                road
-                    ? (
-                        <Container className={classes.root} maxWidth="lg">
-                            <Header id={id} title={currentTab.label}/>
-                            <Box mt={3}>
-                                <Card>
-                                    <Tabs
-                                        onChange={handleTabsChange}
-                                        scrollButtons="auto"
-                                        textColor="secondary"
-                                        value={currentTab}
-                                        centered
-                                    >
-                                        {tabs.map((tab) => (
-                                            <Tab
-                                                key={tab.value}
-                                                value={tab}
-                                                label={tab.label}
-                                                disabled={road.privateTruck ? !tab.privateTruck : false}
-                                                {...a11yProps(tab)}
-                                            />
-                                        ))}
-                                    </Tabs>
-                                    <Divider/>
-                                    <RoadsTabPanel index={'main'} value={currentTab}>
-                                        <RoadMain road={road} updateRoad={getRoad} />
-                                    </RoadsTabPanel>
-                                    <RoadsTabPanel index={'mileage'} value={currentTab}>
-                                        <RoadMileage road={road} updateRoad={getRoad} />
-                                    </RoadsTabPanel>
-                                    <RoadsTabPanel index={'money'} value={currentTab}>
-                                        <RoadMoney road={road} updateRoad={getRoad} />
-                                    </RoadsTabPanel>
-                                    <RoadsTabPanel index={'fuel'} value={currentTab}>
-                                        <RoadFuel road={road} updateRoad={getRoad} />
-                                    </RoadsTabPanel>
-                                    <RoadsTabPanel index={'cargos'} value={currentTab}>
-                                        <RoadCargos roadId={road.id!} />
-                                    </RoadsTabPanel>
-                                </Card>
-                            </Box>
-                        </Container>
-                    )
-                    : <LoadingLayout loading={loading} hasError={hasError}/>
+                road ? (
+                    <Container className={classes.root} maxWidth="lg">
+                        <Header id={id} title={currentTab.label}/>
+                        <Box mt={3}>
+                            <Card>
+                                <Tabs
+                                    onChange={handleTabsChange}
+                                    scrollButtons="auto"
+                                    textColor="secondary"
+                                    value={currentTab}
+                                    variant="scrollable"
+                                >
+                                    {tabs.map((tab) => (
+                                        <Tab
+                                            key={tab.value}
+                                            value={tab}
+                                            label={tab.label}
+                                            disabled={road.privateTruck ? !tab.privateTruck : false}
+                                            {...a11yProps(tab)}
+                                        />
+                                    ))}
+                                </Tabs>
+                                <Divider/>
+                                <RoadsTabPanel index={'main'} value={currentTab}>
+                                    <RoadMain road={road} updateRoad={getRoad} />
+                                </RoadsTabPanel>
+                                <RoadsTabPanel index={'mileage'} value={currentTab}>
+                                    <RoadMileage road={road} updateRoad={getRoad} />
+                                </RoadsTabPanel>
+                                <RoadsTabPanel index={'money'} value={currentTab}>
+                                    <RoadMoney road={road} updateRoad={getRoad} />
+                                </RoadsTabPanel>
+                                <RoadsTabPanel index={'fuel'} value={currentTab}>
+                                    <RoadFuel road={road} />
+                                </RoadsTabPanel>
+                                <RoadsTabPanel index={'cargos'} value={currentTab}>
+                                    <RoadCargos roadId={road.id!} />
+                                </RoadsTabPanel>
+                                <RoadsTabPanel index={'on-base'} value={currentTab}>
+                                    <FuelDetailList updateRoad={getRoad} type="ON_BASE" />
+                                </RoadsTabPanel>
+                                <RoadsTabPanel index={'on-road'} value={currentTab}>
+                                    <FuelDetailList updateRoad={getRoad} type="ON_ROAD" />
+                                </RoadsTabPanel>
+                                <RoadsTabPanel index={'additional-outcome'} value={currentTab}>
+                                    <FuelDetailList updateRoad={getRoad} type="ADDITIONAL_OUTCOME" />
+                                </RoadsTabPanel>
+                            </Card>
+                        </Box>
+                    </Container>
+                ) : <LoadingLayout loading={loading} hasError={hasError}/>
             }
         </Page>
     );

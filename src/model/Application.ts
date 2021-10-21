@@ -16,7 +16,7 @@ export interface ApplicationTabPanelProps {
 }
 
 type StatusApplication = 'WAITING' | 'PAID' | 'ON_ROAD';
-type MoneyUnitApplication = 'TJS' | 'RUB' | 'USD' | 'CNY';
+export type MoneyUnitApplication = 'TJS' | 'RUB' | 'USD' | 'CNY';
 type RefillBalanceTypeAction = 'REFILL' | 'RETURN';
 
 interface CreatedBy {
