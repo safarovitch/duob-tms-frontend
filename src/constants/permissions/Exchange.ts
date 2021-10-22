@@ -1,9 +1,10 @@
 import {ADMIN, CASHIER} from "./roles";
 
-const ARTICLE = {
+const EXCHANGE = {
     LIST: [
         ADMIN,
         CASHIER
     ]
 }
-export default ARTICLE
+
+export default EXCHANGE;

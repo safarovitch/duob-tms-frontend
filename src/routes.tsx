@@ -434,6 +434,24 @@ const routesConfig = [
                         component: lazy(() => import('./views/application/outcome-transfer-warehouse/show'))
                     },
                     {
+                        exact: true,
+                        path: '/app/exchange',
+                        perm: PERMISSIONS.EXCHANGE.LIST,
+                        component: lazy(() => import('./views/exchange/index'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/exchange/edit',
+                        perm: PERMISSIONS.EXCHANGE.LIST,
+                        component: lazy(() => import('./views/exchange/ExchangeForm'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/exchange/create',
+                        perm: PERMISSIONS.EXCHANGE.LIST,
+                        component: lazy(() => import('./views/exchange/ExchangeForm'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]
