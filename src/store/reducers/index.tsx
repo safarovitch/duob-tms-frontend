@@ -19,6 +19,7 @@ import {
     applicationOutcomeTransferWarehouseReducer,
     refillBalanceReducer
 } from "./applicationReducer";
+import exchangeReducer from "./exchangeReducer";
 
 const rootReducer = combineReducers({
     user: accountReducer,
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
     selectedApplicationOutcomeArticle: applicationOutcomeArticleReducer,
     selectedApplicationOutcomeTransferWarehouse: applicationOutcomeTransferWarehouseReducer,
     selectedCustomerCargo: customerCargoReducer,
+    selectedExchange: exchangeReducer
 });
 
 export default rootReducer;

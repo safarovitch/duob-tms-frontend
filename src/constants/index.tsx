@@ -18,6 +18,22 @@ export const moneyUnitApplication = [
     'CNY'
 ]
 
+export enum Currency {
+    TJS = "TJS",
+    USD = "USD",
+    RUB = "RUB",
+    CNY = "CNY"
+}
+
+export const currencyMap = new Map(
+    [
+        ["USD", "Доллар США - $"],
+        ["RUB", "Российский Рубль - ₽"],
+        ["TJS", "Смн."],
+        ["CNY", "Китайский Юань - ¥"],
+    ]
+)
+
 export const cargoStuffTabs = [
     {
         value: 'product',

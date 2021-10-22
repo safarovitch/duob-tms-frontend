@@ -21,6 +21,7 @@ import {
     Flag as FlagIcon,
     Truck as TruckIcon,
     Box as BoxIcon,
+    DollarSign as DollarIcon
 } from 'react-feather';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
@@ -104,6 +105,12 @@ const navConfig = [
                 icon: FlagIcon,
                 href: '/app/application',
                 perm: PERMISSIONS.APPLICATION.LIST
+            },
+            {
+                title: 'Курс валют',
+                icon: DollarIcon,
+                href: '/app/exchange',
+                perm: PERMISSIONS.EXCHANGE.LIST
             },
         ]
     }
