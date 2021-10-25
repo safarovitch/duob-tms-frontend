@@ -221,7 +221,8 @@ const OutcomeArticleListView: React.FC = () => {
                                 <TableCell>Кассир</TableCell>
                                 <TableCell>Статья</TableCell>
                                 <TableCell>Сумма</TableCell>
-                                <TableCell>Валюта</TableCell>
+                                <TableCell>Курс конвертации</TableCell>
+                                <TableCell>Итого по курсу</TableCell>
                                 <TableCell align="center">Админ</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Дата оплаты</TableCell>
@@ -237,9 +238,10 @@ const OutcomeArticleListView: React.FC = () => {
                                             <TableCell>{row.createdBy?.name}</TableCell>
                                             <TableCell>{row.employee?.name}</TableCell>
                                             <TableCell>{row.cashierName}</TableCell>
-                                            <TableCell>{row.articleName}</TableCell>
-                                            <TableCell>{row.amount}</TableCell>
-                                            <TableCell>{row.moneyUnit}</TableCell>
+                                            <TableCell>{row.article?.name}</TableCell>
+                                            <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
+                                            <TableCell>{row.convert ? row.currency : '-'}</TableCell>
+                                            <TableCell>{row.convert ? `${row.convertAmount} ${row.convertMoneyUnit}` : '-'}</TableCell>
                                             <TableCell align="center">
                                                 {
                                                     row.adminApproval ? <DoneAllIcon className={classes.statusPaid} /> : (

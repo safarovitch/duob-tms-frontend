@@ -221,7 +221,8 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
                                 <TableCell>Кассир получателя</TableCell>
                                 <TableCell>Склад</TableCell>
                                 <TableCell>Сумма</TableCell>
-                                <TableCell>Валюта</TableCell>
+                                <TableCell>Курс конвертации</TableCell>
+                                <TableCell>Итого по курсу</TableCell>
                                 <TableCell align="center">Админ</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Дата оплаты</TableCell>
@@ -238,8 +239,9 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
                                             <TableCell>{row.fromCashier?.name || '-'}</TableCell>
                                             <TableCell>{row.toCashierName || '-'}</TableCell>
                                             <TableCell>{row.toWarehouse?.name}</TableCell>
-                                            <TableCell>{row.amount}</TableCell>
-                                            <TableCell>{row.moneyUnit}</TableCell>
+                                            <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
+                                            <TableCell>{row.convert ? row.currency : '-'}</TableCell>
+                                            <TableCell>{row.convert ? `${row.convertAmount} ${row.convertMoneyUnit}` : '-'}</TableCell>
                                             <TableCell align="center">
                                                 {
                                                     row.adminApproval ? <DoneAllIcon className={classes.statusPaid} /> : (

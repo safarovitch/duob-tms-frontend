@@ -12,6 +12,8 @@ import articleService from "../../../services/ArticleService";
 import {ARTICLES} from "../../../constants";
 import employeeService from "../../../services/EmployeeService";
 import {useHistory} from "react-router-dom";
+import {Exchange} from "../../../model/Exchange";
+import exchangeService from "../../../services/ExchangeService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,6 +32,7 @@ function RoadTrailerView() {
     const [hasError, setHasError] = useState(false)
     const [articles, setArticles] = useState<Article[]>([])
     const [employees, setEmployees] = useState<Employee[]>([])
+    const [exchanges, setExchanges] = useState<Exchange[]>([])
 
     useEffect(() => {
         (async () => {
@@ -37,13 +40,15 @@ function RoadTrailerView() {
                 setLoading(true)
                 const dataArticles: any = await articleService.getArticles(ARTICLES.OUTCOME)
                 const dataEmployees: any = await employeeService.getEmployees()
+                const dataExchanges: any = await exchangeService.getAllExchanges()
 
-                if (dataArticles.length === 0 || dataEmployees.length === 0) {
+                if (dataArticles.length === 0 || dataEmployees.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала статью и сотрудника', {variant: 'info'})
+                    enqueueSnackbar('Добавьте с начала статью, сотрудника и курс валюты', {variant: 'info'})
                 } else {
                     setArticles(dataArticles)
                     setEmployees(dataEmployees)
+                    setExchanges(dataExchanges)
                 }
             } catch (error: any) {
                 setHasError(true)
@@ -61,7 +66,7 @@ function RoadTrailerView() {
                     <Container className={classes.root} maxWidth="md">
                         <Header/>
                         <Box mt={3}>
-                            <CreateOrEditForm articles={articles} employees={employees} />
+                            <CreateOrEditForm articles={articles} employees={employees} exchanges={exchanges} />
                         </Box>
                     </Container>
                 )

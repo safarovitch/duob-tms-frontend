@@ -58,7 +58,7 @@ const Header: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcom
                         to="/app/application/outcome-article"
                         component={RouterLink}
                     >
-                        Приход по статьям
+                        Расход по статьям
                     </Link>
                     <Typography
                         variant="body1"

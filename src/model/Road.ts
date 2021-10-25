@@ -1,5 +1,5 @@
 import React from "react";
-import {MoneyUnitApplication} from "./Application";
+import {MoneyUnitType} from "./Exchange";
 
 export interface RoadList {
     id: number;
@@ -92,7 +92,7 @@ export interface RoadFuelDetail {
     id?: number;
     refuelingDate: string;
     liter: number;
-    unit?: MoneyUnitApplication;
+    unit?: MoneyUnitType;
     price?: number;
     totalPrice?: number;
     description: string;
