@@ -119,6 +119,7 @@ export interface CargoIssueResponse {
         totalVolume: number;
         wightCargo: number;
         barcode: string;
+        amount: number;
         groupCargo: boolean;
     }[]
 }

@@ -101,7 +101,7 @@ const IssueShow: React.FC = () => {
         <Page title={cargoIssue ? `Клиент ${cargoIssue.client.code}` : 'Выдача груза'}>
             {
                 cargoIssue ? (
-                    <Container className={classes.root} maxWidth="md">
+                    <Container className={classes.root} maxWidth="lg">
                         <Header cargoIssue={cargoIssue}/>
                         <Card className={classes.mainContent}>
                             <Grid container justifyContent="space-between" alignItems="center">
@@ -202,7 +202,7 @@ const IssueShow: React.FC = () => {
                                     </Grid>
                                 </Grid>
                             </Box>
-                            <Box mt={2}>
+                            <Box mt={3}>
                                 <Card>
                                     <PerfectScrollbar>
                                         <Box minWidth={700}>
@@ -216,6 +216,7 @@ const IssueShow: React.FC = () => {
                                                         <TableCell>Д / Ш / В</TableCell>
                                                         <TableCell>Обьем(м3)</TableCell>
                                                         <TableCell>Вес(кг)</TableCell>
+                                                        <TableCell>Стоимост</TableCell>
                                                         <TableCell>Штрих-код</TableCell>
                                                     </TableRow>
                                                 </TableHead>
@@ -237,6 +238,7 @@ const IssueShow: React.FC = () => {
                                                             <TableCell>{row.lengthCargo} / {row.widthCargo} / {row.heightCargo}</TableCell>
                                                             <TableCell>{row.totalVolume}</TableCell>
                                                             <TableCell>{row.wightCargo}</TableCell>
+                                                            <TableCell>{row.amount}</TableCell>
                                                             <TableCell>{row.barcode}</TableCell>
                                                         </TableRow>
                                                     ))}
