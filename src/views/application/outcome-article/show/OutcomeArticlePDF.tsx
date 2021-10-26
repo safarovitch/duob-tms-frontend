@@ -97,13 +97,13 @@ const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}>
                 </View>
                 <View>
                     <Text style={styles.body}>
-                        Статья: {outcomeArticle.articleName}
+                        Статья: {outcomeArticle.article?.name}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {outcomeArticle.amount}
+                        Сумма: {outcomeArticle.actualAmount}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {outcomeArticle.moneyUnit}
+                        Валюта: {outcomeArticle.actualMoneyUnit}
                     </Text>
                 </View>
             </View>

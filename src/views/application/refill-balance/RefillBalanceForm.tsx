@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as Yup from 'yup';
 import {Formik, FormikProps} from 'formik';
 import {useSnackbar} from 'notistack';
@@ -9,8 +9,9 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles, MenuItem,
+    makeStyles, MenuItem, Checkbox, FormControlLabel,
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteSelectedRefillBalance} from "../../../store/actions/applicationAction";
@@ -18,7 +19,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Autocomplete} from "@material-ui/lab";
 import {RefillBalanceApplication, RefillBalanceFormProps} from "../../../model/Application";
 import applicationService from "../../../services/Application";
-import {mapOfActionTypeApplication, moneyUnitApplication} from "../../../constants";
+import {Currency, mapOfActionTypeApplication} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,14 +31,21 @@ const useStyles = makeStyles((theme) => ({
     },
     cancelButton: {
         marginRight: theme.spacing(2)
+    },
+    checkbox: {
+        display: 'flex'
+    },
+    checkboxLabel: {
+        marginTop: 8
     }
 }));
 
-const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, customers}) => {
+const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, customers, exchanges}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
     const dispatch = useDispatch()
+    const [errorExchange, setErrorExchange] = useState(false)
 
     useEffect(() => () => {
         dispatch(deleteSelectedRefillBalance())
@@ -47,16 +55,17 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
         client: refillBalance?.client,
         clientId: refillBalance?.client?.id || 0,
         actionType: refillBalance?.actionType || '',
-        amount: refillBalance?.amount || 0,
-        moneyUnit: refillBalance?.moneyUnit || '',
+        actualAmount: refillBalance?.actualAmount || 0,
+        actualMoneyUnit: refillBalance?.actualMoneyUnit || '',
+        convert: true,
+        convertMoneyUnit: 'USD' as Currency,
         currency: refillBalance?.currency || 0,
-        totalUSD: refillBalance?.totalUSD || 0,
+        convertAmount: refillBalance?.convertAmount || 0,
         description: refillBalance?.description,
     }
 
     const validationSchema = Yup.object().shape({
-        amount: Yup.number().typeError('Значение должно быть числом'),
-        currency: Yup.number().typeError('Значение должно быть числом'),
+        actualAmount: Yup.number().typeError('Значение должно быть числом'),
         description: Yup.string().max(255)
     })
 
@@ -92,12 +101,17 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
         }
     }
 
-    const calculateTotalUSD = (amount: number, currency: number) => {
-        amount = isNaN(amount) ? 0 : amount
-        currency = isNaN(currency) ? 0 : currency
+    const calculateCurrency = (actualMoneyUnit?: Currency, convertMoneyUnit?: Currency): number => {
+        const actualValue = exchanges.find((value => value.unit === actualMoneyUnit))
+        const convertValue = exchanges.find((value => value.unit === convertMoneyUnit))
 
-        return (amount / currency).toFixed(2);
+        if ((actualMoneyUnit && !actualValue) || (convertMoneyUnit && !convertValue)) setErrorExchange(true)
+        else setErrorExchange(false)
+
+        return Number(((actualValue ? actualValue.currency : 1) / (convertValue ? convertValue.currency : 1)).toFixed(3))
     }
+
+    const calculateConvertAmount = (amount: number, currency: number | undefined) => ((isNaN(amount) ? 0 : amount) * (currency || 0)).toFixed(2);
 
     return (
         <Formik
@@ -204,17 +218,18 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
                                     sm={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.amount && props.errors.amount)}
+                                        error={Boolean(props.touched.actualAmount && props.errors.actualAmount)}
                                         fullWidth
-                                        helperText={props.touched.amount && props.errors.amount}
+                                        helperText={props.touched.actualAmount && props.errors.actualAmount}
                                         label="Введите сумму"
-                                        name="amount"
+                                        placeholder="0"
+                                        name="actualAmount"
                                         onBlur={props.handleBlur}
                                         onChange={(e) => {
+                                            props.setFieldValue("convertAmount", calculateConvertAmount(Number(e.target.value), props.values.currency))
                                             props.handleChange(e)
-                                            props.setFieldValue("totalUSD", calculateTotalUSD(+e.target.value, props.values.currency));
                                         }}
-                                        value={props.values.amount}
+                                        value={props.values.actualAmount || ''}
                                         variant="outlined"
                                         required
                                     />
@@ -226,17 +241,19 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
                                 >
                                     <TextField
                                         select
-                                        error={Boolean(props.touched.moneyUnit && props.errors.moneyUnit)}
+                                        error={Boolean(props.touched.actualMoneyUnit && props.errors.actualMoneyUnit)}
                                         fullWidth
-                                        helperText={props.touched.moneyUnit && props.errors.moneyUnit}
+                                        helperText={props.touched.actualMoneyUnit && props.errors.actualMoneyUnit}
                                         label="Выберите валюту"
-                                        name="moneyUnit"
+                                        name="actualMoneyUnit"
                                         onBlur={props.handleBlur}
                                         onChange={(e) => {
-                                            props.setFieldValue('currency', e.target.value === 'USD' ? 1 : 0)
+                                            const currency = calculateCurrency(e.target.value as Currency, props.values.convertMoneyUnit)
+                                            props.setFieldValue('currency', currency)
+                                            props.setFieldValue("convertAmount", calculateConvertAmount(props.values.actualAmount, currency))
                                             props.handleChange(e)
                                         }}
-                                        value={props.values.moneyUnit}
+                                        value={props.values.actualMoneyUnit}
                                         variant="outlined"
                                         required
                                         SelectProps={{
@@ -255,7 +272,7 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
                                         }}
                                     >
                                         {
-                                            moneyUnitApplication.map((value, index) => (
+                                            Object.keys(Currency).map((value, index) => (
                                                 <MenuItem key={index} value={value}>{value}</MenuItem>
                                             ))
                                         }
@@ -263,38 +280,83 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
                                 </Grid>
                                 <Grid
                                     item
+                                    md={12}
                                     xs={12}
-                                    sm={6}
                                 >
-                                    <TextField
-                                        error={Boolean(props.touched.currency && props.errors.currency)}
-                                        fullWidth
-                                        helperText={props.touched.currency && props.errors.currency}
-                                        label="Введите курс конвертации"
-                                        name="currency"
-                                        onBlur={props.handleBlur}
-                                        onChange={(e) => {
-                                            props.handleChange(e)
-                                            props.setFieldValue("totalUSD", calculateTotalUSD(props.values.amount, +e.target.value));
-                                        }}
-                                        value={props.values.currency}
-                                        variant="outlined"
-                                        required
+                                    <FormControlLabel
+                                        control={<Checkbox
+                                            size="small"
+                                            checked={props.values.convert}
+                                            name="convert"
+                                            color="primary"
+                                            onChange={props.handleChange}
+                                            disabled
+                                        />}
+                                        label="Выбрать курс конвертации"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                >
-                                    <TextField
-                                        fullWidth
-                                        label="ИТОГО $"
-                                        value={props.values.totalUSD}
-                                        variant="outlined"
-                                        disabled
-                                    />
-                                </Grid>
+                                {props.values.convert && (
+                                    <>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={4}
+                                        >
+                                            <TextField
+                                                select
+                                                fullWidth
+                                                label="Конвертационная валюта"
+                                                name="convertMoneyUnit"
+                                                value={props.values.convertMoneyUnit}
+                                                variant="outlined"
+                                                disabled
+                                            >
+                                                {
+                                                    Object.keys(Currency).map((value, index) => (
+                                                        <MenuItem key={index} value={value}>{value}</MenuItem>
+                                                    ))
+                                                }
+                                            </TextField>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={4}
+                                        >
+                                            <TextField
+                                                fullWidth
+                                                label="Курс конвертации"
+                                                name="currency"
+                                                value={props.values.currency}
+                                                disabled={true}
+                                                variant="outlined"
+                                            />
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={4}
+                                        >
+                                            <TextField
+                                                fullWidth
+                                                label="Итого по курсу"
+                                                value={props.values.convertAmount}
+                                                variant="outlined"
+                                                disabled
+                                            />
+                                        </Grid>
+                                    </>
+                                )}
+                                {
+                                    errorExchange && (
+                                        <Grid
+                                            item
+                                            xs={12}
+                                        >
+                                            <Alert severity="error">Выбранный курс не указан!</Alert>
+                                        </Grid>
+                                    )
+                                }
                                 <Grid
                                     item
                                     xs={12}

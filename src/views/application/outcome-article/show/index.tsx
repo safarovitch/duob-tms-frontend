@@ -126,14 +126,21 @@ const ShowView: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
-                                    Статья: {outcomeArticle.articleName}
+                                    Статья: {outcomeArticle.article?.name}
                                 </Typography>
                                 <Typography variant="body1">
-                                    <b>Сумма: {outcomeArticle.amount}</b>
+                                    Сумма: <b>{outcomeArticle.actualAmount} {outcomeArticle.actualMoneyUnit}</b>
                                 </Typography>
-                                <Typography variant="body1">
-                                    <b>Валюта: {outcomeArticle.moneyUnit}</b>
-                                </Typography>
+                                {outcomeArticle.convert && (
+                                    <>
+                                        <Typography variant="body1">
+                                            Курс конвертации: <b>{outcomeArticle.currency}</b>
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Итого по курсу: <b>{outcomeArticle.convertAmount} {outcomeArticle.convertMoneyUnit}</b>
+                                        </Typography>
+                                    </>
+                                )}
                             </Grid>
                         </Grid>
                     </Box>
