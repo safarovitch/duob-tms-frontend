@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import * as Yup from 'yup';
 import {Formik, FormikProps} from 'formik';
 import {useSnackbar} from 'notistack';
@@ -9,7 +9,7 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles, MenuItem,
+    makeStyles, MenuItem, FormControlLabel, Checkbox,
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -19,7 +19,8 @@ import {
     OutcomeTransferWarehouseFormProps
 } from "../../../model/Application";
 import applicationService from "../../../services/Application";
-import {moneyUnitApplication} from "../../../constants";
+import {Currency} from "../../../constants";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,18 +35,23 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CreateOrEditForm: React.FC<OutcomeTransferWarehouseFormProps> = ({warehouses}) => {
+const CreateOrEditForm: React.FC<OutcomeTransferWarehouseFormProps> = ({warehouses, exchanges}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
+    const [errorExchange, setErrorExchange] = useState(false)
 
     const initialValues: OutcomeTransferWarehouseApplication = {
-        amount: 0,
+        actualAmount: 0,
+        actualMoneyUnit: '' as Currency,
+        convert: false,
+        currency: 0,
+        convertAmount: 0,
         description: '',
     }
 
     const validationSchema = Yup.object().shape({
-        amount: Yup.number().typeError('Значение должно быть числом'),
+        actualAmount: Yup.number().typeError('Значение должно быть числом'),
         description: Yup.string().max(255)
     })
 
@@ -63,6 +69,18 @@ const CreateOrEditForm: React.FC<OutcomeTransferWarehouseFormProps> = ({warehous
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
+
+    const calculateCurrency = (actualMoneyUnit?: Currency, convertMoneyUnit?: Currency): number => {
+        const actualValue = exchanges.find((value => value.unit === actualMoneyUnit))
+        const convertValue = exchanges.find((value => value.unit === convertMoneyUnit))
+
+        if ((actualMoneyUnit && !actualValue) || (convertMoneyUnit && !convertValue)) setErrorExchange(true)
+        else setErrorExchange(false)
+
+        return Number(((actualValue ? actualValue.currency : 1) / (convertValue ? convertValue.currency : 1)).toFixed(3))
+    }
+
+    const calculateConvertAmount = (amount: number, currency: number | undefined) => ((isNaN(amount) ? 0 : amount) * (currency || 0)).toFixed(2);
 
     return (
         <Formik
@@ -126,13 +144,16 @@ const CreateOrEditForm: React.FC<OutcomeTransferWarehouseFormProps> = ({warehous
                                     md={4}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.amount && props.errors.amount)}
+                                        error={Boolean(props.touched.actualAmount && props.errors.actualAmount)}
                                         fullWidth
-                                        helperText={props.touched.amount && props.errors.amount}
+                                        helperText={props.touched.actualAmount && props.errors.actualAmount}
                                         label="Введите сумму"
-                                        name="amount"
+                                        name="actualAmount"
                                         onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
+                                        onChange={(e) => {
+                                            props.setFieldValue("convertAmount", calculateConvertAmount(Number(e.target.value), props.values.currency))
+                                            props.handleChange(e)
+                                        }}
                                         variant="outlined"
                                         required
                                     />
@@ -145,14 +166,20 @@ const CreateOrEditForm: React.FC<OutcomeTransferWarehouseFormProps> = ({warehous
                                 >
                                     <TextField
                                         select
-                                        error={Boolean(props.touched.moneyUnit && props.errors.moneyUnit)}
+                                        error={Boolean(props.touched.actualMoneyUnit && props.errors.actualMoneyUnit)}
                                         fullWidth
-                                        helperText={props.touched.moneyUnit && props.errors.moneyUnit}
+                                        helperText={props.touched.actualMoneyUnit && props.errors.actualMoneyUnit}
                                         label="Выберите валюту"
-                                        name="moneyUnit"
+                                        name="actualMoneyUnit"
                                         defaultValue=""
                                         onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
+                                        onChange={(e) => {
+                                            const currency = calculateCurrency(e.target.value as Currency, props.values.convertMoneyUnit)
+                                            props.setFieldValue('currency', currency)
+                                            props.setFieldValue("convertAmount", calculateConvertAmount(props.values.actualAmount, currency))
+                                            props.handleChange(e)
+                                        }}
+                                        value={props.values.actualMoneyUnit}
                                         variant="outlined"
                                         required
                                         SelectProps={{
@@ -171,12 +198,113 @@ const CreateOrEditForm: React.FC<OutcomeTransferWarehouseFormProps> = ({warehous
                                         }}
                                     >
                                         {
-                                            moneyUnitApplication.map((value, index) => (
+                                            Object.keys(Currency).map((value, index) => (
                                                 <MenuItem key={index} value={value}>{value}</MenuItem>
                                             ))
                                         }
                                     </TextField>
                                 </Grid>
+                                <Grid
+                                    item
+                                    md={12}
+                                    xs={12}
+                                >
+                                    <FormControlLabel
+                                        control={<Checkbox
+                                            size="small"
+                                            checked={props.values.convert}
+                                            name="convert"
+                                            color="primary"
+                                            onChange={props.handleChange}
+                                        />}
+                                        label="Выбрать курс конвертации"
+                                    />
+                                </Grid>
+                                {props.values.convert && (
+                                    <>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={4}
+                                        >
+                                            <TextField
+                                                select
+                                                error={Boolean(props.touched.convertMoneyUnit && props.errors.convertMoneyUnit)}
+                                                fullWidth
+                                                helperText={props.touched.convertMoneyUnit && props.errors.convertMoneyUnit}
+                                                label="Конвертационная валюта"
+                                                name="convertMoneyUnit"
+                                                onBlur={props.handleBlur}
+                                                onChange={(e) => {
+                                                    const currency = calculateCurrency(props.values.actualMoneyUnit, e.target.value as Currency)
+                                                    props.setFieldValue('currency', currency)
+                                                    props.setFieldValue("convertAmount", calculateConvertAmount(props.values.actualAmount, currency))
+                                                    props.handleChange(e)
+                                                }}
+                                                value={props.values.convertMoneyUnit || ''}
+                                                variant="outlined"
+                                                required={props.values.convert}
+                                                SelectProps={{
+                                                    MenuProps: {
+                                                        variant: "selectedMenu",
+                                                        anchorOrigin: {
+                                                            vertical: "bottom",
+                                                            horizontal: "left"
+                                                        },
+                                                        transformOrigin: {
+                                                            vertical: "top",
+                                                            horizontal: "left"
+                                                        },
+                                                        getContentAnchorEl: null
+                                                    }
+                                                }}
+                                            >
+                                                {
+                                                    Object.keys(Currency).map((value, index) => (
+                                                        <MenuItem key={index} value={value}>{value}</MenuItem>
+                                                    ))
+                                                }
+                                            </TextField>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={4}
+                                        >
+                                            <TextField
+                                                fullWidth
+                                                label="Курс конвертации"
+                                                name="currency"
+                                                value={props.values.currency}
+                                                disabled={true}
+                                                variant="outlined"
+                                            />
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={4}
+                                        >
+                                            <TextField
+                                                fullWidth
+                                                label="Итого по курсу"
+                                                value={props.values.convertAmount}
+                                                variant="outlined"
+                                                disabled
+                                            />
+                                        </Grid>
+                                    </>
+                                )}
+                                {
+                                    errorExchange && (
+                                        <Grid
+                                            item
+                                            xs={12}
+                                        >
+                                            <Alert severity="error">Выбранный курс не указан!</Alert>
+                                        </Grid>
+                                    )
+                                }
                                 <Grid
                                     item
                                     xs={12}
