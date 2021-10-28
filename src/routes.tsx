@@ -452,6 +452,18 @@ const routesConfig = [
                         component: lazy(() => import('./views/exchange/ExchangeForm'))
                     },
                     {
+                        exact: true,
+                        path: '/app/cargo-issues',
+                        perm: PERMISSIONS.CARGO.ISSUES.LIST,
+                        component: lazy(() => import('./views/cargo/issue'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo-issues/:id/show',
+                        perm: PERMISSIONS.CARGO.ISSUES.LIST,
+                        component: lazy(() => import('./views/cargo/issue/show'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]
