@@ -1,4 +1,4 @@
-import {ADMIN} from "./roles";
+import {ADMIN, CASHIER, MANAGER} from "./roles";
 
 const EMPLOYEE = {
     LIST: [
@@ -12,7 +12,27 @@ const EMPLOYEE = {
     ],
     DELETE: [
         ADMIN
-    ]
+    ],
+    ACCOUNTABILITY: {
+        LIST: [
+            ADMIN,
+            MANAGER
+        ],
+        ADMIN_APPROVE: [
+            ADMIN,
+        ],
+        APPROVE: [
+            CASHIER,
+        ],
+        EDIT: [
+            ADMIN,
+            MANAGER
+        ],
+        DELETE: [
+            ADMIN,
+            MANAGER
+        ]
+    }
 }
 
 export default EMPLOYEE;

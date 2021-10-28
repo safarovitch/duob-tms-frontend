@@ -107,6 +107,12 @@ const navConfig = [
                 perm: PERMISSIONS.APPLICATION.LIST
             },
             {
+                title: 'Подотчеты',
+                icon: FlagIcon,
+                href: '/app/employee-accounts',
+                perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST
+            },
+            {
                 title: 'Курс валют',
                 icon: DollarIcon,
                 href: '/app/exchange',

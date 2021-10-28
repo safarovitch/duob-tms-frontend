@@ -25,6 +25,25 @@ export enum Currency {
     CNY = "CNY"
 }
 
+export enum AccountabilityType {
+    PAYMENT = "PAYMENT",
+    MONEY_STATEMENT = "MONEY_STATEMENT",
+    REFUND = "REFUND"
+}
+
+export enum AccountabilityMoneyUnit {
+    TJS = "TJS",
+    USD = "USD"
+}
+
+export const mapOfAccountabilityType = new Map(
+    [
+        [AccountabilityType.PAYMENT, "Выдача"],
+        [AccountabilityType.MONEY_STATEMENT, "Отчет"],
+        [AccountabilityType.REFUND, "Возврат"],
+    ]
+)
+
 export const currencyMap = new Map(
     [
         ["USD", "Доллар США - $"],
