@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     page: {
         fontFamily: "Roboto",
         backgroundColor: '#fff',
+        paddingVertical: 14,
     },
     main: {
         paddingVertical: 10,
