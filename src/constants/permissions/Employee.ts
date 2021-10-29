@@ -31,6 +31,9 @@ const EMPLOYEE = {
         DELETE: [
             ADMIN,
             MANAGER
+        ],
+        ADD_DELETE_PHOTO: [
+            CASHIER,
         ]
     }
 }

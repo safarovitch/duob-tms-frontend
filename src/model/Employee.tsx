@@ -38,9 +38,10 @@ export interface Accountability {
     description: string;
     amount: number;
     moneyUnit: AccountabilityMoneyUnit;
-    createdDate?: string;
+    updatedDate?: string;
     employeeName?: string;
     createdByName?: string;
     adminConfirmation?: boolean;
     cashierConfirmation?: boolean;
+    filePath?: string;
 }

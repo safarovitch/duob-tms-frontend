@@ -73,7 +73,7 @@ const AccountabilityPDF: React.FC<{accountability: Accountability}> = ({accounta
                 </View>
                 <View>
                     <Text style={styles.body}>
-                        {accountability.createdDate}
+                        {accountability.updatedDate}
                     </Text>
                 </View>
             </View>

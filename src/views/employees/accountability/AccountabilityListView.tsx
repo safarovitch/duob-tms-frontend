@@ -159,6 +159,15 @@ const AccountabilityListView: React.FC = () => {
         
     }
 
+    const handleUpdateImage = (accountabilityId: number, filePath: string) => {
+        let newRows = [...rows]
+        let index = newRows.findIndex((item) => item.id === accountabilityId)
+
+        if (index > -1) newRows[index].filePath = filePath
+
+        setRows(newRows)
+    }
+
     return (
         <Page title={employee?.name || 'Подотчет'}>
             {
@@ -253,7 +262,7 @@ const AccountabilityListView: React.FC = () => {
                                                     <TableBody>
                                                         {rows.map((row: Accountability, index) => (
                                                             <TableRow hover key={row.id}>
-                                                                <TableCell>{row.createdDate}</TableCell>
+                                                                <TableCell>{row.updatedDate}</TableCell>
                                                                 <TableCell>{row.amount}</TableCell>
                                                                 <TableCell>{row.moneyUnit}</TableCell>
                                                                 <TableCell>{mapOfAccountabilityType.get(row.type)}</TableCell>
@@ -288,7 +297,10 @@ const AccountabilityListView: React.FC = () => {
                                                                 </TableCell>
                                                                 <TableCell>{row.description}</TableCell>
                                                                 <TableCell align="center">
-                                                                    <ImageModal />
+                                                                    <ImageModal
+                                                                        accountability={row}
+                                                                        handleUpdate={handleUpdateImage}
+                                                                    />
                                                                     <IconButton
                                                                         onClick={() => {
                                                                             setAccountability(row)

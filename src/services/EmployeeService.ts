@@ -137,6 +137,22 @@ class EmployeeService {
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
+
+    uploadEmployeeAccountabilityImage = (id: number, file: File) => new Promise((resolve, reject) => {
+        let formData = new FormData()
+        formData.append("file", file);
+        api.put(`${API_BASE_URL}/employee-accounts/${id}/file`, formData, {
+                headers: {"Content-Type": "multipart/form-data",},
+            })
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    deleteEmployeeAccountabilityImage = (id: number) => new Promise((resolve, reject) => {
+        api.delete(`${API_BASE_URL}/employee-accounts/${id}/file`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
 }
 let employeeService = new EmployeeService();
 
