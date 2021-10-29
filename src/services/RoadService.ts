@@ -1,7 +1,7 @@
 import api from "../utils/Api";
 import {API_BASE_URL} from "../config";
 import {
-    Driver,
+    Driver, RoadFuelDetail,
     RoadFuelRequest,
     RoadMileageRequest,
     RoadMoneyRequest,
@@ -28,6 +28,30 @@ class RoadService {
         api.get(`${API_BASE_URL}/roads/${id}/income-cargos/?page=${page}&size=${size}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
+    })
+
+    getRoadFuelDetails = (roadId: number, type: string) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/road-fuels?roadId=${roadId}&type=${type}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    postRoadFuelDetail = (roadFuelDetail: RoadFuelDetail) => new Promise((resolve, reject)  => {
+        api.post(`${API_BASE_URL}/road-fuels`, roadFuelDetail)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    updateRoadFuelDetail = (roadFuelDetail: RoadFuelDetail) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/road-fuels`, roadFuelDetail)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    deleteRoadFuelDetail = (fuelId: number) => new Promise((resolve, reject)  => {
+        api.delete(`${API_BASE_URL}/road-fuels/${fuelId}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
     })
 
     postRoad = (road: RoadRequest) => new Promise((resolve, reject)  => {
@@ -66,6 +90,12 @@ class RoadService {
             .catch((error) => {reject(error)})
     })
 
+    getDrivers = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/drivers/all`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
     getFilteredDrivers = (page: number, size: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/drivers?page=${page}&size=${size}`)
             .then((response) => {resolve(response.data)})
@@ -86,6 +116,12 @@ class RoadService {
 
     deleteDriver = (driverId: number) => new Promise((resolve, reject)  => {
         api.delete(`${API_BASE_URL}/drivers/${driverId}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    getActiveTrucks = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/trucks/active`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
     })
@@ -116,6 +152,12 @@ class RoadService {
 
     deleteTruck = (truckId: number) => new Promise((resolve, reject)  => {
         api.delete(`${API_BASE_URL}/trucks/${truckId}`)
+            .then((response) => {resolve(response.data)})
+            .catch((error) => {reject(error)})
+    })
+
+    getTrailers = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/trailers/all`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
     })

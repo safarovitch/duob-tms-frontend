@@ -132,6 +132,30 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
+    getFilteredCargoIssues = (page: number, size: number, query: string) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/applications/cargo-issues?page=${page}&size=${size}&search=${query}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getCargoIssue = (id: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/applications/cargo-issues/${id}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    approveCargoIssue = (id: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/money-transactions/cargo-issue/${id}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    deleteCargoIssue = (id: number) => new Promise((resolve, reject) => {
+        api.delete(`${API_BASE_URL}/applications/cargo-issues/${id}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
 }
 
 const cargoService = new CustomerService();

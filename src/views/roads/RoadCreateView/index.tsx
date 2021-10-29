@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
-import {Driver, Truck} from "../../../model/Road";
+import {RoadTruck} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import LoadingLayout from "../../../components/LoadingLayout";
 import MainForm from "./MainForm";
@@ -29,24 +29,19 @@ const RoadCreateView: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
-    const [trucks, setTrucks] = useState<Truck[]>([])
-    const [drivers, setDrivers] = useState<Driver[]>([])
+    const [trucks, setTrucks] = useState<RoadTruck[]>([])
 
     useEffect(() => {
         (async () => {
             try {
                 setLoading(true)
 
-                const fetchTrucks: any = await roadService.getTrucks()
-                const fetchDrivers: any = await roadService.getFilteredDrivers(1, 1000)
+                const fetchTrucks: any = await roadService.getActiveTrucks()
 
-                if (fetchTrucks.length === 0 || fetchDrivers.length === 0) {
+                if (fetchTrucks.length === 0) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала машину и водителя', {variant: 'info'})
-                } else {
-                    setTrucks(fetchTrucks)
-                    setDrivers(fetchDrivers.content)
-                }
+                    enqueueSnackbar('Нет свободной машины', {variant: 'info'})
+                } else setTrucks(fetchTrucks)
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -59,16 +54,14 @@ const RoadCreateView: React.FC = () => {
     return (
         <Page title={'Рейс'}>
             {
-                (trucks.length > 0 && drivers.length > 0)
-                    ? (
-                        <Container className={classes.root} maxWidth="lg">
-                            <Header />
-                            <Box mt={3}>
-                                <MainForm trucks={trucks} drivers={drivers} />
-                            </Box>
-                        </Container>
-                    )
-                    : <LoadingLayout loading={loading} hasError={hasError} />
+                trucks.length > 0 ? (
+                    <Container className={classes.root} maxWidth="lg">
+                        <Header />
+                        <Box mt={3}>
+                            <MainForm trucks={trucks} />
+                        </Box>
+                    </Container>
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
             }
         </Page>
     )

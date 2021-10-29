@@ -104,24 +104,6 @@ const RoadMoney: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRo
                                     sm={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.contractPriceUsd && props.errors.contractPriceUsd)}
-                                        fullWidth
-                                        helperText={props.touched.contractPriceUsd && props.errors.contractPriceUsd}
-                                        label="Укажите сумму договора ($)"
-                                        name="contractPriceUsd"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.contractPriceUsd}
-                                        variant="outlined"
-                                        required
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                >
-                                    <TextField
                                         error={Boolean(props.touched.contractPriceTjs && props.errors.contractPriceTjs)}
                                         fullWidth
                                         helperText={props.touched.contractPriceTjs && props.errors.contractPriceTjs}
@@ -140,14 +122,14 @@ const RoadMoney: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRo
                                     sm={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.driverPriceUsd && props.errors.driverPriceUsd)}
+                                        error={Boolean(props.touched.contractPriceUsd && props.errors.contractPriceUsd)}
                                         fullWidth
-                                        helperText={props.touched.driverPriceUsd && props.errors.driverPriceUsd}
-                                        label="Введите услугу водителя ($)"
-                                        name="driverPriceUsd"
+                                        helperText={props.touched.contractPriceUsd && props.errors.contractPriceUsd}
+                                        label="Укажите сумму договора ($)"
+                                        name="contractPriceUsd"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.driverPriceUsd}
+                                        value={props.values.contractPriceUsd}
                                         variant="outlined"
                                         required
                                     />
@@ -176,14 +158,14 @@ const RoadMoney: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRo
                                     sm={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.roadCostsUsd && props.errors.roadCostsUsd)}
+                                        error={Boolean(props.touched.driverPriceUsd && props.errors.driverPriceUsd)}
                                         fullWidth
-                                        helperText={props.touched.roadCostsUsd && props.errors.roadCostsUsd}
-                                        label="Введите расходы в пути ($)"
-                                        name="roadCostsUsd"
+                                        helperText={props.touched.driverPriceUsd && props.errors.driverPriceUsd}
+                                        label="Введите услугу водителя ($)"
+                                        name="driverPriceUsd"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.roadCostsUsd}
+                                        value={props.values.driverPriceUsd}
                                         variant="outlined"
                                         required
                                     />
@@ -212,14 +194,14 @@ const RoadMoney: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRo
                                     sm={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.roadPriceUsd && props.errors.roadPriceUsd)}
+                                        error={Boolean(props.touched.roadCostsUsd && props.errors.roadCostsUsd)}
                                         fullWidth
-                                        helperText={props.touched.roadPriceUsd && props.errors.roadPriceUsd}
-                                        label="Введите стоимость рейса ($)"
-                                        name="roadPriceUsd"
+                                        helperText={props.touched.roadCostsUsd && props.errors.roadCostsUsd}
+                                        label="Введите расходы в пути ($)"
+                                        name="roadCostsUsd"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.roadPriceUsd}
+                                        value={props.values.roadCostsUsd}
                                         variant="outlined"
                                         required
                                     />
@@ -248,16 +230,42 @@ const RoadMoney: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRo
                                     sm={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.retentionUsd && props.errors.retentionUsd)}
+                                        error={Boolean(props.touched.roadPriceUsd && props.errors.roadPriceUsd)}
                                         fullWidth
-                                        helperText={props.touched.retentionUsd && props.errors.retentionUsd}
-                                        label="Введите стоимость удержание рейса ($)"
-                                        name="retentionUsd"
+                                        helperText={props.touched.roadPriceUsd && props.errors.roadPriceUsd}
+                                        label="Введите стоимость рейса ($)"
+                                        name="roadPriceUsd"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.retentionUsd}
+                                        value={props.values.roadPriceUsd}
                                         variant="outlined"
                                         required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Заправка в пути (сомони)"
+                                        value={road.refuelingOnRoadPriceTjs}
+                                        variant="outlined"
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Заправка в пути ($)"
+                                        value={road.refuelingOnRoadPriceUsd}
+                                        variant="outlined"
+                                        disabled
                                     />
                                 </Grid>
                                 <Grid
@@ -284,11 +292,16 @@ const RoadMoney: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRo
                                     sm={6}
                                 >
                                     <TextField
+                                        error={Boolean(props.touched.retentionUsd && props.errors.retentionUsd)}
                                         fullWidth
-                                        label="ИТОГО ($)"
-                                        value={road.totalContractPriceUsd}
+                                        helperText={props.touched.retentionUsd && props.errors.retentionUsd}
+                                        label="Введите стоимость удержание рейса ($)"
+                                        name="retentionUsd"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.retentionUsd}
                                         variant="outlined"
-                                        disabled
+                                        required
                                     />
                                 </Grid>
                                 <Grid
@@ -300,6 +313,19 @@ const RoadMoney: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRo
                                         fullWidth
                                         label="ИТОГО (сомони)"
                                         value={road.totalContractPriceTjs}
+                                        variant="outlined"
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="ИТОГО ($)"
+                                        value={road.totalContractPriceUsd}
                                         variant="outlined"
                                         disabled
                                     />

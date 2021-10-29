@@ -214,9 +214,27 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/roads/:id',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads/RedirectToRoadMain'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/roads/:id/:stuffId',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/roads'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/roads/:id/:stuffId/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads/fuel-detail'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/roads/:id/:stuffId/edit',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/roads/fuel-detail'))
                     },
                     {
                         exact: true,
@@ -227,25 +245,13 @@ const routesConfig = [
                         exact: true,
                         path: '/app/road',
                         perm: PERMISSIONS.ROAD.LIST,
-                        component: () => <Redirect to="/app/road/driver" />
+                        component: () => <Redirect to="/app/road/truck" />
                     },
                     {
                         exact: true,
                         path: '/app/road/:stuffId',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/road')),
-                    },
-                    {
-                        exact: true,
-                        path: '/app/road/driver/create',
-                        perm: PERMISSIONS.ROAD.LIST,
-                        component: lazy(() => import('./views/road/driver'))
-                    },
-                    {
-                        exact: true,
-                        path: '/app/road/driver/edit',
-                        perm: PERMISSIONS.ROAD.LIST,
-                        component: lazy(() => import('./views/road/driver'))
                     },
                     {
                         exact: true,
@@ -258,6 +264,18 @@ const routesConfig = [
                         path: '/app/road/truck/edit',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/road/truck'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/driver/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/driver'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/road/driver/edit',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/driver'))
                     },
                     {
                         exact: true,
@@ -414,6 +432,36 @@ const routesConfig = [
                         path: '/app/application/outcome-transfer-warehouse/show',
                         perm: PERMISSIONS.APPLICATION.LIST,
                         component: lazy(() => import('./views/application/outcome-transfer-warehouse/show'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/exchange',
+                        perm: PERMISSIONS.EXCHANGE.LIST,
+                        component: lazy(() => import('./views/exchange/index'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/exchange/edit',
+                        perm: PERMISSIONS.EXCHANGE.LIST,
+                        component: lazy(() => import('./views/exchange/ExchangeForm'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/exchange/create',
+                        perm: PERMISSIONS.EXCHANGE.LIST,
+                        component: lazy(() => import('./views/exchange/ExchangeForm'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo-issues',
+                        perm: PERMISSIONS.CARGO.ISSUES.LIST,
+                        component: lazy(() => import('./views/cargo/issue'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/cargo-issues/:id/show',
+                        perm: PERMISSIONS.CARGO.ISSUES.LIST,
+                        component: lazy(() => import('./views/cargo/issue/show'))
                     },
                     {
                         component: () => <Redirect to="/404" />

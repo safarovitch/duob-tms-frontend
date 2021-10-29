@@ -1,22 +1,54 @@
-export const THEMES = {
-    LIGHT: 'LIGHT',
-    ONE_DARK: 'ONE_DARK',
-    UNICORN: 'UNICORN'
+const
+    LIGHT = 'LIGHT',
+    ONE_DARK = 'ONE_DARK',
+    UNICORN = 'UNICORN',
+    INCOME = 'INCOME',
+    INCOME_POSTFIX = 'income',
+    OUTCOME = 'OUTCOME',
+    OUTCOME_POSTFIX = 'outcome',
+    TJS = 'TJS',
+    RUB = 'RUB',
+    USD = 'USD',
+    CNY = 'CNY',
+    MANAGER = 'MANAGER',
+    WAREHOUSEMAN = 'WAREHOUSEMAN',
+    CASHIER = 'CASHIER',
+    CLIENT = 'CLIENT',
+    ADMIN = 'ADMIN',
+    ENGINEER = 'ENGINEER',
+    TRANSFUSION = 'TRANSFUSION',
+    REFILL = 'REFILL',
+    RETURN = 'RETURN',
+    WAITING = 'WAITING',
+    PAID = 'PAID',
+    ON_ROAD = 'ON_ROAD',
+    FORMALIZED = 'FORMALIZED',
+    ARRIVED = 'ARRIVED',
+    ISSUED = 'ISSUED',
+    THING = 'THING',
+    TON = 'TON'
+
+export const THEMES = {LIGHT, ONE_DARK, UNICORN}
+
+export const ARTICLES = {INCOME, INCOME_POSTFIX, OUTCOME, OUTCOME_POSTFIX}
+
+export const moneyUnitApplication = [TJS, RUB, USD, CNY]
+
+export enum Currency {
+    TJS = "TJS",
+    USD = "USD",
+    RUB = "RUB",
+    CNY = "CNY"
 }
 
-export const ARTICLES = {
-    INCOME: 'INCOME',
-    INCOME_POSTFIX: 'income',
-    OUTCOME: 'OUTCOME',
-    OUTCOME_POSTFIX: 'outcome',
-}
-
-export const moneyUnitApplication = [
-    'TJS',
-    'RUB',
-    'USD',
-    'CNY'
-]
+export const currencyMap = new Map(
+    [
+        [USD, "Доллар США - $"],
+        [RUB, "Российский Рубль - ₽"],
+        [TJS, "Смн."],
+        [CNY, "Китайский Юань - ¥"],
+    ]
+)
 
 export const cargoStuffTabs = [
     {
@@ -54,12 +86,12 @@ export const customerStuffTabs = [
 
 export const roadStuffTabs = [
     {
-        value: 'driver',
-        label: 'Водители'
-    },
-    {
         value: 'truck',
         label: 'Машины'
+    },
+    {
+        value: 'driver',
+        label: 'Водители'
     },
     {
         value: 'trailer',
@@ -97,6 +129,21 @@ export const roadsStuffTabs = [
         label: 'Грузы',
         privateTruck: true,
     },
+    {
+        value: 'on-base',
+        label: 'Заправка на базе',
+        privateTruck: true,
+    },
+    {
+        value: 'on-road',
+        label: 'Заправка в пути',
+        privateTruck: true,
+    },
+    {
+        value: 'additional-outcome',
+        label: 'Дополнительный расход',
+        privateTruck: true,
+    },
 ]
 
 export const articleStuffTabs = [
@@ -131,60 +178,76 @@ export const applicationStuffTabs = [
 
 export const mapOfRoles = new Map(
     [
-        ['MANAGER', 'Менеджер'],
-        ['WAREHOUSEMAN', 'Завсклад'],
-        ['CASHIER', 'Кассир'],
-        ['CLIENT', 'Клиент'],
-        ['ADMIN', 'Админ'],
-        ['ENGINEER', 'Инженер'],
+        [MANAGER, 'Менеджер'],
+        [WAREHOUSEMAN, 'Завсклад'],
+        [CASHIER, 'Кассир'],
+        [CLIENT, 'Клиент'],
+        [ADMIN, 'Админ'],
+        [ENGINEER, 'Инженер'],
     ]
 )
 
 export const mapOfTypeFuelTransactions = new Map(
     [
-        ['INCOME', 'Приход'],
-        ['TRANSFUSION', 'Переливание'],
-        ['OUTCOME', 'Расход'],
+        [INCOME, 'Приход'],
+        [TRANSFUSION, 'Переливание'],
+        [OUTCOME, 'Расход'],
     ]
 )
 
 export const mapOfActionTypeApplication = new Map(
     [
-        ['REFILL', 'Пополнение'],
-        ['RETURN', 'Возврат'],
+        [REFILL, 'Пополнение'],
+        [RETURN, 'Возврат'],
     ]
 )
 
 export const mapOfStatusApplication = new Map<string, string>(
     [
-        ['WAITING', 'Ожидается'],
-        ['PAID', 'Оплачено'],
-        ['ON_ROAD', 'В пути'],
+        [WAITING, 'Ожидается'],
+        [PAID, 'Оплачено'],
+        [ON_ROAD, 'В пути'],
     ]
 )
 
 
 export const mapOfStatusCargo = new Map<string, string>(
     [
-        ['FORMALIZED', 'Оформлен'],
+        [FORMALIZED, 'Оформлен'],
         ['ONROAD', 'В пути'],
-        ['ARRIVED', 'Прибыл'],
-        ['ISSUED', 'Выдано'],
+        [ARRIVED, 'Прибыл'],
+        [ISSUED, 'Выдано'],
     ]
 )
 
 export const mapOfColorStatusCargo = new Map<string, string>(
     [
-        ['FORMALIZED', '#000000'],
+        [FORMALIZED, '#000000'],
         ['ONROAD', '#FDD231'],
-        ['ARRIVED', '#2196F3'],
-        ['ISSUED', '#03A075'],
+        [ARRIVED, '#2196F3'],
+        [ISSUED, '#03A075'],
+    ]
+)
+
+export const mapOfStatusCargoIssue = new Map<string, string> (
+    [
+        [WAITING, 'Ожидание'],
+        [PAID, 'Выплачено'],
+        [ISSUED, 'Выдано'],
+    ]
+)
+
+export const mapOfStatusColorCargoIssue = new Map<string, string> (
+    [
+        [WAITING, '#FDAD00'],
+        [PAID, '#039F75'],
+        [ISSUED, '#03A075'],
     ]
 )
 
 export const mapOfUnits = new Map<string, string>(
     [
-        ['THING', 'штука'],
-        ['TON', 'тонна'],
+        [THING, 'штука'],
+        [TON, 'тонна'],
     ]
 )

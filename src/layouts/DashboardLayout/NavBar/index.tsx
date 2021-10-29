@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation, matchPath } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import {DollarSign as DollarIcon} from 'react-feather';
 import {Avatar, Box, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography, makeStyles} from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import HomeIcon from '@material-ui/icons/Home';
@@ -94,6 +95,18 @@ const navConfig = [
                 icon: DescriptionIcon,
                 href: '/app/application',
                 perm: PERMISSIONS.APPLICATION.LIST
+            },
+            {
+                title: 'Выдача груза',
+                icon: DashboardIcon,
+                href: '/app/cargo-issues',
+                perm: PERMISSIONS.APPLICATION.LIST
+            },
+            {
+                title: 'Курс валют',
+                icon: DollarIcon,
+                href: '/app/exchange',
+                perm: PERMISSIONS.EXCHANGE.LIST
             },
         ]
     }

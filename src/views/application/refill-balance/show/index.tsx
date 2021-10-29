@@ -127,13 +127,13 @@ const ShowView: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
-                                    Сумма: {`${refillBalance.amount} ${refillBalance.moneyUnit}`}
+                                    Сумма: <b>{`${refillBalance.actualAmount} ${refillBalance.actualMoneyUnit}`}</b>
                                 </Typography>
                                 <Typography variant="body1">
-                                    Курс конвертации: {refillBalance.currency}
+                                    Курс конвертации: <b>{refillBalance.currency}</b>
                                 </Typography>
                                 <Typography variant="body1">
-                                    <b>Итого: {refillBalance.totalUSD} $</b>
+                                    Итого по курсу: <b>{refillBalance.convertAmount} {refillBalance.convertMoneyUnit}</b>
                                 </Typography>
                             </Grid>
                         </Grid>

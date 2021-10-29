@@ -18,7 +18,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Autocomplete} from "@material-ui/lab";
 import {IncomeByArticleApplication, IncomeByArticleFormProps} from "../../../model/Application";
 import applicationService from "../../../services/Application";
-import {moneyUnitApplication} from "../../../constants";
+import {Currency} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,14 +46,13 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
     const initialValues: IncomeByArticleApplication = {
         article: incomeArticle?.article,
         articleId: incomeArticle?.article?.id || 0,
-        amount: incomeArticle?.amount || 0,
-        moneyUnit: incomeArticle?.moneyUnit || '',
+        actualAmount: incomeArticle?.actualAmount || 0,
+        actualMoneyUnit: incomeArticle?.actualMoneyUnit || '',
         description: incomeArticle?.description,
     }
 
     const validationSchema = Yup.object().shape({
-        amount: Yup.number().typeError('Значение должно быть числом'),
-        currency: Yup.number().typeError('Значение должно быть числом'),
+        actualAmount: Yup.number().typeError('Значение должно быть числом'),
         description: Yup.string().max(255)
     })
 
@@ -130,14 +129,15 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
                                     md={4}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.amount && props.errors.amount)}
+                                        error={Boolean(props.touched.actualAmount && props.errors.actualAmount)}
                                         fullWidth
-                                        helperText={props.touched.amount && props.errors.amount}
+                                        helperText={props.touched.actualAmount && props.errors.actualAmount}
                                         label="Введите сумму"
-                                        name="amount"
+                                        placeholder="0"
+                                        name="actualAmount"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.amount}
+                                        value={props.values.actualAmount || ''}
                                         variant="outlined"
                                         required
                                     />
@@ -150,14 +150,14 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
                                 >
                                     <TextField
                                         select
-                                        error={Boolean(props.touched.moneyUnit && props.errors.moneyUnit)}
+                                        error={Boolean(props.touched.actualMoneyUnit && props.errors.actualMoneyUnit)}
                                         fullWidth
-                                        helperText={props.touched.moneyUnit && props.errors.moneyUnit}
+                                        helperText={props.touched.actualMoneyUnit && props.errors.actualMoneyUnit}
                                         label="Выберите валюту"
-                                        name="moneyUnit"
+                                        name="actualMoneyUnit"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.moneyUnit}
+                                        value={props.values.actualMoneyUnit}
                                         variant="outlined"
                                         required
                                         SelectProps={{
@@ -176,7 +176,7 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
                                         }}
                                     >
                                         {
-                                            moneyUnitApplication.map((value, index) => (
+                                            Object.keys(Currency).map((value, index) => (
                                                 <MenuItem key={index} value={value}>{value}</MenuItem>
                                             ))
                                         }

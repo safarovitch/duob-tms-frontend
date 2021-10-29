@@ -33,7 +33,7 @@ export interface CargoCustomCode {
     price?: number;
     baseRate?: number;
     vat?: number;
-    totalRate?: number;
+    totalPrice?: number;
     description?: string;
     unit: Units | Units.ton;
     productId?: number;
@@ -89,4 +89,37 @@ export interface CargoTariffFormProps {
     cargoTariff: CargoTariff;
     cargoTypes: CargoType[];
     warehouses: Warehouse[];
+}
+
+
+export interface CargoIssueResponse {
+    id: number;
+    createdDate: string;
+    client: {
+        code: string;
+        balance: number;
+    },
+    actualAmount: number;
+    status: 'WAITING' | 'PAID' | 'ISSUED';
+    createdBy: {
+        id: number;
+        name: string;
+    };
+    approvalBy?: {
+        id: number;
+        name: string;
+    };
+    cargos?: {
+        createdDate: string;
+        product: string;
+        type: string;
+        lengthCargo: number;
+        widthCargo: number;
+        heightCargo: number;
+        totalVolume: number;
+        wightCargo: number;
+        barcode: string;
+        amount: number;
+        groupCargo: boolean;
+    }[]
 }

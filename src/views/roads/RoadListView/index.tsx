@@ -123,7 +123,7 @@ const RoadListView: React.FC = () => {
                                                         key={row.id}
                                                     >
                                                         <TableCell>
-                                                            {row.id}
+                                                            №{row.id}
                                                         </TableCell>
                                                         <TableCell>
                                                             {row.road}
@@ -138,7 +138,7 @@ const RoadListView: React.FC = () => {
                                                             0
                                                         </TableCell>
                                                         <TableCell>
-                                                            {row.status ? 'Активный' : 'Завершенный'}
+                                                            {row.status ? 'Завершенный' : 'Активный'}
                                                         </TableCell>
                                                         <TableCell align="center">
                                                             <IconButton

@@ -9,6 +9,8 @@ import LoadingLayout from "../../../components/LoadingLayout";
 import warehouseService from "../../../services/WarehouseService";
 import {Warehouse} from "../../../model/Warehouse";
 import {useHistory} from "react-router-dom";
+import {Exchange} from "../../../model/Exchange";
+import exchangeService from "../../../services/ExchangeService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,17 +28,22 @@ function Index() {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [warehouses, setWarehouses] = useState<Warehouse[]>([])
+    const [exchanges, setExchanges] = useState<Exchange[]>([])
 
     useEffect(() => {
         (async () => {
             try {
                 setLoading(true)
                 const data: any = await warehouseService.getAllWarehouse()
+                const dataExchanges: any = await exchangeService.getAllExchanges()
 
-                if (data.length === 0) {
+                if (data.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
-                } else setWarehouses(data)
+                    enqueueSnackbar('Добавьте с начала склад и курс валюты', {variant: 'info'})
+                } else {
+                    setWarehouses(data)
+                    setExchanges(dataExchanges)
+                }
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -53,7 +60,7 @@ function Index() {
                     <Container className={classes.root} maxWidth="md">
                         <Header/>
                         <Box mt={3}>
-                            <CreateOrEditForm warehouses={warehouses} />
+                            <CreateOrEditForm warehouses={warehouses} exchanges={exchanges} />
                         </Box>
                     </Container>
                 )

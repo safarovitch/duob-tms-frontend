@@ -130,10 +130,7 @@ const ShowView: React.FC = () => {
                                     Статья: {incomeArticle.article?.name}
                                 </Typography>
                                 <Typography variant="body1">
-                                    <b>Сумма: {incomeArticle.amount}</b>
-                                </Typography>
-                                <Typography variant="body1">
-                                    <b>Валюта: {incomeArticle.moneyUnit}</b>
+                                    Сумма: <b>{incomeArticle.actualAmount} {incomeArticle.actualMoneyUnit}</b>
                                 </Typography>
                             </Grid>
                         </Grid>

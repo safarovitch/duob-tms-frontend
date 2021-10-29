@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {Truck, TruckFormProps, TruckType} from "../../../model/Road";
+import {Driver, Trailer, Truck, TruckType} from "../../../model/Road";
 import roadService from "../../../services/RoadService";
 import {deleteSelectedTruck} from "../../../store/actions/roadActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -30,8 +30,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+interface TruckFormProps {
+    truck: Truck;
+    truckTypes: TruckType[];
+    trailers: Trailer[];
+    drivers: Driver[];
+}
 
-const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes}) => {
+const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drivers}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
@@ -42,19 +48,24 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes}) => {
     }, [])
 
     const initialValues: Truck = {
-        type: truck?.type || '',
-        typeId: truck?.typeId,
+        model: truck?.model || '',
+        type: truck?.type,
+        typeId: truck?.type?.id,
+        number: truck?.number || '',
+        trailer: truck?.trailer,
+        trailerId: truck?.trailer?.id,
+        driver: truck?.driver,
+        driverId: truck?.driver?.id,
         tankCapacity: truck?.tankCapacity,
         liftingCapacity: truck?.liftingCapacity,
-        number: truck?.number || '',
         totalBodyCapacity: truck?.totalBodyCapacity,
     }
 
     const validationSchema = Yup.object().shape({
-        type: Yup.string().max(255),
+        model: Yup.string().max(255),
+        number: Yup.string().max(255),
         tankCapacity: Yup.number().typeError('Значение должно быть числом'),
         liftingCapacity: Yup.number().typeError('Значение должно быть числом'),
-        number: Yup.string().max(255),
         totalBodyCapacity: Yup.number().typeError('Значение должно быть числом'),
     })
 
@@ -129,11 +140,30 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes}) => {
                                     item
                                     xs={12}
                                 >
+                                    <TextField
+                                        error={Boolean(props.touched.model && props.errors.model)}
+                                        fullWidth
+                                        helperText={props.touched.model && props.errors.model}
+                                        label="Введите модель"
+                                        name="model"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.model}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                >
                                     <Autocomplete
                                         options={truckTypes}
                                         getOptionLabel={option => option.name}
-                                        value={truckTypes.find((truckType: TruckType) => truckType.id === props.values.typeId)}
+                                        getOptionSelected={(option, value) => option.name === value.name}
+                                        value={truck ? props.values.type as TruckType : undefined}
                                         onChange={(e, value) => {
+                                            props.setFieldValue("type", value);
                                             props.setFieldValue("typeId", value?.id);
                                         }}
                                         renderInput={params => (
@@ -171,17 +201,52 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes}) => {
                                     item
                                     xs={12}
                                 >
-                                    <TextField
-                                        error={Boolean(props.touched.type && props.errors.type)}
-                                        fullWidth
-                                        helperText={props.touched.type && props.errors.type}
-                                        label="Введите модель машины"
-                                        name="type"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.type}
-                                        variant="outlined"
-                                        required
+                                    <Autocomplete
+                                        options={trailers}
+                                        getOptionLabel={option => option.number}
+                                        getOptionSelected={(option, value) => option.number === value.number}
+                                        value={truck ? props.values.trailer as Trailer : undefined}
+                                        onChange={(e, value) => {
+                                            props.setFieldValue("trailer", value)
+                                            props.setFieldValue("trailerId", value?.id)
+                                        }}
+                                        renderInput={params => (
+                                            <TextField
+                                                error={Boolean(props.touched.trailerId && props.errors.trailerId)}
+                                                helperText={props.touched.trailerId && props.errors.trailerId}
+                                                label="Выберите прицеп"
+                                                name="trailerId"
+                                                variant="outlined"
+                                                onBlur={props.handleBlur}
+                                                {...params}
+                                            />
+                                        )}
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                >
+                                    <Autocomplete
+                                        options={drivers}
+                                        getOptionLabel={option => option.name}
+                                        getOptionSelected={(option, value) => option.name === value.name}
+                                        value={truck ? props.values.driver as Driver : undefined}
+                                        onChange={(e, value) => {
+                                            props.setFieldValue("driver", value)
+                                            props.setFieldValue("driverId", value?.id)
+                                        }}
+                                        renderInput={params => (
+                                            <TextField
+                                                error={Boolean(props.touched.driverId && props.errors.driverId)}
+                                                helperText={props.touched.driverId && props.errors.driverId}
+                                                label="Выберите водителя"
+                                                name="driverId"
+                                                variant="outlined"
+                                                onBlur={props.handleBlur}
+                                                {...params}
+                                            />
+                                        )}
                                     />
                                 </Grid>
                                 <Grid

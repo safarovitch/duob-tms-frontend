@@ -9,25 +9,19 @@ import {
 
 class Application {
     approveRefillBalance = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/fill-client-balance/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/fill-client-balance/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
 
-    getFilteredRefillBalances = (page: number, size: number, search: string, startDate: string, endDate: string) =>
-        new Promise((resolve, reject) => {
-            api.get(`${API_BASE_URL}/applications/income-client-balance`, {
-                params: {
-                    page,
-                    size,
-                    search,
-                    startDate,
-                    endDate
-                }
+    getFilteredRefillBalances =
+        (page: number, size: number, search: string, startDate: string, endDate: string, status: string) =>
+            new Promise((resolve, reject) => {
+                api.get(`${API_BASE_URL}/applications/income-client-balance?${encodeURI(`extraParams[status]=${status}`)}`,
+                    {params: {page, size, search, startDate, endDate}})
+                    .then(response => resolve(response.data))
+                    .catch(error => reject(error))
             })
-                .then(response => resolve(response.data))
-                .catch(error => reject(error))
-        })
 
     postRefillBalance = (refillBalance: RefillBalanceApplication) => new Promise((resolve, reject) => {
         api.post(`${API_BASE_URL}/applications/income-client-balance`, refillBalance)
@@ -56,20 +50,19 @@ class Application {
     })
 
     approveIncomeArticle = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/income-by-article/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/income-by-article/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
 
-    getFilteredIncomeArticles = (page: number, size: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/applications/income-by-article?page=${page}&size=${size}`)
-            .then(response => {
-                resolve(response.data)
+    getFilteredIncomeArticles =
+        (page: number, size: number, search: string, startDate: string, endDate: string, status: string) =>
+            new Promise((resolve, reject) => {
+                api.get(`${API_BASE_URL}/applications/income-by-article?${encodeURI(`extraParams[status]=${status}`)}`,
+                    {params: {page, size, search, startDate, endDate}})
+                    .then(response => resolve(response.data))
+                    .catch(error => reject(error))
             })
-            .catch(error => {
-                reject(error)
-            })
-    })
 
     postIncomeArticle = (incomeArticle: IncomeByArticleApplication) => new Promise((resolve, reject) => {
         api.post(`${API_BASE_URL}/applications/income-by-article`, incomeArticle)
@@ -102,20 +95,19 @@ class Application {
     })
 
     approveOutcomeArticle = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/outcome-by-article/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/outcome-by-article/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
 
-    getFilteredOutcomeArticles = (page: number, size: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/applications/outcome-by-article?page=${page}&size=${size}`)
-            .then(response => {
-                resolve(response.data)
+    getFilteredOutcomeArticles =
+        (page: number, size: number, search: string, startDate: string, endDate: string, status: string) =>
+            new Promise((resolve, reject) => {
+                api.get(`${API_BASE_URL}/applications/outcome-by-article?${encodeURI(`extraParams[status]=${status}`)}`,
+                    {params: {page, size, search, startDate, endDate}})
+                    .then(response => resolve(response.data))
+                    .catch(error => reject(error))
             })
-            .catch(error => {
-                reject(error)
-            })
-    })
 
     postOutcomeArticle = (outcomeArticle: OutcomeByArticleApplication) => new Promise((resolve, reject) => {
         api.post(`${API_BASE_URL}/applications/outcome-by-article`, outcomeArticle)
@@ -138,20 +130,19 @@ class Application {
     })
 
     approveTransferWarehouse = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/transfer-to-warehouse/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/transfer-to-warehouse/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
 
-    getFilteredOutcomeTransferWarehouses = (page: number, size: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/applications/outcome-transfer-warehouse?page=${page}&size=${size}`)
-            .then(response => {
-                resolve(response.data)
+    getFilteredOutcomeTransferWarehouses =
+        (page: number, size: number, search: string, startDate: string, endDate: string, status: string) =>
+            new Promise((resolve, reject) => {
+                api.get(`${API_BASE_URL}/applications/outcome-transfer-warehouse?${encodeURI(`extraParams[status]=${status}`)}`,
+                    {params: {page, size, search, startDate, endDate}})
+                    .then(response => resolve(response.data))
+                    .catch(error => reject(error))
             })
-            .catch(error => {
-                reject(error)
-            })
-    })
 
     postOutcomeTransferWarehouse = (outcomeTransferWarehouse: OutcomeTransferWarehouseApplication) => new Promise((resolve, reject) => {
         api.post(`${API_BASE_URL}/applications/outcome-transfer-warehouse`, outcomeTransferWarehouse)

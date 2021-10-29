@@ -1,4 +1,5 @@
 import React from "react";
+import {MoneyUnitType} from "./Exchange";
 
 export interface RoadList {
     id: number;
@@ -13,13 +14,18 @@ export interface RoadsStuffTab {
     privateTruck: boolean;
 }
 
+export interface RoadTruck {
+    id: number;
+    number: string;
+    trailerNumber: string;
+    driverName: string;
+}
+
 export interface RoadRequest {
     id?: number;
     road: string;
-    truck?: {id: number, number: string};
+    truck?: RoadTruck;
     truckId?: number;
-    driver?: {id: number, name: string};
-    driverId?: number;
     departureDate: string;
     arrivalDate: string;
     description: string;
@@ -80,11 +86,26 @@ export interface RoadFuelRequest {
     tankBalanceAfterArrival?: number;
 }
 
+export type RoadFuelType = 'ON_BASE' | 'ON_ROAD' | 'ADDITIONAL_OUTCOME';
+
+export interface RoadFuelDetail {
+    id?: number;
+    refuelingDate: string;
+    liter: number;
+    unit?: MoneyUnitType;
+    price?: number;
+    totalPrice?: number;
+    description: string;
+    type: RoadFuelType;
+    roadId: number;
+}
+
 export interface Road {
     id?: number;
     road: string;
-    truck: {id: number, number: string};
-    driver?: {id: number, name: string};
+    truck: RoadTruck;
+    trailer: {id: number, number: string};
+    driver: {id: number, name: string};
     departureDate: string;
     arrivalDate: string;
     description: string;
@@ -110,6 +131,8 @@ export interface Road {
     driverPriceTjs: number;
     roadCostsUsd: number;
     roadCostsTjs: number;
+    refuelingOnRoadPriceTjs: number;
+    refuelingOnRoadPriceUsd: number;
     roadPriceUsd: number;
     roadPriceTjs: number;
     retentionUsd: number;
@@ -144,6 +167,22 @@ export interface RoadTabPanelProps {
     value: RoadStuffTab;
 }
 
+export interface Truck {
+    id?: number;
+    type?: {id: number, name: string};
+    typeId?: number;
+    number: string;
+    trailer?: {id: number, number: string};
+    trailerId?: number;
+    driver?: {id: number, name: string};
+    driverId?: number;
+    model: string;
+    tankCapacity: number;
+    liftingCapacity: number;
+    totalBodyCapacity: number;
+    residueOfTank?: number;
+}
+
 export interface Driver {
     id?: number;
     name: string;
@@ -151,35 +190,11 @@ export interface Driver {
     address: string;
 }
 
-export interface Truck {
-    id?: number;
-    type: string;
-    typeId: number;
-    tankCapacity: number;
-    liftingCapacity: number;
-    number: string;
-    trailerNumber?: string;
-    totalBodyCapacity: number;
-    residueOfTank?: number;
-}
-
-export interface TruckFormProps {
-    truck: Truck;
-    truckTypes: TruckType[];
-}
-
 export interface Trailer {
     id?: number;
     number: string;
-    truckNumber?: string;
-    truckId?: number;
     liftingCapacity: number;
     totalBodyCapacity: number;
-}
-
-export interface TrailerFormProps {
-    trailer: Trailer;
-    trucks: Truck[];
 }
 
 export interface TruckType {

@@ -53,8 +53,8 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
         code: customCode?.code || '',
         price: customCode?.price || undefined,
         baseRate: customCode?.baseRate || undefined,
-        vat: customCode?.vat || undefined,
-        totalRate: customCode?.totalRate || undefined,
+        vat: customCode?.vat || 18.0,
+        totalPrice: customCode?.totalPrice || 0.0,
         description: customCode?.description || '',
         unit: customCode?.unit as Units || Units.ton,
         productId: customCode?.productDto?.id || undefined,
@@ -239,7 +239,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                 </Grid>
                                 <Grid
                                     item
-                                    md={6}
+                                    md={3}
                                     xs={12}
                                 >
                                     <TextField
@@ -255,28 +255,28 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
-                                    <TextField
-                                        error={Boolean(props.touched.totalRate && props.errors.totalRate)}
-                                        fullWidth
-                                        helperText={props.touched.totalRate && props.errors.totalRate}
-                                        label="Итоговая ставка %"
-                                        name="totalRate"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        required
-                                        value={props.values.totalRate}
-                                        variant="outlined"
-                                    />
-                                </Grid>
+                                {/*<Grid*/}
+                                {/*    item*/}
+                                {/*    md={6}*/}
+                                {/*    xs={12}*/}
+                                {/*>*/}
+                                {/*    <TextField*/}
+                                {/*        error={Boolean(props.touched.totalPrice && props.errors.totalPrice)}*/}
+                                {/*        fullWidth*/}
+                                {/*        helperText={props.touched.totalPrice && props.errors.totalPrice}*/}
+                                {/*        label="Итоговая стоимость"*/}
+                                {/*        name="totalPrice"*/}
+                                {/*        disabled={true}*/}
+                                {/*        onBlur={props.handleBlur}*/}
+                                {/*        onChange={props.handleChange}*/}
+                                {/*        value={props.values.totalPrice}*/}
+                                {/*        variant="outlined"*/}
+                                {/*    />*/}
+                                {/*</Grid>*/}
 
                                 <Grid
                                     item
-                                    md={12}
+                                    md={9}
                                     xs={12}
                                 >
                                     <TextField

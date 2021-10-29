@@ -3,6 +3,9 @@ import {Customer} from "./Customer";
 import {Article} from "./Article";
 import {Employee} from "./Employee";
 import {Warehouse} from "./Warehouse";
+import {CurrencyExchangeRequest, Exchange} from "./Exchange";
+
+type StatusApplication = 'WAITING' | 'PAID' | 'ON_ROAD';
 
 export interface ApplicationStuffTab {
     value: string;
@@ -15,16 +18,14 @@ export interface ApplicationTabPanelProps {
     children?: React.ReactNode;
 }
 
-type StatusApplication = 'WAITING' | 'PAID' | 'ON_ROAD';
-type MoneyUnitApplication = 'TJS' | 'RUB' | 'USD' | 'CNY';
-type RefillBalanceTypeAction = 'REFILL' | 'RETURN';
-
 interface CreatedBy {
     id: number;
     name: string;
 }
 
-export interface RefillBalanceApplication {
+export type RefillBalanceTypeAction = 'REFILL' | 'RETURN';
+
+export interface RefillBalanceApplication extends CurrencyExchangeRequest {
     id?: number;
     createdDate?: string;
     createdBy?: CreatedBy;
@@ -32,10 +33,6 @@ export interface RefillBalanceApplication {
     client?: Customer;
     clientId: number;
     actionType: RefillBalanceTypeAction;
-    amount: number;
-    moneyUnit: MoneyUnitApplication;
-    currency: number;
-    totalUSD: number;
     status?: StatusApplication;
     images?: string;
     description: string;
@@ -45,16 +42,15 @@ export interface RefillBalanceApplication {
 export interface RefillBalanceFormProps {
     refillBalance: RefillBalanceApplication;
     customers: Customer[];
+    exchanges: Exchange[];
 }
 
-export interface IncomeByArticleApplication {
+export interface IncomeByArticleApplication extends CurrencyExchangeRequest {
     id?: number;
     createdBy?: CreatedBy;
     cashierName?: string;
     article?: Article,
     articleId: number;
-    amount: number;
-    moneyUnit: MoneyUnitApplication;
     status?: StatusApplication;
     images?: string;
     description: string;
@@ -67,17 +63,15 @@ export interface IncomeByArticleFormProps {
     articles: Article[];
 }
 
-export interface OutcomeByArticleApplication {
+export interface OutcomeByArticleApplication extends CurrencyExchangeRequest {
     id?: number;
     createdBy?: CreatedBy;
     employee?: Employee;
     employeeId?: number;
     cashierName?: string;
     adminApproval?: boolean;
-    articleName?: string;
+    article?: Article;
     articleId?: number;
-    amount: number;
-    moneyUnit?: MoneyUnitApplication;
     status?: StatusApplication;
     images?: string;
     description: string;
@@ -88,9 +82,10 @@ export interface OutcomeByArticleApplication {
 export interface OutcomeByArticleFormProps {
     articles: Article[];
     employees: Employee[];
+    exchanges: Exchange[];
 }
 
-export interface OutcomeTransferWarehouseApplication {
+export interface OutcomeTransferWarehouseApplication extends CurrencyExchangeRequest {
     id?: number;
     createdBy?: CreatedBy;
     toWarehouseId?: number;
@@ -101,8 +96,6 @@ export interface OutcomeTransferWarehouseApplication {
     };
     toCashierName?: string;
     adminApproval?: boolean;
-    amount: number;
-    moneyUnit?: MoneyUnitApplication;
     status?: StatusApplication;
     images?: string;
     description: string;
@@ -112,5 +105,5 @@ export interface OutcomeTransferWarehouseApplication {
 
 export interface OutcomeTransferWarehouseFormProps {
     warehouses: Warehouse[];
+    exchanges: Exchange[];
 }
-

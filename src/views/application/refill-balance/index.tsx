@@ -11,6 +11,8 @@ import LoadingLayout from "../../../components/LoadingLayout";
 import customerService from "../../../services/CustomerService";
 import {RefillBalanceApplication} from "../../../model/Application";
 import {Customer} from "../../../model/Customer";
+import {Exchange} from "../../../model/Exchange";
+import exchangeService from "../../../services/ExchangeService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,18 +30,23 @@ function RoadTrailerView() {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [customers, setCustomers] = useState<Customer[]>([])
+    const [exchanges, setExchanges] = useState<Exchange[]>([])
     const refillBalance = useSelector((state: { selectedRefillBalance: RefillBalanceApplication }) => state.selectedRefillBalance)
 
     useEffect(() => {
         (async () => {
             try {
                 setLoading(true)
-                const data: any = await customerService.getCustomers()
+                const dataCustomers: any = await customerService.getCustomers()
+                const dataExchanges: any = await exchangeService.getAllExchanges()
 
-                if (data.length === 0) {
+                if (dataCustomers.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала клиента', {variant: 'info'})
-                } else setCustomers(data)
+                    enqueueSnackbar('Добавьте с начала клиента и курс валюты', {variant: 'info'})
+                } else {
+                    setCustomers(dataCustomers)
+                    setExchanges(dataExchanges)
+                }
             } catch (error: any) {
                 setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -56,12 +63,12 @@ function RoadTrailerView() {
 
     return (
         <Page title={'Пополнение баланса'}>
-            {customers.length > 0
+            {customers.length > 0 && exchanges.length > 0
                 ? (
                     <Container className={classes.root} maxWidth="md">
                         <Header refillBalance={refillBalance}/>
                         <Box mt={3}>
-                            <RefillBalanceForm refillBalance={refillBalance} customers={customers} />
+                            <RefillBalanceForm refillBalance={refillBalance} customers={customers} exchanges={exchanges} />
                         </Box>
                     </Container>
                 )

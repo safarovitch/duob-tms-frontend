@@ -2,7 +2,7 @@ import {ADMIN} from "./roles";
 
 const ARTICLE = {
     LIST: [
-        ADMIN
+        ADMIN,
     ]
 }
 export default ARTICLE
