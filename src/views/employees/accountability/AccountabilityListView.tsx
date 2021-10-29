@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {
-    Box,
+    Box, Button,
     Card,
     Chip,
-    Container,
+    Container, Dialog,
     Grid, IconButton,
     makeStyles,
     SvgIcon,
@@ -19,7 +19,7 @@ import {
 import {useSnackbar} from "notistack";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import employeeService from "../../../services/EmployeeService";
-import {Edit as EditIcon, MoreHorizontal as MoreHorizontalIcon} from "react-feather";
+import {Edit as EditIcon, MoreHorizontal as MoreHorizontalIcon, Printer as PrinterIcon} from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {NavLink as RouterLink} from "react-router-dom";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
@@ -38,6 +38,10 @@ import Header from "./Header";
 import {useDispatch} from "react-redux";
 import {setSelectedEmployeeAccountability} from "../../../store/actions/employeeActions";
 import LoadingLayout from "../../../components/LoadingLayout";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import {PDFViewer} from "@react-pdf/renderer";
+import AccountabilityPDF from "./AccountabilityPDF";
+import ImageModal from "./ImageModal";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -67,6 +71,8 @@ const AccountabilityListView: React.FC = () => {
     const [employeeLoading, setEmployeeLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [employee, setEmployee] = useState<EmployeeAccountabilityResponse>()
+    const [viewPDF, setViewPDF] = useState(false)
+    const [accountability, setAccountability] = useState<Accountability>()
     const canDelete = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.DELETE)
     const canEdit = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.EDIT)
     const canAdminApprove = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.ADMIN_APPROVE)
@@ -282,6 +288,17 @@ const AccountabilityListView: React.FC = () => {
                                                                 </TableCell>
                                                                 <TableCell>{row.description}</TableCell>
                                                                 <TableCell align="center">
+                                                                    <ImageModal />
+                                                                    <IconButton
+                                                                        onClick={() => {
+                                                                            setAccountability(row)
+                                                                            setViewPDF(true)
+                                                                        }}
+                                                                    >
+                                                                        <SvgIcon fontSize="small">
+                                                                            <PrinterIcon />
+                                                                        </SvgIcon>
+                                                                    </IconButton>
                                                                     {!row.cashierConfirmation && canEdit && (
                                                                         <IconButton
                                                                             component={RouterLink}
@@ -321,6 +338,21 @@ const AccountabilityListView: React.FC = () => {
                                     onRowsPerPageChange={handleRowsPerPageChange}
                                     labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                                 />
+                                <Dialog fullScreen open={viewPDF}>
+                                    <Box height="100%" display="flex" flexDirection="column">
+                                        <Box bgcolor="common.white" p={2}>
+                                            <Button variant="contained" color="secondary" onClick={() => setViewPDF(false)}>
+                                                <NavigateBeforeIcon />
+                                                Назад
+                                            </Button>
+                                        </Box>
+                                        <Box flexGrow={1}>
+                                            <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
+                                                <AccountabilityPDF accountability={accountability!} />
+                                            </PDFViewer>
+                                        </Box>
+                                    </Box>
+                                </Dialog>
                             </Card>
                         </Box>
                     </Container>
