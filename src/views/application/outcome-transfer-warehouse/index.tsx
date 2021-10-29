@@ -35,7 +35,7 @@ function Index() {
             try {
                 setLoading(true)
                 const data: any = await warehouseService.getAllWarehouse()
-                const dataExchanges: any = await exchangeService.getAllExchanges()
+                const dataExchanges: any = await exchangeService.getAllExchangesWithTJS()
 
                 if (data.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)

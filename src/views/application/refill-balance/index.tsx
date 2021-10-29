@@ -38,7 +38,7 @@ function RoadTrailerView() {
             try {
                 setLoading(true)
                 const dataCustomers: any = await customerService.getCustomers()
-                const dataExchanges: any = await exchangeService.getAllExchanges()
+                const dataExchanges: any = await exchangeService.getAllExchangesWithTJS()
 
                 if (dataCustomers.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)
