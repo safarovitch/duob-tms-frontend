@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {Link as RouterLink} from "react-router-dom";
-import {OutcomeByArticleApplication} from "../../../../model/Application";
 import {PDFViewer} from '@react-pdf/renderer';
 import {Box, Breadcrumbs, Button, Dialog, Grid, Link, makeStyles, SvgIcon, Typography} from "@material-ui/core";
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {Printer as PrinterIcon} from "react-feather";
-import OutcomeArticlePDF from "./OutcomeArticlePDF";
+import {CargoIssueResponse} from "../../../../model/Cargo";
+import CargoIssuePDF from "./CargoIssuePDF";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcomeArticle}) => {
+const Header: React.FC<{cargoIssue: CargoIssueResponse}> = ({cargoIssue}) => {
     const classes = useStyles();
     const [viewPDF, setViewPDF] = useState(false);
 
@@ -47,31 +47,23 @@ const Header: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcom
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app/application"
+                        to="/app/cargo-issues"
                         component={RouterLink}
                     >
-                        Заявки
-                    </Link>
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/application/outcome-article"
-                        component={RouterLink}
-                    >
-                        Расход по статьям
+                        Выдача груза
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        {`Заявка № ${outcomeArticle.id}`}
+                        {`Клиент ${cargoIssue.client.code}`}
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    {`Заявка № ${outcomeArticle.id}`}
+                    {`Клиент ${cargoIssue.client.code}`}
                 </Typography>
             </Grid>
             <Grid item>
@@ -80,6 +72,7 @@ const Header: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcom
                     variant="outlined"
                     className={classes.action}
                     onClick={() => setViewPDF(true)}
+                    disabled={!cargoIssue.approvalBy}
                 >
                     <SvgIcon
                         fontSize="small"
@@ -114,7 +107,7 @@ const Header: React.FC<{outcomeArticle: OutcomeByArticleApplication}> = ({outcom
                                 height="100%"
                                 style={{ border: 'none' }}
                             >
-                                <OutcomeArticlePDF outcomeArticle={outcomeArticle} />
+                                <CargoIssuePDF cargoIssue={cargoIssue} />
                             </PDFViewer>
                         </Box>
                     </Box>

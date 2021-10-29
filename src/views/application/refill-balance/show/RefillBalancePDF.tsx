@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     page: {
         fontFamily: "Roboto",
         backgroundColor: '#fff',
+        paddingVertical: 14,
     },
     main: {
         paddingVertical: 10,
@@ -98,13 +99,13 @@ const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({
                     </View>
                     <View>
                         <Text style={styles.body}>
-                            Сумма: {`${refillBalance.amount} ${refillBalance.moneyUnit}`}
+                            Сумма: {`${refillBalance.actualAmount} ${refillBalance.actualMoneyUnit}`}
                         </Text>
                         <Text style={styles.body}>
                             Курс конвертации: {refillBalance.currency}
                         </Text>
                         <Text style={[styles.body, styles.fontBold]}>
-                            Итого: {refillBalance.totalUSD} $
+                            Итого: {refillBalance.convertAmount} {refillBalance.convertMoneyUnit}
                         </Text>
                     </View>
                 </View>

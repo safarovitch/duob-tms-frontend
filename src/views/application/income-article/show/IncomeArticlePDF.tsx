@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     page: {
         fontFamily: "Roboto",
         backgroundColor: '#fff',
+        paddingVertical: 14,
     },
     main: {
         paddingVertical: 10,
@@ -99,10 +100,10 @@ const IncomeArticlePDF: React.FC<{incomeArticle: IncomeByArticleApplication}> = 
                         Статья: {incomeArticle.article?.name}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {incomeArticle.amount}
+                        Сумма: {incomeArticle.actualAmount}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {incomeArticle.moneyUnit}
+                        Валюта: {incomeArticle.actualMoneyUnit}
                     </Text>
                 </View>
             </View>

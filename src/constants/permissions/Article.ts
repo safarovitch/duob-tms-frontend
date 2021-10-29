@@ -1,9 +1,8 @@
-import {ADMIN, CASHIER} from "./roles";
+import {ADMIN} from "./roles";
 
 const ARTICLE = {
     LIST: [
         ADMIN,
-        CASHIER
     ]
 }
 export default ARTICLE

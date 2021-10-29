@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     page: {
         fontFamily: "Roboto",
         backgroundColor: '#fff',
+        paddingVertical: 14,
     },
     main: {
         paddingVertical: 10,
@@ -97,10 +98,10 @@ const OutcomeTransferWarehousePDF: React.FC<{outcomeTransferWarehouse: OutcomeTr
                 </View>
                 <View>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {outcomeTransferWarehouse.amount}
+                        Сумма: {outcomeTransferWarehouse.actualAmount}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {outcomeTransferWarehouse.moneyUnit}
+                        Валюта: {outcomeTransferWarehouse.actualMoneyUnit}
                     </Text>
                 </View>
             </View>

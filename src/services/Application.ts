@@ -9,7 +9,7 @@ import {
 
 class Application {
     approveRefillBalance = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/fill-client-balance/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/fill-client-balance/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -50,7 +50,7 @@ class Application {
     })
 
     approveIncomeArticle = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/income-by-article/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/income-by-article/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -95,7 +95,7 @@ class Application {
     })
 
     approveOutcomeArticle = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/outcome-by-article/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/outcome-by-article/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -130,7 +130,7 @@ class Application {
     })
 
     approveTransferWarehouse = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transaction/transfer-to-warehouse/${id}`)
+        api.get(`${API_BASE_URL}/money-transactions/transfer-to-warehouse/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

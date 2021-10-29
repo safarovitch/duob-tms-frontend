@@ -40,35 +40,11 @@ const useStyles = makeStyles((theme) => ({
     queryField: {
         width: 400
     },
-    bulkOperations: {
-        position: 'relative'
-    },
-    bulkActions: {
-        paddingLeft: 4,
-        paddingRight: 4,
-        marginTop: 6,
-        position: 'absolute',
-        width: '100%',
-        zIndex: 2,
-        backgroundColor: theme.palette.background.default
-    },
-    bulkAction: {
-        marginLeft: theme.spacing(2)
-    },
     avatar: {
         height: 42,
         width: 42,
         marginRight: theme.spacing(1)
     },
-    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
 }));
 
 const CustomerListView: React.FC = () => {
@@ -83,7 +59,6 @@ const CustomerListView: React.FC = () => {
     const [rows, setRows] = useState<Customer[]>([]);
     const [loading, setLoading] = useState(false);
     const canEdit = usePermission(PERMISSIONS.CUSTOMER.EDIT)
-    const canDelete = usePermission(PERMISSIONS.CUSTOMER.DELETE)
 
     useEffect(() => {
         getRows().then(null)
@@ -158,9 +133,7 @@ const CustomerListView: React.FC = () => {
                                             <TableCell>Количество мест</TableCell>
                                             <TableCell>Сумма</TableCell>
                                             <TableCell>Баланс клиента</TableCell>
-                                            {(canEdit || canDelete) && (
-                                                <TableCell align="center" width="15%">Действия</TableCell>
-                                            )}
+                                            <TableCell align="center" width="15%">Действия</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     {
@@ -193,32 +166,28 @@ const CustomerListView: React.FC = () => {
                                                         <TableCell>{row.placeNumber}</TableCell>
                                                         <TableCell>{row.amount} $</TableCell>
                                                         <TableCell>{row.balance} $</TableCell>
-                                                        {(canEdit || canDelete) && (
-                                                            <TableCell align="center" width="15%">
-                                                                {canEdit && (
-                                                                    <IconButton
-                                                                        component={RouterLink}
-                                                                        to={`/app/customers/${row.id}/edit`}
-                                                                        onClick={() => dispatch(setSelectedCustomer(row))}
-                                                                    >
-                                                                        <SvgIcon fontSize="small">
-                                                                            <EditIcon/>
-                                                                        </SvgIcon>
-                                                                    </IconButton>
-                                                                )}
-                                                                {canDelete && (
-                                                                    <IconButton
-                                                                        component={RouterLink}
-                                                                        to={`/app/customers/${row.id}`}
-                                                                        onClick={() => dispatch(setSelectedCustomer(row))}
-                                                                    >
-                                                                        <SvgIcon fontSize="small">
-                                                                            <ArrowRightIcon/>
-                                                                        </SvgIcon>
-                                                                    </IconButton>
-                                                                )}
-                                                            </TableCell>
-                                                        )}
+                                                        <TableCell align="center" width="15%">
+                                                            {canEdit && (
+                                                                <IconButton
+                                                                    component={RouterLink}
+                                                                    to={`/app/customers/${row.id}/edit`}
+                                                                    onClick={() => dispatch(setSelectedCustomer(row))}
+                                                                >
+                                                                    <SvgIcon fontSize="small">
+                                                                        <EditIcon/>
+                                                                    </SvgIcon>
+                                                                </IconButton>
+                                                            )}
+                                                            <IconButton
+                                                                component={RouterLink}
+                                                                to={`/app/customers/${row.id}`}
+                                                                onClick={() => dispatch(setSelectedCustomer(row))}
+                                                            >
+                                                                <SvgIcon fontSize="small">
+                                                                    <ArrowRightIcon/>
+                                                                </SvgIcon>
+                                                            </IconButton>
+                                                        </TableCell>
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
