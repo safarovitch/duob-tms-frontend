@@ -1,7 +1,12 @@
-import {SET_EMPLOYEE, DELETE_EMPLOYEE} from "../actions/employeeActions";
-import {Employee} from "../../model/Employee";
+import {
+    SET_EMPLOYEE,
+    DELETE_EMPLOYEE,
+    SET_EMPLOYEE_ACCOUNTABILITY,
+    DELETE_EMPLOYEE_ACCOUNTABILITY,
+} from "../actions/employeeActions";
+import {Employee, Accountability} from "../../model/Employee";
 
-const employeeReducer = (state = null, action: {type: any, payload: Employee | null}) => {
+export const employeeReducer = (state = null, action: {type: any, payload: Employee | any}) => {
     switch (action.type) {
         case SET_EMPLOYEE: {
             return action.payload
@@ -9,9 +14,18 @@ const employeeReducer = (state = null, action: {type: any, payload: Employee | n
         case DELETE_EMPLOYEE: {
             return action.payload;
         }
-
         default: return state
     }
 }
 
-export default employeeReducer
+export const employeeAccountabilityReducer = (state = null, action: {type: any, payload: Accountability | any}) => {
+    switch (action.type) {
+        case SET_EMPLOYEE_ACCOUNTABILITY: {
+            return action.payload
+        }
+        case DELETE_EMPLOYEE_ACCOUNTABILITY: {
+            return action.payload;
+        }
+        default: return state
+    }
+}

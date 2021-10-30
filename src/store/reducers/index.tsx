@@ -1,7 +1,7 @@
 import {combineReducers} from "redux";
 import accountReducer from "./accountReducer";
 import {customerReducer, customerCargoReducer} from "./customerReducer";
-import employeeReducer from './employeeReducer';
+import {employeeReducer, employeeAccountabilityReducer} from './employeeReducer';
 import providerReducer from "./providerReducer";
 import warehouseReducer from "./warehouseReducer";
 import {cargoTariffReducer, cargoTypeReducer, customCodeReducer, productReducer} from "./cargoReducer";
@@ -25,6 +25,7 @@ const rootReducer = combineReducers({
     user: accountReducer,
     selectedCustomer: customerReducer,
     selectedEmployee: employeeReducer,
+    selectedEmployeeAccountability: employeeAccountabilityReducer,
     selectedProvider: providerReducer,
     selectedWarehouse: warehouseReducer,
     selectedProduct: productReducer,

@@ -8,7 +8,7 @@ import {
     Button,
     Grid,
     TextField,
-    MenuItem,
+    MenuItem, FormControlLabel, Checkbox,
 } from '@material-ui/core';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -51,7 +51,8 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
         birthdate: employee.birthdate,
         address: employee.address,
         phoneNumber: employee.phoneNumber,
-        warehouseId: employee.warehouseDto?.id || 0
+        warehouseId: employee.warehouseDto?.id || 0,
+        accountability: employee.accountability,
     }
 
     const validationSchema = Yup.object().shape({
@@ -293,6 +294,18 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                             shrink: true,
                                         }}
                                         placeholder="Введите номер"
+                                    />
+                                </Grid>
+                                <Grid item md={12} xs={12}>
+                                    <FormControlLabel
+                                        control={<Checkbox
+                                            size="small"
+                                            checked={values.accountability}
+                                            name="accountability"
+                                            color="primary"
+                                            onChange={handleChange}
+                                        />}
+                                        label="Возможность получения денег подотчёт"
                                     />
                                 </Grid>
                             </Grid>
