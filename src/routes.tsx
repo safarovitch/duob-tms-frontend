@@ -106,6 +106,30 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/employee-accounts',
+                        perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST,
+                        component: lazy(() => import('./views/employees/accountability/EmployeeListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/employee-accounts/:employeeId',
+                        perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST,
+                        component: lazy(() => import('./views/employees/accountability/AccountabilityListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/employee-accounts/:employeeId/create',
+                        perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST,
+                        component: lazy(() => import('./views/employees/accountability/form'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/employee-accounts/:employeeId/edit',
+                        perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST,
+                        component: lazy(() => import('./views/employees/accountability/form'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/providers',
                         perm: PERMISSIONS.PROVIDER.LIST,
                         component: lazy(() => import('./views/providers/ProviderListView'))

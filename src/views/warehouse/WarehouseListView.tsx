@@ -57,7 +57,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
             setLoading(true)
             setRows([])
 
-            const data: any = await warehouseService.getFilteredWarehouse(page, size, query);
+            const data: any = await warehouseService.getFilteredWarehouse(page, size, debouncedSearchTerm);
             setRows(data.content)
             setTotal(data.totalElements)
         } catch (error: any) {
