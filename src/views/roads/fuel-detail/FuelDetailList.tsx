@@ -60,7 +60,7 @@ const FuelDetailList: React.FC<{updateRoad: Function, type: RoadFuelType}> = ({u
                 setLoading(false)
             }
         })()
-    }, []);
+    }, [roadId, type, enqueueSnackbar]);
 
     const handleDeleteRow = (index: number) => {
         let newRows = [...rows]

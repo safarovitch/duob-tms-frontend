@@ -30,7 +30,7 @@ const FuelDetailForm: React.FC<{type: RoadFuelType, roadId: string, roadFuelDeta
 
     useEffect(() => () => {
         dispatch(deleteSelectedRoadFuelDetail())
-    }, [])
+    }, [dispatch])
 
     const initialValues: RoadFuelDetail = {
         refuelingDate: roadFuelDetail?.refuelingDate || '',

@@ -54,7 +54,7 @@ function RoadTruckView() {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     if (!truck && history.location.pathname.includes('edit')) {
         history.go(-1);

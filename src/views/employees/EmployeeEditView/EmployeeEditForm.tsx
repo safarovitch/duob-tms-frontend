@@ -46,7 +46,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
         name: employee.name,
         rolesId: (employee.roles!).map((role: Role) => role.id),
         username: employee.username,
-        password: '',
+        password: null,
         code: employee.code,
         birthdate: employee.birthdate,
         address: employee.address,
@@ -58,7 +58,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
     const validationSchema = Yup.object().shape({
         name: Yup.string().max(255),
         username: Yup.string().max(255),
-        password: Yup.string().max(255),
+        password: Yup.string().max(255).nullable(),
         code: Yup.string().max(255),
         address: Yup.string().max(255),
         phoneNumber: Yup.string().max(15),

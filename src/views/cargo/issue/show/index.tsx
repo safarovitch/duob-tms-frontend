@@ -79,7 +79,7 @@ const IssueShow: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [cargoIssueId, enqueueSnackbar])
 
     const handleAccept = async () => {
         try {

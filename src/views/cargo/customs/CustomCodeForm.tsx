@@ -47,7 +47,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomCode())
-    }, [])
+    }, [dispatch])
 
     const initialValues: CargoCustomCode = {
         code: customCode?.code || '',
@@ -59,7 +59,6 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
         unit: customCode?.unit as Units || Units.ton,
         productId: customCode?.productDto?.id || undefined,
         isUnitThing: customCode ? customCode?.unit === Units.thing : false
-
     }
 
     const validationSchema = Yup.object().shape({

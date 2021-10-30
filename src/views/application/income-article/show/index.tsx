@@ -50,7 +50,7 @@ const ShowView: React.FC = () => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedIncomeArticle())
-    }, [])
+    }, [dispatch])
 
     if (!incomeArticle) {
         history.go(-1);

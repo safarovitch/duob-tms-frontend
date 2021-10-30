@@ -47,7 +47,7 @@ const CargoProductView: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
 
     if (!customCode && history.location.pathname.includes('edit')) {

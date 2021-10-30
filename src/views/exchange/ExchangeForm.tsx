@@ -40,7 +40,7 @@ const ExchangeForm: React.FC = () => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedExchange())
-    }, [])
+    }, [dispatch])
 
     if (!exchange && history.location.pathname.includes('edit')) {
         history.go(-1);

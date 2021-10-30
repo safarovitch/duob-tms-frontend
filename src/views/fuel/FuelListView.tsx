@@ -60,14 +60,14 @@ const FuelListView: React.FC = () => {
     useEffect(() => {
         (async () => {
             try {
-                const result: any = await fuelService.getTotalBalance()
+                const data: any = await fuelService.getTotalBalance()
 
-                setTotalBalance(result)
+                setTotalBalance(data)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             }
         })()
-    }, [])
+    }, [enqueueSnackbar])
 
     useEffect(() => {
         (async () => {
@@ -75,7 +75,7 @@ const FuelListView: React.FC = () => {
                 setLoading(true)
                 setFuels([])
 
-                const result: any = await fuelService.getFilteredFuels(page, size, query, startDate, endDate)
+                const result: any = await fuelService.getFilteredFuels(page, size, debouncedSearchTerm, startDate, endDate)
 
                 setFuels(result.content)
                 setTotal(result.totalElements)
@@ -85,7 +85,7 @@ const FuelListView: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [page, size, debouncedSearchTerm, startDate, endDate])
+    }, [enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()

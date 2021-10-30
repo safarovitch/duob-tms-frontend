@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import {CargoIssueResponse} from "../../../model/Cargo";
 import {
     Box,
@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 const CargoIssueList: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
@@ -50,23 +51,21 @@ const CargoIssueList: React.FC = () => {
     const canDelete = usePermission(PERMISSIONS.CARGO.ISSUES.DELETE)
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, debouncedSearchTerm, size]);
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await cargoService.getFilteredCargoIssues(page, size, query);
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
+                const data: any = await cargoService.getFilteredCargoIssues(page, size, debouncedSearchTerm);
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, debouncedSearchTerm, size]);
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -86,8 +85,8 @@ const CargoIssueList: React.FC = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
-    }
+        setUpdateRows()
+    };
 
     return (
         <Page className={classes.root} title="Клиенты">

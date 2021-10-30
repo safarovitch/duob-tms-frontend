@@ -52,7 +52,7 @@ const ShowView: React.FC = () => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedOutcomeTransferWarehouse())
-    }, [])
+    }, [dispatch])
 
     if (!outcomeTransferWarehouse) {
         history.go(-1);

@@ -38,7 +38,7 @@ const ArticleIncomeForm: React.FC<{articleIncome: Article}> = ({articleIncome}) 
 
     useEffect(() => () => {
         dispatch(deleteSelectedArticleIncome())
-    }, [])
+    }, [dispatch])
 
     const initialValues: Article = {
         name: articleIncome?.name || '',

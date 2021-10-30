@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import {Warehouse, WarehouseListProps} from "../../model/Warehouse";
 import {
     Box,
@@ -14,7 +14,7 @@ import {
 import Page from "../../components/Page";
 import Header from "./Header";
 import warehouseService from "../../services/WarehouseService";
-import {Edit as EditIcon, Search as SearchIcon} from "react-feather";
+import {Check as CheckIcon, Edit as EditIcon, Search as SearchIcon, X as XIcon} from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {NavLink as RouterLink} from "react-router-dom";
 import useDebounce from "../../hooks/useDebounce";
@@ -40,6 +40,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
     const [query, setQuery] = useState('')
@@ -49,23 +50,21 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
     const [rows, setRows] = useState<Warehouse[]>([])
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, debouncedSearchTerm, size])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await warehouseService.getFilteredWarehouse(page, size, debouncedSearchTerm);
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
+                const data: any = await warehouseService.getFilteredWarehouse(page, size, debouncedSearchTerm);
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -84,8 +83,8 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
-    }
+        setUpdateRows()
+    };
 
     return (
         <Page className={classes.root} title="Склады">
@@ -121,7 +120,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Название</TableCell>
-                                            <TableCell>Склад назначения</TableCell>
+                                            <TableCell align="center">Склад назначения</TableCell>
                                             <TableCell align="center" width="15%">Действия</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -131,7 +130,9 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                                 {rows.map((row: Warehouse, index) => (
                                                     <TableRow hover key={row.id}>
                                                         <TableCell>{row.name}</TableCell>
-                                                        <TableCell>{row.destination ? 'Да' : 'Нет'}</TableCell>
+                                                        <TableCell align="center">
+                                                            {row.destination ? <CheckIcon style={{color: 'green'}} /> : <XIcon style={{color: 'red'}}/>}
+                                                        </TableCell>
                                                         <TableCell align="center">
                                                             <IconButton
                                                                 component={RouterLink}

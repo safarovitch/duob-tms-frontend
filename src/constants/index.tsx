@@ -151,17 +151,17 @@ export const roadsStuffTabs = [
     {
         value: 'on-base',
         label: 'Заправка на базе',
-        privateTruck: true,
+        privateTruck: false,
     },
     {
         value: 'on-road',
         label: 'Заправка в пути',
-        privateTruck: true,
+        privateTruck: false,
     },
     {
         value: 'additional-outcome',
         label: 'Дополнительный расход',
-        privateTruck: true,
+        privateTruck: false,
     },
 ]
 

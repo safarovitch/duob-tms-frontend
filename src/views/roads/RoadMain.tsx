@@ -27,7 +27,7 @@ const RoadMain: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRoa
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [enqueueSnackbar])
 
     return (
         (trucks.length > 0 && road)

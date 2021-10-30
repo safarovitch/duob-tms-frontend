@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import {Provider, ProviderListProps} from "../../model/Provider";
 import {
     Box,
@@ -42,6 +42,7 @@ const ProviderListView: React.FC<ProviderListProps> = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [rows, setRows] = useState<Provider[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
@@ -53,23 +54,21 @@ const ProviderListView: React.FC<ProviderListProps> = () => {
     const canDelete = usePermission(PERMISSIONS.PROVIDER.DELETE)
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, debouncedSearchTerm, size]);
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await providerService.getFilteredProvider(page, size, query);
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
+                const data: any = await providerService.getFilteredProvider(page, size, debouncedSearchTerm);
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm]);
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -89,7 +88,7 @@ const ProviderListView: React.FC<ProviderListProps> = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
+        setUpdateRows()
     };
 
     return (

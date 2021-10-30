@@ -2,27 +2,17 @@ import React, { useEffect } from 'react';
 import { useLocation, matchPath } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {
-    Avatar,
-    Box,
-    Divider,
-    Drawer,
-    Hidden,
-    Link,
-    List,
-    ListSubheader,
-    Typography,
-    makeStyles
-} from '@material-ui/core';
-import {
-    PieChart as PieChartIcon,
-    Users as UsersIcon,
-    Settings as SettingsIcon,
-    Flag as FlagIcon,
-    Truck as TruckIcon,
-    Box as BoxIcon,
-    DollarSign as DollarIcon
-} from 'react-feather';
+import {DollarSign as DollarIcon} from 'react-feather';
+import {Avatar, Box, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography, makeStyles} from '@material-ui/core';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import HomeIcon from '@material-ui/icons/Home';
+import PeopleIcon from '@material-ui/icons/People';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import PersonIcon from '@material-ui/icons/Person';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import TrainIcon from '@material-ui/icons/Train';
+import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
+import DescriptionIcon from '@material-ui/icons/Description';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
 import {useSelector} from "react-redux";
@@ -38,7 +28,7 @@ const navConfig = [
         items: [
             {
                 title: 'Оформить заказ',
-                icon: PieChartIcon,
+                icon: DashboardIcon,
                 href: '/app/reports/dashboard'
             },
         ]
@@ -48,73 +38,73 @@ const navConfig = [
         items: [
             {
                 title: 'Склады',
-                icon: SettingsIcon,
+                icon: HomeIcon,
                 href: '/app/warehouses',
                 perm: PERMISSIONS.WAREHOUSE.LIST
             },
             {
                 title: 'Сотрудники',
-                icon: UsersIcon,
+                icon: PeopleIcon,
                 href: '/app/employees',
                 perm: PERMISSIONS.EMPLOYEE.LIST
             },
             {
                 title: 'Поставщики',
-                icon: UsersIcon,
+                icon: LocalShippingIcon,
                 href: '/app/providers',
                 perm: PERMISSIONS.PROVIDER.LIST
             },
             {
                 title: 'Клиенты',
-                icon: UsersIcon,
+                icon: PersonIcon,
                 href: '/app/customers',
                 perm: PERMISSIONS.CUSTOMER.LIST
             },
             {
                 title: 'Константы груза',
-                icon: BoxIcon,
+                icon: DashboardIcon,
                 href: '/app/cargo',
                 perm: PERMISSIONS.CARGO.LIST
             },
             {
                 title: 'Константы рейса',
-                icon: TruckIcon,
+                icon: DashboardIcon,
                 href: '/app/road',
                 perm: PERMISSIONS.ROAD.LIST
             },
             {
                 title: 'Рейсы',
-                icon: FlagIcon,
+                icon: TrainIcon,
                 href: '/app/roads',
                 perm: PERMISSIONS.ROAD.LIST
             },
             {
                 title: 'АЗС',
-                icon: FlagIcon,
+                icon: LocalGasStationIcon,
                 href: '/app/fuels',
                 perm: PERMISSIONS.FUEL.LIST
             },
             {
                 title: 'Статьи',
-                icon: FlagIcon,
+                icon: ImportContactsIcon,
                 href: '/app/article',
                 perm: PERMISSIONS.ARTICLE.LIST
             },
             {
                 title: 'Заявки',
-                icon: FlagIcon,
+                icon: DescriptionIcon,
                 href: '/app/application',
                 perm: PERMISSIONS.APPLICATION.LIST
             },
             {
                 title: 'Выдача груза',
-                icon: FlagIcon,
+                icon: DashboardIcon,
                 href: '/app/cargo-issues',
                 perm: PERMISSIONS.APPLICATION.LIST
             },
             {
                 title: 'Подотчеты',
-                icon: FlagIcon,
+                icon: DashboardIcon,
                 href: '/app/employee-accounts',
                 perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST
             },

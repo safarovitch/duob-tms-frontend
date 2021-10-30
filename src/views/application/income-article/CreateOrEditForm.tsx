@@ -41,7 +41,7 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
 
     useEffect(() => () => {
         dispatch(deleteSelectedIncomeArticle())
-    }, [])
+    }, [dispatch])
 
     const initialValues: IncomeByArticleApplication = {
         article: incomeArticle?.article,

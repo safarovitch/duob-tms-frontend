@@ -50,7 +50,7 @@ const ShowView: React.FC = () => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedOutcomeArticle())
-    }, [])
+    }, [dispatch])
 
     if (!outcomeArticle) {
         history.go(-1);

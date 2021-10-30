@@ -45,7 +45,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
 
     useEffect(() => () => {
         dispatch(deleteSelectedCargoType())
-    }, [])
+    }, [dispatch])
 
     const initialValues: CargoType = {
         name: cargoType?.name || '',

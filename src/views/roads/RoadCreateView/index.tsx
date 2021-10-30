@@ -49,7 +49,7 @@ const RoadCreateView: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     return (
         <Page title={'Рейс'}>

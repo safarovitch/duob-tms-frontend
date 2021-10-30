@@ -1,4 +1,4 @@
-import React, {useEffect, useState,} from 'react';
+import React, {useEffect, useReducer, useState,} from 'react';
 import {
     Box,
     Card,
@@ -37,6 +37,7 @@ const IncomeListView: React.FC = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
@@ -44,23 +45,21 @@ const IncomeListView: React.FC = () => {
     const [rows, setRows] = useState<Article[]>([])
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size]);
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await articleService.getFilteredArticles(ARTICLES.INCOME, page, size)
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
+                const data: any = await articleService.getFilteredArticles(ARTICLES.INCOME, page, size)
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -74,7 +73,7 @@ const IncomeListView: React.FC = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
+        setUpdateRows()
     };
 
     return (

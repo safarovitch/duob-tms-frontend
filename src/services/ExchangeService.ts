@@ -5,7 +5,26 @@ import {Exchange} from "../model/Exchange";
 class ExchangeService {
     getAllExchanges = () => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/exchanges`)
-            .then(response => resolve(response.data))
+            .then(response => {
+                console.log(response.data)
+                resolve(response.data)
+            })
+            .catch(error => reject(error))
+    })
+
+    getAllExchangesWithTJS = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/exchanges`)
+            .then(response => {
+                response.data.push({
+                    "id": 100,
+                    "createdDate": "28.10.2021 13:25",
+                    "updatedDate": "28.10.2021 13:25",
+                    "unit": "TJS",
+                    "currency": 1
+                })
+
+                resolve(response.data)
+            })
             .catch(error => reject(error))
     })
 

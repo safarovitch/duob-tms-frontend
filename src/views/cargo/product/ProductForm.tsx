@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
     const {product} = props;
     const classes = useStyles();
@@ -39,7 +38,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedProduct())
-    }, [])
+    }, [dispatch])
 
     const initialValues: CargoProduct = {
         name: product?.name || ''

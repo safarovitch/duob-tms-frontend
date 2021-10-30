@@ -51,7 +51,7 @@ const ShowView: React.FC = () => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedRefillBalance())
-    }, [])
+    }, [dispatch])
 
     if (!refillBalance) {
         history.go(-1);

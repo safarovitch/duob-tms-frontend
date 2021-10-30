@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import Header from "./Header";
 import {
     Box,
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 const RoadListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
@@ -44,23 +45,21 @@ const RoadListView: React.FC = () => {
     const [rows, setRows] = useState<RoadList[]>([])
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size]);
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const result: any = await roadService.getFilteredRoads(page, size)
-            setRows(result.content)
-            setTotal(result.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                const result: any = await roadService.getFilteredRoads(page, size)
+                setRows(result.content)
+                setTotal(result.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -74,7 +73,7 @@ const RoadListView: React.FC = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
+        setUpdateRows()
     };
 
     return (

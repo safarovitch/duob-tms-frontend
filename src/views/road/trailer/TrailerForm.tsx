@@ -37,7 +37,7 @@ const TrailerForm: React.FC<{trailer: Trailer}> = ({trailer}) => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedTrailer())
-    }, [])
+    }, [dispatch])
 
     const initialValues: Trailer = {
         number: trailer?.number || '',

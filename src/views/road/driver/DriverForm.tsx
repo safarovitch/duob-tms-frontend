@@ -37,7 +37,7 @@ const DriverForm: React.FC<{driver: Driver}> = ({driver}) => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedDriver())
-    }, [])
+    }, [dispatch])
 
     const initialValues: Driver = {
         name: driver?.name || '',

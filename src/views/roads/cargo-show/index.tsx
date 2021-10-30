@@ -36,7 +36,7 @@ const CargoShow: React.FC = () => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomerCargo())
-    }, [])
+    }, [dispatch])
 
     if (!customerCargo) {
         history.go(-1);

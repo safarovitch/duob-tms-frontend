@@ -1,4 +1,4 @@
-import React, {useEffect, useState,} from 'react';
+import React, {useEffect, useReducer, useState,} from 'react';
 import {
     Box,
     Card,
@@ -36,6 +36,7 @@ const DriverListView: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
@@ -43,23 +44,21 @@ const DriverListView: React.FC = () => {
     const [rows, setRows] = useState<Driver[]>([]);
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size]);
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const result: any = await roadService.getFilteredDrivers(page, size)
-            setRows(result.content)
-            setTotal(result.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
+                const result: any = await roadService.getFilteredDrivers(page, size)
+                setRows(result.content)
+                setTotal(result.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -73,7 +72,7 @@ const DriverListView: React.FC = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
+        setUpdateRows()
     };
 
     return (

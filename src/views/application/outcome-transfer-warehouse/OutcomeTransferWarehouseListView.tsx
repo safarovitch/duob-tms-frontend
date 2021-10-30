@@ -1,4 +1,4 @@
-import React, {useEffect, useState,} from 'react';
+import React, {useEffect, useReducer, useState,} from 'react';
 import {
     Box, Card, Chip, Grid, IconButton, InputAdornment, makeStyles, SvgIcon, Table, TableBody, TableCell,
     TableHead, TablePagination, TableRow, TextField,
@@ -46,6 +46,7 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
@@ -61,23 +62,21 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
     const canAdminApprove = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.ADMIN_APPROVE)
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await applicationService.getFilteredOutcomeTransferWarehouses(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                const data: any = await applicationService.getFilteredOutcomeTransferWarehouses(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -116,7 +115,7 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
+        setUpdateRows()
     };
 
     const handleAdminApprove = (index: number) => {

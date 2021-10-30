@@ -24,21 +24,23 @@ const General: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar()
     const [customer, setCustomer] = useState<Customer>()
     const [loading, setLoading] = useState(false)
-    const user = useSelector((state: {user: User}) => state.user);
+    const {userId} = useSelector((state: {user: User}) => state.user);
 
     useEffect(() => {
         (async function() {
             try {
                 setLoading(true)
-                const customer: any = await customerService.getCustomer(user.userId.toString());
-                setCustomer(customer);
+
+                const data: any = await customerService.getCustomer(userId.toString());
+
+                setCustomer(data);
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'});
             } finally {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [userId, enqueueSnackbar])
 
     return (
         <Grid

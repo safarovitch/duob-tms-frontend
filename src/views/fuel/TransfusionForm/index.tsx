@@ -75,7 +75,7 @@ const TransfusionForm: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     const handleOutcomeFuel = async (values: Fuel, formActions: { [key: string]: any }) => {
         try {

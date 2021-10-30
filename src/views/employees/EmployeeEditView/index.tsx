@@ -54,7 +54,7 @@ const EmployeeEditView: React.FC = () => {
         return () => {
             dispatch(deleteSelectedEmployee())
         }
-    }, []);
+    }, [history, enqueueSnackbar, dispatch]);
 
     if (!selectedEmployee) {
         history.go(-1)

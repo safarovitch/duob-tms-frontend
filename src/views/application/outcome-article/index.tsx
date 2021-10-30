@@ -40,7 +40,7 @@ function RoadTrailerView() {
                 setLoading(true)
                 const dataArticles: any = await articleService.getArticles(ARTICLES.OUTCOME)
                 const dataEmployees: any = await employeeService.getEmployees()
-                const dataExchanges: any = await exchangeService.getAllExchanges()
+                const dataExchanges: any = await exchangeService.getAllExchangesWithTJS()
 
                 if (dataArticles.length === 0 || dataEmployees.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)
@@ -57,7 +57,7 @@ function RoadTrailerView() {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     return (
         <Page title={'Расход по статьям'}>
