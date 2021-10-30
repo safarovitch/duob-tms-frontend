@@ -104,7 +104,7 @@ const navConfig = [
             },
             {
                 title: 'Подотчеты',
-                icon: FlagIcon,
+                icon: DashboardIcon,
                 href: '/app/employee-accounts',
                 perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST
             },
