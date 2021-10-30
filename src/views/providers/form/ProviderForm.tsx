@@ -63,7 +63,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({className, provider}) => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedProvider())
-    }, [])
+    }, [dispatch])
 
 
     const handleAddProvider = async (values: Provider, formActions: { [key: string]: any }) => {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import {Warehouse, WarehouseListProps} from "../../model/Warehouse";
 import {
     Box,
@@ -40,6 +40,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
     const [query, setQuery] = useState('')
@@ -49,23 +50,21 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
     const [rows, setRows] = useState<Warehouse[]>([])
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, debouncedSearchTerm, size])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await warehouseService.getFilteredWarehouse(page, size, query);
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
+                const data: any = await warehouseService.getFilteredWarehouse(page, size, debouncedSearchTerm);
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -84,8 +83,8 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
-    }
+        setUpdateRows()
+    };
 
     return (
         <Page className={classes.root} title="Склады">

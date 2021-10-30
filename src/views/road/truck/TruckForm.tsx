@@ -45,7 +45,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
 
     useEffect(() => () => {
         dispatch(deleteSelectedTruck())
-    }, [])
+    }, [dispatch])
 
     const initialValues: Truck = {
         model: truck?.model || '',

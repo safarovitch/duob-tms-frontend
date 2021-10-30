@@ -54,7 +54,7 @@ function CargoTariffView() {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     if (!cargoTariff && history.location.pathname.includes('edit')) {
         history.go(-1);

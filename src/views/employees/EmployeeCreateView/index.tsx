@@ -51,7 +51,7 @@ const EmployeeCreateView: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     return (
         <Page title="Создание сотрудника">

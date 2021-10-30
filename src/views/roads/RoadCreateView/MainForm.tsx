@@ -81,7 +81,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
             await roadService.updateRoad(values)
 
             enqueueSnackbar('Рейс обновлен', {variant: 'success'})
-            updateRoad && updateRoad().then(null)
+            updateRoad && updateRoad()
         } catch (error: any) {
             formActions.setStatus({success: false});
             formActions.setErrors({submit: error.message});

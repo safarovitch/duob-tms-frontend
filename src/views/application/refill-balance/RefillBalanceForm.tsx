@@ -49,7 +49,7 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
 
     useEffect(() => () => {
         dispatch(deleteSelectedRefillBalance())
-    }, [])
+    }, [dispatch])
 
     const initialValues: RefillBalanceApplication = {
         client: refillBalance?.client,

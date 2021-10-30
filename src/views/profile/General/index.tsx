@@ -35,7 +35,7 @@ const General: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [enqueueSnackbar])
 
     return (
         <Grid

@@ -2,7 +2,7 @@ import {Box, Card, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui
 import {useHistory} from "react-router-dom";
 import {useParams} from "react-router";
 import Page from "../../components/Page";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import Header from "./Header";
 import {roadsStuffTabs as tabs} from '../../constants'
 import {Road, RoadsStuffTab} from "../../model/Road";
@@ -40,42 +40,41 @@ const RoadsStuffView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
-    const {id, stuffId} = useParams<{ stuffId: string, id: string }>()
+    const [updateRoad, setUpdateRoad] = useReducer(x => x + 1, 0)
+    const {id: roadId, stuffId} = useParams<{ stuffId: string, id: string }>()
     const [currentTab, setCurrentTab] = useState<RoadsStuffTab>(getCurrentTab(stuffId))
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [road, setRoad] = useState<Road>()
 
     useEffect(() => {
-        getRoad().then(null)
-    }, [])
+        (async () => {
+            try {
+                setLoading(true)
 
-    const getRoad = async () => {
-        try {
-            setLoading(true)
+                const data: any = await roadService.getRoadById(roadId)
 
-            const fetchRoad: any = await roadService.getRoadById(id)
-
-            setRoad(fetchRoad)
-        } catch (error: any) {
-            setHasError(true)
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                setRoad(data)
+            } catch (error: any) {
+                setHasError(true)
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRoad, enqueueSnackbar, roadId])
 
     const handleTabsChange = (event: React.ChangeEvent<{}>, tab: RoadsStuffTab) => {
         setCurrentTab(tab)
-        history.push(`/app/roads/${id}/${tab.value}`);
+        history.push(`/app/roads/${roadId}/${tab.value}`);
     }
 
     return (
-        <Page title={`Рейс № ${id}`}>
+        <Page title={`Рейс № ${roadId}`}>
             {
                 road ? (
                     <Container className={classes.root} maxWidth="lg">
-                        <Header id={id} title={currentTab.label}/>
+                        <Header id={roadId} title={currentTab.label}/>
                         <Box mt={3}>
                             <Card>
                                 <Tabs
@@ -97,13 +96,13 @@ const RoadsStuffView: React.FC = () => {
                                 </Tabs>
                                 <Divider/>
                                 <RoadsTabPanel index={'main'} value={currentTab}>
-                                    <RoadMain road={road} updateRoad={getRoad} />
+                                    <RoadMain road={road} updateRoad={setUpdateRoad} />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'mileage'} value={currentTab}>
-                                    <RoadMileage road={road} updateRoad={getRoad} />
+                                    <RoadMileage road={road} updateRoad={setUpdateRoad} />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'money'} value={currentTab}>
-                                    <RoadMoney road={road} updateRoad={getRoad} />
+                                    <RoadMoney road={road} updateRoad={setUpdateRoad} />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'fuel'} value={currentTab}>
                                     <RoadFuel road={road} />
@@ -112,13 +111,13 @@ const RoadsStuffView: React.FC = () => {
                                     <RoadCargos roadId={road.id!} />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'on-base'} value={currentTab}>
-                                    <FuelDetailList updateRoad={getRoad} type="ON_BASE" />
+                                    <FuelDetailList updateRoad={setUpdateRoad} type="ON_BASE" />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'on-road'} value={currentTab}>
-                                    <FuelDetailList updateRoad={getRoad} type="ON_ROAD" />
+                                    <FuelDetailList updateRoad={setUpdateRoad} type="ON_ROAD" />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'additional-outcome'} value={currentTab}>
-                                    <FuelDetailList updateRoad={getRoad} type="ADDITIONAL_OUTCOME" />
+                                    <FuelDetailList updateRoad={setUpdateRoad} type="ADDITIONAL_OUTCOME" />
                                 </RoadsTabPanel>
                             </Card>
                         </Box>

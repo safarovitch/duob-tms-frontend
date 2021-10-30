@@ -54,23 +54,21 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
     const {id} = useParams<{id: string}>()
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await customerService.getActiveCargos(id, page, size, cargoStatus)
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                const data: any = await customerService.getActiveCargos(id, page, size, cargoStatus)
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [id, page, size, cargoStatus, enqueueSnackbar])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();

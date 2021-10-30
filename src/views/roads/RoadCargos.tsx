@@ -51,23 +51,21 @@ const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await roadService.getRoadCargos(roadId, page, size)
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                const data: any = await roadService.getRoadCargos(roadId, page, size)
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [roadId, enqueueSnackbar, page, size])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();

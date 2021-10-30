@@ -48,7 +48,7 @@ function RoadTrailerView() {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     if ((!incomeArticle && history.location.pathname.includes('edit')) || incomeArticle?.status === 'PAID') {
         history.go(-1);

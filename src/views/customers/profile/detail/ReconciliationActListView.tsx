@@ -47,22 +47,22 @@ const ReconciliationActListView: React.FC = () => {
     const {id} = useParams<{id: string}>()
 
     useEffect(() => {
-        getReconciliationActs().then(null)
-    }, [page, size])
+        (async () => {
+            try {
+                setLoading(true)
 
-    const getReconciliationActs = async () => {
-        setLoading(true)
+                const data: any = await customerService.getReconciliationActs(id, page, size)
 
-        try {
-            const reconciliationActs: any = await customerService.getReconciliationActs(id, page, size)
-            setReconciliationActs(reconciliationActs.content)
-            setTotal(reconciliationActs.totalElements)
-            setLoading(false)
-        } catch (error: any) {
-            setLoading(false)
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        }
-    }
+                setReconciliationActs(data.content)
+                setTotal(data.totalElements)
+                setLoading(false)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [id, page, size, enqueueSnackbar])
 
     const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage + 1);

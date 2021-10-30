@@ -57,8 +57,7 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
 
     useEffect(() => () => {
         dispatch(deleteSelectedWarehouse())
-    }, [])
-
+    }, [dispatch])
 
     const handleAddWarehouse = async (values: Warehouse, formActions: { [key: string]: any }) => {
         try {

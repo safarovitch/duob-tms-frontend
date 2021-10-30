@@ -39,7 +39,7 @@ const EmployeeListView: React.FC = () => {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [enqueueSnackbar])
 
     return (
         <Page title="Сотрудники">

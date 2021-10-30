@@ -38,7 +38,7 @@ const ArticleOutcomeForm: React.FC<{articleOutcome: Article}> = ({articleOutcome
 
     useEffect(() => () => {
         dispatch(deleteSelectedArticleOutcome())
-    }, [])
+    }, [dispatch])
 
     const initialValues: Article = {
         name: articleOutcome?.name || '',

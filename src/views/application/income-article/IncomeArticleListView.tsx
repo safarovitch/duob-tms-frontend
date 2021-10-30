@@ -1,4 +1,4 @@
-import React, {useEffect, useState,} from 'react';
+import React, {useEffect, useReducer, useState,} from 'react';
 import {
     Box, Card, Chip, Grid, IconButton, InputAdornment, makeStyles, SvgIcon, Table, TableBody, TableCell,
     TableHead, TablePagination, TableRow, TextField,
@@ -44,6 +44,7 @@ const IncomeArticleListView: React.FC = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
@@ -59,23 +60,21 @@ const IncomeArticleListView: React.FC = () => {
     const canDelete = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.DELETE)
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await applicationService.getFilteredIncomeArticles(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                const data: any = await applicationService.getFilteredIncomeArticles(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -114,7 +113,7 @@ const IncomeArticleListView: React.FC = () => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
+        setUpdateRows()
     }
 
     const isPaidApplication = (row: IncomeByArticleApplication): boolean => (row.status === 'PAID');

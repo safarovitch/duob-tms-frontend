@@ -30,28 +30,27 @@ const CustomerDetail: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
     const classes = useStyles()
     const {stuffId} = useParams<{stuffId: string}>()
-    const tabPath = '/customer'
     const {userId} = useSelector((state: {user: User}) => state.user)
     const [customer, setCustomer] = useState<Customer | null>(null)
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (customer === null) {
-            getCustomer().then(null)
-        }
-    }, [])
+            (async () => {
+                try {
+                    setLoading(true)
 
-    const getCustomer = async () => {
-        setLoading(true)
-        try {
-            const customer: any = await customerService.getCustomer(userId.toString());
-            setCustomer(customer)
-            setLoading(false)
-        } catch (error: any) {
-            setLoading(false)
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+                    const data: any = await customerService.getCustomer(userId.toString())
+
+                    setCustomer(data)
+                    setLoading(false)
+                } catch (error: any) {
+                    setLoading(false)
+                    enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+                }
+            })()
         }
-    }
+    }, [customer, userId, enqueueSnackbar])
 
     if (!existStuffId(stuffId)) return <Redirect to="/404"/>
 
@@ -61,7 +60,7 @@ const CustomerDetail: React.FC = () => {
             {customer && (
                 <Page className={classes.root}>
                     <Container maxWidth="lg">
-                        <Detail stuffId={stuffId} tabPath={tabPath} />
+                        <Detail stuffId={stuffId} tabPath={'/customer'} />
                     </Container>
                 </Page>
             )}

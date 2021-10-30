@@ -54,7 +54,7 @@ function RoadTrailerView() {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     if ((!refillBalance && history.location.pathname.includes('edit')) || refillBalance?.status === 'PAID') {
         history.go(-1);

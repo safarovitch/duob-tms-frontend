@@ -22,36 +22,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AdminCustomerDetail: React.FC = () => {
+    const {enqueueSnackbar} = useSnackbar()
+    const classes = useStyles()
     const dispatch = useDispatch()
-    const {id, stuffId} = useParams<{id: string, stuffId: string}>()
-    const tabPath = `/app/customers/${id}`
-    const [loading, setLoading] = useState(false)
+    const {id: customerId, stuffId} = useParams<{id: string, stuffId: string}>()
     const selectedCustomer = useSelector((state: {selectedCustomer: Customer}) => state.selectedCustomer)
     const [customer, setCustomer] = useState<Customer>(selectedCustomer)
-    const {enqueueSnackbar} = useSnackbar();
-    const classes = useStyles()
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomer())
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
         if (customer === null) {
-            getCustomer().then(null)
-        }
-    }, [])
+            (async () => {
+                try {
+                    setLoading(true)
 
-    const getCustomer = async () => {
-        setLoading(true)
-        try {
-            const customer: any = await customerService.getCustomer(id);
-            setCustomer(customer)
-            setLoading(false)
-        } catch (error: any) {
-            setLoading(false)
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+                    const data: any = await customerService.getCustomer(customerId);
+
+                    setCustomer(data)
+                    setLoading(false)
+                } catch (error: any) {
+                    setLoading(false)
+                    enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+                }
+            })()
         }
-    }
+    }, [customer, customerId, enqueueSnackbar])
 
     return (
         <>
@@ -63,7 +62,7 @@ const AdminCustomerDetail: React.FC = () => {
                 >
                     <Container maxWidth="lg">
                         <Header customerName={customer.name}/>
-                        <Detail stuffId={stuffId} tabPath={tabPath} />
+                        <Detail stuffId={stuffId} tabPath={`/app/customers/${customerId}`} />
                     </Container>
                 </Page>
             )}

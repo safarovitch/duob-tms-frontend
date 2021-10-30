@@ -57,7 +57,7 @@ function RoadTrailerView() {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     return (
         <Page title={'Расход по статьям'}>

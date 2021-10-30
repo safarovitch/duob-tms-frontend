@@ -43,7 +43,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, cargoType
 
     useEffect(() => () => {
         dispatch(deleteSelectedCargoTariff())
-    }, [])
+    }, [dispatch])
 
     const initialValues: CargoTariff = {
         name: cargoTariff?.name || '',

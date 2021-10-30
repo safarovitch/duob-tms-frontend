@@ -51,7 +51,7 @@ function Index() {
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [history, enqueueSnackbar])
 
     return (
         <Page title={'Перевод денег'}>

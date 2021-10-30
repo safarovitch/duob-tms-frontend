@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -45,6 +45,7 @@ const Results: React.FC<{roles: Role[]}> = ({roles}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [rows, setRows] = useState<Employee[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
@@ -55,23 +56,21 @@ const Results: React.FC<{roles: Role[]}> = ({roles}) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size, debouncedSearchTerm, rolesId])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await employeeService.getFilteredEmployees(page, size, query, rolesId.join(','))
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                const data: any = await employeeService.getFilteredEmployees(page, size, debouncedSearchTerm, rolesId.join(','))
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, rolesId])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -105,7 +104,7 @@ const Results: React.FC<{roles: Role[]}> = ({roles}) => {
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
+        setUpdateRows()
     };
 
     return (

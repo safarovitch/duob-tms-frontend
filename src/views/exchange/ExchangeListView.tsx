@@ -1,4 +1,4 @@
-import React, {useEffect, useState,} from 'react';
+import React, {useEffect, useReducer, useState,} from 'react';
 import {
     Box,
     Card,
@@ -36,29 +36,28 @@ const ExchangeListView: React.FC = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<Exchange[]>([])
 
     useEffect(() => {
-        getRows().then(null)
-    }, []);
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await exchangeService.getAllExchanges()
-            setRows(data)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    };
+                const data: any = await exchangeService.getAllExchanges()
+                setRows(data)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar]);
 
     const handleDeleteRow = () => {
-        getRows().then(null)
+        setUpdateRows()
     };
 
     return (

@@ -51,7 +51,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomer())
-    }, [])
+    }, [dispatch])
 
     const initialValues: Customer = {
         name: customer?.name || '',
