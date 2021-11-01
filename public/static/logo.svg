@@ -1,38 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="42px" height="43px" viewBox="0 0 42 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
-    <title>Logo</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <circle id="path-1" cx="20" cy="20" r="20"></circle>
-        <filter x="-7.5%" y="-5.0%" width="115.0%" height="117.5%" filterUnits="objectBoundingBox" id="filter-2">
-            <feMorphology radius="1" operator="erode" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
-            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
-            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
-            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
-            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
-            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
-            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.31 0" type="matrix" in="shadowBlurOuter2" result="shadowMatrixOuter2"></feColorMatrix>
-            <feMerge>
-                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
-                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
-            </feMerge>
-        </filter>
-    </defs>
-    <g id="Landing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Landing-page" transform="translate(-31.000000, -11.000000)">
-            <g id="topbar">
-                <g id="left" transform="translate(32.000000, 12.000000)">
-                    <g id="Logo">
-                        <g id="Oval">
-                            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
-                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
-                        </g>
-                        <polygon id="Path" fill="#3A32D0" points="19.1666667 20.4166667 15.0651337 27.9074606 12.5504664 32.5 12.514661 32.5 10.992333 29.7198264 10 27.9074606 10.0355213 27.9074606 14.1373574 20.4166667 10.0355213 12.9258928 10 12.9258928 10.992333 11.1135405 12.514661 8.33333333 12.5504664 8.33333333 15.0651337 12.9258928"></polygon>
-                        <polygon id="Path" fill="#5850EC" points="33.3333333 20.4166667 26.430165 32.5 12.6237354 32.5 11.0353756 29.7198264 10 27.9074606 23.8060709 27.9074606 28.0858759 20.4166667 23.8060709 12.9258928 10 12.9258928 11.0353756 11.1135405 12.6237354 8.33333333 26.430165 8.33333333"></polygon>
-                    </g>
-                </g>
-            </g>
-        </g>
-    </g>
+<svg width="42" height="43" viewBox="0 0 42 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="21" cy="21.5" rx="21" ry="21.5" fill="white"/>
+<path d="M20.3913 14.9997H17.2172V32.2163H24.7999C28.3902 32.2163 29.9819 31.5829 31.5643 29.0379H20.3913V14.9997Z" fill="#6E53DD"/>
+<path d="M12 32.2163V9.67688C12 9.67688 19.7978 8.1539 24.3907 9.67688C25.8192 10.1505 26.6408 10.4369 27.9123 11.242C29.9514 12.5331 31.1091 13.5323 32.2165 15.6766C33.2204 17.6205 33.334 18.9675 33.3903 21.1546C33.4544 23.6413 32.2165 27.4152 32.2165 27.4152H26.2167C26.2167 27.4152 29.347 24.9123 29.8688 23.8689C30.3905 22.8255 30.7495 18.9133 29.2166 16.4344C27.8621 14.244 25.7458 13.4269 23.7938 12.6733L23.7386 12.652C21.1727 11.6612 15.1303 12.1303 15.1303 12.1303V32.2163H12Z" fill="#6E53DD"/>
 </svg>

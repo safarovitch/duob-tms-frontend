@@ -22,6 +22,7 @@ import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
 import ApproveApplication from "../../components/ApproveApplication";
 import {User} from "../../../../model/User";
+import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -66,6 +67,7 @@ const ShowView: React.FC = () => {
             const fetchOutcomeTransferWarehouse: any = await applicationService.approveTransferWarehouse(outcomeTransferWarehouse.id!)
 
             dispatch(setSelectedOutcomeTransferWarehouse(fetchOutcomeTransferWarehouse))
+            dispatch(needUpdateWarehouseBalance())
             enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

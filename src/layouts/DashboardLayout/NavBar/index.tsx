@@ -100,7 +100,7 @@ const navConfig = [
                 title: 'Выдача груза',
                 icon: DashboardIcon,
                 href: '/app/cargo-issues',
-                perm: PERMISSIONS.APPLICATION.LIST
+                perm: PERMISSIONS.CARGO.ISSUES.LIST
             },
             {
                 title: 'Подотчеты',

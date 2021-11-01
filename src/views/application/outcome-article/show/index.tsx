@@ -21,6 +21,7 @@ import {deleteSelectedOutcomeArticle, setSelectedOutcomeArticle} from "../../../
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
 import ApproveApplication from "../../components/ApproveApplication";
+import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,6 +65,7 @@ const ShowView: React.FC = () => {
             const fetchOutcomeArticle: any = await applicationService.approveOutcomeArticle(outcomeArticle.id!)
 
             dispatch(setSelectedOutcomeArticle(fetchOutcomeArticle))
+            dispatch(needUpdateWarehouseBalance())
             enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

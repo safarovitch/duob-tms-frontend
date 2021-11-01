@@ -13,7 +13,7 @@ const Auth: React.FC<{children: any}> = ({ children }) => {
 
     useEffect(() => {
         const initAuth = async () => {
-            authService.setAxiosInterceptors( () => dispatch(logout()));
+            authService.setAxiosInterceptors(() => dispatch(logout()));
 
             authService.handleAuthentication();
 

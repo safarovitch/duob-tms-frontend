@@ -66,6 +66,7 @@ class AuthService {
         } else {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('user');
+            localStorage.removeItem('warehouseBalance');
             delete axios.defaults.headers.common.Authorization;
         }
     }
