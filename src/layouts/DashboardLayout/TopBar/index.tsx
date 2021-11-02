@@ -36,9 +36,17 @@ const useStyles = makeStyles((theme?: any) => ({
     toolbar: {
         minHeight: 64
     },
-    title: {
+    boxTitle: {
         marginLeft: 10,
         color: "white",
+    },
+    title: {
+        fontSize: 17,
+        lineHeight: '16px'
+    },
+    subtitle: {
+        fontSize: 14,
+        lineHeight: '16px',
     },
     balanceTitle: {
         color: 'rgba(255, 255, 255, 0.7)',
@@ -95,9 +103,14 @@ const TopBar: React.FC<{onMobileNavOpen: () => void, className?: string}> = ({
                                 <Logo />
                             </Grid>
                             <Grid item>
-                                <Typography variant="h6" className={classes.title}>
-                                    DUOB LOGISTIC
-                                </Typography>
+                                <Box className={classes.boxTitle}>
+                                    <Typography variant="h6" className={classes.title}>
+                                        DUOB
+                                    </Typography>
+                                    <Typography variant="h6" className={classes.subtitle}>
+                                        Logistics
+                                    </Typography>
+                                </Box>
                             </Grid>
                         </Grid>
                     </RouterLink>

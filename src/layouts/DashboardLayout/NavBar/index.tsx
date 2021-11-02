@@ -27,7 +27,7 @@ const navConfig = [
         subheader: 'Другое',
         items: [
             {
-                title: 'Оформить заказ',
+                title: 'Аналитика',
                 icon: DashboardIcon,
                 href: '/app/reports/dashboard'
             },
