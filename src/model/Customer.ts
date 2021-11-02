@@ -66,4 +66,6 @@ export interface CustomerReconciliationAct {
     outcomeQuantity: number;
     balance: number;
     balanceQuantity: number;
+    discount: number;
+    discountQuantity: number;
 }

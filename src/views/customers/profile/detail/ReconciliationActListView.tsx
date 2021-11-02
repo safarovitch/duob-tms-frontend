@@ -152,8 +152,8 @@ const ReconciliationActListView: React.FC = () => {
                                             <TableCell>{row.date}</TableCell>
                                             <TableCell>{row.income}</TableCell>
                                             <TableCell>{row.incomeQuantity}</TableCell>
-                                            <TableCell>-</TableCell>
-                                            <TableCell>-</TableCell>
+                                            <TableCell>{row.discount}</TableCell>
+                                            <TableCell>{row.discountQuantity}</TableCell>
                                             <TableCell>{row.outcome}</TableCell>
                                             <TableCell>{row.outcomeQuantity}</TableCell>
                                             <TableCell>{row.balance}</TableCell>
