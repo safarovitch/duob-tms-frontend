@@ -23,8 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         maxWidth: '100%',
-        width: 560,
-        maxHeight: 300,
+        maxHeight: 600,
         height: 'auto'
     }
 }));
@@ -47,27 +46,14 @@ function Error404View() {
                 >
                     Ошибка 404. Нет такой страницы
                 </Typography>
-                {/*<Typography*/}
-                {/*    align="center"*/}
-                {/*    variant="subtitle2"*/}
-                {/*    color="textSecondary"*/}
-                {/*>*/}
-                {/*    You either tried some shady route or you*/}
-                {/*    came here by mistake. Whichever it is, try using the navigation.*/}
-                {/*</Typography>*/}
-                <Box
-                    mt={6}
-                    display="flex"
-                    justifyContent="center"
-                >
+                <Box display="flex" justifyContent="center">
                     <img
-                        alt="Under development"
+                        alt="404"
                         className={classes.image}
                         src="/static/page_not_found.svg"
                     />
                 </Box>
                 <Box
-                    mt={6}
                     display="flex"
                     justifyContent="center"
                 >
