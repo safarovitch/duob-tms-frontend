@@ -27,18 +27,6 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
     },
-    queryField: {
-        width: 500
-    },
-    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
 }));
 
 const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
@@ -91,9 +79,9 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                             <TableRow>
                                 <TableCell>Груз</TableCell>
                                 <TableCell>Вид груза</TableCell>
-                                <TableCell>Д/Ш/В</TableCell>
-                                <TableCell>Обьем(м3)</TableCell>
-                                <TableCell>Вес(кг)</TableCell>
+                                <TableCell>Д / Ш / В</TableCell>
+                                <TableCell>Обьем (м3)</TableCell>
+                                <TableCell>Вес (кг)</TableCell>
                                 <TableCell>Стоимост $</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Просроченно дней</TableCell>

@@ -58,10 +58,12 @@ interface CargoGeneral{
     dueDays: number;
 }
 
-export interface CustomerReceivedCargo {
-    id?: number;
-}
-
 export interface CustomerReconciliationAct {
-    id?: number;
+    date: string;
+    income: number;
+    incomeQuantity: number;
+    outcome: number;
+    outcomeQuantity: number;
+    balance: number;
+    balanceQuantity: number;
 }

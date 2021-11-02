@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {
     Box,
-    Card, CircularProgress,
+    Card, Grid,
     makeStyles,
     Table,
     TableBody,
     TableCell,
     TableHead, TablePagination,
-    TableRow,
+    TableRow, TextField,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {CustomerReconciliationAct} from "../../../../model/Customer";
@@ -15,6 +15,8 @@ import customerService from "../../../../services/CustomerService";
 import {useSnackbar} from "notistack";
 import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import {useParams} from "react-router";
+import moment from "moment";
+import NoFoundTableBody from "../../../../components/NoFoundTableBody";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,51 +24,37 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
     },
-    queryField: {
-        width: 500
-    },
-    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
 }));
 
 const ReconciliationActListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
-    const [reconciliationActs, setReconciliationActs] = useState<CustomerReconciliationAct[]>([])
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(5)
+    const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
+    const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
+    const [rows, setRows] = useState<CustomerReconciliationAct[]>([])
     const [loading, setLoading] = useState(false)
-    const {id} = useParams<{id: string}>()
+    const {id: customerId} = useParams<{id: string}>()
 
     useEffect(() => {
         (async () => {
             try {
                 setLoading(true)
+                setRows([])
 
-                const data: any = await customerService.getReconciliationActs(id, page, size)
+                const data: any = await customerService.getReconciliationActs(customerId, page, size, startDate, endDate)
 
-                setReconciliationActs(data.content)
+                setRows(data.content)
                 setTotal(data.totalElements)
-                setLoading(false)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
                 setLoading(false)
             }
         })()
-    }, [id, page, size, enqueueSnackbar])
-
-    const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage + 1);
-    };
+    }, [enqueueSnackbar, customerId, page, size, startDate, endDate])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -74,58 +62,109 @@ const ReconciliationActListView: React.FC = () => {
         setPage(1);
     };
 
-    return reconciliationActs && (
+    const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+        setPage(newPage + 1);
+    };
+
+    const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setStartDate(event.target.value)
+        setPage(1)
+    }
+
+    const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setEndDate(event.target.value)
+        setPage(1)
+    }
+
+    return (
         <Card className={classes.root}>
+            <Box pb={3} pl={2}>
+                <Grid container spacing={2}>
+                    <Grid item>
+                        <TextField
+                            fullWidth
+                            type="date"
+                            label="От"
+                            onChange={handleStartDateChange}
+                            value={startDate}
+                            variant="outlined"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            size="small"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            fullWidth
+                            type="date"
+                            label="До"
+                            onChange={handleEndDateChange}
+                            value={endDate}
+                            variant="outlined"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            size="small"
+                        />
+                    </Grid>
+                </Grid>
+            </Box>
             <PerfectScrollbar>
-                <Box minWidth={700} className={loading ? classes.tableProgressBoxStyle : ''}>
+                <Box minWidth={700}>
                     <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell>
                                     Дата
                                 </TableCell>
-                                <TableCell>
-                                    Поступление ($)
+                                <TableCell colSpan={2} align="center">
+                                    Поступление
                                 </TableCell>
-                                <TableCell>
-                                    Поступление(м)
+                                <TableCell colSpan={2} align="center">
+                                    Скидка
                                 </TableCell>
-                                <TableCell>
-                                    Скидка ($)
+                                <TableCell colSpan={2} align="center">
+                                    Оплата
                                 </TableCell>
-                                <TableCell>
-                                    Скидка (м)
-                                </TableCell>
-                                <TableCell>
-                                    Оплата ($)
-                                </TableCell>
-                                <TableCell>
-                                    Оплата(м)
-                                </TableCell>
-                                <TableCell>
-                                    Остаток ($)
-                                </TableCell>
-                                <TableCell>
-                                    Остаток (м)
+                                <TableCell colSpan={2} align="center">
+                                    Остаток
                                 </TableCell>
                             </TableRow>
+                            <TableRow>
+                                <TableCell/>
+                                <TableCell>Сумма $</TableCell>
+                                <TableCell>Места</TableCell>
+                                <TableCell>Сумма $</TableCell>
+                                <TableCell>Места</TableCell>
+                                <TableCell>Сумма $</TableCell>
+                                <TableCell>Места</TableCell>
+                                <TableCell>Сумма $</TableCell>
+                                <TableCell>Места</TableCell>
+                            </TableRow>
                         </TableHead>
-                        <TableBody>
-                            {reconciliationActs.map((reconciliationAct: CustomerReconciliationAct) => {
-                                return (
-                                    <TableRow
-                                        hover
-                                        key={reconciliationAct.id}
-                                    >
-                                        {/*<TableCell>*/}
-                                        {/*    {reconciliationAct.name}*/}
-                                        {/*</TableCell>*/}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
+                        {
+                            rows.length > 0 ? (
+                                <TableBody>
+                                    {rows.map((row: CustomerReconciliationAct, index) => (
+                                        <TableRow hover key={index}>
+                                            <TableCell>{row.date}</TableCell>
+                                            <TableCell>{row.income}</TableCell>
+                                            <TableCell>{row.incomeQuantity}</TableCell>
+                                            <TableCell>-</TableCell>
+                                            <TableCell>-</TableCell>
+                                            <TableCell>{row.outcome}</TableCell>
+                                            <TableCell>{row.outcomeQuantity}</TableCell>
+                                            <TableCell>{row.balance}</TableCell>
+                                            <TableCell>{row.balanceQuantity}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            ) : <NoFoundTableBody loading={loading}/>
+                        }
                     </Table>
-                    {loading && (<CircularProgress size={48} className={classes.tableProgress}/>)}
                 </Box>
             </PerfectScrollbar>
             <TablePagination
