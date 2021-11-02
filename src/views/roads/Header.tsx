@@ -15,7 +15,6 @@ const Header: React.FC<{id: string, title: string}> = ({id, title}) => {
         try {
             const invoice: any = await roadService.generateInvoice(Number(id))
             const fileBuffer: ArrayBuffer = await roadService.getInvoice(invoice.fileName) as ArrayBuffer
-            console.log(fileBuffer)
             const blob = new Blob([fileBuffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});
             fileSaver.saveAs(blob, `Рейс №${id}.xlsx`)
         } catch (error: any) {
