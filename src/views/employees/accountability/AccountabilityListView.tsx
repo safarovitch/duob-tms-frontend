@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import {
     Box, Button,
     Card,
@@ -42,6 +42,7 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import {PDFViewer} from "@react-pdf/renderer";
 import AccountabilityPDF from "./AccountabilityPDF";
 import ImageModal from "./ImageModal";
+import {needUpdateWarehouseBalance} from "../../../store/actions/warehouseActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,6 +60,7 @@ const AccountabilityListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
@@ -93,26 +95,24 @@ const AccountabilityListView: React.FC = () => {
                 setEmployeeLoading(false)
             }
         })()
-    }, [])
+    }, [employeeId, enqueueSnackbar])
 
     useEffect(() => {
-        getRows().then(null)
-    }, [page, size, startDate, endDate, selectedType])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
-
-            const data: any = await employeeService.getFilteredEmployeeAccount(Number(employeeId), page, size, startDate, endDate, selectedType)
-            setRows(data.content)
-            setTotal(data.totalElements)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
+                const data: any = await employeeService.getFilteredEmployeeAccount(Number(employeeId), page, size, startDate, endDate, selectedType)
+                setRows(data.content)
+                setTotal(data.totalElements)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [updateRows, enqueueSnackbar, employeeId, page, size, startDate, endDate, selectedType])
 
     const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()
@@ -151,12 +151,12 @@ const AccountabilityListView: React.FC = () => {
     const handleApprove = (index: number) => {
         rows[index].cashierConfirmation = true
         setRows([...rows])
+        dispatch(needUpdateWarehouseBalance())
     }
 
     const handleDeleteRow = () => {
         setPage(1)
-        getRows().then(null)
-        
+        setUpdateRows()
     }
 
     const handleUpdateImage = (accountabilityId: number, filePath: string) => {

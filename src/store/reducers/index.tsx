@@ -3,7 +3,7 @@ import accountReducer from "./accountReducer";
 import {customerReducer, customerCargoReducer} from "./customerReducer";
 import {employeeReducer, employeeAccountabilityReducer} from './employeeReducer';
 import providerReducer from "./providerReducer";
-import warehouseReducer from "./warehouseReducer";
+import {warehouseReducer, warehouseBalanceReducer, warehouseNeedUpdateBalanceReducer} from "./warehouseReducer";
 import {cargoTariffReducer, cargoTypeReducer, customCodeReducer, productReducer} from "./cargoReducer";
 import {
     roadDriverReducer,
@@ -28,6 +28,8 @@ const rootReducer = combineReducers({
     selectedEmployeeAccountability: employeeAccountabilityReducer,
     selectedProvider: providerReducer,
     selectedWarehouse: warehouseReducer,
+    warehouseBalance: warehouseBalanceReducer,
+    needUpdateWarehouseBalance: warehouseNeedUpdateBalanceReducer,
     selectedProduct: productReducer,
     selectedCustomCode: customCodeReducer,
     selectedCargoType: cargoTypeReducer,

@@ -8,8 +8,10 @@ import FUEL from "./Fuel";
 import ARTICLE from "./Article";
 import APPLICATION from "./Application";
 import EXCHANGE from "./Exchange";
+import ANALYTICS from "./Analytics";
 
 const PERMISSIONS = {
+    ANALYTICS,
     EMPLOYEE,
     WAREHOUSE,
     PROVIDER,

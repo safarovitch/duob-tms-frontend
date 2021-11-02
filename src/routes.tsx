@@ -46,6 +46,7 @@ const routesConfig = [
                     {
                         exact: true,
                         path: '/app/reports/dashboard',
+                        // perm: PERMISSIONS.ANALYTICS.LIST,
                         component: lazy(() => import('./views/reports/DashboardView'))
                     },
                     {

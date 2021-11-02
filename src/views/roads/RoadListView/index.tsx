@@ -22,7 +22,7 @@ import roadService from "../../../services/RoadService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {NavLink as RouterLink} from "react-router-dom";
-import {Edit as EditIcon} from "react-feather";
+import {ArrowRight as ArrowRightIcon} from "react-feather";
 import DeleteButton from "../../../components/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -140,20 +140,20 @@ const RoadListView: React.FC = () => {
                                                             {row.status ? 'Завершенный' : 'Активный'}
                                                         </TableCell>
                                                         <TableCell align="center">
-                                                            <IconButton
-                                                                component={RouterLink}
-                                                                to={`/app/roads/${row.id}/main`}
-                                                            >
-                                                                <SvgIcon fontSize="small">
-                                                                    <EditIcon/>
-                                                                </SvgIcon>
-                                                            </IconButton>
                                                             <DeleteButton
                                                                 index={index}
                                                                 rowId={row.id!}
                                                                 onDelete={roadService.deleteRoad}
                                                                 handleDelete={handleDeleteRow}
                                                             />
+                                                            <IconButton
+                                                                component={RouterLink}
+                                                                to={`/app/roads/${row.id}/main`}
+                                                            >
+                                                                <SvgIcon fontSize="small">
+                                                                    <ArrowRightIcon />
+                                                                </SvgIcon>
+                                                            </IconButton>
                                                         </TableCell>
                                                     </TableRow>
                                                 ))}

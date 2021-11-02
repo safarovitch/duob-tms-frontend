@@ -2,17 +2,18 @@ import React, { useEffect } from 'react';
 import { useLocation, matchPath } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {DollarSign as DollarIcon} from 'react-feather';
+import {DollarSign as DollarIcon, CheckSquare as CheckSquareIcon, Box as BoxIcon, Sliders as SlidersIcon,
+    Tool as ToolIcon} from 'react-feather';
 import {Avatar, Box, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography, makeStyles} from '@material-ui/core';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
-import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-import PersonIcon from '@material-ui/icons/Person';
-import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import TrainIcon from '@material-ui/icons/Train';
-import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
-import DescriptionIcon from '@material-ui/icons/Description';
+import DashboardIcon from '@material-ui/icons/DashboardOutlined';
+import HomeIcon from '@material-ui/icons/HomeOutlined';
+import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import LocalShippingIcon from '@material-ui/icons/LocalShippingOutlined';
+import PersonIcon from '@material-ui/icons/PersonOutlined';
+import ImportContactsIcon from '@material-ui/icons/ImportContactsOutlined';
+import TrainIcon from '@material-ui/icons/TrainOutlined';
+import LocalGasStationIcon from '@material-ui/icons/LocalGasStationOutlined';
+import DescriptionIcon from '@material-ui/icons/DescriptionOutlined';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
 import {useSelector} from "react-redux";
@@ -24,58 +25,29 @@ import PERMISSIONS from "../../../constants/permissions";
 
 const navConfig = [
     {
-        subheader: 'Другое',
+        subheader: 'Аналитика',
         items: [
             {
-                title: 'Оформить заказ',
+                title: 'Аналитика',
                 icon: DashboardIcon,
-                href: '/app/reports/dashboard'
+                href: '/app/reports/dashboard',
+                // perm: PERMISSIONS.ANALYTICS.LIST
             },
         ]
     },
     {
-        subheader: 'Настройки',
+        subheader: 'Рейс',
         items: [
-            {
-                title: 'Склады',
-                icon: HomeIcon,
-                href: '/app/warehouses',
-                perm: PERMISSIONS.WAREHOUSE.LIST
-            },
-            {
-                title: 'Сотрудники',
-                icon: PeopleIcon,
-                href: '/app/employees',
-                perm: PERMISSIONS.EMPLOYEE.LIST
-            },
-            {
-                title: 'Поставщики',
-                icon: LocalShippingIcon,
-                href: '/app/providers',
-                perm: PERMISSIONS.PROVIDER.LIST
-            },
-            {
-                title: 'Клиенты',
-                icon: PersonIcon,
-                href: '/app/customers',
-                perm: PERMISSIONS.CUSTOMER.LIST
-            },
-            {
-                title: 'Константы груза',
-                icon: DashboardIcon,
-                href: '/app/cargo',
-                perm: PERMISSIONS.CARGO.LIST
-            },
-            {
-                title: 'Константы рейса',
-                icon: DashboardIcon,
-                href: '/app/road',
-                perm: PERMISSIONS.ROAD.LIST
-            },
             {
                 title: 'Рейсы',
                 icon: TrainIcon,
                 href: '/app/roads',
+                perm: PERMISSIONS.ROAD.LIST
+            },
+            {
+                title: 'Константы рейса',
+                icon: ToolIcon,
+                href: '/app/road',
                 perm: PERMISSIONS.ROAD.LIST
             },
             {
@@ -84,12 +56,11 @@ const navConfig = [
                 href: '/app/fuels',
                 perm: PERMISSIONS.FUEL.LIST
             },
-            {
-                title: 'Статьи',
-                icon: ImportContactsIcon,
-                href: '/app/article',
-                perm: PERMISSIONS.ARTICLE.LIST
-            },
+        ]
+    },
+    {
+        subheader: 'Касса',
+        items: [
             {
                 title: 'Заявки',
                 icon: DescriptionIcon,
@@ -97,22 +68,68 @@ const navConfig = [
                 perm: PERMISSIONS.APPLICATION.LIST
             },
             {
-                title: 'Выдача груза',
-                icon: DashboardIcon,
-                href: '/app/cargo-issues',
-                perm: PERMISSIONS.APPLICATION.LIST
-            },
-            {
-                title: 'Подотчеты',
-                icon: DashboardIcon,
-                href: '/app/employee-accounts',
-                perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST
-            },
-            {
                 title: 'Курс валют',
                 icon: DollarIcon,
                 href: '/app/exchange',
                 perm: PERMISSIONS.EXCHANGE.LIST
+            },
+            {
+                title: 'Статьи',
+                icon: ImportContactsIcon,
+                href: '/app/article',
+                perm: PERMISSIONS.ARTICLE.LIST
+            },
+        ]
+    },
+    {
+        subheader: 'Заявки',
+        items: [
+            {
+                title: 'Выдача груза',
+                icon: BoxIcon,
+                href: '/app/cargo-issues',
+                perm: PERMISSIONS.CARGO.ISSUES.LIST
+            },
+            {
+                title: 'Подотчеты',
+                icon: CheckSquareIcon,
+                href: '/app/employee-accounts',
+                perm: PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.LIST
+            },
+        ]
+    },
+    {
+        subheader: 'Настройки',
+        items: [
+            {
+                title: 'Сотрудники',
+                icon: PeopleIcon,
+                href: '/app/employees',
+                perm: PERMISSIONS.EMPLOYEE.LIST
+            },
+            {
+                title: 'Клиенты',
+                icon: PersonIcon,
+                href: '/app/customers',
+                perm: PERMISSIONS.CUSTOMER.LIST
+            },
+            {
+                title: 'Склады',
+                icon: HomeIcon,
+                href: '/app/warehouses',
+                perm: PERMISSIONS.WAREHOUSE.LIST
+            },
+            {
+                title: 'Поставщики',
+                icon: LocalShippingIcon,
+                href: '/app/providers',
+                perm: PERMISSIONS.PROVIDER.LIST
+            },
+            {
+                title: 'Константы груза',
+                icon: SlidersIcon,
+                href: '/app/cargo',
+                perm: PERMISSIONS.CARGO.LIST
             },
         ]
     }
@@ -263,21 +280,25 @@ const NavBar: React.FC<{openMobile: boolean, onMobileClose: () => void}> = ({ op
                 </Box>
                 <Divider />
                 <Box p={2}>
-                    {navConfig.map((config) => (
-                        <List
-                            key={config.subheader}
-                            subheader={(
-                                <ListSubheader
-                                    disableGutters
-                                    disableSticky
-                                >
-                                    {config.subheader}
-                                </ListSubheader>
-                            )}
-                        >
-                            {renderNavItems({ items: filterNavConfig(config.items), pathname: location.pathname })}
-                        </List>
-                    ))}
+                    {navConfig.map((config) => {
+                        const filterItems = filterNavConfig(config.items)
+
+                        return filterItems.length > 0 && (
+                            <List
+                                key={config.subheader}
+                                subheader={(
+                                    <ListSubheader
+                                        disableGutters
+                                        disableSticky
+                                    >
+                                        {config.subheader}
+                                    </ListSubheader>
+                                )}
+                            >
+                                {renderNavItems({ items: filterItems, pathname: location.pathname })}
+                            </List>
+                        )
+                    })}
                 </Box>
             </PerfectScrollbar>
         </Box>

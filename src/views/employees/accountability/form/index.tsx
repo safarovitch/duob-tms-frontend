@@ -44,7 +44,7 @@ const Index: React.FC = () => {
 
     useEffect(() => () => {
         dispatch(deleteSelectedEmployeeAccountability())
-    }, [])
+    }, [dispatch])
 
     if (!accountability && history.location.pathname.includes('edit')) {
         history.go(-1)

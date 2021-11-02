@@ -6,7 +6,6 @@ class ExchangeService {
     getAllExchanges = () => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/exchanges`)
             .then(response => {
-                console.log(response.data)
                 resolve(response.data)
             })
             .catch(error => reject(error))
