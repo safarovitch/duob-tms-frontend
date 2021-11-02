@@ -16,3 +16,10 @@ export interface WarehouseFormProps {
     className?: string;
     warehouse?: Warehouse;
 }
+
+export interface WarehouseBalance {
+    moneyBalanceTJS: number;
+    moneyBalanceUSD: number;
+    moneyBalanceRUB: number;
+    moneyBalanceCNY: number;
+}

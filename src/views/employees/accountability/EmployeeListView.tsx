@@ -35,22 +35,21 @@ const EmployeeListView: React.FC = () => {
     const [rows, setRows] = useState<EmployeeAccountabilityResponse[]>([])
 
     useEffect(() => {
-        getRows().then(null)
-    }, [debouncedSearchTerm])
+        (async () => {
+            try {
+                setLoading(true)
+                setRows([])
 
-    const getRows = async () => {
-        try {
-            setLoading(true)
-            setRows([])
+                const data: any = await employeeService.getFilteredEmployeeAccounts(debouncedSearchTerm)
+                setRows(data)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [enqueueSnackbar, debouncedSearchTerm])
 
-            const data: any = await employeeService.getFilteredEmployeeAccounts(debouncedSearchTerm)
-            setRows(data)
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
-    }
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()

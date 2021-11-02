@@ -1,5 +1,5 @@
 const DashboardView = () => {
-    return (<div>Оформить заказ</div>)
+    return (<div>Аналитика</div>)
 }
 
 export default DashboardView;

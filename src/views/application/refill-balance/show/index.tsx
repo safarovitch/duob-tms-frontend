@@ -22,6 +22,7 @@ import {deleteSelectedRefillBalance, setSelectedRefillBalance} from "../../../..
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
 import ApproveApplication from "../../components/ApproveApplication";
+import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -65,6 +66,7 @@ const ShowView: React.FC = () => {
             const fetchRefillBalance: any = await applicationService.approveRefillBalance(refillBalance.id!)
 
             dispatch(setSelectedRefillBalance(fetchRefillBalance))
+            dispatch(needUpdateWarehouseBalance())
             enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

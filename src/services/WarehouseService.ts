@@ -3,6 +3,12 @@ import {Warehouse} from "../model/Warehouse";
 import {API_BASE_URL} from "../config";
 
 class WarehouseService {
+    getWarehouseBalances = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/warehouses/balances`)
+            .then((response) => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getAllWarehouse = () => new Promise((resolve, reject)  => {
         api.get(`${API_BASE_URL}/warehouses/all`)
             .then((response) => {

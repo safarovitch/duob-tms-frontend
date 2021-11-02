@@ -16,6 +16,7 @@ const EMPLOYEE = {
     ACCOUNTABILITY: {
         LIST: [
             ADMIN,
+            CASHIER,
             MANAGER
         ],
         ADMIN_APPROVE: [

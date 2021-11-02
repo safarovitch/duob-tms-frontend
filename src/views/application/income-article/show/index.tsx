@@ -21,6 +21,7 @@ import {deleteSelectedIncomeArticle, setSelectedIncomeArticle} from "../../../..
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
 import ApproveApplication from "../../components/ApproveApplication";
+import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,6 +65,7 @@ const ShowView: React.FC = () => {
             const fetchIncomeArticle: any = await applicationService.approveIncomeArticle(incomeArticle.id!)
 
             dispatch(setSelectedIncomeArticle(fetchIncomeArticle))
+            dispatch(needUpdateWarehouseBalance())
             enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
