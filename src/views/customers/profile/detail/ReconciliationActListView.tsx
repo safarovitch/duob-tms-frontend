@@ -114,10 +114,10 @@ const ReconciliationActListView: React.FC = () => {
             </Box>
             <PerfectScrollbar>
                 <Box minWidth={700}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>
+                    <Table size="small">
+                        <TableHead >
+                            <TableRow >
+                                <TableCell rowSpan={2} align="center">
                                     Дата
                                 </TableCell>
                                 <TableCell colSpan={2} align="center">
@@ -134,7 +134,6 @@ const ReconciliationActListView: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell/>
                                 <TableCell>Сумма $</TableCell>
                                 <TableCell>Места</TableCell>
                                 <TableCell>Сумма $</TableCell>
