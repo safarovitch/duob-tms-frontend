@@ -45,18 +45,23 @@ const OutcomeListView: React.FC = () => {
     const [rows, setRows] = useState<Article[]>([])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await articleService.getFilteredArticles(ARTICLES.OUTCOME, page, size)
-                setRows(data.content)
-                setTotal(data.totalElements)
+
+                if(!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
     }, [updateRows, enqueueSnackbar, page, size]);
