@@ -26,19 +26,24 @@ const EmployeeListView: React.FC = () => {
     const [hasError, setHasError] = useState(false)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
+
                 const data: any = await employeeService.getRoles()
 
-                setRoles(data)
+                if (!cancel) setRoles(data)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [enqueueSnackbar])
 
     return (

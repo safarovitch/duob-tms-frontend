@@ -45,20 +45,27 @@ const RoadListView: React.FC = () => {
     const [rows, setRows] = useState<RoadList[]>([])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
-                const result: any = await roadService.getFilteredRoads(page, size)
-                setRows(result.content)
-                setTotal(result.totalElements)
+                const data: any = await roadService.getFilteredRoads(page, size)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

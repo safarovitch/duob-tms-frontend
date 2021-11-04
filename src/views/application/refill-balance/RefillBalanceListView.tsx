@@ -60,20 +60,27 @@ const RefillBalanceListView: React.FC = () => {
     const canDelete = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.DELETE)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
-                const result: any = await applicationService.getFilteredRefillBalances(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
-                setRows(result.content)
-                setTotal(result.totalElements)
+                const data: any = await applicationService.getFilteredRefillBalances(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

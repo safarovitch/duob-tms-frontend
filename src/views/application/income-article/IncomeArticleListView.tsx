@@ -60,20 +60,27 @@ const IncomeArticleListView: React.FC = () => {
     const canDelete = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.DELETE)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await applicationService.getFilteredIncomeArticles(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
-                setRows(data.content)
-                setTotal(data.totalElements)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

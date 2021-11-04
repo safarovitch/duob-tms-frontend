@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {logout} from "../../../store/actions/accountActions";
 import {useSnackbar} from "notistack";
 import {useDispatch} from "react-redux";
-import {useHistory} from "react-router";
 import {IconButton, SvgIcon, Tooltip} from "@material-ui/core";
 import { LogOut as LogOutIcon } from 'react-feather';
 import ConfirmModal from "../../../components/ConfirmModal";
@@ -10,14 +9,13 @@ import ConfirmModal from "../../../components/ConfirmModal";
 const Logout: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const history = useHistory();
     const [isOpen, setOpen] = useState(false);
 
     const handleLogout = async () => {
         try {
             setOpen(false)
             await dispatch(logout())
-            history.push('/')
+            window.location.pathname = '/'
         } catch (error: any) {
             enqueueSnackbar('Unable to logout', {variant: 'error'})
         }

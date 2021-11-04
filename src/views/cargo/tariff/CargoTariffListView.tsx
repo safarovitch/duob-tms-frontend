@@ -15,24 +15,10 @@ import DeleteButton from "../../../components/DeleteButton";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        minHeight: '100%',
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3)
-    },
+const useStyles = makeStyles(() => ({
     queryField: {
         width: 400
     },
-    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
 }));
 
 const CargoTariffListView: React.FC = () => {
@@ -49,20 +35,27 @@ const CargoTariffListView: React.FC = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await cargoService.getFilteredCargoTariffs(page, size, debouncedSearchTerm);
-                setRows(data.content)
-                setTotal(data.totalElements)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, debouncedSearchTerm, size]);
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

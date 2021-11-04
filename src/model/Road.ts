@@ -177,6 +177,7 @@ export interface Truck {
     driver?: {id: number, name: string};
     driverId?: number;
     model: string;
+    weight: number;
     tankCapacity: number;
     liftingCapacity: number;
     totalBodyCapacity: number;

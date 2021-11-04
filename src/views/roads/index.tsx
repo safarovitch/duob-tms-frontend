@@ -43,20 +43,24 @@ const RoadsStuffView: React.FC = () => {
     const [road, setRoad] = useState<Road>()
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
 
                 const data: any = await roadService.getRoadById(roadId)
 
-                setRoad(data)
+                !cancel && setRoad(data)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRoad, enqueueSnackbar, roadId])
 
     if (!currentTab) {

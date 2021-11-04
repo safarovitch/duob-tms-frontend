@@ -54,7 +54,7 @@ const OutcomeListView: React.FC = () => {
 
                 const data: any = await articleService.getFilteredArticles(ARTICLES.OUTCOME, page, size)
 
-                if(!cancel) {
+                if (!cancel) {
                     setRows(data.content)
                     setTotal(data.totalElements)
                 }
@@ -64,6 +64,8 @@ const OutcomeListView: React.FC = () => {
                 !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

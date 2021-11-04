@@ -32,9 +32,12 @@ function RoadTruckView() {
     const truck = useSelector((state: { selectedRoadTruck: Truck }) => state.selectedRoadTruck)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
+
                 const dataTruckTypes: any = await roadService.getTruckTypes()
                 const dataTrailer: any = await roadService.getTrailers()
                 const dataDrivers: any = await roadService.getDrivers()
@@ -42,18 +45,20 @@ function RoadTruckView() {
                 if (dataTruckTypes.length === 0 || dataTrailer.length === 0 || dataDrivers.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала тип машины, прицеп и водитель ', {variant: 'info'})
-                } else {
+                } else if (!cancel) {
                     setTruckTypes(dataTruckTypes)
                     setTrailers(dataTrailer)
                     setDrivers(dataDrivers)
                 }
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     if (!truck && history.location.pathname.includes('edit')) {

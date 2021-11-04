@@ -185,7 +185,7 @@ const EmployeeEditForm: React.FC<{className?: string, employee: Employee, roles:
                                         name="password"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        value={values.password}
+                                        value={values.password || ''}
                                         variant="outlined"
                                         InputLabelProps={{
                                             shrink: true,

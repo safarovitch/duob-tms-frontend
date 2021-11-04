@@ -28,6 +28,7 @@ function WarehouseFormView() {
     const selectedWarehouse = useSelector((state: { selectedWarehouse: Warehouse }) => state.selectedWarehouse);
 
     if (id && !selectedWarehouse) {history.go(-1)}
+
     return (
         <Page
             className={classes.root}

@@ -35,23 +35,32 @@ const EmployeeEditView: React.FC = () => {
     const selectedEmployee = useSelector(({selectedEmployee}: {selectedEmployee: Employee}) => selectedEmployee)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
+
                 const dataRoles: any = await employeeService.getRoles()
                 const dataWarehouses: any = await warehouseService.getAllWarehouse()
 
-                setRoles(dataRoles)
-                setWarehouses(dataWarehouses)
+                if (dataWarehouses.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
+                } else if (!cancel) {
+                    setRoles(dataRoles)
+                    setWarehouses(dataWarehouses)
+                }
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
 
         return () => {
+            cancel = true
             dispatch(deleteSelectedEmployee())
         }
     }, [history, enqueueSnackbar, dispatch]);

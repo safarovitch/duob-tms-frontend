@@ -25,18 +25,6 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
     },
-    queryField: {
-        width: 500
-    },
-    tableProgressBoxStyle: {position: 'relative', pointerEvents: 'none', backgroundColor: '#00000005'},
-    tableProgress: {
-        color: "secondary",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
 }));
 
 const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
@@ -51,20 +39,27 @@ const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await roadService.getRoadCargos(roadId, page, size)
-                setRows(data.content)
-                setTotal(data.totalElements)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [roadId, enqueueSnackbar, page, size])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

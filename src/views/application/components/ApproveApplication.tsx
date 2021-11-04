@@ -76,7 +76,7 @@ const ApproveApplication: React.FC<ApproveApplicationInterface> = ({isPaid, canA
                                 >
                                     {!loading && <DoneIcon />}
                                 </SvgIcon>
-                                Потверждение
+                                Подтвердить
                             </Button>
                             {loading && <CircularProgress size={20} className={classes.loadingProgress} />}
                         </Box>

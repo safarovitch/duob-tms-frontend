@@ -54,7 +54,7 @@ const IncomeListView: React.FC = () => {
 
                 const data: any = await articleService.getFilteredArticles(ARTICLES.INCOME, page, size)
 
-                if(!cancel) {
+                if (!cancel) {
                     setRows(data.content)
                     setTotal(data.totalElements)
                 }
@@ -65,9 +65,7 @@ const IncomeListView: React.FC = () => {
             }
         })()
 
-        return () => {
-            cancel = true
-        }
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

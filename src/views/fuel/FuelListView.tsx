@@ -58,33 +58,43 @@ const FuelListView: React.FC = () => {
     const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 const data: any = await fuelService.getTotalBalance()
 
-                setTotalBalance(data)
+                !cancel && setTotalBalance(data)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             }
         })()
+
+        return () => {cancel = true}
     }, [enqueueSnackbar])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setFuels([])
 
-                const result: any = await fuelService.getFilteredFuels(page, size, debouncedSearchTerm, startDate, endDate)
+                const data: any = await fuelService.getFilteredFuels(page, size, debouncedSearchTerm, startDate, endDate)
 
-                setFuels(result.content)
-                setTotal(result.totalElements)
+                if (!cancel) {
+                    setFuels(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

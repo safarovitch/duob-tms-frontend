@@ -47,19 +47,23 @@ const FuelDetailList: React.FC<{updateRoad: Function, type: RoadFuelType}> = ({u
     const [rows, setRows] = useState<RoadFuelDetail[]>([]);
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
 
                 const data: any = await roadService.getRoadFuelDetails(Number(roadId), type)
 
-                setRows(data)
+                !cancel && setRows(data)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [roadId, type, enqueueSnackbar]);
 
     const handleDeleteRow = (index: number) => {

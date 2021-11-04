@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Index() {
+const Index: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
@@ -31,6 +31,8 @@ function Index() {
     const [exchanges, setExchanges] = useState<Exchange[]>([])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
@@ -40,17 +42,19 @@ function Index() {
                 if (data.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала склад и курс валюты', {variant: 'info'})
-                } else {
+                } else if (!cancel) {
                     setWarehouses(data)
                     setExchanges(dataExchanges)
                 }
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     return (

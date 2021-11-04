@@ -32,6 +32,8 @@ const RoadCreateView: React.FC = () => {
     const [trucks, setTrucks] = useState<RoadTruck[]>([])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
@@ -41,14 +43,16 @@ const RoadCreateView: React.FC = () => {
                 if (fetchTrucks.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Нет свободной машины', {variant: 'info'})
-                } else setTrucks(fetchTrucks)
+                } else if (!cancel) setTrucks(fetchTrucks)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     return (

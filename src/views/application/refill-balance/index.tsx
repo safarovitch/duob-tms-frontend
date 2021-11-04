@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function RoadTrailerView() {
+const Index: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
@@ -34,6 +34,8 @@ function RoadTrailerView() {
     const refillBalance = useSelector((state: { selectedRefillBalance: RefillBalanceApplication }) => state.selectedRefillBalance)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
@@ -43,17 +45,19 @@ function RoadTrailerView() {
                 if (dataCustomers.length === 0 || dataExchanges.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала клиента и курс валюты', {variant: 'info'})
-                } else {
+                } else if(!cancel) {
                     setCustomers(dataCustomers)
                     setExchanges(dataExchanges)
                 }
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     if ((!refillBalance && history.location.pathname.includes('edit')) || refillBalance?.status === 'PAID') {
@@ -78,4 +82,4 @@ function RoadTrailerView() {
     );
 }
 
-export default RoadTrailerView;
+export default Index;

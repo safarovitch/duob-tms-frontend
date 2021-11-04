@@ -28,6 +28,7 @@ function CustomerFormView() {
     const selectedCustomer = useSelector((state: { selectedCustomer: Customer }) => state.selectedCustomer) || undefined;
 
     if (id && !selectedCustomer) {history.go(-1)}
+
     return (
         <Page
             className={classes.root}

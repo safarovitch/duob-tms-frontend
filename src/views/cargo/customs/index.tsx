@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CargoProductView: React.FC = () => {
+const Index: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
@@ -30,6 +30,8 @@ const CargoProductView: React.FC = () => {
     const customCode = useSelector((state: { selectedCustomCode: CargoCustomCode }) => state.selectedCustomCode)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
@@ -39,16 +41,17 @@ const CargoProductView: React.FC = () => {
                 if (data.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала наименования', {variant: 'info'})
-                } else setProducts(data)
+                } else if (!cancel) setProducts(data)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
-    }, [history, enqueueSnackbar])
 
+        return () => {cancel = true}
+    }, [history, enqueueSnackbar])
 
     if (!customCode && history.location.pathname.includes('edit')) {
         history.go(-1);
@@ -71,4 +74,4 @@ const CargoProductView: React.FC = () => {
     );
 }
 
-export default CargoProductView;
+export default Index;

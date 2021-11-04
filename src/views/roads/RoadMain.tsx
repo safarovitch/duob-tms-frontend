@@ -13,20 +13,24 @@ const RoadMain: React.FC<{road: Road, updateRoad: Function}> = ({road, updateRoa
     const [trucks, setTrucks] = useState<RoadTruck[]>([])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
 
                 const fetchTrucks: any = await roadService.getTrucks()
 
-                setTrucks(fetchTrucks)
+                !cancel && setTrucks(fetchTrucks)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [enqueueSnackbar])
 
     return (
