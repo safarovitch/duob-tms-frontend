@@ -61,20 +61,27 @@ const CustomerListView: React.FC = () => {
     const canEdit = usePermission(PERMISSIONS.CUSTOMER.EDIT)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await customerService.getFilteredCustomers(page, size, debouncedSearchTerm);
-                setRows(data.content)
-                setTotal(data.totalElements)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [enqueueSnackbar, page, debouncedSearchTerm, size]);
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

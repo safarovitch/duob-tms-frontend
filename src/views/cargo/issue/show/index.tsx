@@ -65,20 +65,24 @@ const IssueShow: React.FC = () => {
     const canApprove = usePermission(PERMISSIONS.CARGO.ISSUES.APPROVE)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
 
                 const data: any = await cargoService.getCargoIssue(Number(cargoIssueId))
 
-                setCargoIssue(data)
+                if (!cancel) setCargoIssue(data)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [cargoIssueId, enqueueSnackbar])
 
     const handleAccept = async () => {

@@ -31,26 +31,31 @@ const EmployeeCreateView: React.FC = () => {
     const [hasError, setHasError] = useState(false)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
+
                 const dataRoles: any = await employeeService.getRoles()
                 const dataWarehouses: any = await warehouseService.getAllWarehouse()
 
                 if (dataWarehouses.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
-                } else {
+                } else if (!cancel) {
                     setRoles(dataRoles)
                     setWarehouses(dataWarehouses)
                 }
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     return (

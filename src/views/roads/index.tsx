@@ -1,14 +1,14 @@
-import {Box, Card, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
-import {useHistory} from "react-router-dom";
-import {useParams} from "react-router";
-import Page from "../../components/Page";
 import React, {useEffect, useReducer, useState} from "react";
+import {Link, useHistory} from "react-router-dom";
+import {useParams} from "react-router";
+import {useSnackbar} from "notistack";
+import {Box, Card, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
+import Page from "../../components/Page";
 import Header from "./Header";
 import {roadsStuffTabs as tabs} from '../../constants'
 import {Road, RoadsStuffTab} from "../../model/Road";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import roadService from "../../services/RoadService";
-import {useSnackbar} from "notistack";
 import LoadingLayout from "../../components/LoadingLayout";
 import RoadsTabPanel from "./RoadsTabPanel";
 import RoadMain from "./RoadMain";
@@ -17,15 +17,6 @@ import RoadMileage from "./RoadMileage";
 import RoadMoney from "./RoadMoney";
 import RoadCargos from "./RoadCargos";
 import FuelDetailList from "./fuel-detail/FuelDetailList";
-
-const getCurrentTab = (stuffId: string) => {
-    return tabs.filter(v => v.value === stuffId)[0];
-}
-
-const a11yProps = (tab: RoadsStuffTab) => ({
-    id: `roads-tab-${tab.value}`,
-    'aria-controls': `roads-tabpanel-${tab.value}`
-})
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,37 +27,45 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const a11yProps = (tab: RoadsStuffTab) => ({id: `article-tab-${tab.value}`, 'aria-controls': `article-tabpanel-${tab.value}`})
+
+const getCurrentTab = (pathTab: string) => tabs.find(item => item.value === pathTab)
+
 const RoadsStuffView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
     const [updateRoad, setUpdateRoad] = useReducer(x => x + 1, 0)
-    const {id: roadId, stuffId} = useParams<{ stuffId: string, id: string }>()
-    const [currentTab, setCurrentTab] = useState<RoadsStuffTab>(getCurrentTab(stuffId))
+    const {id: roadId, stuffId: pathTab} = useParams<{ stuffId: string, id: string }>()
+    const currentTab = getCurrentTab(pathTab)
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [road, setRoad] = useState<Road>()
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
 
                 const data: any = await roadService.getRoadById(roadId)
 
-                setRoad(data)
+                !cancel && setRoad(data)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRoad, enqueueSnackbar, roadId])
 
-    const handleTabsChange = (event: React.ChangeEvent<{}>, tab: RoadsStuffTab) => {
-        setCurrentTab(tab)
-        history.push(`/app/roads/${roadId}/${tab.value}`);
+    if (!currentTab) {
+        history.go(-1)
+        return null
     }
 
     return (
@@ -78,17 +77,18 @@ const RoadsStuffView: React.FC = () => {
                         <Box mt={3}>
                             <Card>
                                 <Tabs
-                                    onChange={handleTabsChange}
                                     scrollButtons="auto"
                                     textColor="secondary"
-                                    value={currentTab}
+                                    value={currentTab.value}
                                     variant="scrollable"
                                 >
                                     {tabs.map((tab) => (
                                         <Tab
                                             key={tab.value}
-                                            value={tab}
+                                            value={tab.value}
                                             label={tab.label}
+                                            to={tab.value}
+                                            component={Link}
                                             disabled={road.privateTruck ? !tab.privateTruck : false}
                                             {...a11yProps(tab)}
                                         />

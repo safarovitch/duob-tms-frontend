@@ -16,10 +16,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CargoTypeView() {
+const Index: React.FC = () => {
     const classes = useStyles();
     const cargoType = useSelector((state: { selectedCargoType: CargoType }) => state.selectedCargoType);
     const history = useHistory();
+
     if (!cargoType && history.location.pathname.includes('edit')) {
         history.go(-1);
         return null;
@@ -40,4 +41,4 @@ function CargoTypeView() {
     );
 }
 
-export default CargoTypeView;
+export default Index;

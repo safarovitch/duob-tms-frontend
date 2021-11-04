@@ -58,6 +58,8 @@ const OutcomeForm: React.FC = () => {
     })
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
@@ -66,13 +68,15 @@ const OutcomeForm: React.FC = () => {
                 if (data.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала машину', {variant: 'info'})
-                } else setTrucks(data)
+                } else if (!cancel) setTrucks(data)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     const handleOutcomeFuel = async (values: Fuel, formActions: { [key: string]: any }) => {

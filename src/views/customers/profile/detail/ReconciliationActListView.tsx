@@ -39,6 +39,8 @@ const ReconciliationActListView: React.FC = () => {
     const {id: customerId} = useParams<{id: string}>()
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
@@ -46,14 +48,18 @@ const ReconciliationActListView: React.FC = () => {
 
                 const data: any = await customerService.getReconciliationActs(customerId, page, size, startDate, endDate)
 
-                setRows(data.content)
-                setTotal(data.totalElements)
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [enqueueSnackbar, customerId, page, size, startDate, endDate])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

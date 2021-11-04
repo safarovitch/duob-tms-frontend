@@ -44,20 +44,27 @@ const TruckListView: React.FC = () => {
     const [rows, setRows] = useState<Truck[]>([]);
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
-                const result: any = await roadService.getFilteredTrucks(page, size)
-                setRows(result.content)
-                setTotal(result.totalElements)
+                const data: any = await roadService.getFilteredTrucks(page, size)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -95,6 +102,9 @@ const TruckListView: React.FC = () => {
                                     Водитель
                                 </TableCell>
                                 <TableCell>
+                                    Масса
+                                </TableCell>
+                                <TableCell>
                                     Грузо подъёмность (кг)
                                 </TableCell>
                                 <TableCell>
@@ -130,6 +140,9 @@ const TruckListView: React.FC = () => {
                                             </TableCell>
                                             <TableCell>
                                                 {row.driver?.name || '-'}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.weight}
                                             </TableCell>
                                             <TableCell>
                                                 {row.liftingCapacity}

@@ -1,8 +1,8 @@
-import {Box, Card, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
-import {useHistory} from "react-router-dom";
+import React from "react";
+import {Link, useHistory} from "react-router-dom";
 import {useParams} from "react-router";
+import {Box, Card, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
 import Page from "../../components/Page";
-import React, {useState} from "react";
 import Header from "./Header";
 import {applicationStuffTabs as tabs} from '../../constants'
 import {ApplicationStuffTab} from "../../model/Application";
@@ -11,12 +11,6 @@ import RefillBalanceListView from "./refill-balance/RefillBalanceListView";
 import IncomeArticleListView from "./income-article/IncomeArticleListView";
 import OutcomeArticleListView from "./outcome-article/OutcomeArticleListView";
 import OutcomeTransferWarehouseListView from "./outcome-transfer-warehouse/OutcomeTransferWarehouseListView";
-
-const getCurrentTab = (stuffId: string) => {
-    return tabs.filter(v => v.value === stuffId)[0];
-}
-
-const a11yProps = (tab: ApplicationStuffTab) => ({id: `application-tab-${tab.value}`, 'aria-controls': `application-tabpanel-${tab.value}`})
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,15 +21,19 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const a11yProps = (tab: ApplicationStuffTab) => ({id: `application-tab-${tab.value}`, 'aria-controls': `application-tabpanel-${tab.value}`})
+
+const getCurrentTab = (pathTab: string) => tabs.find(item => item.value === pathTab)
+
 const RoadStuffView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
-    const {stuffId} = useParams<{ stuffId: string }>()
-    const [currentTab, setCurrentTab] = useState<ApplicationStuffTab>(getCurrentTab(stuffId))
+    const {stuffId: pathTab} = useParams<{ stuffId: string }>()
+    const currentTab = getCurrentTab(pathTab)
 
-    const handleTabsChange = (event: React.ChangeEvent<{}>, tab: ApplicationStuffTab) => {
-        setCurrentTab(tab)
-        history.push('/app/application/' + tab.value);
+    if (!currentTab) {
+        history.go(-1)
+        return null
     }
 
     return (
@@ -48,17 +46,18 @@ const RoadStuffView: React.FC = () => {
                 <Box mt={3}>
                     <Card>
                         <Tabs
-                            onChange={handleTabsChange}
                             scrollButtons="auto"
                             textColor="secondary"
-                            value={currentTab}
+                            value={currentTab.value}
                             centered
                         >
                             {tabs.map((tab) => (
                                 <Tab
                                     key={tab.value}
-                                    value={tab}
+                                    value={tab.value}
                                     label={tab.label}
+                                    to={tab.value}
+                                    component={Link}
                                     {...a11yProps(tab)}
                                 />
                             ))}
@@ -77,7 +76,6 @@ const RoadStuffView: React.FC = () => {
                             <OutcomeTransferWarehouseListView />
                         </ApplicationTabPanel>
                     </Card>
-
                 </Box>
             </Container>
         </Page>

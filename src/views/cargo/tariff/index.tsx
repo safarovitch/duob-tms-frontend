@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CargoTariffView() {
+const Index: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
@@ -33,6 +33,8 @@ function CargoTariffView() {
     const cargoTariff = useSelector((state: { selectedCargoTariff: CargoTariff }) => state.selectedCargoTariff)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
@@ -43,17 +45,19 @@ function CargoTariffView() {
                 if (dataCargoTypes.length === 0 || dataWarehouses.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала склад и виды груза', {variant: 'info'})
-                } else {
+                } else if (!cancel) {
                     setCargoTypes(dataCargoTypes)
                     setWarehouses(dataWarehouses)
                 }
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     if (!cargoTariff && history.location.pathname.includes('edit')) {
@@ -77,4 +81,4 @@ function CargoTariffView() {
     );
 }
 
-export default CargoTariffView;
+export default Index;

@@ -81,37 +81,48 @@ const AccountabilityListView: React.FC = () => {
     const canApprove = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.APPROVE)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setEmployeeLoading(true)
 
                 const data: any = await employeeService.getEmployeeById(Number(employeeId))
 
-                setEmployee(data)
+                cancel && setEmployee(data)
             } catch (error: any) {
-                setHasError(true)
+                cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setEmployeeLoading(false)
+                cancel && setEmployeeLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [employeeId, enqueueSnackbar])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await employeeService.getFilteredEmployeeAccount(Number(employeeId), page, size, startDate, endDate, selectedType)
-                setRows(data.content)
-                setTotal(data.totalElements)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, employeeId, page, size, startDate, endDate, selectedType])
 
     const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

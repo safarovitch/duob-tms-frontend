@@ -41,19 +41,24 @@ const ExchangeListView: React.FC = () => {
     const [rows, setRows] = useState<Exchange[]>([])
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await exchangeService.getAllExchanges()
-                setRows(data)
+
+                !cancel && setRows(data)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar]);
 
     const handleDeleteRow = () => {

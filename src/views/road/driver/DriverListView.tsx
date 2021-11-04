@@ -44,20 +44,27 @@ const DriverListView: React.FC = () => {
     const [rows, setRows] = useState<Driver[]>([]);
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
-                const result: any = await roadService.getFilteredDrivers(page, size)
-                setRows(result.content)
-                setTotal(result.totalElements)
+                const data: any = await roadService.getFilteredDrivers(page, size)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, size]);
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

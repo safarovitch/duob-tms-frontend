@@ -36,20 +36,26 @@ const ProductListView: React.FC = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
                 setRows([])
 
                 const data: any = await cargoService.getFilteredProducts(page, size, debouncedSearchTerm);
-                setRows(data.content)
-                setTotal(data.totalElements)
+                if (!cancel) {
+                    setRows(data.content)
+                    setTotal(data.totalElements)
+                }
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [updateRows, enqueueSnackbar, page, debouncedSearchTerm, size]);
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {

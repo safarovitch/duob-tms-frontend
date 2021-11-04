@@ -16,10 +16,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CargoProductView() {
+const Index: React.FC = () => {
     const classes = useStyles();
     const product = useSelector((state: { selectedProduct: CargoProduct }) => state.selectedProduct);
     const history = useHistory();
+
     if (!product && history.location.pathname.includes('edit')) {
         history.go(-1);
         return null;
@@ -42,4 +43,4 @@ function CargoProductView() {
     );
 }
 
-export default CargoProductView;
+export default Index;

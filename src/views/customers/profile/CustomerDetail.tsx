@@ -8,10 +8,11 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Customer} from "../../../model/Customer";
 import {useSnackbar} from "notistack";
 import {Container, makeStyles} from "@material-ui/core";
-import LoadingScreen from "../../../components/LoadingScreen";
 import Page from "../../../components/Page";
 import {customerStuffTabs} from "../../../constants";
 import {Redirect} from "react-router-dom";
+import Header from "./detail/Header";
+import LoadingLayout from "../../../components/LoadingLayout";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +34,7 @@ const CustomerDetail: React.FC = () => {
     const {userId} = useSelector((state: {user: User}) => state.user)
     const [customer, setCustomer] = useState<Customer | null>(null)
     const [loading, setLoading] = useState(false)
+    const [hasError, setHasError] = useState(false)
 
     useEffect(() => {
         if (customer === null) {
@@ -43,10 +45,11 @@ const CustomerDetail: React.FC = () => {
                     const data: any = await customerService.getCustomer(userId.toString())
 
                     setCustomer(data)
-                    setLoading(false)
                 } catch (error: any) {
-                    setLoading(false)
+                    setHasError(true)
                     enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+                } finally {
+                    setLoading(false)
                 }
             })()
         }
@@ -55,16 +58,16 @@ const CustomerDetail: React.FC = () => {
     if (!existStuffId(stuffId)) return <Redirect to="/404"/>
 
     return (
-        <>
-            {loading && <LoadingScreen />}
-            {customer && (
-                <Page className={classes.root}>
-                    <Container maxWidth="lg">
+        <Page title={customer?.name || ''}>
+            {
+                customer ? (
+                    <Container className={classes.root} maxWidth="lg">
+                        <Header customerName={customer.name}/>
                         <Detail stuffId={stuffId} tabPath={'/customer'} />
                     </Container>
-                </Page>
-            )}
-        </>
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
+            }
+        </Page>
     )
 }
 

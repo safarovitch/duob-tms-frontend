@@ -56,6 +56,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
         trailerId: truck?.trailer?.id,
         driver: truck?.driver,
         driverId: truck?.driver?.id,
+        weight: truck?.weight,
         tankCapacity: truck?.tankCapacity,
         liftingCapacity: truck?.liftingCapacity,
         totalBodyCapacity: truck?.totalBodyCapacity,
@@ -64,6 +65,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
     const validationSchema = Yup.object().shape({
         model: Yup.string().max(255),
         number: Yup.string().max(255),
+        weight: Yup.number().typeError('Значение должно быть числом'),
         tankCapacity: Yup.number().typeError('Значение должно быть числом'),
         liftingCapacity: Yup.number().typeError('Значение должно быть числом'),
         totalBodyCapacity: Yup.number().typeError('Значение должно быть числом'),
@@ -138,6 +140,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
                             >
                                 <Grid
                                     item
+                                    md={4}
                                     xs={12}
                                 >
                                     <TextField
@@ -155,6 +158,44 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
                                 </Grid>
                                 <Grid
                                     item
+                                    md={4}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(props.touched.number && props.errors.number)}
+                                        fullWidth
+                                        helperText={props.touched.number && props.errors.number}
+                                        label="Введите номер машины"
+                                        name="number"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.number}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={4}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(props.touched.weight && props.errors.weight)}
+                                        fullWidth
+                                        helperText={props.touched.weight && props.errors.weight}
+                                        label="Введите массу машины (кг)"
+                                        placeholder="0"
+                                        name="weight"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.weight}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={4}
                                     xs={12}
                                 >
                                     <Autocomplete
@@ -182,23 +223,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={12}
-                                >
-                                    <TextField
-                                        error={Boolean(props.touched.number && props.errors.number)}
-                                        fullWidth
-                                        helperText={props.touched.number && props.errors.number}
-                                        label="Введите номер машины"
-                                        name="number"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.number}
-                                        variant="outlined"
-                                        required
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
+                                    md={4}
                                     xs={12}
                                 >
                                     <Autocomplete
@@ -225,6 +250,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
                                 </Grid>
                                 <Grid
                                     item
+                                    md={4}
                                     xs={12}
                                 >
                                     <Autocomplete
@@ -258,6 +284,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
                                         fullWidth
                                         helperText={props.touched.tankCapacity && props.errors.tankCapacity}
                                         label="Введите объём бака (л)"
+                                        placeholder="0"
                                         name="tankCapacity"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
@@ -275,6 +302,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
                                         fullWidth
                                         helperText={props.touched.liftingCapacity && props.errors.liftingCapacity}
                                         label="Введите грузоподъёмность (кг)"
+                                        placeholder="0"
                                         name="liftingCapacity"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
@@ -292,6 +320,7 @@ const TruckForm: React.FC<TruckFormProps> = ({truck, truckTypes, trailers, drive
                                         fullWidth
                                         helperText={props.touched.totalBodyCapacity && props.errors.totalBodyCapacity}
                                         label="Введите общий объём кузова (м3)"
+                                        placeholder="0"
                                         name="totalBodyCapacity"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}

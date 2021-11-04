@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function RoadTrailerView() {
+const Index: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
@@ -32,22 +32,27 @@ function RoadTrailerView() {
     const incomeArticle = useSelector((state: { selectedApplicationIncomeArticle: IncomeByArticleApplication }) => state.selectedApplicationIncomeArticle)
 
     useEffect(() => {
+        let cancel = false;
+
         (async () => {
             try {
                 setLoading(true)
+
                 const data: any = await articleService.getArticles(ARTICLES.INCOME)
 
                 if (data.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала статью', {variant: 'info'})
-                } else setArticles(data)
+                } else if (!cancel) setArticles(data)
             } catch (error: any) {
-                setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
+
+        return () => {cancel = true}
     }, [history, enqueueSnackbar])
 
     if ((!incomeArticle && history.location.pathname.includes('edit')) || incomeArticle?.status === 'PAID') {
@@ -72,4 +77,4 @@ function RoadTrailerView() {
     );
 }
 
-export default RoadTrailerView;
+export default Index;
