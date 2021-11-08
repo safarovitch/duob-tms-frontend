@@ -11,6 +11,7 @@ import RefillBalanceListView from "./refill-balance/RefillBalanceListView";
 import IncomeArticleListView from "./income-article/IncomeArticleListView";
 import OutcomeArticleListView from "./outcome-article/OutcomeArticleListView";
 import OutcomeTransferWarehouseListView from "./outcome-transfer-warehouse/OutcomeTransferWarehouseListView";
+import RoadDriverListView from "./road-driver/RoadDriverListView";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -74,6 +75,9 @@ const RoadStuffView: React.FC = () => {
                         </ApplicationTabPanel>
                         <ApplicationTabPanel index={'outcome-transfer-warehouse'} value={currentTab.value}>
                             <OutcomeTransferWarehouseListView />
+                        </ApplicationTabPanel>
+                        <ApplicationTabPanel index={'road-driver'} value={currentTab.value}>
+                            <RoadDriverListView />
                         </ApplicationTabPanel>
                     </Card>
                 </Box>

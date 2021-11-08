@@ -138,7 +138,7 @@ const RoadListView: React.FC = () => {
                                                             {row.truck?.number || '-'}
                                                         </TableCell>
                                                         <TableCell>
-                                                            0
+                                                            {row.cargoCount}
                                                         </TableCell>
                                                         <TableCell>
                                                             0

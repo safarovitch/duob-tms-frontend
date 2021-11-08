@@ -25,6 +25,7 @@ const Header: React.FC<{ title: string, linkName: string }> = ({title, linkName}
     const canCreateIncomeArticle = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.CREATE)
     const canCreateOutcomeArticle = usePermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.CREATE)
     const canCreateOutcomeTransferWarehouse = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.CREATE)
+    const canCreateRoadDriver = usePermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.CREATE)
 
     const canCreate = (): boolean => {
         switch (linkName) {
@@ -39,6 +40,9 @@ const Header: React.FC<{ title: string, linkName: string }> = ({title, linkName}
             }
             case "outcome-transfer-warehouse": {
                 return canCreateOutcomeTransferWarehouse
+            }
+            case "road-driver": {
+                return canCreateRoadDriver
             }
             default: return false
         }

@@ -1,7 +1,7 @@
 import {
     IncomeByArticleApplication,
     OutcomeByArticleApplication, OutcomeTransferWarehouseApplication,
-    RefillBalanceApplication
+    RefillBalanceApplication, RoadDriverApplicationResponse
 } from "../../model/Application";
 
 export const SET_REFILL_BALANCE = '@application/set-selected-refill-balance';
@@ -12,8 +12,8 @@ export const SET_OUTCOME_ARTICLE = '@application/set-selected-outcome-article';
 export const DELETE_OUTCOME_ARTICLE = '@application/delete-selected-outcome-article';
 export const SET_OUTCOME_TRANSFER_WAREHOUSE = '@application/set-selected-outcome-transfer-warehouse';
 export const DELETE_OUTCOME_TRANSFER_WAREHOUSE = '@application/delete-selected-outcome-transfer-warehouse';
-
-
+export const SET_ROAD_DRIVER = '@application/set-selected-road-driver';
+export const DELETE_ROAD_DRIVER = '@application/delete-selected-road-driver';
 
 export const setSelectedRefillBalance = (refillBalance: RefillBalanceApplication) => {
     return {
@@ -67,6 +67,20 @@ export const setSelectedOutcomeTransferWarehouse = (outcomeTransferWarehouse: Ou
 export const deleteSelectedOutcomeTransferWarehouse = () => {
     return {
         type: DELETE_OUTCOME_TRANSFER_WAREHOUSE,
+        payload: null
+    }
+}
+
+export const setSelectedRoadDriver = (roadDriver: RoadDriverApplicationResponse) => {
+    return {
+        type: SET_ROAD_DRIVER,
+        payload: roadDriver
+    }
+}
+
+export const deleteSelectedRoadDriver = () => {
+    return {
+        type: DELETE_ROAD_DRIVER,
         payload: null
     }
 }

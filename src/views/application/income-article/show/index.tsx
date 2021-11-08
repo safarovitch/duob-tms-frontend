@@ -90,7 +90,6 @@ const ShowView: React.FC = () => {
                         <ApproveApplication isPaid={isPaidApplication(incomeArticle)} canApprove={canApprove} loading={loading} onApproveApplication={handleApproveApplication} />
                     </Box>
                     <Divider />
-
                     <Box mt={3}>
                         <Grid container alignItems="center">
                             <Grid item xs={12} sm={6}>

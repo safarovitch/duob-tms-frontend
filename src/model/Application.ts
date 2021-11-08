@@ -4,6 +4,7 @@ import {Article} from "./Article";
 import {Employee} from "./Employee";
 import {Warehouse} from "./Warehouse";
 import {CurrencyExchangeRequest, Exchange} from "./Exchange";
+import {RoadDriverApplicationMoneyUnit, RoadDriverApplicationType} from "../constants";
 
 type StatusApplication = 'WAITING' | 'PAID' | 'ON_ROAD';
 
@@ -106,4 +107,42 @@ export interface OutcomeTransferWarehouseApplication extends CurrencyExchangeReq
 export interface OutcomeTransferWarehouseFormProps {
     warehouses: Warehouse[];
     exchanges: Exchange[];
+}
+
+export interface RoadBalanceApplicationResponse {
+    id: number;
+    roadWithId: string;
+    incomeBalanceTjs: number;
+    incomeBalanceUsd: number;
+    outcomeBalanceTjs: number;
+    outcomeBalanceUsd: number;
+    driverName: string;
+}
+
+export interface RoadDriverApplicationRequest {
+    roadId: number;
+    type: RoadDriverApplicationType;
+    actualAmount: number;
+    actualMoneyUnit: RoadDriverApplicationMoneyUnit;
+    balanceTjs: number;
+    balanceUsd: number;
+    description: string;
+}
+
+export interface RoadDriverApplicationResponse {
+    id: number;
+    createdByName: string;
+    createdById: string;
+    roadId: number;
+    type: RoadDriverApplicationType;
+    status?: StatusApplication;
+    balanceTjs: number;
+    balanceUsd: number;
+    driverName: string;
+    driverId: number | null;
+    actualAmount: number;
+    actualMoneyUnit: RoadDriverApplicationMoneyUnit;
+    createdDate: string;
+    updatedDate: string;
+    description: string;
 }

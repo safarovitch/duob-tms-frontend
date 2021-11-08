@@ -10,7 +10,6 @@ import {
     FormControlLabel,
     Grid,
     makeStyles,
-    MenuItem,
     TextField
 } from "@material-ui/core";
 import {Autocomplete} from "@material-ui/lab";
@@ -51,7 +50,6 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
         description: road?.description || '',
         privateTruck: road?.privateTruck || false,
         withTrailer: road?.withTrailer || false,
-        status: road?.status === undefined ? 0 : +road.status,
     }
 
     const validationSchema = Yup.object().shape({
@@ -308,43 +306,6 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                         }
                                         label="C прицепом"
                                     />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
-                                    <TextField
-                                        select
-                                        error={Boolean(props.touched.status && props.errors.status)}
-                                        fullWidth
-                                        helperText={props.touched.status && props.errors.status}
-                                        label="Статус"
-                                        name="status"
-                                        value={props.values.status}
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        variant="outlined"
-                                        required
-                                        disabled={!road}
-                                        SelectProps={{
-                                            MenuProps: {
-                                                variant: "selectedMenu",
-                                                anchorOrigin: {
-                                                    vertical: "bottom",
-                                                    horizontal: "left"
-                                                },
-                                                transformOrigin: {
-                                                    vertical: "top",
-                                                    horizontal: "left"
-                                                },
-                                                getContentAnchorEl: null
-                                            }
-                                        }}
-                                    >
-                                        <MenuItem key={0} value={0}>Активный</MenuItem>
-                                        <MenuItem key={1} value={1}>Завершенный</MenuItem>
-                                    </TextField>
                                 </Grid>
                             </Grid>
                             <Box mt={2} pb={1} className={classes.buttons}>

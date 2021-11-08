@@ -7,8 +7,9 @@ import roadService from "../../services/RoadService";
 import {useSnackbar} from "notistack";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import * as fileSaver from "file-saver"
+import CompleteRoadButton from "./CompleteRoadButton";
 
-const Header: React.FC<{id: string, title: string}> = ({id, title}) => {
+const Header: React.FC<{id: string, title: string, roadStatus: boolean, updateRoad: Function}> = ({id, title, roadStatus, updateRoad}) => {
     const {enqueueSnackbar} = useSnackbar()
 
     const handleInvoice = async () => {
@@ -26,6 +27,7 @@ const Header: React.FC<{id: string, title: string}> = ({id, title}) => {
         <Grid
             container
             justifyContent="space-between"
+            alignItems="center"
             spacing={3}
         >
             <Grid item>
@@ -64,25 +66,32 @@ const Header: React.FC<{id: string, title: string}> = ({id, title}) => {
                 </Typography>
             </Grid>
             <Grid item>
-                <Tooltip title="Таможенная декларация">
-                    <IconButton
-                        color="secondary"
-                        onClick={handleInvoice}
-                    >
-                        <SvgIcon fontSize="small">
-                            <DownloadIcon />
-                        </SvgIcon>
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Отчет по рейсу">
-                    <IconButton
-                        color="secondary"
-                    >
-                        <SvgIcon fontSize="small">
-                            <PrinterIcon />
-                        </SvgIcon>
-                    </IconButton>
-                </Tooltip>
+                <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                        <CompleteRoadButton status={roadStatus} roadId={Number(id)} updateRoad={updateRoad} />
+                    </Grid>
+                    <Grid item>
+                        <Tooltip title="Таможенная декларация">
+                            <IconButton
+                                color="secondary"
+                                onClick={handleInvoice}
+                            >
+                                <SvgIcon fontSize="small">
+                                    <DownloadIcon />
+                                </SvgIcon>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Отчет по рейсу">
+                            <IconButton
+                                color="secondary"
+                            >
+                                <SvgIcon fontSize="small">
+                                    <PrinterIcon />
+                                </SvgIcon>
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     );
