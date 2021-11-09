@@ -18,6 +18,12 @@ class RoadService {
             .catch((error) => {reject(error)})
     })
 
+    getRoadsBalance = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/roads/balance`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getRoadById = (id: string) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/roads/${id}`)
             .then((response) => {resolve(response.data)})
@@ -98,6 +104,12 @@ class RoadService {
 
     getInvoice = (fileName: string) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/customs-invoice/excel/download/${fileName}`, {responseType: "arraybuffer"})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    completeRoad = (roadId: number) => new Promise((resolve, reject) => {
+        api.put(`${API_BASE_URL}/roads/${roadId}/complete`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

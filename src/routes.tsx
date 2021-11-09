@@ -460,6 +460,18 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/application/road-driver/create',
+                        perm: PERMISSIONS.APPLICATION.ROAD_DRIVER.CREATE,
+                        component: lazy(() => import('./views/application/road-driver'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/application/road-driver/show',
+                        perm: PERMISSIONS.APPLICATION.LIST,
+                        component: lazy(() => import('./views/application/road-driver/show'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/exchange',
                         perm: PERMISSIONS.EXCHANGE.LIST,
                         component: lazy(() => import('./views/exchange/index'))

@@ -1,7 +1,7 @@
 import {
     IncomeByArticleApplication,
     OutcomeByArticleApplication, OutcomeTransferWarehouseApplication,
-    RefillBalanceApplication
+    RefillBalanceApplication, RoadDriverApplicationResponse
 } from "../../model/Application";
 import {
     SET_REFILL_BALANCE,
@@ -11,7 +11,7 @@ import {
     SET_OUTCOME_ARTICLE,
     DELETE_OUTCOME_ARTICLE,
     SET_OUTCOME_TRANSFER_WAREHOUSE,
-    DELETE_OUTCOME_TRANSFER_WAREHOUSE
+    DELETE_OUTCOME_TRANSFER_WAREHOUSE, SET_ROAD_DRIVER, DELETE_ROAD_DRIVER
 } from "../actions/applicationAction";
 
 export const refillBalanceReducer = (state = null, action: {type: any, payload: RefillBalanceApplication | any}) => {
@@ -56,6 +56,18 @@ export const applicationOutcomeTransferWarehouseReducer = (state = null, action:
             return action.payload
         }
         case DELETE_OUTCOME_TRANSFER_WAREHOUSE: {
+            return action.payload
+        }
+        default: return state
+    }
+}
+
+export const applicationRoadDriverReducer = (state = null, action: {type: any, payload: RoadDriverApplicationResponse | any}) => {
+    switch (action.type) {
+        case SET_ROAD_DRIVER: {
+            return action.payload
+        }
+        case DELETE_ROAD_DRIVER: {
             return action.payload
         }
         default: return state

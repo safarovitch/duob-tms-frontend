@@ -219,7 +219,6 @@ const IncomeArticleListView: React.FC = () => {
                                 <TableCell>Кассир</TableCell>
                                 <TableCell>Статья</TableCell>
                                 <TableCell>Сумма</TableCell>
-                                <TableCell>Валюта</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Дата оплаты</TableCell>
                                 <TableCell align="center" width="17%">
@@ -236,8 +235,7 @@ const IncomeArticleListView: React.FC = () => {
                                             <TableCell>{row.createdBy?.name}</TableCell>
                                             <TableCell>{row.cashierName}</TableCell>
                                             <TableCell>{row.article?.name}</TableCell>
-                                            <TableCell>{row.actualAmount}</TableCell>
-                                            <TableCell>{row.actualMoneyUnit}</TableCell>
+                                            <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
                                             <TableCell className={isPaidApplication(row) ? classes.statusPaid : classes.statusWaiting}>
                                                 {mapOfStatusApplication.get(row.status!)}
                                             </TableCell>

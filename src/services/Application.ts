@@ -4,7 +4,7 @@ import {
     IncomeByArticleApplication,
     OutcomeByArticleApplication,
     OutcomeTransferWarehouseApplication,
-    RefillBalanceApplication
+    RefillBalanceApplication, RoadDriverApplicationRequest
 } from "../model/Application";
 
 class Application {
@@ -162,6 +162,32 @@ class Application {
             .catch(error => {
                 reject(error)
             })
+    })
+
+    approveRoadDriver = (id: number) => new Promise((resolve, reject) => {
+        api.put(`${API_BASE_URL}/applications/road-and-driver/${id}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getFilteredRoadDriver = (page: number, size: number, search: string, startDate: string, endDate: string) =>
+        new Promise((resolve, reject) => {
+            api.get(`${API_BASE_URL}/applications/road-and-driver`,
+                {params: {page, size, search, startDate, endDate}})
+                .then(response => resolve(response.data))
+                .catch(error => reject(error))
+        })
+
+    postRoadDriver = (roadDriver: RoadDriverApplicationRequest) => new Promise((resolve, reject) => {
+        api.post(`${API_BASE_URL}/applications/road-and-driver`, roadDriver)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    deleteRoadDriver = (id: number) => new Promise((resolve, reject) => {
+        api.delete(`${API_BASE_URL}/applications/road-and-driver/${id}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 
     uploadPhoto = (id: number, file: File) => new Promise((resolve, reject) => {

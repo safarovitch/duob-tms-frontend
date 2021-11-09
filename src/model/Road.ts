@@ -5,7 +5,8 @@ export interface RoadList {
     id: number;
     road: string;
     truck: {id: number, number: string};
-    status: number | boolean;
+    cargoCount: number;
+    status: boolean;
 }
 
 export interface RoadsStuffTab {
@@ -31,7 +32,7 @@ export interface RoadRequest {
     description: string;
     privateTruck?: boolean;
     withTrailer?: boolean;
-    status: number | boolean;
+    status?: boolean;
 }
 
 export interface RoadMileageRequest {
@@ -111,7 +112,7 @@ export interface Road {
     description: string;
     privateTruck: boolean;
     withTrailer: boolean;
-    status: number | boolean;
+    status: boolean;
     speedometerBefore: number;
     speedometerAfter: number;
     totalKmDeparture: number;

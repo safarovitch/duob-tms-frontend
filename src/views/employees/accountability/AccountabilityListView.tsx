@@ -89,12 +89,12 @@ const AccountabilityListView: React.FC = () => {
 
                 const data: any = await employeeService.getEmployeeById(Number(employeeId))
 
-                cancel && setEmployee(data)
+                !cancel && setEmployee(data)
             } catch (error: any) {
-                cancel && setHasError(true)
+                !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                cancel && setEmployeeLoading(false)
+                !cancel && setEmployeeLoading(false)
             }
         })()
 
@@ -118,7 +118,7 @@ const AccountabilityListView: React.FC = () => {
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                cancel && setLoading(false)
+                !cancel && setLoading(false)
             }
         })()
 

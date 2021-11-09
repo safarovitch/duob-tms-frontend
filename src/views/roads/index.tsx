@@ -73,7 +73,7 @@ const RoadsStuffView: React.FC = () => {
             {
                 road ? (
                     <Container className={classes.root} maxWidth="lg">
-                        <Header id={roadId} title={currentTab.label}/>
+                        <Header id={roadId} title={currentTab.label} roadStatus={road.status} updateRoad={setUpdateRoad} />
                         <Box mt={3}>
                             <Card>
                                 <Tabs

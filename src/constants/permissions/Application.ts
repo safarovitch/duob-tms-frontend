@@ -77,6 +77,17 @@ const APPLICATION = {
             ADMIN,
             CASHIER,
         ]
+    },
+    ROAD_DRIVER: {
+        CREATE: [
+            MANAGER,
+        ],
+        DELETE: [
+            MANAGER,
+        ],
+        APPROVE: [
+            CASHIER,
+        ],
     }
 }
 

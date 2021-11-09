@@ -5,20 +5,11 @@ import {employeeReducer, employeeAccountabilityReducer} from './employeeReducer'
 import providerReducer from "./providerReducer";
 import {warehouseReducer, warehouseBalanceReducer, warehouseNeedUpdateBalanceReducer} from "./warehouseReducer";
 import {cargoTariffReducer, cargoTypeReducer, customCodeReducer, productReducer} from "./cargoReducer";
-import {
-    roadDriverReducer,
-    roadFuelDetailReducer,
-    roadTrailerReducer,
-    roadTruckReducer,
-    roadTruckTypeReducer
-} from "./roadReducer";
+import {roadDriverReducer, roadFuelDetailReducer, roadTrailerReducer, roadTruckReducer,
+    roadTruckTypeReducer} from "./roadReducer";
 import {articleIncomeReducer, articleOutcomeReducer} from "./articleReducer";
-import {
-    applicationIncomeArticleReducer,
-    applicationOutcomeArticleReducer,
-    applicationOutcomeTransferWarehouseReducer,
-    refillBalanceReducer
-} from "./applicationReducer";
+import {applicationIncomeArticleReducer, applicationOutcomeArticleReducer, applicationOutcomeTransferWarehouseReducer,
+    applicationRoadDriverReducer, refillBalanceReducer} from "./applicationReducer";
 import exchangeReducer from "./exchangeReducer";
 
 const rootReducer = combineReducers({
@@ -45,6 +36,7 @@ const rootReducer = combineReducers({
     selectedApplicationIncomeArticle: applicationIncomeArticleReducer,
     selectedApplicationOutcomeArticle: applicationOutcomeArticleReducer,
     selectedApplicationOutcomeTransferWarehouse: applicationOutcomeTransferWarehouseReducer,
+    selectedApplicationRoadDriver: applicationRoadDriverReducer,
     selectedCustomerCargo: customerCargoReducer,
     selectedExchange: exchangeReducer
 });

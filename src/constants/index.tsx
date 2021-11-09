@@ -192,8 +192,29 @@ export const applicationStuffTabs = [
     {
         value: 'outcome-transfer-warehouse',
         label: 'Перевод денег'
+    },
+    {
+        value: 'road-driver',
+        label: 'Рейсы и водители'
     }
 ]
+
+export enum RoadDriverApplicationType {
+    INCOME = "INCOME",
+    OUTCOME = "OUTCOME",
+}
+
+export const mapOfRoadDriverApplicationType = new Map(
+    [
+        [INCOME, 'Приход'],
+        [OUTCOME, 'Расход'],
+    ]
+)
+
+export enum RoadDriverApplicationMoneyUnit {
+    TJS = "TJS",
+    USD = "USD"
+}
 
 export const mapOfRoles = new Map(
     [

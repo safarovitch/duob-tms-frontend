@@ -6,4 +6,5 @@ const ARTICLE = {
         CASHIER
     ]
 }
+
 export default ARTICLE
