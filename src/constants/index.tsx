@@ -32,8 +32,6 @@ export const THEMES = {LIGHT, ONE_DARK, UNICORN}
 
 export const ARTICLES = {INCOME, INCOME_POSTFIX, OUTCOME, OUTCOME_POSTFIX}
 
-export const moneyUnitApplication = [TJS, RUB, USD, CNY]
-
 export enum Currency {
     TJS = "TJS",
     USD = "USD",
@@ -257,6 +255,7 @@ export const mapOfStatusCargo = new Map<string, string>(
         ['ONROAD', 'В пути'],
         [ARRIVED, 'Прибыл'],
         [ISSUED, 'Выдано'],
+        [RETURN, 'Возврат'],
     ]
 )
 
@@ -266,6 +265,7 @@ export const mapOfColorStatusCargo = new Map<string, string>(
         ['ONROAD', '#FDD231'],
         [ARRIVED, '#2196F3'],
         [ISSUED, '#03A075'],
+        [RETURN, '#384C38'],
     ]
 )
 
