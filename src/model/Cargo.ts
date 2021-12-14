@@ -56,6 +56,7 @@ export interface CargoType {
     calculationRateWeight: boolean;
     discount: boolean;
 }
+
 export interface CargoTypeFormProps {
     className?: string;
     cargoType: CargoType;
@@ -83,14 +84,12 @@ export interface CargoTariff {
     warehouseId?: number;
     cargoTypeId?: number;
     warehouseDto?: Warehouse;
-    cargoTypeDto?: CargoType;
-}
-export interface CargoTariffFormProps {
-    cargoTariff: CargoTariff;
-    cargoTypes: CargoType[];
-    warehouses: Warehouse[];
 }
 
+export interface CargoTariffFormProps {
+    cargoTariff: CargoTariff;
+    warehouses: Warehouse[];
+}
 
 export interface CargoIssueResponse {
     id: number;
