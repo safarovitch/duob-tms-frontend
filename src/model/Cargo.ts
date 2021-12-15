@@ -15,6 +15,7 @@ export interface CargoTabPanelProps {
 export interface CargoProduct {
     id?: number;
     name: string;
+    defaultValue: boolean;
 }
 
 export interface ProductFormProps {

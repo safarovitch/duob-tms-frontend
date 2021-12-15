@@ -24,6 +24,13 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
+    setDefaultProduct = (productId: number) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/products/${productId}`)
+            .then((response) => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     deleteProduct = (productId: number) => new Promise((resolve, reject)  => {
         api.delete(API_BASE_URL + `/products/`+productId)
             .then((response) => {

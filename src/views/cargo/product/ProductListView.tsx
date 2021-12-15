@@ -15,6 +15,7 @@ import cargoService from "../../../services/CargoService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import DeleteButton from "../../../components/DeleteButton";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import DefaultButton from "../../../components/DefaultButton";
 
 const useStyles = makeStyles(() => ({
     queryField: {
@@ -109,7 +110,7 @@ const ProductListView: React.FC = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Наименование</TableCell>
-                                <TableCell align="center" width="15%">Действия</TableCell>
+                                <TableCell align="center" width="18%">Действия</TableCell>
                             </TableRow>
                         </TableHead>
                         {
@@ -119,6 +120,12 @@ const ProductListView: React.FC = () => {
                                         <TableRow hover key={row.id}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell align="center">
+                                                <DefaultButton
+                                                    rowId={row.id!}
+                                                    rowDefault={row.defaultValue}
+                                                    onSetDefault={cargoService.setDefaultProduct}
+                                                    handleSetDefault={setUpdateRows}
+                                                />
                                                 <IconButton
                                                     component={RouterLink}
                                                     to={`/app/cargo/product/edit`}
