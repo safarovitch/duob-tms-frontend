@@ -19,6 +19,7 @@ const
     TRANSFUSION = 'TRANSFUSION',
     REFILL = 'REFILL',
     RETURN = 'RETURN',
+    RETURNED = 'RETURNED',
     WAITING = 'WAITING',
     PAID = 'PAID',
     ON_ROAD = 'ON_ROAD',
@@ -31,8 +32,6 @@ const
 export const THEMES = {LIGHT, ONE_DARK, UNICORN}
 
 export const ARTICLES = {INCOME, INCOME_POSTFIX, OUTCOME, OUTCOME_POSTFIX}
-
-export const moneyUnitApplication = [TJS, RUB, USD, CNY]
 
 export enum Currency {
     TJS = "TJS",
@@ -91,11 +90,15 @@ export const cargoStuffTabs = [
 export const customerStuffTabs = [
     {
         value: 'active-cargo',
-        label: 'Активные Грузы'
+        label: 'Активные грузы'
     },
     {
         value: 'received-cargo',
-        label: 'Полученные Грузы'
+        label: 'Полученные грузы'
+    },
+    {
+        value: 'returned-cargo',
+        label: 'Возвращенные грузы'
     },
     {
         value: 'reconciliation-act',
@@ -257,6 +260,7 @@ export const mapOfStatusCargo = new Map<string, string>(
         ['ONROAD', 'В пути'],
         [ARRIVED, 'Прибыл'],
         [ISSUED, 'Выдано'],
+        [RETURNED, 'Возврат'],
     ]
 )
 
@@ -266,6 +270,7 @@ export const mapOfColorStatusCargo = new Map<string, string>(
         ['ONROAD', '#FDD231'],
         [ARRIVED, '#2196F3'],
         [ISSUED, '#03A075'],
+        [RETURNED, '#D33833'],
     ]
 )
 
