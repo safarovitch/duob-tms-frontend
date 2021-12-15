@@ -15,6 +15,7 @@ import cargoService from "../../../services/CargoService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import DeleteButton from "../../../components/DeleteButton";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import DefaultButton from "../../../components/DefaultButton";
 
 const useStyles = makeStyles(() => ({
     queryField: {
@@ -114,7 +115,7 @@ const CargoTypeListView: React.FC = () => {
                                 <TableCell align="center">Договорная цена</TableCell>
                                 <TableCell align="center">Расчет по норме и весу</TableCell>
                                 <TableCell align="center">Учитывать скидку</TableCell>
-                                <TableCell align="center" width="15%">Действия</TableCell>
+                                <TableCell align="center" width="18%">Действия</TableCell>
                             </TableRow>
                         </TableHead>
                         {
@@ -136,6 +137,12 @@ const CargoTypeListView: React.FC = () => {
                                                 {row.discount ? (<CheckIcon style={{color: 'green'}}/>) : (<XIcon style={{color: 'red'}}/>)}
                                             </TableCell>
                                             <TableCell align="center">
+                                                <DefaultButton
+                                                    rowId={row.id!}
+                                                    rowDefault={row.defaultValue}
+                                                    onSetDefault={cargoService.setDefaultCargoType}
+                                                    handleSetDefault={setUpdateRows}
+                                                />
                                                 <IconButton
                                                     component={RouterLink}
                                                     to={`/app/cargo/type/edit`}

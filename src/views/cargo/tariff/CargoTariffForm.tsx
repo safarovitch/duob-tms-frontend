@@ -65,6 +65,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, cargoType
         totalPrice: cargoTariff?.totalPrice || undefined,
         warehouseId: cargoTariff?.warehouseDto?.id || undefined,
         cargoTypeId: cargoTariff?.cargoTypeDto?.id || undefined,
+        defaultValue: cargoTariff?.defaultValue || false
     }
 
     const validationSchema = Yup.object().shape({

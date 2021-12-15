@@ -17,6 +17,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import DeleteButton from "../../../components/DeleteButton";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {mapOfUnits} from "../../../constants";
+import DefaultButton from "../../../components/DefaultButton";
 
 const useStyles = makeStyles(() => ({
     queryField: {
@@ -119,7 +120,7 @@ const CustomCodeListView: React.FC = () => {
                                 <TableCell>Стоимость</TableCell>
                                 <TableCell>Ед. расчета</TableCell>
                                 <TableCell>Описание</TableCell>
-                                <TableCell align="center" width="15%">Действия</TableCell>
+                                <TableCell align="center" width="18%">Действия</TableCell>
                             </TableRow>
                         </TableHead>
                         {
@@ -135,6 +136,12 @@ const CustomCodeListView: React.FC = () => {
                                             <TableCell>{units.get(row.unit)}</TableCell>
                                             <TableCell>{row.description}</TableCell>
                                             <TableCell align="center">
+                                                <DefaultButton
+                                                    rowId={row.id!}
+                                                    rowDefault={row.defaultValue}
+                                                    onSetDefault={cargoService.setDefaultCustomCode}
+                                                    handleSetDefault={setUpdateRows}
+                                                />
                                                 <IconButton
                                                     component={RouterLink}
                                                     to={`/app/cargo/customs/edit`}

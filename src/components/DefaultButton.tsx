@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Box, IconButton, SvgIcon} from "@material-ui/core";
-import {Done as DoneIcon, DoneAll as DoneAllIcon} from "@material-ui/icons";
+import {Done as DoneIcon, CheckCircle as CheckCircleIcon} from "@material-ui/icons";
 import ConfirmModal from "./ConfirmModal";
 import LoadingDeleteButton from "./LoadingDeleteButton";
 import errorMessageHandler from "../utils/errorMessageHandler";
@@ -31,7 +31,7 @@ const DefaultButton: React.FC<{rowId: number, rowDefault: boolean, onSetDefault:
         <>
             {rowDefault ? (
                 <IconButton disabled>
-                    <DoneAllIcon />
+                    <CheckCircleIcon style={{color: '1B9A4F'}} />
                 </IconButton>
             ) : (
                 <Box sx={{position: 'relative', display: 'inline-block'}}>
@@ -48,8 +48,8 @@ const DefaultButton: React.FC<{rowId: number, rowDefault: boolean, onSetDefault:
             )}
             <ConfirmModal
                 isOpen={isOpen}
-                title={'Выбор значений по умолчанию'}
-                description={'Выберите значение по умолчанию для константа груза.'}
+                title={'Вы уверены, что хотите подтвердить?'}
+                description={'При подтверждении значения константа становиться по умолчанию.'}
                 onClose={() => setOpen(false)}
                 onAccept={handleAccept}/>
         </>

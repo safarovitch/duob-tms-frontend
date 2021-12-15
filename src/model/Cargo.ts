@@ -39,6 +39,7 @@ export interface CargoCustomCode {
     unit: Units | Units.ton;
     productId?: number;
     productDto?: CargoProduct
+    defaultValue: boolean;
 
     //helpers
     isUnitThing?: boolean;
@@ -56,7 +57,9 @@ export interface CargoType {
     negotiatedPrice: boolean;
     calculationRateWeight: boolean;
     discount: boolean;
+    defaultValue: boolean;
 }
+
 export interface CargoTypeFormProps {
     className?: string;
     cargoType: CargoType;
@@ -85,6 +88,7 @@ export interface CargoTariff {
     cargoTypeId?: number;
     warehouseDto?: Warehouse;
     cargoTypeDto?: CargoType;
+    defaultValue: boolean;
 }
 export interface CargoTariffFormProps {
     cargoTariff: CargoTariff;

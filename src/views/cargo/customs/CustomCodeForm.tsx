@@ -58,7 +58,8 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
         description: customCode?.description || '',
         unit: customCode?.unit as Units || Units.ton,
         productId: customCode?.productDto?.id || undefined,
-        isUnitThing: customCode ? customCode?.unit === Units.thing : false
+        isUnitThing: customCode ? customCode?.unit === Units.thing : false,
+        defaultValue: customCode?.defaultValue || false
     }
 
     const validationSchema = Yup.object().shape({
