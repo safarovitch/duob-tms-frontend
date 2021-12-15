@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, cargoTypes, warehouses}) => {
+const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouses}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
@@ -64,8 +64,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, cargoType
         totalCube: cargoTariff?.totalCube || undefined,
         totalPrice: cargoTariff?.totalPrice || undefined,
         warehouseId: cargoTariff?.warehouseDto?.id || undefined,
-        cargoTypeId: cargoTariff?.cargoTypeDto?.id || undefined,
-        defaultValue: cargoTariff?.defaultValue || false
+        defaultValue: cargoTariff?.defaultValue || false,
     }
 
     const validationSchema = Yup.object().shape({
@@ -194,45 +193,6 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, cargoType
                                         {warehouses.map((warehouse) => (
                                             <MenuItem value={warehouse.id} key={warehouse.id}>
                                                 {warehouse.name}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                                <Grid
-                                    item
-                                    md={12}
-                                    xs={12}
-                                >
-                                    <TextField
-                                        error={Boolean(props.touched.cargoTypeId && props.errors.cargoTypeId)}
-                                        fullWidth
-                                        helperText={props.touched.cargoTypeId && props.errors.cargoTypeId}
-                                        label="Вид груза"
-                                        name="cargoTypeId"
-                                        select
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        required
-                                        value={props.values.cargoTypeId}
-                                        variant="outlined"
-                                        SelectProps={{
-                                            MenuProps: {
-                                                variant: "selectedMenu",
-                                                anchorOrigin: {
-                                                    vertical: "bottom",
-                                                    horizontal: "left"
-                                                },
-                                                transformOrigin: {
-                                                    vertical: "top",
-                                                    horizontal: "left"
-                                                },
-                                                getContentAnchorEl: null
-                                            }
-                                        }}
-                                    >
-                                        {cargoTypes.map((cargoType) => (
-                                            <MenuItem value={cargoType.id} key={cargoType.id}>
-                                                {cargoType.name}
                                             </MenuItem>
                                         ))}
                                     </TextField>

@@ -90,12 +90,11 @@ export interface CargoTariff {
     cargoTypeDto?: CargoType;
     defaultValue: boolean;
 }
+
 export interface CargoTariffFormProps {
     cargoTariff: CargoTariff;
-    cargoTypes: CargoType[];
     warehouses: Warehouse[];
 }
-
 
 export interface CargoIssueResponse {
     id: number;

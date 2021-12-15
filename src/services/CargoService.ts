@@ -89,13 +89,6 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
-    getAllCargoTypes = () => new Promise((resolve, reject)  => {
-        api.get(API_BASE_URL + `/cargos-types/all`)
-            .then((response) => {
-                resolve(response.data)
-            })
-            .catch((error) => {reject(error)})
-    })
     postCargoType = (cargoType: CargoType) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + `/cargos-types`, cargoType)
             .then((response) => {

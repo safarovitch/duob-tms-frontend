@@ -47,6 +47,9 @@ const Detail: React.FC<{stuffId: string, tabPath: string}> = ({stuffId, tabPath}
                 <CustomerTabPanel index={'received-cargo'} value={currentTab}>
                     <CargoListView cargoStatus={'ISSUED'}/>
                 </CustomerTabPanel>
+                <CustomerTabPanel index={'returned-cargo'} value={currentTab}>
+                    <CargoListView cargoStatus={'RETURNED'}/>
+                </CustomerTabPanel>
                 <CustomerTabPanel index={'reconciliation-act'} value={currentTab}>
                     <ReconciliationActListView/>
                 </CustomerTabPanel>
