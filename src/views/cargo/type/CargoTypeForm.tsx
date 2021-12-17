@@ -53,6 +53,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
         negotiatedPrice: cargoType?.negotiatedPrice || false,
         calculationRateWeight: cargoType?.calculationRateWeight !== false,
         discount: cargoType?.discount || false,
+        defaultValue: cargoType?.defaultValue || false
     }
 
     const validationSchema = Yup.object().shape({

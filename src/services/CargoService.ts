@@ -24,6 +24,13 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
+    setDefaultProduct = (productId: number) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/products/${productId}`)
+            .then((response) => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     deleteProduct = (productId: number) => new Promise((resolve, reject)  => {
         api.delete(API_BASE_URL + `/products/`+productId)
             .then((response) => {
@@ -60,6 +67,13 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
+    setDefaultCustomCode = (customCodeId: number) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/customs-codes/${customCodeId}`)
+            .then((response) => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     deleteCustomCode = (customCodeId: number) => new Promise((resolve, reject)  => {
         api.delete(API_BASE_URL + `/customs-codes/`+customCodeId)
             .then((response) => {
@@ -89,6 +103,13 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
+    setDefaultCargoType = (cargoTypeId: number) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/cargos-types/${cargoTypeId}`)
+            .then((response) => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     deleteCargoType = (cargoTypeId: number) => new Promise((resolve, reject)  => {
         api.delete(API_BASE_URL + `/cargos-types/`+cargoTypeId)
             .then((response) => {
@@ -118,6 +139,13 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
+    setDefaultCargoTariff = (cargoTariffId: number) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/tariffs/${cargoTariffId}`)
+            .then((response) => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     deleteCargoTariff = (cargoTariffId: number) => new Promise((resolve, reject)  => {
         api.delete(API_BASE_URL + `/tariffs/`+cargoTariffId)
             .then((response) => {

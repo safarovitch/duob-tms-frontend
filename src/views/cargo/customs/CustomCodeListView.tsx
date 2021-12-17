@@ -17,6 +17,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import DeleteButton from "../../../components/DeleteButton";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {mapOfUnits} from "../../../constants";
+import DefaultButton from "../../../components/DefaultButton";
 
 const useStyles = makeStyles(() => ({
     queryField: {
@@ -31,10 +32,10 @@ const CustomCodeListView: React.FC = () => {
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(10);
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
-    const [rows, setRows] = useState<CargoCustomCode[]>([]);
+    const [rows, setRows] = useState<{[key: string]: CargoCustomCode[]}>();
     const [loading, setLoading] = useState(false);
     const units = mapOfUnits
 
@@ -44,12 +45,15 @@ const CustomCodeListView: React.FC = () => {
         (async () => {
             try {
                 setLoading(true)
-                setRows([])
+                setRows(undefined)
 
                 const data: any = await cargoService.getFilteredCustomCodes(page, size, debouncedSearchTerm);
 
                 if (!cancel) {
-                    setRows(data.content)
+                    setRows(data.content.reduce((r: any, a: CargoCustomCode) => {
+                        r[a.productDto!.name] = [...r[a.productDto!.name] || [], a]
+                        return r
+                    }, {}))
                     setTotal(data.totalElements)
                 }
             } catch (error: any) {
@@ -119,40 +123,52 @@ const CustomCodeListView: React.FC = () => {
                                 <TableCell>Стоимость</TableCell>
                                 <TableCell>Ед. расчета</TableCell>
                                 <TableCell>Описание</TableCell>
-                                <TableCell align="center" width="15%">Действия</TableCell>
+                                <TableCell align="center" width="18%">Действия</TableCell>
                             </TableRow>
                         </TableHead>
                         {
-                            rows.length > 0 ? (
+                            rows ? (
                                 <TableBody>
-                                    {rows.map((row: CargoCustomCode, index) => (
-                                        <TableRow hover key={row.id}>
-                                            <TableCell>{row.productDto?.name}</TableCell>
-                                            <TableCell>{row.code}</TableCell>
-                                            <TableCell>{row.price}</TableCell>
-                                            <TableCell>{Number(row.baseRate) + Number(row.vat)}</TableCell>
-                                            <TableCell>{row.totalPrice}</TableCell>
-                                            <TableCell>{units.get(row.unit)}</TableCell>
-                                            <TableCell>{row.description}</TableCell>
-                                            <TableCell align="center">
-                                                <IconButton
-                                                    component={RouterLink}
-                                                    to={`/app/cargo/customs/edit`}
-                                                    onClick={() => dispatch(setSelectedCustomCode(row))}
-                                                >
-                                                    <SvgIcon fontSize="small">
-                                                        <EditIcon/>
-                                                    </SvgIcon>
-                                                </IconButton>
-                                                <DeleteButton
-                                                    index={index}
-                                                    rowId={row.id!}
-                                                    onDelete={cargoService.deleteCustomCode}
-                                                    handleDelete={handleDeleteRow}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {
+                                        Object.keys(rows).map((value: string) => (
+                                            rows[value].map((row: CargoCustomCode, index) => (
+                                                <TableRow hover key={row.id}>
+                                                    {index === 0 && (
+                                                        <TableCell rowSpan={rows[value].length}>{value}</TableCell>
+                                                    )}
+                                                    <TableCell>{row.code}</TableCell>
+                                                    <TableCell>{row.price}</TableCell>
+                                                    <TableCell>{Number(row.baseRate) + Number(row.vat)}</TableCell>
+                                                    <TableCell>{row.totalPrice}</TableCell>
+                                                    <TableCell>{units.get(row.unit)}</TableCell>
+                                                    <TableCell>{row.description}</TableCell>
+                                                    <TableCell align="center">
+                                                        <DefaultButton
+                                                            rowId={row.id!}
+                                                            rowDefault={row.defaultValue}
+                                                            onSetDefault={cargoService.setDefaultCustomCode}
+                                                            handleSetDefault={setUpdateRows}
+                                                        />
+                                                        <IconButton
+                                                            component={RouterLink}
+                                                            to={`/app/cargo/customs/edit`}
+                                                            onClick={() => dispatch(setSelectedCustomCode(row))}
+                                                        >
+                                                            <SvgIcon fontSize="small">
+                                                                <EditIcon/>
+                                                            </SvgIcon>
+                                                        </IconButton>
+                                                        <DeleteButton
+                                                            index={index}
+                                                            rowId={row.id!}
+                                                            onDelete={cargoService.deleteCustomCode}
+                                                            handleDelete={handleDeleteRow}
+                                                        />
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                        ))
+                                    }
                                 </TableBody>
                             ) : <NoFoundTableBody loading={loading}/>
                         }

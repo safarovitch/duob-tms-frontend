@@ -15,6 +15,7 @@ import cargoService from "../../../services/CargoService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import DeleteButton from "../../../components/DeleteButton";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import DefaultButton from "../../../components/DefaultButton";
 
 const useStyles = makeStyles(() => ({
     queryField: {
@@ -29,7 +30,7 @@ const ProductListView: React.FC = () => {
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(10);
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
     const [rows, setRows] = useState<CargoProduct[]>([]);
@@ -105,11 +106,11 @@ const ProductListView: React.FC = () => {
             </Box>
             <PerfectScrollbar>
                 <Box minWidth={700}>
-                    <Table>
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Наименование</TableCell>
-                                <TableCell align="center" width="15%">Действия</TableCell>
+                                <TableCell align="center" width="18%">Действия</TableCell>
                             </TableRow>
                         </TableHead>
                         {
@@ -119,6 +120,12 @@ const ProductListView: React.FC = () => {
                                         <TableRow hover key={row.id}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell align="center">
+                                                <DefaultButton
+                                                    rowId={row.id!}
+                                                    rowDefault={row.defaultValue}
+                                                    onSetDefault={cargoService.setDefaultProduct}
+                                                    handleSetDefault={setUpdateRows}
+                                                />
                                                 <IconButton
                                                     component={RouterLink}
                                                     to={`/app/cargo/product/edit`}

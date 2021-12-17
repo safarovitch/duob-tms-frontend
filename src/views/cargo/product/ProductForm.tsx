@@ -41,7 +41,8 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
     }, [dispatch])
 
     const initialValues: CargoProduct = {
-        name: product?.name || ''
+        name: product?.name || '',
+        defaultValue: product?.defaultValue || false
     }
 
     const validationSchema = Yup.object().shape({
