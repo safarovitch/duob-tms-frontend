@@ -30,7 +30,7 @@ const CargoTypeListView: React.FC = () => {
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(10);
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
     const [rows, setRows] = useState<CargoType[]>([]);

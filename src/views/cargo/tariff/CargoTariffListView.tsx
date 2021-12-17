@@ -29,10 +29,10 @@ const CargoTariffListView: React.FC = () => {
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(10);
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
-    const [rows, setRows] = useState<CargoTariff[]>([]);
+    const [rows, setRows] = useState<{[key: string]: CargoTariff[]}>();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -41,12 +41,15 @@ const CargoTariffListView: React.FC = () => {
         (async () => {
             try {
                 setLoading(true)
-                setRows([])
+                setRows(undefined)
 
                 const data: any = await cargoService.getFilteredCargoTariffs(page, size, debouncedSearchTerm);
 
                 if (!cancel) {
-                    setRows(data.content)
+                    setRows(data.content.reduce((r: any, a: CargoTariff) => {
+                        r[a.warehouseDto!.name] = [...r[a.warehouseDto!.name] || [], a]
+                        return r
+                    }, {}))
                     setTotal(data.totalElements)
                 }
             } catch (error: any) {
@@ -107,48 +110,54 @@ const CargoTariffListView: React.FC = () => {
                 </Box>
                 <PerfectScrollbar>
                     <Box minWidth={700}>
-                        <Table>
+                        <Table size="small">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Название</TableCell>
                                     <TableCell>Филиал</TableCell>
+                                    <TableCell>Название</TableCell>
                                     <TableCell>Описание</TableCell>
                                     <TableCell align="center" width="18%">Действия</TableCell>
                                 </TableRow>
                             </TableHead>
                             {
-                                rows.length > 0 ? (
+                                rows ? (
                                     <TableBody>
-                                        {rows.map((row: CargoTariff, index) => (
-                                            <TableRow hover key={row.id}>
-                                                <TableCell>{row.name}</TableCell>
-                                                <TableCell>{row.warehouseDto?.name}</TableCell>
-                                                <TableCell>{row.description}</TableCell>
-                                                <TableCell align="center">
-                                                    <DefaultButton
-                                                        rowId={row.id!}
-                                                        rowDefault={row.defaultValue}
-                                                        onSetDefault={cargoService.setDefaultCargoTariff}
-                                                        handleSetDefault={setUpdateRows}
-                                                    />
-                                                    <IconButton
-                                                        component={RouterLink}
-                                                        to={`/app/cargo/tariff/edit`}
-                                                        onClick={() => dispatch(setSelectedCargoTariff(row))}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <EditIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                    <DeleteButton
-                                                        index={index}
-                                                        rowId={row.id!}
-                                                        onDelete={cargoService.deleteCargoTariff}
-                                                        handleDelete={handleDeleteRow}
-                                                    />
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
+                                        {
+                                            Object.keys(rows).map((value: string) => (
+                                                rows[value].map((row: CargoTariff, index) => (
+                                                    <TableRow hover key={row.id}>
+                                                        {index === 0 && (
+                                                            <TableCell rowSpan={rows[value].length}>{value}</TableCell>
+                                                        )}
+                                                        <TableCell>{row.name}</TableCell>
+                                                        <TableCell>{row.description}</TableCell>
+                                                        <TableCell align="center">
+                                                            <DefaultButton
+                                                                rowId={row.id!}
+                                                                rowDefault={row.defaultValue}
+                                                                onSetDefault={cargoService.setDefaultCargoTariff}
+                                                                handleSetDefault={setUpdateRows}
+                                                            />
+                                                            <IconButton
+                                                                component={RouterLink}
+                                                                to={`/app/cargo/tariff/edit`}
+                                                                onClick={() => dispatch(setSelectedCargoTariff(row))}
+                                                            >
+                                                                <SvgIcon fontSize="small">
+                                                                    <EditIcon/>
+                                                                </SvgIcon>
+                                                            </IconButton>
+                                                            <DeleteButton
+                                                                index={index}
+                                                                rowId={row.id!}
+                                                                onDelete={cargoService.deleteCargoTariff}
+                                                                handleDelete={handleDeleteRow}
+                                                            />
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))
+                                            ))
+                                        }
                                     </TableBody>
                                 ) : <NoFoundTableBody loading={loading}/>
                             }

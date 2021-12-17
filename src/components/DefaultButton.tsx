@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, IconButton, SvgIcon} from "@material-ui/core";
+import {Box, IconButton, SvgIcon, Tooltip} from "@material-ui/core";
 import {Done as DoneIcon, CheckCircle as CheckCircleIcon} from "@material-ui/icons";
 import ConfirmModal from "./ConfirmModal";
 import LoadingDeleteButton from "./LoadingDeleteButton";
@@ -35,14 +35,16 @@ const DefaultButton: React.FC<{rowId: number, rowDefault: boolean, onSetDefault:
                 </IconButton>
             ) : (
                 <Box sx={{position: 'relative', display: 'inline-block'}}>
-                    <IconButton
-                        onClick={() => setOpen(true)}
-                        disabled={loading}
-                    >
-                        <SvgIcon fontSize="small">
-                            <DoneIcon />
-                        </SvgIcon>
-                    </IconButton>
+                    <Tooltip title="Выбрать по умолчанию">
+                        <IconButton
+                            onClick={() => setOpen(true)}
+                            disabled={loading}
+                        >
+                            <SvgIcon fontSize="small">
+                                <DoneIcon />
+                            </SvgIcon>
+                        </IconButton>
+                    </Tooltip>
                     {loading && <LoadingDeleteButton/>}
                 </Box>
             )}
