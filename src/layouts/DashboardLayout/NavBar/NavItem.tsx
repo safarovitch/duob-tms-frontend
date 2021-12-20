@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         textTransform: 'none',
         letterSpacing: 0,
         width: '100%',
-        fontWeight: theme.typography.fontWeightRegular,
+        // fontWeight: theme.typography.fontWeightRegular,
         '&.depth-0': {
             '& $title': {
                 fontWeight: theme.typography.fontWeightMedium
