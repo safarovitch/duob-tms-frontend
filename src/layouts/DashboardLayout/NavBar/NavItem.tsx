@@ -5,12 +5,12 @@ import {
     Button,
     Collapse,
     ListItem,
-    makeStyles, Theme
+    makeStyles
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
     item: {
         display: 'block',
         paddingTop: 0,
