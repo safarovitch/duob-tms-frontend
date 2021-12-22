@@ -50,7 +50,7 @@ const DefaultButton: React.FC<{rowId: number, rowDefault: boolean, onSetDefault:
             )}
             <ConfirmModal
                 isOpen={isOpen}
-                title={'Вы уверены, что хотите подтвердить?'}
+                title={'Вы уверены?'}
                 description={'При подтверждении значения константа становиться по умолчанию.'}
                 onClose={() => setOpen(false)}
                 onAccept={handleAccept}/>

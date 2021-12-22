@@ -56,6 +56,12 @@ const navConfig = [
                 href: '/app/fuels',
                 perm: PERMISSIONS.FUEL.LIST
             },
+            {
+                title: 'Состояние складов',
+                icon: DashboardIcon,
+                href: '/app/warehouse-state',
+                perm: PERMISSIONS.WAREHOUSE_STATE.LIST
+            },
         ]
     },
     {

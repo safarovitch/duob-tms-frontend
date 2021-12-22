@@ -1,3 +1,5 @@
+import {CargoGeneral} from "./Customer";
+
 export interface Warehouse {
     id?: number;
     name: string;
@@ -22,4 +24,32 @@ export interface WarehouseBalance {
     moneyBalanceUSD: number;
     moneyBalanceRUB: number;
     moneyBalanceCNY: number;
+}
+
+export interface WarehouseStateCargo {
+    id?: number;
+    createdDate: string;
+    createdBy: string;
+    updatedBy: string;
+    amount: number;
+    barcode: string;
+    cargoTypeName: string;
+    heightCargo: number;
+    lengthCargo: number;
+    productName: string;
+    status: boolean;
+    totalVolume: number;
+    totalWeight: number;
+    widthCargo: number;
+    cargos: CargoGeneral[];
+    clientCode: string;
+    providerCode: string;
+    groupCargo: boolean;
+    date: string;
+}
+
+export interface WarehouseStateTotal {
+    place: number;
+    price: number;
+    volume: number;
 }

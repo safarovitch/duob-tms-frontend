@@ -5,4 +5,5 @@ export interface User {
     balance?: number;
     roles: string[];
     userId: number;
+    warehouseId?: number;
 }
