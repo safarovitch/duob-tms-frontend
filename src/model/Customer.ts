@@ -1,5 +1,6 @@
 import React from "react";
 import {CargoStuffTab} from "./Cargo";
+import {StatusCargoEnum} from "../constants";
 
 export interface CustomerFormProps {
     className?: string;
@@ -47,15 +48,18 @@ export interface CustomerCargo {
     cargos?: CargoGeneral[]
 }
 
-type CargoStatus = 'FORMALIZED' | 'ONROAD' | 'ARRIVED' | 'ISSUED';
-
-interface CargoGeneral{
+export interface CargoGeneral {
     roadId: number;
     warehouseId: number;
     description: string;
     barcode: string;
-    status: CargoStatus;
+    status: StatusCargoEnum;
     dueDays: number;
+    createdDate?: string;
+    arrivalDate?: string;
+    dateOfIssue?: string;
+    updatedDate?: string;
+    deleted?: boolean;
 }
 
 export interface CustomerReconciliationAct {

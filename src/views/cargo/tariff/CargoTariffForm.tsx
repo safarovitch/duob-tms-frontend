@@ -75,7 +75,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
         try {
             await cargoService.postCargoTariff(values)
 
-            enqueueSnackbar('Вид груза создан', {variant: 'success'});
+            enqueueSnackbar('Тариф создан', {variant: 'success'});
             history.go(-1);
         } catch (error: any) {
             formActions.setStatus({success: false});
@@ -92,7 +92,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
 
             await cargoService.updateCargoTariff(values)
 
-            enqueueSnackbar('Вид груза обновлено', {variant: 'success'});
+            enqueueSnackbar('Тариф обновлено', {variant: 'success'});
             history.go(-1);
         } catch (error: any) {
             formActions.setStatus({success: false});

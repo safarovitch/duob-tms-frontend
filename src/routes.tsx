@@ -352,6 +352,18 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/warehouse-state',
+                        perm: PERMISSIONS.WAREHOUSE_STATE.LIST,
+                        component: lazy(() => import('./views/warehouse-state/WarehouseStateListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/warehouse-state/:id',
+                        perm: PERMISSIONS.WAREHOUSE_STATE.LIST,
+                        component: lazy(() => import('./views/warehouse-state/cargo'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/article',
                         perm: PERMISSIONS.ARTICLE.LIST,
                         component: () => <Redirect to="/app/article/income" />

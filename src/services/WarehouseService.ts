@@ -48,6 +48,28 @@ class WarehouseService {
             })
             .catch((error) => {reject(error)})
     })
+
+    getFilteredWarehouseStateCargos = (warehouseId: number, status: string, startDate: string, endDate: string,
+                                 page: number, size: number,) => new Promise((resolve, reject)  => {
+        let params = `extraParams[status]=${status}` + (warehouseId === 0 ? '' : `&extraParams[warehouseId]=${warehouseId}`)
+
+        api.get(`${API_BASE_URL}/warehouses/state?${encodeURI(params)}`, {params: {startDate, endDate, page, size}})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getFilteredWarehouseStateTotal = (warehouseId: number, status: string) => new Promise((resolve, reject)  => {
+        let params = `extraParams[status]=${status}` + (warehouseId === 0 ? '' : `&extraParams[warehouseId]=${warehouseId}`)
+        api.get(`${API_BASE_URL}/warehouses/total?${encodeURI(params)}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getWarehouseStateCargo = (cargoId: number) => new Promise((resolve, reject)  => {
+        api.get(`${API_BASE_URL}/sync/income-cargos/${cargoId}/history`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
 }
 
 const warehouseService = new WarehouseService()

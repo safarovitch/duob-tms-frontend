@@ -19,12 +19,9 @@ const
     TRANSFUSION = 'TRANSFUSION',
     REFILL = 'REFILL',
     RETURN = 'RETURN',
-    RETURNED = 'RETURNED',
     WAITING = 'WAITING',
     PAID = 'PAID',
     ON_ROAD = 'ON_ROAD',
-    FORMALIZED = 'FORMALIZED',
-    ARRIVED = 'ARRIVED',
     ISSUED = 'ISSUED',
     THING = 'THING',
     TON = 'TON'
@@ -253,24 +250,31 @@ export const mapOfStatusApplication = new Map<string, string>(
     ]
 )
 
+export enum StatusCargoEnum {
+    FORMALIZED = "FORMALIZED",
+    ONROAD = "ONROAD",
+    ARRIVED = "ARRIVED",
+    ISSUED = "ISSUED",
+    RETURNED = "RETURNED",
+}
 
 export const mapOfStatusCargo = new Map<string, string>(
     [
-        [FORMALIZED, 'Оформлен'],
-        ['ONROAD', 'В пути'],
-        [ARRIVED, 'Прибыл'],
-        [ISSUED, 'Выдано'],
-        [RETURNED, 'Возврат'],
+        [StatusCargoEnum.FORMALIZED, 'Оформлен'],
+        [StatusCargoEnum.ONROAD, 'В пути'],
+        [StatusCargoEnum.ARRIVED, 'Прибыл'],
+        [StatusCargoEnum.ISSUED, 'Выдано'],
+        [StatusCargoEnum.RETURNED, 'Возврат'],
     ]
 )
 
 export const mapOfColorStatusCargo = new Map<string, string>(
     [
-        [FORMALIZED, '#000000'],
-        ['ONROAD', '#FDD231'],
-        [ARRIVED, '#2196F3'],
-        [ISSUED, '#03A075'],
-        [RETURNED, '#D33833'],
+        [StatusCargoEnum.FORMALIZED, '#000000'],
+        [StatusCargoEnum.ONROAD, '#FDD231'],
+        [StatusCargoEnum.ARRIVED, '#2196F3'],
+        [StatusCargoEnum.ISSUED, '#03A075'],
+        [StatusCargoEnum.RETURNED, '#D33833'],
     ]
 )
 

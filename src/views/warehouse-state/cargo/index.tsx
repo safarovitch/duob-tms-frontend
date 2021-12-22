@@ -1,0 +1,193 @@
+import React, {useEffect, useState} from "react";
+import {
+    Box,
+    Card,
+    CardHeader, Chip,
+    Container,
+    Divider,
+    Grid,
+    makeStyles,
+    Table,
+    TableBody, TableCell, TableHead,
+    TableRow
+} from "@material-ui/core";
+import PerfectScrollbar from "react-perfect-scrollbar";
+// import {CustomerCargo} from "../../../../../model/Customer";
+// import {deleteSelectedCustomerCargo} from "../../../../../store/actions/customerActions";
+// import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../../../constants";
+import {useSnackbar} from "notistack";
+import warehouseService from "../../../services/WarehouseService";
+import errorMessageHandler from "../../../utils/errorMessageHandler";
+import {useParams} from "react-router";
+import {WarehouseStateCargo} from "../../../model/Warehouse";
+import Page from "../../../components/Page";
+import LoadingLayout from "../../../components/LoadingLayout";
+import Header from "./Header";
+import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../constants";
+import DoneIcon from "@material-ui/icons/Done";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        backgroundColor: theme.palette.background.default,
+        minHeight: '100%',
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(3)
+    }
+}));
+
+const CargoShow: React.FC = () => {
+    const classes = useStyles()
+    const {enqueueSnackbar} = useSnackbar()
+    const {id: cargoId} = useParams<{id: string}>()
+    const [loading, setLoading] = useState(false)
+    const [hasError, setHasError] = useState(false)
+    const [cargos, setCargos] = useState<WarehouseStateCargo[]>()
+    const [selectedCargo, setSelectCargo] = useState<WarehouseStateCargo>()
+
+    useEffect(() => {
+        let cancel = false;
+
+        (async () => {
+            try {
+                setLoading(true)
+
+                const dataCargos: any = await warehouseService.getWarehouseStateCargo(Number(cargoId))
+
+                if (!cancel) {
+                    setCargos(dataCargos)
+                    setSelectCargo(dataCargos[0])
+                }
+            } catch (error: any) {
+                !cancel && setHasError(true)
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                !cancel && setLoading(false)
+            }
+        })()
+
+        return () => {cancel = true}
+    }, [enqueueSnackbar])
+
+    return (
+        <Page title={selectedCargo ? `Груз: ${selectedCargo.productName}` : 'Груз'}>
+            {
+                cargos && selectedCargo ? (
+                    <Container className={classes.root} maxWidth="xl">
+                        <Header cargo={selectedCargo} />
+                        <Box mt={3}>
+                            {
+                                cargos.length > 1 && (
+                                    <Box pb={3} px={2}>
+                                        <Grid container spacing={2}>
+                                            {cargos.map((cargo, index) => (
+                                                <Grid item key={index}>
+                                                    {selectedCargo.date === cargo.date ? (
+                                                        <Chip
+                                                            label={cargo.date}
+                                                            clickable
+                                                            color="primary"
+                                                            onDelete={() => null}
+                                                            deleteIcon={<DoneIcon />}
+                                                        />
+                                                    ) : (
+                                                        <Chip
+                                                            label={cargo.date}
+                                                            clickable
+                                                            onClick={() => setSelectCargo(cargo)}
+                                                        />
+                                                    )}
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </Box>
+                                )
+                            }
+                            <Grid container spacing={3}>
+                                <Grid item md={4} xl={3} xs={12}>
+                                    <Card>
+                                        <CardHeader title="Информация о грузе" />
+                                        <Divider />
+                                        <Table>
+                                            <TableBody>
+                                                <TableRow>
+                                                    <TableCell>Наименование:</TableCell>
+                                                    <TableCell>{selectedCargo.productName}</TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell>Вид груза:</TableCell>
+                                                    <TableCell>{selectedCargo.cargoTypeName}</TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell>Д / Ш / В (м):</TableCell>
+                                                    <TableCell>{selectedCargo.lengthCargo} / {selectedCargo.widthCargo} / {selectedCargo.heightCargo}</TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell>Объем(м3):</TableCell>
+                                                    <TableCell>{selectedCargo.totalVolume}</TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell>Вес (кг):</TableCell>
+                                                    <TableCell>{selectedCargo.totalWeight}</TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell>Стоимость (USD):</TableCell>
+                                                    <TableCell>{selectedCargo.amount}</TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell>Завсклад:</TableCell>
+                                                    <TableCell>{selectedCargo.updatedBy || selectedCargo.createdBy}</TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
+                                    </Card>
+                                </Grid>
+                                <Grid item md={8} xl={9} xs={12}>
+                                    <Card>
+                                        <CardHeader title="Грузы" />
+                                        <Divider />
+                                        <PerfectScrollbar>
+                                            <Box minWidth={700}>
+                                                <Table>
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell>№</TableCell>
+                                                            <TableCell>Статус</TableCell>
+                                                            <TableCell>Дата</TableCell>
+                                                            <TableCell width="30%">Путь груза</TableCell>
+                                                            <TableCell>Штрих-код</TableCell>
+                                                            <TableCell></TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {selectedCargo.cargos.map((row, index) => (
+                                                            <TableRow key={index}>
+                                                                <TableCell>{++index}</TableCell>
+                                                                <TableCell style={{color: mapOfColorStatusCargo.get(row.status)}}>
+                                                                    <b>{mapOfStatusCargo.get(row.status)}</b>
+                                                                </TableCell>
+                                                                <TableCell>{row.updatedDate}</TableCell>
+                                                                <TableCell>{row.description}</TableCell>
+                                                                <TableCell>{row.barcode}</TableCell>
+                                                                <TableCell>
+                                                                    {row.deleted && (
+                                                                        <b style={{color: "red"}}>Удалено</b>
+                                                                    )}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            </Box>
+                                        </PerfectScrollbar>
+                                    </Card>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Container>
+                ) : <LoadingLayout loading={loading} hasError={hasError}/>
+            }
+        </Page>
+    )
+}
+
+export default CargoShow
