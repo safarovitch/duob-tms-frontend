@@ -65,6 +65,20 @@ export const currencyMap = new Map(
     ]
 )
 
+export enum RoadStatusEnum {
+    ACTIVE = "ACTIVE",
+    COMPLETED = "COMPLETED",
+    ARRIVED = "ARRIVED",
+}
+
+export const mapOfRoadStatus = new Map(
+    [
+        [RoadStatusEnum.ACTIVE, "Активный"],
+        [RoadStatusEnum.COMPLETED, "Завершенный"],
+        [RoadStatusEnum.ARRIVED, "Прибыл"],
+    ]
+)
+
 export const cargoStuffTabs = [
     {
         value: 'product',

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updateRoad: Function}> = ({status, roadId, updateRoad}) => {
+const ArrivedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updateRoad: Function}> = ({status, roadId, updateRoad}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const [isConfirmModalOpen, setOpen] = useState(false)
@@ -36,9 +36,9 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
             setOpen(false)
             setLoading(true)
 
-            await roadService.completeRoad(roadId)
+            await roadService.arrivedRoad(roadId)
 
-            enqueueSnackbar('Рейс завершен', {variant: 'success'})
+            enqueueSnackbar('Рейс прибыл', {variant: 'success'})
             updateRoad()
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -47,14 +47,14 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
         }
     }
 
-    return RoadStatusEnum.COMPLETED === status ? (
+    return RoadStatusEnum.ARRIVED === status || RoadStatusEnum.COMPLETED === status ? (
         <Button
             variant="outlined"
             color="primary"
             type="submit"
             disabled
         >
-            Завершенный
+            Прибыл
         </Button>
     ) : (
         <>
@@ -73,13 +73,13 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
                     >
                         {!loading && <DoneIcon />}
                     </SvgIcon>
-                    Завершить рейс
+                    Прибыл
                 </Button>
                 {loading && <CircularProgress size={20} className={classes.loadingProgress} />}
             </Box>
             <ConfirmModal
                 isOpen={isConfirmModalOpen}
-                title={'Вы уверены, что хотите завершить рейс?'}
+                title={'Вы уверены?'}
                 description={'При завершении рейса, его нельзя будет отменить. Пожалуйста, убедитесь, что вы хотите завершить именно этот рейс.'}
                 onClose={() => setOpen(false)}
                 onAccept={handleAccept}
@@ -88,4 +88,4 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
     )
 }
 
-export default CompleteRoadButton
+export default ArrivedRoadButton
