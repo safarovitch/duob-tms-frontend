@@ -1,12 +1,13 @@
 import React from "react";
 import {MoneyUnitType} from "./Exchange";
+import {RoadStatusEnum} from "../constants";
 
 export interface RoadList {
     id: number;
     road: string;
     truck: {id: number, number: string};
     cargoCount: number;
-    status: boolean;
+    status: RoadStatusEnum;
 }
 
 export interface RoadsStuffTab {
@@ -32,7 +33,6 @@ export interface RoadRequest {
     description: string;
     privateTruck?: boolean;
     withTrailer?: boolean;
-    status?: boolean;
 }
 
 export interface RoadMileageRequest {
@@ -112,7 +112,7 @@ export interface Road {
     description: string;
     privateTruck: boolean;
     withTrailer: boolean;
-    status: boolean;
+    status: RoadStatusEnum;
     speedometerBefore: number;
     speedometerAfter: number;
     totalKmDeparture: number;

@@ -8,8 +8,10 @@ import {useSnackbar} from "notistack";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import * as fileSaver from "file-saver"
 import CompleteRoadButton from "./CompleteRoadButton";
+import {RoadStatusEnum} from "../../constants";
+import ArrivedRoadButton from "./ArrivedRoadButton";
 
-const Header: React.FC<{id: string, title: string, roadStatus: boolean, updateRoad: Function}> = ({id, title, roadStatus, updateRoad}) => {
+const Header: React.FC<{id: string, title: string, roadStatus: RoadStatusEnum, updateRoad: Function}> = ({id, title, roadStatus, updateRoad}) => {
     const {enqueueSnackbar} = useSnackbar()
 
     const handleInvoice = async () => {
@@ -67,6 +69,9 @@ const Header: React.FC<{id: string, title: string, roadStatus: boolean, updateRo
             </Grid>
             <Grid item>
                 <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                        <ArrivedRoadButton status={roadStatus} roadId={Number(id)} updateRoad={updateRoad} />
+                    </Grid>
                     <Grid item>
                         <CompleteRoadButton status={roadStatus} roadId={Number(id)} updateRoad={updateRoad} />
                     </Grid>

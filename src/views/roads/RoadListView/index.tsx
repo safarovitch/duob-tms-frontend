@@ -24,6 +24,7 @@ import {useSnackbar} from "notistack";
 import {NavLink as RouterLink} from "react-router-dom";
 import {ArrowRight as ArrowRightIcon} from "react-feather";
 import DeleteButton from "../../../components/DeleteButton";
+import {mapOfRoadStatus} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -144,7 +145,7 @@ const RoadListView: React.FC = () => {
                                                             0
                                                         </TableCell>
                                                         <TableCell>
-                                                            {row.status ? 'Завершенный' : 'Активный'}
+                                                            {mapOfRoadStatus.get(row.status)}
                                                         </TableCell>
                                                         <TableCell align="center">
                                                             <DeleteButton

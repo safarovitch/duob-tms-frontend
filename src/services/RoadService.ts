@@ -114,6 +114,12 @@ class RoadService {
             .catch(error => reject(error))
     })
 
+    arrivedRoad = (roadId: number) => new Promise((resolve, reject) => {
+        api.put(`${API_BASE_URL}/roads/5`, {id: roadId})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getDrivers = () => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/drivers/all`)
             .then((response) => {resolve(response.data)})
