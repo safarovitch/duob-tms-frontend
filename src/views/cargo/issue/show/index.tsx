@@ -206,6 +206,20 @@ const IssueShow: React.FC = () => {
                                     </Grid>
                                 </Grid>
                             </Box>
+                            <Box mt={2}>
+                                <Grid container>
+                                    <Grid item xs={6} sm={3}>
+                                        <Typography variant="h5">
+                                            Номер машины:
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Typography variant="body1">
+                                            <b>{cargoIssue.numberVehicle}</b>
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Box>
                             <Box mt={3}>
                                 <Card>
                                     <PerfectScrollbar>

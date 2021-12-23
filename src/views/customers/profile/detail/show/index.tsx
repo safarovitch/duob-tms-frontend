@@ -16,9 +16,9 @@ import Header from "./Header";
 import Page from "../../../../../components/Page";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {useDispatch, useSelector} from "react-redux";
-import {CustomerCargo} from "../../../../../model/Customer";
+import {CargoGeneral, CustomerCargo} from "../../../../../model/Customer";
 import {deleteSelectedCustomerCargo} from "../../../../../store/actions/customerActions";
-import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../../../constants";
+import {mapOfColorStatusCargo, mapOfStatusCargo, StatusCargoEnum} from "../../../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,6 +44,26 @@ const CargoShow: React.FC = () => {
         return null;
     }
 
+    const getCargoDate = (cargo: CargoGeneral) => {
+        switch (cargo.status) {
+            case StatusCargoEnum.FORMALIZED: {
+                return cargo.createdDate
+            }
+            case StatusCargoEnum.ARRIVED: {
+                return cargo.arrivalDate
+            }
+            case StatusCargoEnum.ISSUED: {
+                return cargo.dateOfIssue
+            }
+            case StatusCargoEnum.RETURNED: {
+                return cargo.dateOfReturn
+            }
+            case StatusCargoEnum.ONROAD: {
+                return '-'
+            }
+        }
+    }
+
     return (
         <Page title={`Груз: ${customerCargo.productName}`}>
             <Container className={classes.root} maxWidth="xl">
@@ -57,7 +77,7 @@ const CargoShow: React.FC = () => {
                                 <Table>
                                     <TableBody>
                                         <TableRow>
-                                            <TableCell>Груз:</TableCell>
+                                            <TableCell>Наименование:</TableCell>
                                             <TableCell>{customerCargo.productName}</TableCell>
                                         </TableRow>
                                         <TableRow>
@@ -95,6 +115,7 @@ const CargoShow: React.FC = () => {
                                                 <TableRow>
                                                     <TableCell>№</TableCell>
                                                     <TableCell>Статус</TableCell>
+                                                    <TableCell>Дата операции</TableCell>
                                                     <TableCell>Просроченно дней</TableCell>
                                                     <TableCell>Текущая местоположение</TableCell>
                                                     <TableCell width="30%">Путь груза</TableCell>
@@ -108,6 +129,7 @@ const CargoShow: React.FC = () => {
                                                         <TableCell style={{color: mapOfColorStatusCargo.get(row.status)}}>
                                                             <b>{mapOfStatusCargo.get(row.status)}</b>
                                                         </TableCell>
+                                                        <TableCell>{getCargoDate(row)}</TableCell>
                                                         <TableCell>{row.dueDays} дней</TableCell>
                                                         <TableCell>
                                                             {row.roadId !== 0 && `Рейс ${row.roadId}`}
