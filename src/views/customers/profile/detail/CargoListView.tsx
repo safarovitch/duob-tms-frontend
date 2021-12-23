@@ -84,7 +84,8 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Груз</TableCell>
+                                <TableCell>Дата оформления</TableCell>
+                                <TableCell>Наименование</TableCell>
                                 <TableCell>Вид груза</TableCell>
                                 <TableCell>Д / Ш / В</TableCell>
                                 <TableCell>Обьем (м3)</TableCell>
@@ -108,6 +109,9 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                                                 history.push(`${window.location.pathname}/show`)
                                             }}
                                         >
+                                            <TableCell>
+                                                {row.cargos[0].createdDate}
+                                            </TableCell>
                                             <TableCell>
                                                 {row.productName}
                                             </TableCell>

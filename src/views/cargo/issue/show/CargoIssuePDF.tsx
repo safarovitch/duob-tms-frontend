@@ -138,6 +138,20 @@ const CargoIssuePDF: React.FC<{cargoIssue: CargoIssueResponse}> = ({cargoIssue})
                             </View>
                         </View>
                     </View>
+                    <View style={[styles.row, styles.mt]}>
+                        <View style={styles.col}>
+                            <View style={styles.titleContainer}>
+                                <Text style={styles.title}>
+                                    Номер машины:
+                                </Text>
+                            </View>
+                            <View>
+                                <Text style={styles.body}>
+                                    {cargoIssue.numberVehicle}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
                     <View style={[styles.row, styles.mt2]}>
                         <View style={styles.table}>
                             <View style={styles.tableRow}>

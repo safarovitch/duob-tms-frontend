@@ -105,6 +105,7 @@ export interface CargoIssueResponse {
     },
     actualAmount: number;
     status: 'WAITING' | 'PAID' | 'ISSUED';
+    numberVehicle: string;
     createdBy: {
         id: number;
         name: string;

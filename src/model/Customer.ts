@@ -45,7 +45,7 @@ export interface CustomerCargo {
     totalVolume: number;
     totalWeight: number;
     widthCargo: number;
-    cargos?: CargoGeneral[]
+    cargos: CargoGeneral[]
 }
 
 export interface CargoGeneral {
@@ -59,6 +59,7 @@ export interface CargoGeneral {
     arrivalDate?: string;
     dateOfIssue?: string;
     updatedDate?: string;
+    dateOfReturn?: string;
     deleted?: boolean;
 }
 
