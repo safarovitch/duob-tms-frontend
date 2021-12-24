@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useState} from "react";
 import Header from "./Header";
 import {
-    Box,
+    Box, Button,
     Card,
     Container,
     IconButton,
@@ -12,7 +12,7 @@ import {
     TableCell,
     TableHead,
     TablePagination,
-    TableRow
+    TableRow, Tooltip
 } from "@material-ui/core";
 import Page from "../../../components/Page";
 import {RoadList} from "../../../model/Road";
@@ -84,12 +84,16 @@ const RoadListView: React.FC = () => {
         setUpdateRows()
     };
 
+    const calculatePercentage = (a: number, b: number) => Math.round((b * 100) / a);
+
+    const getColorOfPercentage = (per: number) => per <= 75 ? '#FDB300' : (per <= 100 ? '#27AE60' : '#E73D3A');
+
     return (
         <Page
             className={classes.root}
             title={'Рейсы'}
         >
-            <Container maxWidth="lg">
+            <Container maxWidth="xl">
                 <Header/>
                 <Box mt={3}>
                     <Card>
@@ -98,27 +102,17 @@ const RoadListView: React.FC = () => {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>
-                                                Номер
-                                            </TableCell>
-                                            <TableCell>
-                                                Путь рейса
-                                            </TableCell>
-                                            <TableCell>
-                                                Номер машин
-                                            </TableCell>
-                                            <TableCell>
-                                                Кол-во грузов
-                                            </TableCell>
-                                            <TableCell>
-                                                Недостающий груз
-                                            </TableCell>
-                                            <TableCell>
-                                                Статус
-                                            </TableCell>
-                                            <TableCell align="center" width="15%">
-                                                Действия
-                                            </TableCell>
+                                            <TableCell>Номер</TableCell>
+                                            <TableCell>Путь рейса</TableCell>
+                                            <TableCell>Номер машин</TableCell>
+                                            <TableCell>Объем</TableCell>
+                                            <TableCell>Вес</TableCell>
+                                            <TableCell>Сумма $</TableCell>
+                                            <TableCell>Количество мест</TableCell>
+                                            <TableCell>Кол-во грузов</TableCell>
+                                            <TableCell>Недостающий груз</TableCell>
+                                            <TableCell>Статус</TableCell>
+                                            <TableCell align="center" width="15%">Действия</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     {
@@ -136,8 +130,28 @@ const RoadListView: React.FC = () => {
                                                             {row.road}
                                                         </TableCell>
                                                         <TableCell>
-                                                            {row.truck?.number || '-'}
+                                                            {row.truck.number || '-'}
                                                         </TableCell>
+                                                        <TableCell>
+                                                            <Tooltip title={`Объем машины ${row.truck.totalBodyCapacity} / Объем груза ${row.totalVolume}`}>
+                                                                <Button style={{
+                                                                    color: getColorOfPercentage(calculatePercentage(row.truck.totalBodyCapacity, row.totalVolume))
+                                                                }}>
+                                                                    {calculatePercentage(row.truck.totalBodyCapacity, row.totalVolume)}%
+                                                                </Button>
+                                                            </Tooltip>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Tooltip title={`Вес машины ${row.truck.liftingCapacity} / Вес груза ${row.totalWeight}`}>
+                                                                <Button style={{
+                                                                    color: getColorOfPercentage(calculatePercentage(row.truck.totalBodyCapacity, row.totalVolume))
+                                                                }}>
+                                                                    {calculatePercentage(row.truck.liftingCapacity, row.totalWeight)}%
+                                                                </Button>
+                                                            </Tooltip>
+                                                        </TableCell>
+                                                        <TableCell>{row.totalAmount}</TableCell>
+                                                        <TableCell>{row.totalPlace}</TableCell>
                                                         <TableCell>
                                                             {row.cargoCount}
                                                         </TableCell>
