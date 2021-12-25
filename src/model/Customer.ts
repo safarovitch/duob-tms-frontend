@@ -55,6 +55,7 @@ export interface CargoGeneral {
     barcode: string;
     status: StatusCargoEnum;
     dueDays: number;
+    storagePrice: number;
     createdDate?: string;
     arrivalDate?: string;
     dateOfIssue?: string;
