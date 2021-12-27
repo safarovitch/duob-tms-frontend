@@ -513,6 +513,18 @@ const routesConfig = [
                         component: lazy(() => import('./views/cargo/issue/show'))
                     },
                     {
+                        exact: true,
+                        path: '/app/notifications',
+                        perm: PERMISSIONS.NOTIFICATION.LIST,
+                        component: lazy(() => import('./views/notification/NotificationListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/notifications/create',
+                        perm: PERMISSIONS.NOTIFICATION.CREATE,
+                        component: lazy(() => import('./views/notification/form'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
                     }
                 ]

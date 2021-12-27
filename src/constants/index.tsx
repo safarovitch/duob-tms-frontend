@@ -114,6 +114,10 @@ export const customerStuffTabs = [
     {
         value: 'reconciliation-act',
         label: 'Акт сверки'
+    },
+    {
+        value: 'notification',
+        label: 'Уведомление'
     }
 ];
 
