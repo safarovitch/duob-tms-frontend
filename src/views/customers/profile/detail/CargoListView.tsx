@@ -93,7 +93,7 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                                 <TableCell>Стоимост $</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Просроченно дней</TableCell>
-                                <TableCell>Стоимость хранения за сутки, м3 ($)</TableCell>
+                                <TableCell>Стоимость хранения ($)</TableCell>
                                 <TableCell>Штрих-код</TableCell>
                             </TableRow>
                         </TableHead>

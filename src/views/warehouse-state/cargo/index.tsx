@@ -12,9 +12,6 @@ import {
     TableRow
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-// import {CustomerCargo} from "../../../../../model/Customer";
-// import {deleteSelectedCustomerCargo} from "../../../../../store/actions/customerActions";
-// import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../../../constants";
 import {useSnackbar} from "notistack";
 import warehouseService from "../../../services/WarehouseService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -66,7 +63,7 @@ const CargoShow: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar])
+    }, [enqueueSnackbar, cargoId])
 
     return (
         <Page title={selectedCargo ? `Груз: ${selectedCargo.productName}` : 'Груз'}>
@@ -153,6 +150,8 @@ const CargoShow: React.FC = () => {
                                                             <TableCell>№</TableCell>
                                                             <TableCell>Статус</TableCell>
                                                             <TableCell>Дата</TableCell>
+                                                            <TableCell>Просроченно дней</TableCell>
+                                                            <TableCell>Стоимость хранения ($)</TableCell>
                                                             <TableCell width="30%">Путь груза</TableCell>
                                                             <TableCell>Штрих-код</TableCell>
                                                             <TableCell></TableCell>
@@ -166,6 +165,8 @@ const CargoShow: React.FC = () => {
                                                                     <b>{mapOfStatusCargo.get(row.status)}</b>
                                                                 </TableCell>
                                                                 <TableCell>{row.updatedDate}</TableCell>
+                                                                <TableCell>{row.dueDays}</TableCell>
+                                                                <TableCell>{row.storagePrice}</TableCell>
                                                                 <TableCell>{row.description}</TableCell>
                                                                 <TableCell>{row.barcode}</TableCell>
                                                                 <TableCell>

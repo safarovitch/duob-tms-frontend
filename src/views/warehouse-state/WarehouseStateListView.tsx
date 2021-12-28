@@ -56,7 +56,7 @@ const WarehouseStateListView: React.FC = () => {
     const user = useSelector(({user}: {user: User}) => user)
     const canSelectWarehouse = usePermission(PERMISSIONS.WAREHOUSE_STATE.SELECT_WAREHOUSE)
     const [warehouseId, setWarehouseId] = useState<number>(canSelectWarehouse ? 0 : (user.warehouseId || 1))
-    const statuses = [StatusCargoEnum.FORMALIZED, StatusCargoEnum.RETURNED]
+    const statuses = [StatusCargoEnum.FORMALIZED, StatusCargoEnum.ARRIVED, StatusCargoEnum.RETURNED]
     const [selectedStatus, setSelectedStatus] = useState<string>(StatusCargoEnum.FORMALIZED)
     const [startDate, setStartDate] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
@@ -113,7 +113,7 @@ const WarehouseStateListView: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [warehouseId, selectedStatus, startDate, endDate, page, size])
+    }, [enqueueSnackbar, warehouseId, selectedStatus, startDate, endDate, page, size])
 
     useEffect(() => {
         let cancel = false;
@@ -131,7 +131,7 @@ const WarehouseStateListView: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [warehouseId, selectedStatus])
+    }, [enqueueSnackbar, warehouseId, selectedStatus])
 
     const handleWarehouseChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()
@@ -294,21 +294,21 @@ const WarehouseStateListView: React.FC = () => {
                                                     <TableCell>Вес (кг)</TableCell>
                                                     <TableCell>Стоимост $</TableCell>
                                                     <TableCell>Статус</TableCell>
-                                                    <TableCell>Штрих-код</TableCell>
-                                                    <TableCell>Код клиента</TableCell>
-                                                    <TableCell>Код поставщика</TableCell>
                                                     <TableCell>Дата операции</TableCell>
                                                     <TableCell>Завсклад</TableCell>
+                                                    <TableCell>Код клиента</TableCell>
+                                                    <TableCell>Код поставщика</TableCell>
+                                                    <TableCell>Штрих-код</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             {
                                                 rows.length > 0 ? (
                                                     <TableBody>
-                                                        {rows.map((row: WarehouseStateCargo) => (
+                                                        {rows.map((row: WarehouseStateCargo, index) => (
                                                             <TableRow
                                                                 hover
                                                                 style={{cursor: 'pointer'}}
-                                                                key={row.id}
+                                                                key={index}
                                                                 onClick={() => {
                                                                     history.push(`/app/warehouse-state/${row.id}`)
                                                                 }}
@@ -325,11 +325,11 @@ const WarehouseStateListView: React.FC = () => {
                                                                         <b style={{color: mapOfColorStatusCargo.get(row.cargos[0].status)}}>{mapOfStatusCargo.get(row.cargos[0].status)}</b>
                                                                     ) : '-')}
                                                                 </TableCell>
-                                                                <TableCell>{row.groupCargo ? 'Сборный': row.cargos[0].barcode}</TableCell>
-                                                                <TableCell>{row.clientCode}</TableCell>
-                                                                <TableCell>{row.providerCode}</TableCell>
                                                                 <TableCell>{row.groupCargo ? '-' : getCargoDate(row.cargos[0])}</TableCell>
                                                                 <TableCell>{row.groupCargo ? '-' : row.createdBy}</TableCell>
+                                                                <TableCell>{row.clientCode}</TableCell>
+                                                                <TableCell>{row.providerCode}</TableCell>
+                                                                <TableCell>{row.groupCargo ? 'Сборный': row.cargos[0].barcode}</TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
