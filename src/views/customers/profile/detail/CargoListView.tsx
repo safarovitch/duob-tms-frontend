@@ -93,6 +93,7 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                                 <TableCell>Стоимост $</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Просроченно дней</TableCell>
+                                <TableCell>Стоимость хранения ($)</TableCell>
                                 <TableCell>Штрих-код</TableCell>
                             </TableRow>
                         </TableHead>
@@ -136,7 +137,10 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                                                 ) : '-')}
                                             </TableCell>
                                             <TableCell>
-                                                {isGroupCargo(row.barcode) ? '-' : (row.cargos ? `${row.cargos[0].dueDays} дней` : '-')}
+                                                {isGroupCargo(row.barcode) ? '-' : (row.cargos ? row.cargos[0].dueDays : '-')}
+                                            </TableCell>
+                                            <TableCell>
+                                                {isGroupCargo(row.barcode) ? '-' : (row.cargos ? row.cargos[0].storagePrice : '-')}
                                             </TableCell>
                                             <TableCell>
                                                 {isGroupCargo(row.barcode) ? 'Сборный': row.barcode}

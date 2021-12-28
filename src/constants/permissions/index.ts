@@ -10,6 +10,7 @@ import APPLICATION from "./Application";
 import EXCHANGE from "./Exchange";
 import ANALYTICS from "./Analytics";
 import WAREHOUSE_STATE from "./WarehouseState";
+import STORAGE_COST from "./StorageCost";
 
 const PERMISSIONS = {
     ANALYTICS,
@@ -23,7 +24,8 @@ const PERMISSIONS = {
     ARTICLE,
     APPLICATION,
     EXCHANGE,
-    WAREHOUSE_STATE
+    WAREHOUSE_STATE,
+    STORAGE_COST
 }
 
 export default PERMISSIONS;

@@ -117,6 +117,7 @@ const CargoShow: React.FC = () => {
                                                     <TableCell>Статус</TableCell>
                                                     <TableCell>Дата операции</TableCell>
                                                     <TableCell>Просроченно дней</TableCell>
+                                                    <TableCell>Стоимость хранения ($)</TableCell>
                                                     <TableCell>Текущая местоположение</TableCell>
                                                     <TableCell width="30%">Путь груза</TableCell>
                                                     <TableCell>Штрих-код</TableCell>
@@ -130,7 +131,8 @@ const CargoShow: React.FC = () => {
                                                             <b>{mapOfStatusCargo.get(row.status)}</b>
                                                         </TableCell>
                                                         <TableCell>{getCargoDate(row)}</TableCell>
-                                                        <TableCell>{row.dueDays} дней</TableCell>
+                                                        <TableCell>{row.dueDays}</TableCell>
+                                                        <TableCell>{row.storagePrice}</TableCell>
                                                         <TableCell>
                                                             {row.roadId !== 0 && `Рейс ${row.roadId}`}
                                                             {row.warehouseId !== 0 && `Склад ${row.warehouseId}`}

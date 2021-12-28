@@ -513,8 +513,20 @@ const routesConfig = [
                         component: lazy(() => import('./views/cargo/issue/show'))
                     },
                     {
+                        exact: true,
+                        path: '/app/storage-cost',
+                        perm: PERMISSIONS.STORAGE_COST.LIST,
+                        component: lazy(() => import('./views/storage-cost/StorageCostListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/storage-cost/create',
+                        perm: PERMISSIONS.STORAGE_COST.LIST,
+                        component: lazy(() => import('./views/storage-cost/form'))
+                    },
+                    {
                         component: () => <Redirect to="/404" />
-                    }
+                    },
                 ]
             }
         ]
