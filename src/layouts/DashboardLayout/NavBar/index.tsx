@@ -144,6 +144,12 @@ const navConfig = [
                 href: '/app/cargo',
                 perm: PERMISSIONS.CARGO.LIST
             },
+            {
+                title: 'Хранение',
+                icon: DollarIcon,
+                href: '/app/storage-cost',
+                perm: PERMISSIONS.STORAGE_COST.LIST
+            },
         ]
     }
 ];

@@ -514,6 +514,18 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/storage-cost',
+                        perm: PERMISSIONS.STORAGE_COST.LIST,
+                        component: lazy(() => import('./views/storage-cost/StorageCostListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/storage-cost/create',
+                        perm: PERMISSIONS.STORAGE_COST.LIST,
+                        component: lazy(() => import('./views/storage-cost/form'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/notifications',
                         perm: PERMISSIONS.NOTIFICATION.LIST,
                         component: lazy(() => import('./views/notification/NotificationListView'))
@@ -526,7 +538,7 @@ const routesConfig = [
                     },
                     {
                         component: () => <Redirect to="/404" />
-                    }
+                    },
                 ]
             }
         ]
