@@ -5,9 +5,18 @@ import {RoadStatusEnum} from "../constants";
 export interface RoadList {
     id: number;
     road: string;
-    truck: {id: number, number: string};
+    truck: {
+        id: number;
+        number: string;
+        totalBodyCapacity: number;
+        liftingCapacity: number;
+    };
     cargoCount: number;
     status: RoadStatusEnum;
+    totalVolume: number;
+    totalWeight: number;
+    totalAmount: number;
+    totalPlace: number;
 }
 
 export interface RoadsStuffTab {
