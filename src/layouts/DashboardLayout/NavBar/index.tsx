@@ -14,6 +14,7 @@ import ImportContactsIcon from '@material-ui/icons/ImportContactsOutlined';
 import TrainIcon from '@material-ui/icons/TrainOutlined';
 import LocalGasStationIcon from '@material-ui/icons/LocalGasStationOutlined';
 import DescriptionIcon from '@material-ui/icons/DescriptionOutlined';
+import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import Logo from '../../../components/Logo';
 import NavItem from './NavItem';
 import {useSelector} from "react-redux";
@@ -61,6 +62,12 @@ const navConfig = [
                 icon: DashboardIcon,
                 href: '/app/warehouse-state',
                 perm: PERMISSIONS.WAREHOUSE_STATE.LIST
+            },
+            {
+                title: 'Уведомление',
+                icon: NotificationsNoneIcon,
+                href: '/app/notifications',
+                perm: PERMISSIONS.NOTIFICATION.LIST
             },
         ]
     },

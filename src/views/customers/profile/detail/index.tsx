@@ -6,6 +6,7 @@ import {CustomerStuffTab} from "../../../../model/Customer";
 import CustomerTabPanel from "./CustomerTabPanel";
 import ReconciliationActListView from "./ReconciliationActListView";
 import CargoListView from "./CargoListView";
+import NotificationListView from "./NotificationListView";
 
 const a11yProps = (tab: CustomerStuffTab) => ({id: `cargo-tab-${tab.value}`, 'aria-controls': `cargo-tabpanel-${tab.value}`})
 
@@ -52,6 +53,9 @@ const Detail: React.FC<{stuffId: string, tabPath: string}> = ({stuffId, tabPath}
                 </CustomerTabPanel>
                 <CustomerTabPanel index={'reconciliation-act'} value={currentTab}>
                     <ReconciliationActListView/>
+                </CustomerTabPanel>
+                <CustomerTabPanel index={'notification'} value={currentTab}>
+                    <NotificationListView/>
                 </CustomerTabPanel>
             </Card>
         </Box>
