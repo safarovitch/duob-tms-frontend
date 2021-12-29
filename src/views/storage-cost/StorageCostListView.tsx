@@ -95,8 +95,8 @@ const StorageCostListView: React.FC = () => {
                                                 {rows.map((row: StorageCost, index) => (
                                                     <TableRow hover key={row.id}>
                                                         <TableCell>{row.createdDate}</TableCell>
-                                                        <TableCell>{row.price}</TableCell>
                                                         <TableCell>{row.freeTime}</TableCell>
+                                                        <TableCell>{row.price}</TableCell>
                                                         <TableCell>
                                                             {index === 0 && page === 1 && (
                                                                 <IconButton disabled size="small">

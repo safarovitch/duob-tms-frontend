@@ -96,15 +96,15 @@ const Index: React.FC = () => {
                                                 sm={6}
                                             >
                                                 <TextField
-                                                    error={Boolean(props.touched.price && props.errors.price)}
+                                                    error={Boolean(props.touched.freeTime && props.errors.freeTime)}
                                                     fullWidth
-                                                    helperText={props.touched.price && props.errors.price}
+                                                    helperText={props.touched.freeTime && props.errors.freeTime}
                                                     label="Введите бесплатный срок хранения (день)"
                                                     placeholder="0"
-                                                    name="price"
+                                                    name="freeTime"
                                                     onBlur={props.handleBlur}
                                                     onChange={props.handleChange}
-                                                    value={props.values.price || ''}
+                                                    value={props.values.freeTime || ''}
                                                     variant="outlined"
                                                     required
                                                 />
@@ -115,15 +115,15 @@ const Index: React.FC = () => {
                                                 sm={6}
                                             >
                                                 <TextField
-                                                    error={Boolean(props.touched.freeTime && props.errors.freeTime)}
+                                                    error={Boolean(props.touched.price && props.errors.price)}
                                                     fullWidth
-                                                    helperText={props.touched.freeTime && props.errors.freeTime}
+                                                    helperText={props.touched.price && props.errors.price}
                                                     label="Введите стоимость хранения за сутки, м3 ($)"
                                                     placeholder="0"
-                                                    name="freeTime"
+                                                    name="price"
                                                     onBlur={props.handleBlur}
                                                     onChange={props.handleChange}
-                                                    value={props.values.freeTime || ''}
+                                                    value={props.values.price || ''}
                                                     variant="outlined"
                                                     required
                                                 />
