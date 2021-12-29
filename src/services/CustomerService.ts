@@ -84,13 +84,21 @@ class CustomerService {
     })
 
     getActiveCargos = (id: string, page: number, size: number, status: string) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/clients/income-cargos/${id ? `${id}` : ``}?page=${page}&size=${size}&${encodeURI(`extraParams[cargoStatus]=${status}`)}`)
+        api.get(`${API_BASE_URL}/clients/income-cargos${id ? `/${id}` : ``}?page=${page}&size=${size}&${encodeURI(`extraParams[cargoStatus]=${status}`)}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
 
     getReconciliationActs = (id: string, page: number, size: number, startDate: string, endDate: string) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/clients/reconciliation/${id ? `${id}` : ``}`, {params: {page, size, startDate, endDate}})
+        api.get(`${API_BASE_URL}/clients/reconciliation${id ? `/${id}` : ``}`, {params: {page, size, startDate, endDate}})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getNotifications = (id: string, page: number, size: number, startDate: string, endDate: string) =>
+        new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/notifications/all${id ? `/${id}` : ``}`,
+            {params: {page, size, startDate, endDate}})
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
