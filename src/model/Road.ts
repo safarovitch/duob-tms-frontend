@@ -11,6 +11,7 @@ export interface RoadList {
         totalBodyCapacity: number;
         liftingCapacity: number;
     };
+    trailer: Trailer;
     cargoCount: number;
     status: RoadStatusEnum;
     totalVolume: number;
