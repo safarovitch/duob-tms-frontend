@@ -4,7 +4,12 @@ import {Article} from "./Article";
 import {Employee} from "./Employee";
 import {Warehouse} from "./Warehouse";
 import {CurrencyExchangeRequest, Exchange} from "./Exchange";
-import {RoadDriverApplicationMoneyUnit, RoadDriverApplicationType} from "../constants";
+import {Currency, RoadDriverApplicationMoneyUnit, RoadDriverApplicationType} from "../constants";
+
+export interface WarehouseSecondaryMoneyUnit {
+    secondaryMoneyUnit: Currency;
+    secondaryMoneyCurrency: number
+}
 
 type StatusApplication = 'WAITING' | 'PAID' | 'ON_ROAD';
 

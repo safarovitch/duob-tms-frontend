@@ -49,7 +49,7 @@ const ExchangeForm: React.FC = () => {
 
     const initialValues: Exchange = {
         id: exchange?.id,
-        unit: exchange?.unit || Currency.USD,
+        unit: exchange?.unit || Currency.TJS,
         currency: exchange?.currency || 1
     }
 

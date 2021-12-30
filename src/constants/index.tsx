@@ -31,8 +31,8 @@ export const THEMES = {LIGHT, ONE_DARK, UNICORN}
 export const ARTICLES = {INCOME, INCOME_POSTFIX, OUTCOME, OUTCOME_POSTFIX}
 
 export enum Currency {
-    TJS = "TJS",
     USD = "USD",
+    TJS = "TJS",
     RUB = "RUB",
     CNY = "CNY"
 }
@@ -59,8 +59,8 @@ export const mapOfAccountabilityType = new Map(
 export const currencyMap = new Map(
     [
         [USD, "Доллар США - $"],
+        [TJS, "Таджикский сомони - TJS"],
         [RUB, "Российский Рубль - ₽"],
-        [TJS, "Смн."],
         [CNY, "Китайский Юань - ¥"],
     ]
 )

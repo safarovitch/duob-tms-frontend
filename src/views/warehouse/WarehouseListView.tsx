@@ -128,6 +128,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                         <TableRow>
                                             <TableCell>Название</TableCell>
                                             <TableCell align="center">Склад назначения</TableCell>
+                                            <TableCell>Валюта склада</TableCell>
                                             <TableCell align="center" width="15%">Действия</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -140,6 +141,7 @@ const WarehouseListView: React.FC<WarehouseListProps> = () => {
                                                         <TableCell align="center">
                                                             {row.destination ? <CheckIcon style={{color: 'green'}} /> : <XIcon style={{color: 'red'}}/>}
                                                         </TableCell>
+                                                        <TableCell>{row.secondaryMoneyUnit}</TableCell>
                                                         <TableCell align="center">
                                                             <IconButton
                                                                 component={RouterLink}

@@ -8,9 +8,12 @@ import {
     Button,
     Card,
     CardContent,
+    Checkbox,
     Grid,
+    makeStyles,
+    MenuItem,
     TextField,
-    makeStyles, Checkbox, Typography
+    Typography
 } from '@material-ui/core';
 import {Warehouse, WarehouseFormProps} from "../../../model/Warehouse";
 import warehouseService from "../../../services/WarehouseService";
@@ -18,6 +21,7 @@ import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteSelectedWarehouse} from "../../../store/actions/warehouseActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
+import {Currency} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -48,6 +52,7 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
 
     const initialValues: Warehouse = {
         name: warehouse?.name || '',
+        secondaryMoneyUnit: '' as Currency,
         destination: warehouse?.destination || false
     }
 
@@ -123,7 +128,11 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
                     <Card>
                         <CardContent>
                             <Grid container spacing={3}>
-                                <Grid item xs={12}>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
                                     <TextField
                                         error={Boolean(props.touched.name && props.errors.name)}
                                         fullWidth
@@ -141,6 +150,45 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
                                             shrink: true,
                                         }}
                                     />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <TextField
+                                        select
+                                        error={Boolean(props.touched.secondaryMoneyUnit && props.errors.secondaryMoneyUnit)}
+                                        fullWidth
+                                        helperText={props.touched.secondaryMoneyUnit && props.errors.secondaryMoneyUnit}
+                                        label="Выберите валюту"
+                                        name="secondaryMoneyUnit"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        value={props.values.secondaryMoneyUnit}
+                                        variant="outlined"
+                                        required
+                                        SelectProps={{
+                                            MenuProps: {
+                                                variant: "selectedMenu",
+                                                anchorOrigin: {
+                                                    vertical: "bottom",
+                                                    horizontal: "left"
+                                                },
+                                                transformOrigin: {
+                                                    vertical: "top",
+                                                    horizontal: "left"
+                                                },
+                                                getContentAnchorEl: null
+                                            }
+                                        }}
+                                    >
+                                        {
+                                            Object.keys(Currency).map((value, index) => (
+                                                <MenuItem key={index} value={value}>{value}</MenuItem>
+                                            ))
+                                        }
+                                    </TextField>
                                 </Grid>
                                 <Grid item md={12} xs={12}>
                                     <label onClick={props.handleChange} className={classes.checkbox}>

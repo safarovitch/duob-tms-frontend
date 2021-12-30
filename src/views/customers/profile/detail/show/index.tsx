@@ -134,8 +134,8 @@ const CargoShow: React.FC = () => {
                                                         <TableCell>{row.dueDays}</TableCell>
                                                         <TableCell>{row.storagePrice}</TableCell>
                                                         <TableCell>
-                                                            {row.roadId !== 0 && `Рейс ${row.roadId}`}
-                                                            {row.warehouseId !== 0 && `Склад ${row.warehouseId}`}
+                                                            {row.roadId && `Рейс ${row.roadId}`}
+                                                            {row.warehouseId && `Склад ${row.warehouseId}`}
                                                         </TableCell>
                                                         <TableCell>{row.description}</TableCell>
                                                         <TableCell>{row.barcode}</TableCell>

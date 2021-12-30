@@ -502,6 +502,18 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/conversion',
+                        perm: PERMISSIONS.CONVERSION.LIST,
+                        component: lazy(() => import('./views/conversion/ConversionListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/conversion/create',
+                        perm: PERMISSIONS.CONVERSION.CREATE,
+                        component: lazy(() => import('./views/conversion/form'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/cargo-issues',
                         perm: PERMISSIONS.CARGO.ISSUES.LIST,
                         component: lazy(() => import('./views/cargo/issue'))

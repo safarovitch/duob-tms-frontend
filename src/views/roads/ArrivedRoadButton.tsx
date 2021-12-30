@@ -80,7 +80,7 @@ const ArrivedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updat
             <ConfirmModal
                 isOpen={isConfirmModalOpen}
                 title={'Вы уверены?'}
-                description={'При завершении рейса, его нельзя будет отменить. Пожалуйста, убедитесь, что вы хотите завершить именно этот рейс.'}
+                description={'Пожалуйста, убедитесь, что именно этот рейс прибыль.'}
                 onClose={() => setOpen(false)}
                 onAccept={handleAccept}
             />
