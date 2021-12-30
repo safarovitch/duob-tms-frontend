@@ -82,8 +82,8 @@ const ExchangeListView: React.FC = () => {
                                 <TableBody>
                                     {rows.map((row: Exchange, index) => (
                                         <TableRow hover key={row.currency}>
-                                            <TableCell>{"1 " + currencyMap.get(row.unit)}</TableCell>
-                                            <TableCell><b>{row.currency}</b>{" " + currencyMap.get(Currency.TJS)!!}</TableCell>
+                                            <TableCell><b>1</b> {currencyMap.get(Currency.USD)}</TableCell>
+                                            <TableCell><b>{row.currency}</b>{" " + currencyMap.get(row.unit)}</TableCell>
                                             <TableCell align="center">
                                                 <IconButton
                                                     component={RouterLink}

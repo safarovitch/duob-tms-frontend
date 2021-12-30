@@ -1,7 +1,9 @@
 import {CargoGeneral} from "./Customer";
+import {Currency} from "../constants";
 
 export interface Warehouse {
     id?: number;
+    secondaryMoneyUnit: Currency;
     name: string;
     destination: boolean;
 }

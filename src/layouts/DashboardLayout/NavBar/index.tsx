@@ -87,6 +87,12 @@ const navConfig = [
                 perm: PERMISSIONS.EXCHANGE.LIST
             },
             {
+                title: 'Конвертация',
+                icon: DollarIcon,
+                href: '/app/conversion',
+                perm: PERMISSIONS.EXCHANGE.LIST
+            },
+            {
                 title: 'Статьи',
                 icon: ImportContactsIcon,
                 href: '/app/article',

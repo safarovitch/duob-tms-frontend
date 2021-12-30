@@ -8,6 +8,12 @@ import {
 } from "../model/Application";
 
 class Application {
+    getWarehouseSecondaryMoneyUnit = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/warehouses/secondary-money-unit`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     approveRefillBalance = (id: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/money-transactions/fill-client-balance/${id}`)
             .then(response => resolve(response.data))

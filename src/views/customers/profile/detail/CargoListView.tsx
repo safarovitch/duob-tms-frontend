@@ -36,7 +36,7 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
     const dispatch = useDispatch()
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(5)
+    const [size, setSize] = useState(10)
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
     const {id} = useParams<{id: string}>()
@@ -81,7 +81,7 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
         <Card className={classes.root}>
             <PerfectScrollbar>
                 <Box minWidth={700}>
-                    <Table>
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Дата оформления</TableCell>
@@ -160,7 +160,7 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                 page={page - 1}
                 labelRowsPerPage={'Строк на странице:'}
                 rowsPerPage={size}
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[10, 20, 30]}
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
