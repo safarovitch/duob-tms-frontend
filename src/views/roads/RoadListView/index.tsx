@@ -133,20 +133,20 @@ const RoadListView: React.FC = () => {
                                                             {row.truck.number || '-'}
                                                         </TableCell>
                                                         <TableCell>
-                                                            <Tooltip title={`Объем машины ${row.truck.totalBodyCapacity} / Объем груза ${row.totalVolume}`}>
+                                                            <Tooltip title={`Объем машины ${row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0)} / Объем груза ${row.totalVolume}`}>
                                                                 <Button style={{
-                                                                    color: getColorOfPercentage(calculatePercentage(row.truck.totalBodyCapacity, row.totalVolume))
+                                                                    color: getColorOfPercentage(calculatePercentage(row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0), row.totalVolume))
                                                                 }}>
-                                                                    {calculatePercentage(row.truck.totalBodyCapacity, row.totalVolume)}%
+                                                                    {calculatePercentage(row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0), row.totalVolume)}%
                                                                 </Button>
                                                             </Tooltip>
                                                         </TableCell>
                                                         <TableCell>
-                                                            <Tooltip title={`Вес машины ${row.truck.liftingCapacity} / Вес груза ${row.totalWeight}`}>
+                                                            <Tooltip title={`Вес машины ${row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0)} / Вес груза ${row.totalWeight}`}>
                                                                 <Button style={{
-                                                                    color: getColorOfPercentage(calculatePercentage(row.truck.totalBodyCapacity, row.totalVolume))
+                                                                    color: getColorOfPercentage(calculatePercentage(row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0), row.totalVolume))
                                                                 }}>
-                                                                    {calculatePercentage(row.truck.liftingCapacity, row.totalWeight)}%
+                                                                    {calculatePercentage(row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0), row.totalWeight)}%
                                                                 </Button>
                                                             </Tooltip>
                                                         </TableCell>
