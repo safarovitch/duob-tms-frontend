@@ -9,8 +9,8 @@ import LoadingLayout from "../../../components/LoadingLayout";
 import warehouseService from "../../../services/WarehouseService";
 import {Warehouse} from "../../../model/Warehouse";
 import {useHistory} from "react-router-dom";
-import {Exchange} from "../../../model/Exchange";
-import exchangeService from "../../../services/ExchangeService";
+import {WarehouseSecondaryMoneyUnit} from "../../../model/Application";
+import applicationService from "../../../services/Application";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,7 +28,7 @@ const Index: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [warehouses, setWarehouses] = useState<Warehouse[]>([])
-    const [exchanges, setExchanges] = useState<Exchange[]>([])
+    const [warehouseSecondaryMoneyUnit, setWarehouseSecondaryMoneyUnit] = useState<WarehouseSecondaryMoneyUnit>()
 
     useEffect(() => {
         let cancel = false;
@@ -37,14 +37,14 @@ const Index: React.FC = () => {
             try {
                 setLoading(true)
                 const data: any = await warehouseService.getAllWarehouse()
-                const dataExchanges: any = await exchangeService.getAllExchangesWithTJS()
+                const dataWarehouseSecondaryMoneyUnit: any = await applicationService.getWarehouseSecondaryMoneyUnit()
 
-                if (data.length === 0 || dataExchanges.length === 0) {
+                if (data.length === 0 || !dataWarehouseSecondaryMoneyUnit) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала склад и курс валюты', {variant: 'info'})
                 } else if (!cancel) {
                     setWarehouses(data)
-                    setExchanges(dataExchanges)
+                    setWarehouseSecondaryMoneyUnit(dataWarehouseSecondaryMoneyUnit)
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -59,16 +59,18 @@ const Index: React.FC = () => {
 
     return (
         <Page title={'Перевод денег'}>
-            {warehouses.length > 0
-                ? (
+            {
+                warehouses.length > 0 && warehouseSecondaryMoneyUnit ? (
                     <Container className={classes.root} maxWidth="md">
                         <Header/>
                         <Box mt={3}>
-                            <CreateOrEditForm warehouses={warehouses} exchanges={exchanges} />
+                            <CreateOrEditForm
+                                warehouses={warehouses}
+                                warehouseSecondaryMoneyUnit={warehouseSecondaryMoneyUnit}
+                            />
                         </Box>
                     </Container>
-                )
-                : <LoadingLayout loading={loading} hasError={hasError} />
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
             }
         </Page>
     );

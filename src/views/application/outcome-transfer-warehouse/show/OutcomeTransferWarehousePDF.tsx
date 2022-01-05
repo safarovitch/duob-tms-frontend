@@ -5,6 +5,7 @@ import DividerPDF from "../../pdf/DividerPDF";
 import SignaturePDF from "../../pdf/SignaturePDF";
 import HeaderPDF from "../../pdf/HeaderPDF";
 import LinePDF from "../../pdf/LinePDF";
+import {Currency} from "../../../../constants";
 
 Font.register({
     family: "Roboto",
@@ -97,11 +98,16 @@ const OutcomeTransferWarehousePDF: React.FC<{outcomeTransferWarehouse: OutcomeTr
                     </Text>
                 </View>
                 <View>
-                    <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {outcomeTransferWarehouse.actualAmount}
+                    <Text style={styles.body}>
+                        Сумма: {`${outcomeTransferWarehouse.actualAmount} ${outcomeTransferWarehouse.actualMoneyUnit}`}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        {`${outcomeTransferWarehouse.convertAmount} ${outcomeTransferWarehouse.convertMoneyUnit}`}
+                    </Text>
+                    <Text style={styles.body}>
+                        Курс конвертации: {outcomeTransferWarehouse.currency}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {outcomeTransferWarehouse.actualMoneyUnit}
+                        Итого: {outcomeTransferWarehouse.totalAmount} {Currency.USD}
                     </Text>
                 </View>
             </View>

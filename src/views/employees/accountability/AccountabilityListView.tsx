@@ -29,7 +29,7 @@ import moment from "moment";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import {useParams} from "react-router";
-import {AccountabilityType, mapOfAccountabilityType} from "../../../constants";
+import {AccountabilityType, Currency, mapOfAccountabilityType} from "../../../constants";
 import DeleteButton from "../../../components/DeleteButton";
 import {DoneAll as DoneAllIcon} from "@material-ui/icons";
 import AdminApproveButton from "../../application/components/AdminApproveButton";
@@ -183,14 +183,14 @@ const AccountabilityListView: React.FC = () => {
         <Page title={employee?.name || 'Подотчет'}>
             {
                 employee ? (
-                    <Container className={classes.root} maxWidth="lg">
+                    <Container className={classes.root} maxWidth="xl">
                         <Header employee={employee} />
                         <Box mt={3}>
                             <Card>
                                 <Box py={3} px={2}>
                                     <Box mb={3}>
                                         <Typography variant="h5">
-                                            Остаток: <b>{`${employee.balanceTJS} TJS, ${employee.balanceUSD} USD`}</b>
+                                            Остаток: <b>{employee.secondaryBalance} {employee.secondaryMoneyUnit} {employee.balanceUSD} {Currency.USD}</b>
                                         </Typography>
                                     </Box>
                                     <Grid container spacing={2} alignItems="center" justifyContent="space-between">
@@ -258,8 +258,10 @@ const AccountabilityListView: React.FC = () => {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>Дата</TableCell>
+                                                    <TableCell>Сумма USD</TableCell>
                                                     <TableCell>Сумма</TableCell>
-                                                    <TableCell>Валюта</TableCell>
+                                                    <TableCell>Курс конвертации</TableCell>
+                                                    <TableCell>Итого</TableCell>
                                                     <TableCell>Действие</TableCell>
                                                     <TableCell>Менеджер</TableCell>
                                                     <TableCell align="center">Админ</TableCell>
@@ -274,8 +276,10 @@ const AccountabilityListView: React.FC = () => {
                                                         {rows.map((row: Accountability, index) => (
                                                             <TableRow hover key={row.id}>
                                                                 <TableCell>{row.updatedDate}</TableCell>
-                                                                <TableCell>{row.amount}</TableCell>
-                                                                <TableCell>{row.moneyUnit}</TableCell>
+                                                                <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
+                                                                <TableCell>{row.convertAmount} {row.convertMoneyUnit}</TableCell>
+                                                                <TableCell>{row.currency}</TableCell>
+                                                                <TableCell>{row.totalAmount}</TableCell>
                                                                 <TableCell>{mapOfAccountabilityType.get(row.type)}</TableCell>
                                                                 <TableCell>{row.createdByName}</TableCell>
                                                                 <TableCell align="center">

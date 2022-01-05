@@ -22,10 +22,9 @@ export interface WarehouseFormProps {
 }
 
 export interface WarehouseBalance {
-    moneyBalanceTJS: number;
     moneyBalanceUSD: number;
-    moneyBalanceRUB: number;
-    moneyBalanceCNY: number;
+    secondaryMoneyBalance: number;
+    secondaryMoneyUnit: Currency;
 }
 
 export interface WarehouseStateCargo {

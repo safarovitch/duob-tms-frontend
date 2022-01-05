@@ -12,8 +12,8 @@ import articleService from "../../../services/ArticleService";
 import {ARTICLES} from "../../../constants";
 import employeeService from "../../../services/EmployeeService";
 import {useHistory} from "react-router-dom";
-import {Exchange} from "../../../model/Exchange";
-import exchangeService from "../../../services/ExchangeService";
+import {WarehouseSecondaryMoneyUnit} from "../../../model/Application";
+import applicationService from "../../../services/Application";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,7 +32,7 @@ const Index: React.FC = () => {
     const [hasError, setHasError] = useState(false)
     const [articles, setArticles] = useState<Article[]>([])
     const [employees, setEmployees] = useState<Employee[]>([])
-    const [exchanges, setExchanges] = useState<Exchange[]>([])
+    const [warehouseSecondaryMoneyUnit, setWarehouseSecondaryMoneyUnit] = useState<WarehouseSecondaryMoneyUnit>()
 
     useEffect(() => {
         let cancel = false;
@@ -42,15 +42,15 @@ const Index: React.FC = () => {
                 setLoading(true)
                 const dataArticles: any = await articleService.getArticles(ARTICLES.OUTCOME)
                 const dataEmployees: any = await employeeService.getEmployees()
-                const dataExchanges: any = await exchangeService.getAllExchangesWithTJS()
+                const dataWarehouseSecondaryMoneyUnit: any = await applicationService.getWarehouseSecondaryMoneyUnit()
 
-                if (dataArticles.length === 0 || dataEmployees.length === 0 || dataExchanges.length === 0) {
+                if (dataArticles.length === 0 || dataEmployees.length === 0 || !dataWarehouseSecondaryMoneyUnit) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала статью, сотрудника и курс валюты', {variant: 'info'})
                 } else if (!cancel) {
                     setArticles(dataArticles)
                     setEmployees(dataEmployees)
-                    setExchanges(dataExchanges)
+                    setWarehouseSecondaryMoneyUnit(dataWarehouseSecondaryMoneyUnit)
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -65,16 +65,19 @@ const Index: React.FC = () => {
 
     return (
         <Page title={'Расход по статьям'}>
-            {articles.length > 0
-                ? (
+            {
+                articles.length > 0 && employees.length > 0 && warehouseSecondaryMoneyUnit ? (
                     <Container className={classes.root} maxWidth="md">
                         <Header/>
                         <Box mt={3}>
-                            <CreateOrEditForm articles={articles} employees={employees} exchanges={exchanges} />
+                            <CreateOrEditForm
+                                articles={articles}
+                                employees={employees}
+                                warehouseSecondaryMoneyUnit={warehouseSecondaryMoneyUnit}
+                            />
                         </Box>
                     </Container>
-                )
-                : <LoadingLayout loading={loading} hasError={hasError} />
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
             }
         </Page>
     );

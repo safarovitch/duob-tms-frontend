@@ -6,6 +6,7 @@ import {
     OutcomeTransferWarehouseApplication,
     RefillBalanceApplication, RoadDriverApplicationRequest
 } from "../model/Application";
+import {CurrencyExchange} from "../model/Exchange";
 
 class Application {
     getWarehouseSecondaryMoneyUnit = () => new Promise((resolve, reject) => {
@@ -14,8 +15,8 @@ class Application {
             .catch(error => reject(error))
     })
 
-    approveRefillBalance = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transactions/fill-client-balance/${id}`)
+    approveRefillBalance = (id: number, currencyExchangeData: CurrencyExchange) => new Promise((resolve, reject) => {
+        api.post(`${API_BASE_URL}/money-transactions/fill-client-balance/${id}`, currencyExchangeData)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -55,8 +56,8 @@ class Application {
             })
     })
 
-    approveIncomeArticle = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transactions/income-by-article/${id}`)
+    approveIncomeArticle = (id: number, currencyExchangeData: CurrencyExchange) => new Promise((resolve, reject) => {
+        api.post(`${API_BASE_URL}/money-transactions/income-by-article/${id}`, currencyExchangeData)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -100,8 +101,8 @@ class Application {
             })
     })
 
-    approveOutcomeArticle = (id: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/money-transactions/outcome-by-article/${id}`)
+    approveOutcomeArticle = (id: number, currencyExchangeData: CurrencyExchange) => new Promise((resolve, reject) => {
+        api.post(`${API_BASE_URL}/money-transactions/outcome-by-article/${id}`, currencyExchangeData)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -135,7 +136,13 @@ class Application {
             })
     })
 
-    approveTransferWarehouse = (id: number) => new Promise((resolve, reject) => {
+    approveTransferWarehouse = (id: number, currencyExchangeData: CurrencyExchange) => new Promise((resolve, reject) => {
+        api.post(`${API_BASE_URL}/money-transactions/transfer-to-warehouse/${id}`, currencyExchangeData)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    approveSecondCashierTransferWarehouse = (id: number) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/money-transactions/transfer-to-warehouse/${id}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))

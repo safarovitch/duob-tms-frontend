@@ -4,6 +4,8 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {NavLink as RouterLink} from "react-router-dom";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
 import {EmployeeAccountabilityResponse} from "../../../model/Employee";
+import usePermission from "../../../hooks/usePermission";
+import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -20,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header: React.FC<{ employee: EmployeeAccountabilityResponse }> = ({employee}) => {
     const classes = useStyles();
+    const canCreate = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.CREATE)
 
     return (
         <Grid
@@ -63,23 +66,27 @@ const Header: React.FC<{ employee: EmployeeAccountabilityResponse }> = ({employe
                     {employee.name}
                 </Typography>
             </Grid>
-            <Grid item>
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    component={RouterLink}
-                    to={`/app/employee-accounts/${employee.id}/create`}
-                    className={classes.action}
-                >
-                    <SvgIcon
-                        fontSize="small"
-                        className={classes.actionIcon}
-                    >
-                        <PlusCircleIcon/>
-                    </SvgIcon>
-                    Добавить
-                </Button>
-            </Grid>
+            {
+                canCreate && (
+                    <Grid item>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            component={RouterLink}
+                            to={`/app/employee-accounts/${employee.id}/create`}
+                            className={classes.action}
+                        >
+                            <SvgIcon
+                                fontSize="small"
+                                className={classes.actionIcon}
+                            >
+                                <PlusCircleIcon/>
+                            </SvgIcon>
+                            Добавить
+                        </Button>
+                    </Grid>
+                )
+            }
         </Grid>
     );
 }

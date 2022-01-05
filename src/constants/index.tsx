@@ -48,6 +48,12 @@ export enum AccountabilityMoneyUnit {
     USD = "USD"
 }
 
+export enum ApplicationStatusEnum {
+    WAITING = "WAITING",
+    PAID = "PAID",
+    ON_ROAD = "ON_ROAD",
+}
+
 export const mapOfAccountabilityType = new Map(
     [
         [AccountabilityType.PAYMENT, "Выдача"],
