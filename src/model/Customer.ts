@@ -75,3 +75,27 @@ export interface CustomerReconciliationAct {
     discount: number;
     discountQuantity: number;
 }
+
+export interface Credit {
+    id: number;
+    adminApproval: boolean;
+    amount: number;
+    balance: number;
+    cashierApproval: boolean;
+    createdDate: string;
+    warehouseName: string;
+    description: string;
+    createdBy: string;
+}
+
+export interface CreditPaidRequest {
+    parentId?: number;
+    amount: number;
+}
+
+export interface CreditPaidResponse {
+    createdDate: string;
+    amount: number;
+    createdBy: string;
+}
+

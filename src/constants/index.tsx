@@ -100,24 +100,20 @@ export const cargoStuffTabs = [
 
 export const customerStuffTabs = [
     {
-        value: 'active-cargo',
-        label: 'Активные грузы'
-    },
-    {
-        value: 'received-cargo',
-        label: 'Полученные грузы'
-    },
-    {
-        value: 'returned-cargo',
-        label: 'Возвращенные грузы'
+        value: 'cargos',
+        label: 'Грузы',
     },
     {
         value: 'reconciliation-act',
-        label: 'Акт сверки'
+        label: 'Акт сверки',
+    },
+    {
+        value: 'credits',
+        label: 'Кредиты',
     },
     {
         value: 'notification',
-        label: 'Уведомление'
+        label: 'Уведомление',
     }
 ];
 
@@ -265,6 +261,20 @@ export const mapOfStatusApplication = new Map<string, string>(
         [WAITING, 'Ожидается'],
         [PAID, 'Оплачено'],
         [ON_ROAD, 'В пути'],
+    ]
+)
+
+export enum TypeCargoCustomerEnum {
+    ACTIVE = "ACTIVE",
+    ISSUED = "ISSUED",
+    RETURNED = "RETURNED",
+}
+
+export const mapOfTypeCargoCustomer = new Map<string, string>(
+    [
+        [TypeCargoCustomerEnum.ACTIVE, 'Активные'],
+        [TypeCargoCustomerEnum.ISSUED, 'Полученные'],
+        [TypeCargoCustomerEnum.RETURNED, 'Возвращенные'],
     ]
 )
 

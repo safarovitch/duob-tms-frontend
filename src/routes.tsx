@@ -567,7 +567,7 @@ const routesConfig = [
                     {
                         exact: true,
                         path: '/customer',
-                        component: () => <Redirect to="/customer/active-cargo" />
+                        component: () => <Redirect to="/customer/cargos" />
                     },
                     {
                         exact: true,

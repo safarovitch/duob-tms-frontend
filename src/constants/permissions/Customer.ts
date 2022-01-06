@@ -1,10 +1,11 @@
-import {ADMIN, MANAGER, WAREHOUSEMAN} from "./roles";
+import {ADMIN, CASHIER, MANAGER, WAREHOUSEMAN} from "./roles";
 
 const CUSTOMER = {
     LIST: [
         ADMIN,
         WAREHOUSEMAN,
-        MANAGER
+        MANAGER,
+        CASHIER
     ],
     CREATE: [
         ADMIN,
@@ -15,7 +16,18 @@ const CUSTOMER = {
     ],
     DELETE: [
         ADMIN
-    ]
+    ],
+    CREDIT: {
+        ADMIN_APPROVE: [
+            ADMIN,
+        ],
+        CASHIER_APPROVE: [
+            CASHIER,
+        ],
+        PAID: [
+            CASHIER,
+        ]
+    }
 }
 
 export default CUSTOMER

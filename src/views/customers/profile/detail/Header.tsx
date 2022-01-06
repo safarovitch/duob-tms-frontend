@@ -1,8 +1,9 @@
-import {Breadcrumbs, Grid, Link, makeStyles, Typography} from "@material-ui/core";
+import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from "@material-ui/core";
 import React from "react";
-import clsx from "clsx";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {NavLink as RouterLink} from "react-router-dom";
+import {useParams} from "react-router";
+import {PlusCircle as PlusCircleIcon} from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -17,12 +18,15 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<{className?: string, customerName: string}> = ({ className, customerName}) => {
+const Header: React.FC<{customerName: string}> = ({ customerName}) => {
     const classes = useStyles();
+    const {stuffId, id} = useParams<{stuffId: string, id: string}>()
+
+    console.log(stuffId)
 
     return (
         <Grid
-            className={clsx(classes.root, className)}
+            className={classes.root}
             container
             justifyContent="space-between"
             spacing={3}
@@ -62,6 +66,27 @@ const Header: React.FC<{className?: string, customerName: string}> = ({ classNam
                     {customerName}
                 </Typography>
             </Grid>
+            {
+                stuffId === "credits" && (
+                    <Grid item>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            to={`/app/customers/${id}/credits/create`}
+                            component={RouterLink}
+                            className={classes.action}
+                        >
+                            <SvgIcon
+                                fontSize="small"
+                                className={classes.actionIcon}
+                            >
+                                <PlusCircleIcon />
+                            </SvgIcon>
+                            Добавить
+                        </Button>
+                    </Grid>
+                )
+            }
         </Grid>
     );
 }

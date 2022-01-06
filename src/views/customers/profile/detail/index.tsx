@@ -7,6 +7,7 @@ import CustomerTabPanel from "./CustomerTabPanel";
 import ReconciliationActListView from "./ReconciliationActListView";
 import CargoListView from "./CargoListView";
 import NotificationListView from "./NotificationListView";
+import CreditListView from "./credit/CreditListView";
 
 const a11yProps = (tab: CustomerStuffTab) => ({id: `cargo-tab-${tab.value}`, 'aria-controls': `cargo-tabpanel-${tab.value}`})
 
@@ -42,17 +43,14 @@ const Detail: React.FC<{stuffId: string, tabPath: string}> = ({stuffId, tabPath}
                     ))}
                 </Tabs>
                 <Divider/>
-                <CustomerTabPanel index={'active-cargo'} value={currentTab}>
-                    <CargoListView cargoStatus={'ACTIVE'} />
-                </CustomerTabPanel>
-                <CustomerTabPanel index={'received-cargo'} value={currentTab}>
-                    <CargoListView cargoStatus={'ISSUED'}/>
-                </CustomerTabPanel>
-                <CustomerTabPanel index={'returned-cargo'} value={currentTab}>
-                    <CargoListView cargoStatus={'RETURNED'}/>
+                <CustomerTabPanel index={'cargos'} value={currentTab}>
+                    <CargoListView />
                 </CustomerTabPanel>
                 <CustomerTabPanel index={'reconciliation-act'} value={currentTab}>
                     <ReconciliationActListView/>
+                </CustomerTabPanel>
+                <CustomerTabPanel index={'credits'} value={currentTab}>
+                    <CreditListView />
                 </CustomerTabPanel>
                 <CustomerTabPanel index={'notification'} value={currentTab}>
                     <NotificationListView/>

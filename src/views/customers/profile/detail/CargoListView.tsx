@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {
     Box,
-    Card,
+    Card, Chip, Grid,
     makeStyles,
     Table,
     TableBody,
@@ -19,7 +19,13 @@ import {useDispatch} from "react-redux";
 import NoFoundTableBody from "../../../../components/NoFoundTableBody";
 import {useHistory} from "react-router-dom";
 import {setSelectedCustomerCargo} from "../../../../store/actions/customerActions";
-import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../../constants";
+import {
+    mapOfColorStatusCargo,
+    mapOfStatusCargo,
+    mapOfTypeCargoCustomer,
+    TypeCargoCustomerEnum
+} from "../../../../constants";
+import DoneIcon from "@material-ui/icons/Done";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,11 +35,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
+const CargoListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
     const dispatch = useDispatch()
+    const [selectedStatus, setSelectedStatus] = useState<string>(TypeCargoCustomerEnum.ACTIVE)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
@@ -49,7 +56,7 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
                 setLoading(true)
                 setRows([])
 
-                const data: any = await customerService.getActiveCargos(id, page, size, cargoStatus)
+                const data: any = await customerService.getActiveCargos(id, page, size, selectedStatus)
 
                 if (!cancel) {
                     setRows(data.content)
@@ -63,7 +70,12 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
         })()
 
         return () => {cancel = true}
-    }, [id, page, size, cargoStatus, enqueueSnackbar])
+    }, [id, page, size, selectedStatus, enqueueSnackbar])
+
+    const handleSelectStatus = (status: string) => {
+        setSelectedStatus(status)
+        setPage(1)
+    }
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -79,6 +91,29 @@ const CargoListView: React.FC<{cargoStatus: string}> = ({cargoStatus}) => {
 
     return rows && (
         <Card className={classes.root}>
+            <Box pb={3} px={2}>
+                <Grid container spacing={2}>
+                    {Object.keys(TypeCargoCustomerEnum).map((status, index) => (
+                        <Grid item key={index}>
+                            {selectedStatus === status ? (
+                                <Chip
+                                    label={mapOfTypeCargoCustomer.get(status)}
+                                    clickable
+                                    color="primary"
+                                    onDelete={() => null}
+                                    deleteIcon={<DoneIcon />}
+                                />
+                            ) : (
+                                <Chip
+                                    label={mapOfTypeCargoCustomer.get(status)}
+                                    clickable
+                                    onClick={() => handleSelectStatus(status)}
+                                />
+                            )}
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
             <PerfectScrollbar>
                 <Box minWidth={700}>
                     <Table size="small">
