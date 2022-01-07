@@ -26,6 +26,10 @@ const CUSTOMER = {
         ],
         PAID: [
             CASHIER,
+        ],
+        CREATE: [
+            MANAGER,
+            CASHIER
         ]
     }
 }

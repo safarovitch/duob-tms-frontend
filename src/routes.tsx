@@ -74,6 +74,12 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/customers/:id/credits/create',
+                        perm: PERMISSIONS.CUSTOMER.CREDIT.CREATE,
+                        component: lazy(() => import('./views/customers/credit'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/customers/:id/',
                         component: lazy(() => import('./views/customers/profile/RedirectToAdminCustomerDetail'))
                     },

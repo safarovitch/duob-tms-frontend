@@ -88,6 +88,13 @@ export interface Credit {
     createdBy: string;
 }
 
+export interface CreditCreateRequest {
+    clientId: number;
+    warehouseId: number;
+    amount?: number;
+    description: string;
+}
+
 export interface CreditPaidRequest {
     parentId?: number;
     amount: number;
