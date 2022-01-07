@@ -1,18 +1,10 @@
 import React, {useEffect} from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {
-    AppBar,
-    Box,
-    Hidden,
-    IconButton,
-    Toolbar,
-    makeStyles,
-    SvgIcon, Typography, Grid
-} from '@material-ui/core';
-import { Menu as MenuIcon } from 'react-feather';
+import {AppBar, Box, Grid, Hidden, IconButton, makeStyles, SvgIcon, Toolbar, Typography} from '@material-ui/core';
+import {Menu as MenuIcon} from 'react-feather';
 import Logo from '../../../components/Logo';
-import { THEMES } from '../../../constants';
+import {Currency, THEMES} from '../../../constants';
 import Settings from '../../CustomerLayout/TopBar/Settings';
 import Logout from "./Logout";
 import {useDispatch, useSelector} from "react-redux";
@@ -74,7 +66,7 @@ const TopBar: React.FC<{onMobileNavOpen: () => void, className?: string}> = ({
                     const warehouseBalance: any = await warehouseService.getWarehouseBalances()
                     dispatch(setWarehouseBalance(warehouseBalance))
                 } catch {
-                    dispatch(setWarehouseBalance({moneyBalanceUSD: 0, moneyBalanceTJS: 0, moneyBalanceRUB: 0, moneyBalanceCNY: 0}))
+                    dispatch(setWarehouseBalance({moneyBalanceUSD: 0, secondaryMoneyBalance: 0, secondaryMoneyUnit: Currency.TJS}))
                 }
             })()
         }
@@ -127,22 +119,12 @@ const TopBar: React.FC<{onMobileNavOpen: () => void, className?: string}> = ({
                         <Grid container spacing={2}>
                             <Grid item>
                                 <Typography variant="body1" className={classes.balance}>
-                                    {warehouseBalance.moneyBalanceTJS} TJS
+                                    {warehouseBalance.moneyBalanceUSD} {Currency.USD}
                                 </Typography>
                             </Grid>
                             <Grid item>
                                 <Typography variant="body1" align="right" className={classes.balance}>
-                                    {warehouseBalance.moneyBalanceUSD} $
-                                </Typography>
-                            </Grid>
-                            <Grid item>
-                                <Typography variant="body1" align="right" className={classes.balance}>
-                                    {warehouseBalance.moneyBalanceRUB} ₽
-                                </Typography>
-                            </Grid>
-                            <Grid item>
-                                <Typography variant="body1" align="right" className={classes.balance}>
-                                    {warehouseBalance.moneyBalanceCNY} ¥
+                                    {warehouseBalance.secondaryMoneyBalance} {warehouseBalance.secondaryMoneyUnit}
                                 </Typography>
                             </Grid>
                         </Grid>

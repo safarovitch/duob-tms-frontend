@@ -137,7 +137,7 @@ const ExchangeForm: React.FC = () => {
                                                     error={Boolean(props.touched.currency && props.errors.currency)}
                                                     fullWidth
                                                     helperText={props.touched.currency && props.errors.currency}
-                                                    label="Введите курс относительно Сомони"
+                                                    label="Введите курс относительно Доллара"
                                                     name="currency"
                                                     onBlur={props.handleBlur}
                                                     onChange={props.handleChange}

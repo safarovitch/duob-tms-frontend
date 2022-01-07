@@ -1,7 +1,7 @@
 import React from 'react';
 import {Font, Document, Page, Text, View, StyleSheet} from '@react-pdf/renderer';
 import {RefillBalanceApplication} from "../../../../model/Application";
-import {mapOfActionTypeApplication} from "../../../../constants";
+import {Currency, mapOfActionTypeApplication} from "../../../../constants";
 import DividerPDF from "../../pdf/DividerPDF";
 import SignaturePDF from "../../pdf/SignaturePDF";
 import HeaderPDF from "../../pdf/HeaderPDF";
@@ -100,12 +100,14 @@ const RefillBalancePDF: React.FC<{refillBalance: RefillBalanceApplication}> = ({
                     <View>
                         <Text style={styles.body}>
                             Сумма: {`${refillBalance.actualAmount} ${refillBalance.actualMoneyUnit}`}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            {`${refillBalance.convertAmount} ${refillBalance.convertMoneyUnit}`}
                         </Text>
                         <Text style={styles.body}>
                             Курс конвертации: {refillBalance.currency}
                         </Text>
                         <Text style={[styles.body, styles.fontBold]}>
-                            Итого: {refillBalance.convertAmount} {refillBalance.convertMoneyUnit}
+                            Итого: {refillBalance.totalAmount} {Currency.USD}
                         </Text>
                     </View>
                 </View>

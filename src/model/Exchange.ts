@@ -8,11 +8,12 @@ export interface Exchange {
     currency: number
 }
 
-export interface CurrencyExchangeRequest {
-    actualMoneyUnit: Currency;
+export interface CurrencyExchange {
     actualAmount: number;
-    convert?: boolean;
-    convertMoneyUnit?: Currency;
-    currency?: number;
-    convertAmount?: number;
+    actualMoneyUnit: Currency;
+    convertAmount: number;
+    convertMoneyUnit: Currency;
+    currency: number;
+    totalConvertAmount?: number;
+    totalAmount: number;
 }

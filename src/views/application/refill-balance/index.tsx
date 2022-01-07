@@ -9,10 +9,9 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import LoadingLayout from "../../../components/LoadingLayout";
 import customerService from "../../../services/CustomerService";
-import {RefillBalanceApplication} from "../../../model/Application";
+import {RefillBalanceApplication, WarehouseSecondaryMoneyUnit} from "../../../model/Application";
 import {Customer} from "../../../model/Customer";
-import {Exchange} from "../../../model/Exchange";
-import exchangeService from "../../../services/ExchangeService";
+import applicationService from "../../../services/Application";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,7 +29,7 @@ const Index: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [customers, setCustomers] = useState<Customer[]>([])
-    const [exchanges, setExchanges] = useState<Exchange[]>([])
+    const [warehouseSecondaryMoneyUnit, setWarehouseSecondaryMoneyUnit] = useState<WarehouseSecondaryMoneyUnit>()
     const refillBalance = useSelector((state: { selectedRefillBalance: RefillBalanceApplication }) => state.selectedRefillBalance)
 
     useEffect(() => {
@@ -40,14 +39,14 @@ const Index: React.FC = () => {
             try {
                 setLoading(true)
                 const dataCustomers: any = await customerService.getCustomers()
-                const dataExchanges: any = await exchangeService.getAllExchangesWithTJS()
+                const dataWarehouseSecondaryMoneyUnit: any = await applicationService.getWarehouseSecondaryMoneyUnit()
 
-                if (dataCustomers.length === 0 || dataExchanges.length === 0) {
+                if (dataCustomers.length === 0 || !dataWarehouseSecondaryMoneyUnit) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала клиента и курс валюты', {variant: 'info'})
                 } else if(!cancel) {
                     setCustomers(dataCustomers)
-                    setExchanges(dataExchanges)
+                    setWarehouseSecondaryMoneyUnit(dataWarehouseSecondaryMoneyUnit)
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -67,16 +66,19 @@ const Index: React.FC = () => {
 
     return (
         <Page title={'Пополнение баланса'}>
-            {customers.length > 0 && exchanges.length > 0
+            {customers.length > 0 && warehouseSecondaryMoneyUnit
                 ? (
                     <Container className={classes.root} maxWidth="md">
                         <Header refillBalance={refillBalance}/>
                         <Box mt={3}>
-                            <RefillBalanceForm refillBalance={refillBalance} customers={customers} exchanges={exchanges} />
+                            <RefillBalanceForm
+                                refillBalance={refillBalance}
+                                customers={customers}
+                                warehouseSecondaryMoneyUnit={warehouseSecondaryMoneyUnit}
+                            />
                         </Box>
                     </Container>
-                )
-                : <LoadingLayout loading={loading} hasError={hasError} />
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
             }
         </Page>
     );

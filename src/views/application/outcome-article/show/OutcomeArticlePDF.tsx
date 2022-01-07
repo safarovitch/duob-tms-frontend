@@ -5,6 +5,7 @@ import DividerPDF from "../../pdf/DividerPDF";
 import SignaturePDF from "../../pdf/SignaturePDF";
 import HeaderPDF from "../../pdf/HeaderPDF";
 import LinePDF from "../../pdf/LinePDF";
+import {Currency} from "../../../../constants";
 
 Font.register({
     family: "Roboto",
@@ -93,18 +94,20 @@ const OutcomeArticlePDF: React.FC<{outcomeArticle: OutcomeByArticleApplication}>
             <View style={styles.row}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Расход по сатьям:
+                        Расход по сатьям: {outcomeArticle.article?.name}
                     </Text>
                 </View>
                 <View>
                     <Text style={styles.body}>
-                        Статья: {outcomeArticle.article?.name}
+                        Сумма: {`${outcomeArticle.actualAmount} ${outcomeArticle.actualMoneyUnit}`}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        {`${outcomeArticle.convertAmount} ${outcomeArticle.convertMoneyUnit}`}
+                    </Text>
+                    <Text style={styles.body}>
+                        Курс конвертации: {outcomeArticle.currency}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {outcomeArticle.actualAmount}
-                    </Text>
-                    <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {outcomeArticle.actualMoneyUnit}
+                        Итого: {outcomeArticle.totalAmount} {Currency.USD}
                     </Text>
                 </View>
             </View>

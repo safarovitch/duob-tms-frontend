@@ -1,27 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {useSnackbar} from "notistack";
-import {
-    Box,
-    Card,
-    Container,
-    Divider,
-    Grid,
-    makeStyles,
-    Typography
-} from "@material-ui/core";
+import {Box, Button, Card, Container, Divider, Grid, makeStyles, SvgIcon, Typography} from "@material-ui/core";
 import Page from "../../../../components/Page";
 import Header from "./Header";
 import {RefillBalanceApplication} from "../../../../model/Application";
-import {mapOfActionTypeApplication} from "../../../../constants";
+import {ApplicationStatusEnum, Currency, mapOfActionTypeApplication} from "../../../../constants";
 import PERMISSIONS from "../../../../constants/permissions";
-import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import applicationService from "../../../../services/Application";
 import {deleteSelectedRefillBalance, setSelectedRefillBalance} from "../../../../store/actions/applicationAction";
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
-import ApproveApplication from "../../components/ApproveApplication";
+import CashierApprove from "../../components/CashierApprove";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,17 +28,24 @@ const useStyles = makeStyles((theme) => ({
     },
     mb1: {
         marginBottom: '8px',
-    }
+    },
+    action: {
+        marginBottom: theme.spacing(1),
+        '& + &': {
+            marginLeft: theme.spacing(1)
+        }
+    },
+    actionIcon: {
+        marginRight: theme.spacing(1)
+    },
 }));
 
 const ShowView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
-    const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
     const canApprove = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.APPROVE)
     const canAddPhoto = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.ADD_PHOTO)
-    const [loading, setLoading] = useState(false)
     const refillBalance = useSelector((state: { selectedRefillBalance: RefillBalanceApplication }) => state.selectedRefillBalance)
 
     useEffect(() => () => {
@@ -59,20 +57,9 @@ const ShowView: React.FC = () => {
         return null;
     }
 
-    const handleApproveApplication = async () => {
-        try {
-            setLoading(true)
-
-            const fetchRefillBalance: any = await applicationService.approveRefillBalance(refillBalance.id!)
-
-            dispatch(setSelectedRefillBalance(fetchRefillBalance))
-            dispatch(needUpdateWarehouseBalance())
-            enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
+    const handleApprove = (data: RefillBalanceApplication) => {
+        dispatch(setSelectedRefillBalance(data))
+        dispatch(needUpdateWarehouseBalance())
     }
 
     const handleAddImage = (images: string) => {
@@ -80,7 +67,7 @@ const ShowView: React.FC = () => {
         dispatch(setSelectedRefillBalance(newRefillBalance))
     }
 
-    const isPaidApplication = (row: RefillBalanceApplication): boolean => row.status === 'PAID';
+    const isPaid = (): boolean => refillBalance.status === ApplicationStatusEnum.PAID;
 
     return (
         <Page title={`Заявка №${refillBalance.id}`}>
@@ -88,7 +75,20 @@ const ShowView: React.FC = () => {
                 <Header refillBalance={refillBalance}/>
                 <Card className={classes.mainContent}>
                     <Box mb={2}>
-                        <ApproveApplication isPaid={isPaidApplication(refillBalance)} canApprove={canApprove} loading={loading} onApproveApplication={handleApproveApplication} />
+                        <Button
+                            color="secondary"
+                            variant="outlined"
+                            onClick={() => history.go(-1)}
+                            className={classes.action}
+                        >
+                            <SvgIcon
+                                fontSize="small"
+                                className={classes.actionIcon}
+                            >
+                                <NavigateBeforeIcon />
+                            </SvgIcon>
+                            Назад
+                        </Button>
                     </Box>
                     <Divider />
                     <Box mt={3}>
@@ -119,26 +119,57 @@ const ShowView: React.FC = () => {
                             </Grid>
                         </Grid>
                     </Box>
+                    {
+                        !isPaid() && canApprove && (
+                            <Box mb={3}>
+                                <Grid container alignItems="center">
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="h4">
+                                            Действие:
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1">
+                                            {mapOfActionTypeApplication.get(refillBalance.actionType)}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        )
+                    }
                     <Divider />
                     <Box mt={3} mb={4}>
-                        <Grid container alignItems="center">
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="h4">
-                                    {mapOfActionTypeApplication.get(refillBalance.actionType)}:
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="body1">
-                                    Сумма: <b>{`${refillBalance.actualAmount} ${refillBalance.actualMoneyUnit}`}</b>
-                                </Typography>
-                                <Typography variant="body1">
-                                    Курс конвертации: <b>{refillBalance.currency}</b>
-                                </Typography>
-                                <Typography variant="body1">
-                                    Итого по курсу: <b>{refillBalance.convertAmount} {refillBalance.convertMoneyUnit}</b>
-                                </Typography>
-                            </Grid>
-                        </Grid>
+                        {
+                            !isPaid() && canApprove ? (
+                                <CashierApprove
+                                    applicationId={refillBalance.id!}
+                                    currencyExchangeData={refillBalance}
+                                    onApprove={applicationService.approveRefillBalance}
+                                    handleApprove={handleApprove}
+                                />
+                            ) : (
+                                <Grid container alignItems="center">
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="h4">
+                                            {mapOfActionTypeApplication.get(refillBalance.actionType)}:
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1">
+                                            Сумма: <b>{`${refillBalance.actualAmount} ${refillBalance.actualMoneyUnit}`}</b>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <b>{`${refillBalance.convertAmount} ${refillBalance.convertMoneyUnit}`}</b>
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Курс конвертации: <b>{refillBalance.currency}</b>
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Итого: <b>{refillBalance.totalAmount} {Currency.USD}</b>
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            )
+                        }
                     </Box>
                     <Divider />
                     <Box my={4}>
