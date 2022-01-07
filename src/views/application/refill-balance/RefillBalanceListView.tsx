@@ -13,7 +13,7 @@ import {setSelectedRefillBalance} from "../../../store/actions/applicationAction
 import applicationService from "../../../services/Application";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {mapOfActionTypeApplication, mapOfStatusApplication} from "../../../constants";
+import {Currency, mapOfActionTypeApplication, mapOfStatusApplication} from "../../../constants";
 import useDebounce from "../../../hooks/useDebounce";
 import moment from "moment";
 import usePermission from "../../../hooks/usePermission";
@@ -218,9 +218,10 @@ const RefillBalanceListView: React.FC = () => {
                                 <TableCell>Менеджер</TableCell>
                                 <TableCell>Клиент</TableCell>
                                 <TableCell>Кассир</TableCell>
+                                <TableCell>Сумма USD</TableCell>
                                 <TableCell>Сумма</TableCell>
                                 <TableCell>Курс конвертации</TableCell>
-                                <TableCell>Итого по курсу</TableCell>
+                                <TableCell>Итого</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Действие</TableCell>
                                 <TableCell>Дата оплаты</TableCell>
@@ -237,8 +238,9 @@ const RefillBalanceListView: React.FC = () => {
                                             <TableCell>{row.client?.name}</TableCell>
                                             <TableCell>{isPaidApplication(row) ? row.cashierName : "-"}</TableCell>
                                             <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
-                                            <TableCell>{row.convert ? row.currency : '-'}</TableCell>
-                                            <TableCell>{row.convert ? `${row.convertAmount} ${row.convertMoneyUnit}` : '-'}</TableCell>
+                                            <TableCell>{row.convertAmount} {row.convertMoneyUnit}</TableCell>
+                                            <TableCell>{row.currency}</TableCell>
+                                            <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
                                             <TableCell className={isPaidApplication(row) ? classes.statusPaid : classes.statusWaiting}>
                                                 {mapOfStatusApplication.get(row.status!)}
                                             </TableCell>

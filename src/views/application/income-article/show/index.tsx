@@ -1,27 +1,27 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {useSnackbar} from "notistack";
 import {
-    Box,
+    Box, Button,
     Card,
     Container,
     Divider,
     Grid,
-    makeStyles,
+    makeStyles, SvgIcon,
     Typography
 } from "@material-ui/core";
 import Page from "../../../../components/Page";
 import Header from "./Header";
 import {IncomeByArticleApplication} from "../../../../model/Application";
 import PERMISSIONS from "../../../../constants/permissions";
-import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import applicationService from "../../../../services/Application";
 import {deleteSelectedIncomeArticle, setSelectedIncomeArticle} from "../../../../store/actions/applicationAction";
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
-import ApproveApplication from "../../components/ApproveApplication";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
+import {ApplicationStatusEnum, Currency} from "../../../../constants";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import CashierApprove from "../../components/CashierApprove";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,17 +36,24 @@ const useStyles = makeStyles((theme) => ({
     },
     mb1: {
         marginBottom: '8px',
-    }
+    },
+    action: {
+        marginBottom: theme.spacing(1),
+        '& + &': {
+            marginLeft: theme.spacing(1)
+        }
+    },
+    actionIcon: {
+        marginRight: theme.spacing(1)
+    },
 }));
 
 const ShowView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
-    const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
     const canApprove = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.APPROVE)
     const canAddPhoto = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.ADD_PHOTO)
-    const [loading, setLoading] = useState(false)
     const incomeArticle = useSelector((state: { selectedApplicationIncomeArticle: IncomeByArticleApplication }) => state.selectedApplicationIncomeArticle)
 
     useEffect(() => () => {
@@ -58,20 +65,9 @@ const ShowView: React.FC = () => {
         return null;
     }
 
-    const handleApproveApplication = async () => {
-        try {
-            setLoading(true)
-
-            const fetchIncomeArticle: any = await applicationService.approveIncomeArticle(incomeArticle.id!)
-
-            dispatch(setSelectedIncomeArticle(fetchIncomeArticle))
-            dispatch(needUpdateWarehouseBalance())
-            enqueueSnackbar('Успешно подтверждено', {variant: 'success'})
-        } catch (error: any) {
-            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-        } finally {
-            setLoading(false)
-        }
+    const handleApprove = (data: IncomeByArticleApplication) => {
+        dispatch(setSelectedIncomeArticle(data))
+        dispatch(needUpdateWarehouseBalance())
     }
 
     const handleAddImage = (images: string) => {
@@ -79,7 +75,7 @@ const ShowView: React.FC = () => {
         dispatch(setSelectedIncomeArticle(newIncomeArticle))
     }
 
-    const isPaidApplication = (row: IncomeByArticleApplication): boolean => row.status === 'PAID';
+    const isPaid = (): boolean => incomeArticle.status === ApplicationStatusEnum.PAID;
 
     return (
         <Page title={`Заявка №${incomeArticle.id}`}>
@@ -87,7 +83,20 @@ const ShowView: React.FC = () => {
                 <Header incomeArticle={incomeArticle}/>
                 <Card className={classes.mainContent}>
                     <Box mb={2}>
-                        <ApproveApplication isPaid={isPaidApplication(incomeArticle)} canApprove={canApprove} loading={loading} onApproveApplication={handleApproveApplication} />
+                        <Button
+                            color="secondary"
+                            variant="outlined"
+                            onClick={() => history.go(-1)}
+                            className={classes.action}
+                        >
+                            <SvgIcon
+                                fontSize="small"
+                                className={classes.actionIcon}
+                            >
+                                <NavigateBeforeIcon />
+                            </SvgIcon>
+                            Назад
+                        </Button>
                     </Box>
                     <Divider />
                     <Box mt={3}>
@@ -118,23 +127,60 @@ const ShowView: React.FC = () => {
                             </Grid>
                         </Grid>
                     </Box>
+                    {
+                        !isPaid() && canApprove && (
+                            <Box mb={3}>
+                                <Grid container alignItems="center">
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="h4">
+                                            Приход по статьям:
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1">
+                                            {incomeArticle.article?.name}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        )
+                    }
                     <Divider />
                     <Box mt={3} mb={4}>
-                        <Grid container alignItems="center">
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="h4">
-                                    Приход по статьям:
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="body1">
-                                    Статья: {incomeArticle.article?.name}
-                                </Typography>
-                                <Typography variant="body1">
-                                    Сумма: <b>{incomeArticle.actualAmount} {incomeArticle.actualMoneyUnit}</b>
-                                </Typography>
-                            </Grid>
-                        </Grid>
+                        {
+                            !isPaid() && canApprove ? (
+                                <CashierApprove
+                                    applicationId={incomeArticle.id!}
+                                    currencyExchangeData={incomeArticle}
+                                    onApprove={applicationService.approveIncomeArticle}
+                                    handleApprove={handleApprove}
+                                />
+                            ) : (
+                                <Grid container alignItems="center">
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="h4">
+                                            Приход по статьям:
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1">
+                                            Статья: {incomeArticle.article?.name}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Сумма: <b>{`${incomeArticle.actualAmount} ${incomeArticle.actualMoneyUnit}`}</b>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <b>{`${incomeArticle.convertAmount} ${incomeArticle.convertMoneyUnit}`}</b>
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Курс конвертации: <b>{incomeArticle.currency}</b>
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Итого: <b>{incomeArticle.totalAmount} {Currency.USD}</b>
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            )
+                        }
                     </Box>
                     <Divider />
                     <Box my={4}>

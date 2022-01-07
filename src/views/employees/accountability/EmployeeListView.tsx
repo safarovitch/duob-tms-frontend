@@ -14,6 +14,7 @@ import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {EmployeeAccountabilityResponse} from "../../../model/Employee";
 import Page from "../../../components/Page";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import {Currency} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -119,8 +120,8 @@ const EmployeeListView: React.FC = () => {
                                         <TableRow>
                                             <TableCell>№</TableCell>
                                             <TableCell>Сотрудник</TableCell>
-                                            <TableCell>TJS</TableCell>
-                                            <TableCell>USD</TableCell>
+                                            <TableCell>Сумма</TableCell>
+                                            <TableCell>Сумма USD</TableCell>
                                             <TableCell>Заявки подотчет</TableCell>
                                             <TableCell align="center" width="17%">Действия</TableCell>
                                         </TableRow>
@@ -132,8 +133,8 @@ const EmployeeListView: React.FC = () => {
                                                     <TableRow hover key={row.id}>
                                                         <TableCell>{++index}</TableCell>
                                                         <TableCell>{row.name}</TableCell>
-                                                        <TableCell>{row.balanceTJS}</TableCell>
-                                                        <TableCell>{row.balanceUSD}</TableCell>
+                                                        <TableCell>{row.secondaryBalance} {row.secondaryMoneyUnit}</TableCell>
+                                                        <TableCell>{row.balanceUSD} {Currency.USD}</TableCell>
                                                         <TableCell>{row.countOfUncheckedApplications}</TableCell>
                                                         <TableCell align="center">
                                                             <IconButton

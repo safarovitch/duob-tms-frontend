@@ -11,7 +11,7 @@ import {OutcomeByArticleApplication} from "../../../model/Application";
 import applicationService from "../../../services/Application";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {mapOfStatusApplication} from "../../../constants";
+import {Currency, mapOfStatusApplication} from "../../../constants";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import {NavLink as RouterLink} from "react-router-dom";
@@ -226,9 +226,10 @@ const OutcomeArticleListView: React.FC = () => {
                                 <TableCell>Сотрудник</TableCell>
                                 <TableCell>Кассир</TableCell>
                                 <TableCell>Статья</TableCell>
+                                <TableCell>Сумма USD</TableCell>
                                 <TableCell>Сумма</TableCell>
                                 <TableCell>Курс конвертации</TableCell>
-                                <TableCell>Итого по курсу</TableCell>
+                                <TableCell>Итого</TableCell>
                                 <TableCell align="center">Админ</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Дата оплаты</TableCell>
@@ -241,13 +242,14 @@ const OutcomeArticleListView: React.FC = () => {
                                     {rows.map((row: OutcomeByArticleApplication, index) => (
                                         <TableRow hover key={row.id}>
                                             <TableCell>{row.createdDate}</TableCell>
-                                            <TableCell>{row.createdBy?.name}</TableCell>
+                                            <TableCell>{row.createdBy?.name || ''}</TableCell>
                                             <TableCell>{row.employee?.name}</TableCell>
-                                            <TableCell>{row.cashierName}</TableCell>
+                                            <TableCell>{row.cashierName || '-'}</TableCell>
                                             <TableCell>{row.article?.name}</TableCell>
                                             <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
-                                            <TableCell>{row.convert ? row.currency : '-'}</TableCell>
-                                            <TableCell>{row.convert ? `${row.convertAmount} ${row.convertMoneyUnit}` : '-'}</TableCell>
+                                            <TableCell>{row.convertAmount} {row.convertMoneyUnit}</TableCell>
+                                            <TableCell>{row.currency}</TableCell>
+                                            <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
                                             <TableCell align="center">
                                                 {
                                                     row.adminApproval ? <DoneAllIcon className={classes.statusPaid} /> : (

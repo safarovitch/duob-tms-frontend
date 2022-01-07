@@ -1,5 +1,6 @@
 import {Warehouse} from "./Warehouse";
-import {AccountabilityMoneyUnit, AccountabilityType} from "../constants";
+import {AccountabilityType, Currency} from "../constants";
+import {CurrencyExchange} from "./Exchange";
 
 export interface Employee {
     id?: number;
@@ -28,16 +29,15 @@ export interface EmployeeAccountabilityResponse {
     name: string;
     countOfUncheckedApplications: number;
     balanceUSD: number;
-    balanceTJS: number;
+    secondaryBalance: number;
+    secondaryMoneyUnit: Currency;
 }
 
-export interface Accountability {
+export interface Accountability extends CurrencyExchange{
     id?: number;
     employeeId: number;
     type: AccountabilityType;
     description: string;
-    amount: number;
-    moneyUnit: AccountabilityMoneyUnit;
     updatedDate?: string;
     employeeName?: string;
     createdByName?: string;

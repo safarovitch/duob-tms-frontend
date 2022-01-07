@@ -9,7 +9,7 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles, MenuItem,
+    makeStyles, Typography,
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -33,7 +33,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, articles}) => {
+const CreateOrEditForm: React.FC<IncomeByArticleFormProps> =
+    ({incomeArticle, articles, warehouseSecondaryMoneyUnit}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
@@ -47,12 +48,18 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
         article: incomeArticle?.article,
         articleId: incomeArticle?.article?.id || 0,
         actualAmount: incomeArticle?.actualAmount || 0,
-        actualMoneyUnit: incomeArticle?.actualMoneyUnit || '',
+        actualMoneyUnit: Currency.USD,
+        convertAmount: incomeArticle?.convertAmount || 0,
+        convertMoneyUnit: warehouseSecondaryMoneyUnit.secondaryMoneyUnit,
+        currency: warehouseSecondaryMoneyUnit.secondaryMoneyCurrency,
+        totalConvertAmount: Number(((incomeArticle?.totalAmount || 0) - (incomeArticle?.actualAmount || 0)).toFixed(2)),
+        totalAmount: incomeArticle?.totalAmount || 0,
         description: incomeArticle?.description,
     }
 
     const validationSchema = Yup.object().shape({
         actualAmount: Yup.number().typeError('Значение должно быть числом'),
+        convertAmount: Yup.number().typeError('Значение должно быть числом'),
         description: Yup.string().max(255)
     })
 
@@ -86,6 +93,18 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
 
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
+    }
+
+    const calculateTotalAmount = (actualAmount: number, convertAmount: number) => {
+        isNaN(actualAmount) && (actualAmount = 0)
+        isNaN(convertAmount) && (convertAmount = 0)
+
+        return (actualAmount + convertAmount).toFixed(2);
+    }
+
+    const calculateTotalConvertAmount = (convertAmount: number) => {
+        isNaN(convertAmount) && (convertAmount = 0)
+        return Number((convertAmount === 0 ? 0 : convertAmount / warehouseSecondaryMoneyUnit.secondaryMoneyCurrency).toFixed(2))
     }
 
     return (
@@ -126,67 +145,6 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
                                     item
                                     xs={12}
                                     sm={6}
-                                    md={4}
-                                >
-                                    <TextField
-                                        error={Boolean(props.touched.actualAmount && props.errors.actualAmount)}
-                                        fullWidth
-                                        helperText={props.touched.actualAmount && props.errors.actualAmount}
-                                        label="Введите сумму"
-                                        placeholder="0"
-                                        name="actualAmount"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.actualAmount || ''}
-                                        variant="outlined"
-                                        required
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                    md={4}
-                                >
-                                    <TextField
-                                        select
-                                        error={Boolean(props.touched.actualMoneyUnit && props.errors.actualMoneyUnit)}
-                                        fullWidth
-                                        helperText={props.touched.actualMoneyUnit && props.errors.actualMoneyUnit}
-                                        label="Выберите валюту"
-                                        name="actualMoneyUnit"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        value={props.values.actualMoneyUnit}
-                                        variant="outlined"
-                                        required
-                                        SelectProps={{
-                                            MenuProps: {
-                                                variant: "selectedMenu",
-                                                anchorOrigin: {
-                                                    vertical: "bottom",
-                                                    horizontal: "left"
-                                                },
-                                                transformOrigin: {
-                                                    vertical: "top",
-                                                    horizontal: "left"
-                                                },
-                                                getContentAnchorEl: null
-                                            }
-                                        }}
-                                    >
-                                        {
-                                            Object.keys(Currency).map((value, index) => (
-                                                <MenuItem key={index} value={value}>{value}</MenuItem>
-                                            ))
-                                        }
-                                    </TextField>
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                    md={4}
                                 >
                                     <Autocomplete
                                         options={articles}
@@ -208,6 +166,70 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> = ({incomeArticle, ar
                                             />
                                         )}
                                     />
+                                </Grid>
+                                <Grid item xs={12} sm={6} />
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <TextField
+                                        error={Boolean(props.touched.actualAmount && props.errors.actualAmount)}
+                                        fullWidth
+                                        helperText={props.touched.actualAmount && props.errors.actualAmount}
+                                        label={`Введите сумму ${Currency.USD}`}
+                                        placeholder="0"
+                                        name="actualAmount"
+                                        onBlur={props.handleBlur}
+                                        onChange={(e) => {
+                                            props.setFieldValue("totalAmount", calculateTotalAmount(Number(e.target.value), props.values.totalConvertAmount!))
+                                            props.handleChange(e)
+                                        }}
+                                        value={props.values.actualAmount || ''}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <TextField
+                                        error={Boolean(props.touched.convertAmount && props.errors.convertAmount)}
+                                        fullWidth
+                                        helperText={props.touched.convertAmount && props.errors.convertAmount}
+                                        label={`Введите сумму ${warehouseSecondaryMoneyUnit.secondaryMoneyUnit}`}
+                                        placeholder="0"
+                                        name="convertAmount"
+                                        onBlur={props.handleBlur}
+                                        onChange={(e) => {
+                                            let res = calculateTotalConvertAmount(Number(e.target.value))
+                                            props.setFieldValue("totalConvertAmount", res)
+                                            props.setFieldValue("totalAmount", calculateTotalAmount(Number(props.values.actualAmount), res))
+                                            props.handleChange(e)
+                                        }}
+                                        value={props.values.convertAmount || ''}
+                                        variant="outlined"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <Typography>Курс конвертации: {warehouseSecondaryMoneyUnit.secondaryMoneyCurrency}</Typography>
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <Typography>Итого по курсу: {props.values.totalConvertAmount} {Currency.USD}</Typography>
+                                    <Box pt={2}>
+                                        <Typography><b>Итого: {props.values.totalAmount} {Currency.USD}</b></Typography>
+                                    </Box>
                                 </Grid>
                                 <Grid
                                     item

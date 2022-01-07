@@ -3,8 +3,8 @@ import {Customer} from "./Customer";
 import {Article} from "./Article";
 import {Employee} from "./Employee";
 import {Warehouse} from "./Warehouse";
-import {CurrencyExchangeRequest, Exchange} from "./Exchange";
-import {Currency, RoadDriverApplicationMoneyUnit, RoadDriverApplicationType} from "../constants";
+import {CurrencyExchange} from "./Exchange";
+import {ApplicationStatusEnum, Currency, RoadDriverApplicationMoneyUnit, RoadDriverApplicationType} from "../constants";
 
 export interface WarehouseSecondaryMoneyUnit {
     secondaryMoneyUnit: Currency;
@@ -31,7 +31,7 @@ interface CreatedBy {
 
 export type RefillBalanceTypeAction = 'REFILL' | 'RETURN';
 
-export interface RefillBalanceApplication extends CurrencyExchangeRequest {
+export interface RefillBalanceApplication extends CurrencyExchange {
     id?: number;
     createdDate?: string;
     createdBy?: CreatedBy;
@@ -39,7 +39,7 @@ export interface RefillBalanceApplication extends CurrencyExchangeRequest {
     client?: Customer;
     clientId: number;
     actionType: RefillBalanceTypeAction;
-    status?: StatusApplication;
+    status?: ApplicationStatusEnum;
     images?: string;
     description: string;
     updatedDate?: string;
@@ -48,16 +48,16 @@ export interface RefillBalanceApplication extends CurrencyExchangeRequest {
 export interface RefillBalanceFormProps {
     refillBalance: RefillBalanceApplication;
     customers: Customer[];
-    exchanges: Exchange[];
+    warehouseSecondaryMoneyUnit: WarehouseSecondaryMoneyUnit;
 }
 
-export interface IncomeByArticleApplication extends CurrencyExchangeRequest {
+export interface IncomeByArticleApplication extends CurrencyExchange {
     id?: number;
     createdBy?: CreatedBy;
     cashierName?: string;
     article?: Article,
     articleId: number;
-    status?: StatusApplication;
+    status?: ApplicationStatusEnum;
     images?: string;
     description: string;
     createdDate?: string;
@@ -67,9 +67,10 @@ export interface IncomeByArticleApplication extends CurrencyExchangeRequest {
 export interface IncomeByArticleFormProps {
     incomeArticle: IncomeByArticleApplication;
     articles: Article[];
+    warehouseSecondaryMoneyUnit: WarehouseSecondaryMoneyUnit
 }
 
-export interface OutcomeByArticleApplication extends CurrencyExchangeRequest {
+export interface OutcomeByArticleApplication extends CurrencyExchange {
     id?: number;
     createdBy?: CreatedBy;
     employee?: Employee;
@@ -78,7 +79,7 @@ export interface OutcomeByArticleApplication extends CurrencyExchangeRequest {
     adminApproval?: boolean;
     article?: Article;
     articleId?: number;
-    status?: StatusApplication;
+    status?: ApplicationStatusEnum;
     images?: string;
     description: string;
     createdDate?: string;
@@ -88,21 +89,25 @@ export interface OutcomeByArticleApplication extends CurrencyExchangeRequest {
 export interface OutcomeByArticleFormProps {
     articles: Article[];
     employees: Employee[];
-    exchanges: Exchange[];
+    warehouseSecondaryMoneyUnit: WarehouseSecondaryMoneyUnit;
 }
 
-export interface OutcomeTransferWarehouseApplication extends CurrencyExchangeRequest {
+export interface OutcomeTransferWarehouseApplication extends CurrencyExchange {
     id?: number;
     createdBy?: CreatedBy;
     toWarehouseId?: number;
     toWarehouse?: Warehouse;
+    fromWarehouse?: Warehouse;
     fromCashier?: {
         id: number;
         name: string;
     };
-    toCashierName?: string;
+    toCashier?: {
+        id: number;
+        name: string;
+    };
     adminApproval?: boolean;
-    status?: StatusApplication;
+    status?: ApplicationStatusEnum;
     images?: string;
     description: string;
     createdDate?: string;
@@ -111,7 +116,7 @@ export interface OutcomeTransferWarehouseApplication extends CurrencyExchangeReq
 
 export interface OutcomeTransferWarehouseFormProps {
     warehouses: Warehouse[];
-    exchanges: Exchange[];
+    warehouseSecondaryMoneyUnit: WarehouseSecondaryMoneyUnit;
 }
 
 export interface RoadBalanceApplicationResponse {

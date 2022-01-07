@@ -13,7 +13,7 @@ import {setSelectedIncomeArticle} from "../../../store/actions/applicationAction
 import applicationService from "../../../services/Application";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {mapOfStatusApplication} from "../../../constants";
+import {Currency, mapOfStatusApplication} from "../../../constants";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
@@ -218,7 +218,10 @@ const IncomeArticleListView: React.FC = () => {
                                 <TableCell>Менеджер</TableCell>
                                 <TableCell>Кассир</TableCell>
                                 <TableCell>Статья</TableCell>
+                                <TableCell>Сумма USD</TableCell>
                                 <TableCell>Сумма</TableCell>
+                                <TableCell>Курс конвертации</TableCell>
+                                <TableCell>Итого</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Дата оплаты</TableCell>
                                 <TableCell align="center" width="17%">
@@ -232,10 +235,13 @@ const IncomeArticleListView: React.FC = () => {
                                     {rows.map((row: IncomeByArticleApplication, index) => (
                                         <TableRow hover key={row.id}>
                                             <TableCell>{row.createdDate}</TableCell>
-                                            <TableCell>{row.createdBy?.name}</TableCell>
-                                            <TableCell>{row.cashierName}</TableCell>
+                                            <TableCell>{row.createdBy?.name || '-'}</TableCell>
+                                            <TableCell>{row.cashierName || '-'}</TableCell>
                                             <TableCell>{row.article?.name}</TableCell>
                                             <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
+                                            <TableCell>{row.convertAmount} {row.convertMoneyUnit}</TableCell>
+                                            <TableCell>{row.currency}</TableCell>
+                                            <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
                                             <TableCell className={isPaidApplication(row) ? classes.statusPaid : classes.statusWaiting}>
                                                 {mapOfStatusApplication.get(row.status!)}
                                             </TableCell>

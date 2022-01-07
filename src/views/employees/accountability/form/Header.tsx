@@ -30,7 +30,7 @@ const Header: React.FC<{employeeId: string, accountability: Accountability}> = (
             <Link
                 variant="body1"
                 color="inherit"
-                to="/app/road/driver"
+                to={`/app/employee-accounts/${employeeId}`}
                 component={RouterLink}
             >
                 Сотрудник #{employeeId}

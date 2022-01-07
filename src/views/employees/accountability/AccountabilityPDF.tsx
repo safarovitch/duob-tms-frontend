@@ -1,6 +1,6 @@
 import React from 'react';
 import {Document, Font, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
-import {AccountabilityType, mapOfAccountabilityType} from "../../../constants";
+import {AccountabilityType, Currency, mapOfAccountabilityType} from "../../../constants";
 import DividerPDF from "../../application/pdf/DividerPDF";
 import SignaturePDF from "../../application/pdf/SignaturePDF";
 import HeaderPDF from "../../application/pdf/HeaderPDF";
@@ -94,18 +94,20 @@ const AccountabilityPDF: React.FC<{accountability: Accountability}> = ({accounta
             <View style={styles.row}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Подотчет:
+                        Подотчет: {mapOfAccountabilityType.get(AccountabilityType[accountability.type])}
                     </Text>
                 </View>
                 <View>
+                    <Text style={[styles.body, styles.fontBold]}>
+                        Сумма: {`${accountability.actualAmount} ${accountability.actualMoneyUnit}`}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        {`${accountability.convertAmount} ${accountability.convertMoneyUnit}`}
+                    </Text>
                     <Text style={styles.body}>
-                        {mapOfAccountabilityType.get(AccountabilityType[accountability.type])}
+                        Курс конвертации: {accountability.currency}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {accountability.amount}
-                    </Text>
-                    <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {accountability.moneyUnit}
+                        Итого: {accountability.totalAmount} {Currency.USD}
                     </Text>
                 </View>
             </View>

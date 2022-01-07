@@ -19,6 +19,9 @@ const EMPLOYEE = {
             CASHIER,
             MANAGER
         ],
+        CREATE: [
+            MANAGER
+        ],
         ADMIN_APPROVE: [
             ADMIN,
         ],

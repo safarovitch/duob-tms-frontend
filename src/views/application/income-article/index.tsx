@@ -8,10 +8,11 @@ import CreateOrEditForm from "./CreateOrEditForm";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import LoadingLayout from "../../../components/LoadingLayout";
-import {IncomeByArticleApplication} from "../../../model/Application";
+import {IncomeByArticleApplication, WarehouseSecondaryMoneyUnit} from "../../../model/Application";
 import {Article} from "../../../model/Article";
 import articleService from "../../../services/ArticleService";
 import {ARTICLES} from "../../../constants";
+import applicationService from "../../../services/Application";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,6 +30,7 @@ const Index: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [articles, setArticles] = useState<Article[]>([])
+    const [warehouseSecondaryMoneyUnit, setWarehouseSecondaryMoneyUnit] = useState<WarehouseSecondaryMoneyUnit>()
     const incomeArticle = useSelector((state: { selectedApplicationIncomeArticle: IncomeByArticleApplication }) => state.selectedApplicationIncomeArticle)
 
     useEffect(() => {
@@ -39,11 +41,15 @@ const Index: React.FC = () => {
                 setLoading(true)
 
                 const data: any = await articleService.getArticles(ARTICLES.INCOME)
+                const dataWarehouseSecondaryMoneyUnit: any = await applicationService.getWarehouseSecondaryMoneyUnit()
 
-                if (data.length === 0) {
+                if (data.length === 0 || !dataWarehouseSecondaryMoneyUnit) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала статью', {variant: 'info'})
-                } else if (!cancel) setArticles(data)
+                    enqueueSnackbar('Добавьте с начала статью и курс валюты', {variant: 'info'})
+                } else if (!cancel) {
+                    setArticles(data)
+                    setWarehouseSecondaryMoneyUnit(dataWarehouseSecondaryMoneyUnit)
+                }
             } catch (error: any) {
                 !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -62,16 +68,15 @@ const Index: React.FC = () => {
 
     return (
         <Page title={'Приход по статьям'}>
-            {articles.length > 0
-                ? (
+            {
+                articles.length > 0 && warehouseSecondaryMoneyUnit ? (
                     <Container className={classes.root} maxWidth="md">
                         <Header incomeArticle={incomeArticle}/>
                         <Box mt={3}>
-                            <CreateOrEditForm incomeArticle={incomeArticle} articles={articles} />
+                            <CreateOrEditForm incomeArticle={incomeArticle} articles={articles} warehouseSecondaryMoneyUnit={warehouseSecondaryMoneyUnit} />
                         </Box>
                     </Container>
-                )
-                : <LoadingLayout loading={loading} hasError={hasError} />
+                ) : <LoadingLayout loading={loading} hasError={hasError} />
             }
         </Page>
     );

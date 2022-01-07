@@ -11,7 +11,7 @@ import {OutcomeTransferWarehouseApplication} from "../../../model/Application";
 import applicationService from "../../../services/Application";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {mapOfStatusApplication} from "../../../constants";
+import {Currency, mapOfStatusApplication} from "../../../constants";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import {NavLink as RouterLink} from "react-router-dom";
@@ -226,9 +226,10 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
                                 <TableCell>Кассир отправителя</TableCell>
                                 <TableCell>Кассир получателя</TableCell>
                                 <TableCell>Склад</TableCell>
+                                <TableCell>Сумма USD</TableCell>
                                 <TableCell>Сумма</TableCell>
                                 <TableCell>Курс конвертации</TableCell>
-                                <TableCell>Итого по курсу</TableCell>
+                                <TableCell>Итого</TableCell>
                                 <TableCell align="center">Админ</TableCell>
                                 <TableCell>Статус</TableCell>
                                 <TableCell>Дата оплаты</TableCell>
@@ -243,11 +244,12 @@ const OutcomeTransferWarehouseListView: React.FC = () => {
                                             <TableCell>{row.createdDate}</TableCell>
                                             <TableCell>{row.createdBy?.name}</TableCell>
                                             <TableCell>{row.fromCashier?.name || '-'}</TableCell>
-                                            <TableCell>{row.toCashierName || '-'}</TableCell>
+                                            <TableCell>{row.toCashier?.name || '-'}</TableCell>
                                             <TableCell>{row.toWarehouse?.name}</TableCell>
                                             <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
-                                            <TableCell>{row.convert ? row.currency : '-'}</TableCell>
-                                            <TableCell>{row.convert ? `${row.convertAmount} ${row.convertMoneyUnit}` : '-'}</TableCell>
+                                            <TableCell>{row.convertAmount} {row.convertMoneyUnit}</TableCell>
+                                            <TableCell>{row.currency}</TableCell>
+                                            <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
                                             <TableCell align="center">
                                                 {
                                                     row.adminApproval ? <DoneAllIcon className={classes.statusPaid} /> : (
