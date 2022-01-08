@@ -108,18 +108,22 @@ export const customerStuffTabs = [
     {
         value: 'cargos',
         label: 'Грузы',
+        hasBadge: false
     },
     {
         value: 'reconciliation-act',
         label: 'Акт сверки',
+        hasBadge: false
     },
     {
         value: 'credits',
         label: 'Кредиты',
+        hasBadge: true
     },
     {
         value: 'notification',
         label: 'Уведомление',
+        hasBadge: false
     }
 ];
 

@@ -20,6 +20,8 @@ export interface Customer {
     placeNumber?: number;
     amount?: number;
     balance?: number;
+    creditBalance?: number;
+    unconfirmedCredit?: number;
 }
 
 export interface CustomerStuffTab {

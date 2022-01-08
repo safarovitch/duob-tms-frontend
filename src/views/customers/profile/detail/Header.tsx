@@ -4,23 +4,32 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {NavLink as RouterLink} from "react-router-dom";
 import {useParams} from "react-router";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
+import {Customer} from "../../../../model/Customer";
+import {Currency} from "../../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
     action: {
         marginBottom: theme.spacing(1),
+        marginTop: theme.spacing(0.5),
         '& + &': {
             marginLeft: theme.spacing(1)
         }
     },
     actionIcon: {
         marginRight: theme.spacing(1)
+    },
+    balanceTitle: {
+        fontSize: 13
+    },
+    balance: {
+        fontSize: 17
     }
 }));
 
-const Header: React.FC<{customerName: string}> = ({ customerName}) => {
+const Header: React.FC<{ customer: Customer }> = ({customer}) => {
     const classes = useStyles();
-    const {stuffId, id} = useParams<{stuffId: string, id: string}>()
+    const {stuffId, id} = useParams<{ stuffId: string, id: string }>()
 
     console.log(stuffId)
 
@@ -29,11 +38,11 @@ const Header: React.FC<{customerName: string}> = ({ customerName}) => {
             className={classes.root}
             container
             justifyContent="space-between"
-            spacing={3}
+            spacing={2}
         >
-            <Grid item>
+            <Grid item md={8}>
                 <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small" />}
+                    separator={<NavigateNextIcon fontSize="small"/>}
                     aria-label="breadcrumb"
                 >
                     <Link
@@ -56,35 +65,48 @@ const Header: React.FC<{customerName: string}> = ({ customerName}) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        {customerName}
+                        {customer.name}
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    {customerName}
+                    {customer.name}
                 </Typography>
             </Grid>
             {
                 stuffId === "credits" && (
-                    <Grid item>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            to={`/app/customers/${id}/credits/create`}
-                            component={RouterLink}
-                            className={classes.action}
-                        >
-                            <SvgIcon
-                                fontSize="small"
-                                className={classes.actionIcon}
+                    <>
+                        <Grid item md={2}>
+                            <Typography variant="body1" align="right" className={classes.balanceTitle}>
+                                Сумма кредита
+                            </Typography>
+                            <Grid item>
+                                <Typography variant="body1" align="right" className={classes.balance}>
+                                    {customer.creditBalance} {Currency.USD}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+
+                        <Grid item md={2}>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                to={`/app/customers/${id}/credits/create`}
+                                component={RouterLink}
+                                className={classes.action}
                             >
-                                <PlusCircleIcon />
-                            </SvgIcon>
-                            Добавить
-                        </Button>
-                    </Grid>
+                                <SvgIcon
+                                    fontSize="small"
+                                    className={classes.actionIcon}
+                                >
+                                    <PlusCircleIcon/>
+                                </SvgIcon>
+                                Добавить
+                            </Button>
+                        </Grid>
+                    </>
                 )
             }
         </Grid>

@@ -3,7 +3,7 @@ import React, {
     useEffect,
 } from 'react';
 import {
-    Avatar,
+    Avatar, Badge,
     Box, Card,
     Container, IconButton, InputAdornment, Link,
     makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField, Typography
@@ -152,15 +152,21 @@ const CustomerListView: React.FC = () => {
                                                                     {getInitials(row.name)}
                                                                 </Avatar>
                                                                 <div>
-                                                                    <Link
-                                                                        color="inherit"
-                                                                        onClick={() => dispatch(setSelectedCustomer(row))}
-                                                                        component={RouterLink}
-                                                                        to={`/app/customers/${row.id}`}
-                                                                        variant="h6"
-                                                                    >
-                                                                        {row.name}
-                                                                    </Link>
+                                                                    <Badge color="error"
+                                                                           invisible={row.unconfirmedCredit === 0}
+                                                                           anchorOrigin={{vertical: 'top', horizontal: 'left'}}
+                                                                           variant="dot">
+                                                                        <Link
+                                                                            color="inherit"
+                                                                            onClick={() => dispatch(setSelectedCustomer(row))}
+                                                                            component={RouterLink}
+                                                                            to={`/app/customers/${row.id}`}
+                                                                            variant="h6"
+                                                                        >
+                                                                            {row.name}
+                                                                        </Link>
+                                                                    </Badge>
+
                                                                     <Typography variant="body2" color="textSecondary">
                                                                         {row.phoneNumber}
                                                                     </Typography>

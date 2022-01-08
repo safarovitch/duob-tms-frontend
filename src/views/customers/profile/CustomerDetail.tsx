@@ -61,7 +61,7 @@ const CustomerDetail: React.FC = () => {
             {
                 customer ? (
                     <Container className={classes.root} maxWidth="lg">
-                        <Detail stuffId={stuffId} tabPath={'/customer'} />
+                        <Detail stuffId={stuffId} tabPath={'/customer'} customer={customer} />
                     </Container>
                 ) : <LoadingLayout loading={loading} hasError={hasError} />
             }
