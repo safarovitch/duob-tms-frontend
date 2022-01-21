@@ -1,5 +1,5 @@
 import React from "react";
-import {customerStuffTabs as tabs} from '../../../../constants';
+import {customerStuffTabs} from '../../../../constants';
 import {Badge, Box, Card, Divider, Tab, Tabs} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {Customer, CustomerStuffTab} from "../../../../model/Customer";
@@ -8,17 +8,19 @@ import ReconciliationActListView from "./ReconciliationActListView";
 import CargoListView from "./CargoListView";
 import NotificationListView from "./NotificationListView";
 import CreditListView from "./credit/CreditListView";
+import hasPermission from "../../../../hooks/hasPermisson";
 
 const a11yProps = (tab: CustomerStuffTab) => ({
     id: `cargo-tab-${tab.value}`,
     'aria-controls': `cargo-tabpanel-${tab.value}`
 })
 
-const getCurrentTab = (pathTab: string) => tabs.find(item => item.value === pathTab)
+const getCurrentTab = (tabs: CustomerStuffTab[], pathTab: string) => tabs.find(item => item.value === pathTab)
 
 const Detail: React.FC<{ stuffId: string, tabPath: string, customer: Customer }> = ({stuffId, tabPath, customer}) => {
     const history = useHistory()
-    const currentTab = getCurrentTab(stuffId)
+    let tabs = customerStuffTabs.filter(tab => hasPermission(tab.perm));
+    const currentTab = getCurrentTab(tabs, stuffId)
 
     if (!currentTab) {
         history.go(-1)
@@ -34,16 +36,19 @@ const Detail: React.FC<{ stuffId: string, tabPath: string, customer: Customer }>
                     value={currentTab.value}
                     centered
                 >
-                    {tabs.map((tab) => (
-                        <Tab
-                            key={tab.value}
-                            value={tab.value}
-                            label={tab.hasBadge ? <Badge color="error" badgeContent={customer.unconfirmedCredit}>{tab.label}</Badge> : tab.label}
-                            to={`${tabPath}/${tab.value}`}
-                            component={Link}
-                            {...a11yProps(tab)}
-                        />
-                    ))}
+                    {
+                        tabs.map(tab => (
+                                <Tab
+                                    key={tab.value}
+                                    value={tab.value}
+                                    label={tab.hasBadge ? <Badge color="error" badgeContent={customer.unconfirmedCredit}>{tab.label}</Badge> : tab.label}
+                                    to={`${tabPath}/${tab.value}`}
+                                    component={Link}
+                                    {...a11yProps(tab)}
+                                />
+                            )
+                        )
+                    }
                 </Tabs>
                 <Divider/>
                 <CustomerTabPanel index={'cargos'} value={currentTab}>

@@ -1,3 +1,5 @@
+import PERMISSIONS from "./permissions";
+
 const
     LIGHT = 'LIGHT',
     ONE_DARK = 'ONE_DARK',
@@ -108,22 +110,26 @@ export const customerStuffTabs = [
     {
         value: 'cargos',
         label: 'Грузы',
-        hasBadge: false
+        hasBadge: false,
+        perm: PERMISSIONS.CUSTOMER.CARGOS.LIST,
     },
     {
         value: 'reconciliation-act',
         label: 'Акт сверки',
-        hasBadge: false
+        hasBadge: false,
+        perm: PERMISSIONS.CUSTOMER.RECONCILIATION_ACT.LIST,
     },
     {
         value: 'credits',
         label: 'Кредиты',
-        hasBadge: true
+        hasBadge: true,
+        perm: PERMISSIONS.CUSTOMER.CREDIT.LIST,
     },
     {
         value: 'notification',
         label: 'Уведомление',
-        hasBadge: false
+        hasBadge: false,
+        perm: PERMISSIONS.CUSTOMER.NOTIFICATION.LIST,
     }
 ];
 

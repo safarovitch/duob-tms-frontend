@@ -154,7 +154,7 @@ const CargoShow: React.FC = () => {
                                                             <TableCell>Стоимость хранения ($)</TableCell>
                                                             <TableCell width="30%">Путь груза</TableCell>
                                                             <TableCell>Штрих-код</TableCell>
-                                                            <TableCell></TableCell>
+                                                            <TableCell />
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>

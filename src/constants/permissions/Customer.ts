@@ -17,7 +17,29 @@ const CUSTOMER = {
     DELETE: [
         ADMIN
     ],
+    DETAIL: [
+      ADMIN,
+      MANAGER,
+      CASHIER
+    ],
+    CARGOS: {
+        LIST: [
+            ADMIN,
+            MANAGER
+        ]
+    },
+    RECONCILIATION_ACT: {
+        LIST: [
+            ADMIN,
+            MANAGER
+        ]
+    },
     CREDIT: {
+        LIST: [
+            ADMIN,
+            MANAGER,
+            CASHIER
+        ],
         ADMIN_APPROVE: [
             ADMIN,
         ],
@@ -25,13 +47,19 @@ const CUSTOMER = {
             CASHIER,
         ],
         PAID: [
-            CASHIER,
+            MANAGER,
         ],
         CREATE: [
             MANAGER,
             CASHIER
         ]
-    }
+    },
+    NOTIFICATION: {
+        LIST: [
+            ADMIN,
+            MANAGER
+        ]
+    },
 }
 
 export default CUSTOMER

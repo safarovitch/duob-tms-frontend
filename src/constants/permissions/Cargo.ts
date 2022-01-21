@@ -14,8 +14,12 @@ const CARGO = {
             MANAGER
         ],
         APPROVE: [
+            ADMIN,
             MANAGER,
         ],
+        CREDIT: [
+            MANAGER
+        ]
     }
 }
 

@@ -25,10 +25,9 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import ConfirmModal from "../../../../components/ConfirmModal";
 import {Done as DoneIcon} from "@material-ui/icons";
-import {useHistory} from "react-router-dom";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import usePermission from "../../../../hooks/usePermission";
 import PERMISSIONS from "../../../../constants/permissions";
+import CreditCheckbox from "./CreditCheckbox";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
 const IssueShow: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
-    const history = useHistory()
     const {id: cargoIssueId} = useParams<{id: string}>()
     const [cargoIssue, setCargoIssue] = useState<CargoIssueResponse>()
     const [hasError, setHasError] = useState(false)
@@ -63,6 +61,9 @@ const IssueShow: React.FC = () => {
     const [loadingApprove, setLoadingApprove] = useState(false)
     const [isConfirmModalOpen, setOpen] = useState(false)
     const canApprove = usePermission(PERMISSIONS.CARGO.ISSUES.APPROVE)
+    const canCheckedCredit = usePermission(PERMISSIONS.CARGO.ISSUES.CREDIT)
+    const isManager = usePermission(PERMISSIONS.MANAGER)
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;
@@ -113,9 +114,10 @@ const IssueShow: React.FC = () => {
                                     <Typography variant="h5"><b>{cargoIssue.createdDate}</b></Typography>
                                 </Grid>
                                 <Grid item>
+                                    <CreditCheckbox canCheckedCredit={canCheckedCredit} cargoIssue={cargoIssue} handleChecked={(data: CargoIssueResponse) => setCargoIssue(data)} />
                                     {
-                                        !cargoIssue.approvalBy && canApprove ? (
-                                            <Box style={{position: 'relative'}}>
+                                        !cargoIssue.approvalBy && canApprove && ((!cargoIssue.credit && isManager) || (cargoIssue.credit && isAdmin)) && (
+                                            <Box style={{position: 'relative', display: 'inline-block'}}>
                                                 <Button
                                                     color="secondary"
                                                     variant="contained"
@@ -133,17 +135,6 @@ const IssueShow: React.FC = () => {
                                                 </Button>
                                                 {loadingApprove && <CircularProgress size={20} className={classes.loadingProgress} />}
                                             </Box>
-                                        ) : (
-                                            <Button
-                                                color="secondary"
-                                                variant="outlined"
-                                                onClick={() => history.go(-1)}
-                                            >
-                                                <SvgIcon fontSize="small" className={classes.actionIcon}>
-                                                    <NavigateBeforeIcon />
-                                                </SvgIcon>
-                                                Назад
-                                            </Button>
                                         )
                                     }
                                 </Grid>

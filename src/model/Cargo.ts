@@ -98,7 +98,9 @@ export interface CargoTariffFormProps {
 
 export interface CargoIssueResponse {
     id: number;
+    uuid: string;
     createdDate: string;
+    credit: boolean;
     client: {
         code: string;
         balance: number;

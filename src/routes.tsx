@@ -81,16 +81,19 @@ const routesConfig = [
                     {
                         exact: true,
                         path: '/app/customers/:id/',
+                        perm: PERMISSIONS.CUSTOMER.DETAIL,
                         component: lazy(() => import('./views/customers/profile/RedirectToAdminCustomerDetail'))
                     },
                     {
                         exact: true,
                         path: '/app/customers/:id/:stuffId',
+                        perm: PERMISSIONS.CUSTOMER.DETAIL,
                         component: lazy(() => import('./views/customers/profile/AdminCustomerDetail'))
                     },
                     {
                         exact: true,
                         path: '/app/customers/:id/:stuffId/show',
+                        perm: PERMISSIONS.CUSTOMER.DETAIL,
                         component: lazy(() => import('./views/customers/profile/detail/show'))
                     },
                     {

@@ -1,19 +1,9 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-    Avatar, Badge,
-    Box, Card,
-    Container, IconButton, InputAdornment, Link,
+    Avatar, Badge, Box, Card, Container, IconButton, InputAdornment,
     makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField, Typography
 } from '@material-ui/core';
-import {
-    Search as SearchIcon,
-    Edit as EditIcon,
-    ArrowRight as ArrowRightIcon,
-
-} from 'react-feather';
+import {Search as SearchIcon, Edit as EditIcon, ArrowRight as ArrowRightIcon,} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Page from '../../components/Page';
 import Header from './Header';
@@ -154,19 +144,13 @@ const CustomerListView: React.FC = () => {
                                                                 <div>
                                                                     <Badge color="error"
                                                                            invisible={row.unconfirmedCredit === 0}
-                                                                           anchorOrigin={{vertical: 'top', horizontal: 'left'}}
+                                                                           anchorOrigin={{
+                                                                               vertical: 'top',
+                                                                               horizontal: 'left'
+                                                                           }}
                                                                            variant="dot">
-                                                                        <Link
-                                                                            color="inherit"
-                                                                            onClick={() => dispatch(setSelectedCustomer(row))}
-                                                                            component={RouterLink}
-                                                                            to={`/app/customers/${row.id}`}
-                                                                            variant="h6"
-                                                                        >
-                                                                            {row.name}
-                                                                        </Link>
+                                                                        {row.name}
                                                                     </Badge>
-
                                                                     <Typography variant="body2" color="textSecondary">
                                                                         {row.phoneNumber}
                                                                     </Typography>

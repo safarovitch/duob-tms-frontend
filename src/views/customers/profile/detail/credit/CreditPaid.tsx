@@ -23,10 +23,11 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, value: number, onPaid: Function, handlePaid: Function }> =
-    ({credit, index, canPaid, value, onPaid, handlePaid}) => {
+const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, onPaid: Function, handlePaid: Function }> =
+    ({credit, index, canPaid, onPaid, handlePaid}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
+    const balanceInPercent = credit.cashierApproval ? ((100 * (credit.amount - credit.balance)) / credit.amount) : 0
     const [loading, setLoading] = useState(false)
     const [isConfirmModalOpen, setOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
@@ -37,7 +38,7 @@ const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, va
     }
 
     const validationSchema = Yup.object().shape({
-        amount: Yup.number().typeError('Значение должно быть числом'),
+        amount: Yup.number().positive().typeError('Значение должно быть числом'),
     })
 
     const handleAccept = async (values: CreditPaidRequest, formActions: { [key: string]: any }) => {
@@ -71,7 +72,7 @@ const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, va
             <Box position="relative" display="inline-flex">
                 <IconButton
                     style={{padding: 5}}
-                    disabled={!canPaid || loading}
+                    disabled={credit.balance === 0 || !canPaid || loading}
                     onClick={() => handleClick(index)}
                 >
                     <Box
@@ -85,10 +86,10 @@ const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, va
                         justifyContent="center"
                     >
                         <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
-                            value
+                            balanceInPercent
                         )}%`}</Typography>
                     </Box>
-                    {loading ? <CircularProgress /> : <CircularProgress variant="determinate" value={value} />}
+                    {loading ? <CircularProgress /> : <CircularProgress variant="determinate" value={balanceInPercent} />}
                 </IconButton>
             </Box>
             <Dialog
@@ -97,7 +98,6 @@ const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, va
                 aria-labelledby="alert-dialog-title"
             >
                 <DialogTitle className={classes.title} disableTypography id="alert-dialog-title"><Typography variant="h4">Оплата кредита</Typography></DialogTitle>
-                <DialogContent>
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
@@ -119,19 +119,29 @@ const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, va
                 >
                     {(props: FormikProps<CreditPaidRequest>) => (
                         <form onSubmit={props.handleSubmit}>
-                            <TextField
-                                error={Boolean(props.touched.amount && props.errors.amount)}
-                                fullWidth
-                                helperText={props.touched.amount && props.errors.amount}
-                                label={`Введите сумму ${Currency.USD}`}
-                                placeholder="0"
-                                name="amount"
-                                onBlur={props.handleBlur}
-                                onChange={props.handleChange}
-                                value={props.values.amount || ''}
-                                variant="outlined"
-                                required
-                            />
+                            <DialogContent style={{paddingTop: 0}}>
+                                <Typography variant="subtitle2" style={{marginBottom: 10}}>Остаток: {credit.balance} {Currency.USD} из {credit.amount} {Currency.USD}</Typography>
+                                <TextField
+                                    error={Boolean(props.touched.amount && props.errors.amount)}
+                                    fullWidth
+                                    helperText={props.touched.amount && props.errors.amount}
+                                    label={`Введите сумму ${Currency.USD}`}
+                                    placeholder="0"
+                                    name="amount"
+                                    onBlur={props.handleBlur}
+                                    onChange={(e) => {
+                                        let value = Number(e.target.value)
+
+                                        if (!isNaN(value) && value > credit.balance) {
+                                            value = credit.balance
+                                            props.setFieldValue("amount", value)
+                                        } else props.handleChange(e)
+                                    }}
+                                    value={props.values.amount || ''}
+                                    variant="outlined"
+                                    required
+                                />
+                            </DialogContent>
                             <DialogActions>
                                 <Button onClick={() => setOpen(false)} size="large" color="primary">
                                     Отмена
@@ -143,7 +153,6 @@ const CreditPaid: React.FC<{ credit: Credit, index: number, canPaid: boolean, va
                         </form>
                     )}
                 </Formik>
-                </DialogContent>
             </Dialog>
         </>
     )

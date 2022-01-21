@@ -172,8 +172,7 @@ const CreditListView: React.FC = () => {
                                                     <CreditPaid
                                                         index={index}
                                                         credit={row}
-                                                        canPaid={canPaid}
-                                                        value={row.cashierApproval ? ((100 * (row.amount - row.balance)) / row.amount) : 0}
+                                                        canPaid={canPaid && row.adminApproval && row.cashierApproval}
                                                         onPaid={customerService.paidCredit}
                                                         handlePaid={handlePaid}
                                                     />

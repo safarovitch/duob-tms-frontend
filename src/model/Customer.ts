@@ -27,6 +27,8 @@ export interface Customer {
 export interface CustomerStuffTab {
     value: string;
     label: string;
+    hasBadge: boolean;
+    perm: string[];
 }
 
 export interface CustomerTabPanelProps {

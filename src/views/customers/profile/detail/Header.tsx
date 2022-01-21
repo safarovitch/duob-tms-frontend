@@ -6,6 +6,8 @@ import {useParams} from "react-router";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
 import {Customer} from "../../../../model/Customer";
 import {Currency} from "../../../../constants";
+import usePermission from "../../../../hooks/usePermission";
+import PERMISSIONS from "../../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -30,8 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const Header: React.FC<{ customer: Customer }> = ({customer}) => {
     const classes = useStyles();
     const {stuffId, id} = useParams<{ stuffId: string, id: string }>()
-
-    console.log(stuffId)
+    const canCreateCredit = usePermission(PERMISSIONS.CUSTOMER.CREDIT.CREATE)
 
     return (
         <Grid
@@ -88,24 +89,27 @@ const Header: React.FC<{ customer: Customer }> = ({customer}) => {
                                 </Typography>
                             </Grid>
                         </Grid>
-
-                        <Grid item md={2}>
-                            <Button
-                                color="secondary"
-                                variant="contained"
-                                to={`/app/customers/${id}/credits/create`}
-                                component={RouterLink}
-                                className={classes.action}
-                            >
-                                <SvgIcon
-                                    fontSize="small"
-                                    className={classes.actionIcon}
-                                >
-                                    <PlusCircleIcon/>
-                                </SvgIcon>
-                                Добавить
-                            </Button>
-                        </Grid>
+                        {
+                            canCreateCredit && (
+                                <Grid item md={2}>
+                                    <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        to={`/app/customers/${id}/credits/create`}
+                                        component={RouterLink}
+                                        className={classes.action}
+                                    >
+                                        <SvgIcon
+                                            fontSize="small"
+                                            className={classes.actionIcon}
+                                        >
+                                            <PlusCircleIcon/>
+                                        </SvgIcon>
+                                        Добавить
+                                    </Button>
+                                </Grid>
+                            )
+                        }
                     </>
                 )
             }
