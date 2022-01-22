@@ -27,16 +27,14 @@ class CustomerService {
 
     getCustomers = () => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/clients/all`)
-            .then((response) => {resolve(response.data)})
-            .catch((error) => {reject(error)})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 
     getFilteredCustomers = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(API_BASE_URL + `/clients?page=${page}&size=${size}&search=${query}`)
-            .then((response) => {
-                resolve(response.data)
-            })
-            .catch((error) => {reject(error)})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 
     getCustomer = (id: string) => new Promise((resolve, reject) => {

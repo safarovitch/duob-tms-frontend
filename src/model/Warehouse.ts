@@ -49,6 +49,20 @@ export interface WarehouseStateCargo {
     date: string;
 }
 
+export interface WarehouseStateCargoRequest {
+    id?: number;
+    cargoTypeName: string;
+    heightCargo: number;
+    lengthCargo: number;
+    productName: string;
+    totalWeight: number;
+    widthCargo: number;
+    clientCode: string;
+    providerCode: string;
+    cargoTariff: string;
+    cargoCustomCode: string;
+}
+
 export interface WarehouseStateTotal {
     place: number;
     price: number;

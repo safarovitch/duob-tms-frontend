@@ -373,6 +373,12 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/warehouse-state/:id/edit',
+                        perm: PERMISSIONS.WAREHOUSE_STATE.CARGO_EDIT,
+                        component: lazy(() => import('./views/warehouse-state/cargo/CargoEdit'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/article',
                         perm: PERMISSIONS.ARTICLE.LIST,
                         component: () => <Redirect to="/app/article/income" />
