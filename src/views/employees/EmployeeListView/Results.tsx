@@ -7,7 +7,6 @@ import {
     Card, Chip, Grid,
     IconButton,
     InputAdornment,
-    Link,
     makeStyles,
     SvgIcon,
     Table,
@@ -191,10 +190,7 @@ const Results: React.FC<{roles: Role[]}> = ({roles}) => {
                                                         <Avatar className={classes.avatar} src={EMPLOYEES_IMAGE_BASE_URL + row.avatar}>
                                                             {getInitials(row.name)}
                                                         </Avatar>
-                                                        <Link color="inherit" component={RouterLink}
-                                                              to={"/app/employees/" + row.id} variant="h6">
-                                                            {row.name}
-                                                        </Link>
+                                                        {row.name}
                                                     </Box>
                                                 </TableCell>
                                                 <TableCell>{(row.roles!).map((role: Role)=>mapOfRoles.get(role.name)).join(', ')}</TableCell>

@@ -59,8 +59,8 @@ const AdminCustomerDetail: React.FC = () => {
             {
                 customer ? (
                     <Container className={classes.root} maxWidth="lg">
-                        <Header customerName={customer.name}/>
-                        <Detail stuffId={stuffId} tabPath={`/app/customers/${customerId}`} />
+                        <Header customer={customer}/>
+                        <Detail stuffId={stuffId} customer={customer} tabPath={`/app/customers/${customerId}`} />
                     </Container>
                 ) : <LoadingLayout loading={loading} hasError={hasError} />
             }

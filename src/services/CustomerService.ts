@@ -1,5 +1,5 @@
 import api from '../utils/Api'
-import {Customer} from "../model/Customer";
+import {CreditCreateRequest, CreditPaidRequest, Customer} from "../model/Customer";
 import {API_BASE_URL} from "../config";
 
 class CustomerService {
@@ -27,16 +27,14 @@ class CustomerService {
 
     getCustomers = () => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/clients/all`)
-            .then((response) => {resolve(response.data)})
-            .catch((error) => {reject(error)})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 
     getFilteredCustomers = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(API_BASE_URL + `/clients?page=${page}&size=${size}&search=${query}`)
-            .then((response) => {
-                resolve(response.data)
-            })
-            .catch((error) => {reject(error)})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 
     getCustomer = (id: string) => new Promise((resolve, reject) => {
@@ -91,6 +89,45 @@ class CustomerService {
 
     getReconciliationActs = (id: string, page: number, size: number, startDate: string, endDate: string) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/clients/reconciliation${id ? `/${id}` : ``}`, {params: {page, size, startDate, endDate}})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getCredits = (id: string, page: number, size: number) =>
+        new Promise((resolve, reject) => {
+            api.get(`${API_BASE_URL}/client-credits${id ? `/${id}` : ``}`,
+                {params: {page, size}})
+                .then(response => resolve(response.data))
+                .catch(error => reject(error))
+        })
+
+    addCredit = (credit: CreditCreateRequest) =>
+        new Promise((resolve, reject) => {
+            api.post(`${API_BASE_URL}/client-credits`, credit)
+                .then(response => resolve(response.data))
+                .catch(error => reject(error))
+        })
+
+    approveAdminApplication = (id: number) => new Promise((resolve, reject) => {
+        api.put(`${API_BASE_URL}/client-credits/${id}/admin-approval`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    approveCashierApplication = (id: number) => new Promise((resolve, reject) => {
+        api.put(`${API_BASE_URL}/client-credits/${id}/cashier-approval`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    paidCredit = (data: CreditPaidRequest) => new Promise((resolve, reject) => {
+        api.post(`${API_BASE_URL}/client-credits/debt-repayment`, data)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getCreditHistory = (creditId: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/client-credits/${creditId}/history`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

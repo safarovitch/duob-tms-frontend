@@ -2,13 +2,18 @@ import React, {useEffect, useState} from "react";
 import {
     Box,
     Card,
-    CardHeader, Chip,
+    CardHeader,
+    Chip,
     Container,
     Divider,
     Grid,
+    IconButton,
     makeStyles,
+    SvgIcon,
     Table,
-    TableBody, TableCell, TableHead,
+    TableBody,
+    TableCell,
+    TableHead,
     TableRow
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -22,6 +27,8 @@ import LoadingLayout from "../../../components/LoadingLayout";
 import Header from "./Header";
 import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../constants";
 import DoneIcon from "@material-ui/icons/Done";
+import {NavLink as RouterLink} from "react-router-dom";
+import {Edit as EditIcon} from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -102,7 +109,23 @@ const CargoShow: React.FC = () => {
                             <Grid container spacing={3}>
                                 <Grid item md={4} xl={3} xs={12}>
                                     <Card>
-                                        <CardHeader title="Информация о грузе" />
+                                        <Grid container justifyContent="space-between" alignItems="center">
+                                            <Grid item>
+                                                <CardHeader title="Информация о грузе" />
+                                            </Grid>
+                                            <Grid item>
+                                                <Box p={1}>
+                                                    <IconButton
+                                                        component={RouterLink}
+                                                        to={`/app/warehouse-state/${selectedCargo.id}/edit`}
+                                                    >
+                                                        <SvgIcon fontSize="small">
+                                                            <EditIcon/>
+                                                        </SvgIcon>
+                                                    </IconButton>
+                                                </Box>
+                                            </Grid>
+                                        </Grid>
                                         <Divider />
                                         <Table>
                                             <TableBody>
@@ -154,7 +177,7 @@ const CargoShow: React.FC = () => {
                                                             <TableCell>Стоимость хранения ($)</TableCell>
                                                             <TableCell width="30%">Путь груза</TableCell>
                                                             <TableCell>Штрих-код</TableCell>
-                                                            <TableCell></TableCell>
+                                                            <TableCell />
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>

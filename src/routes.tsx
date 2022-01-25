@@ -74,17 +74,26 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/customers/:id/credits/create',
+                        perm: PERMISSIONS.CUSTOMER.CREDIT.CREATE,
+                        component: lazy(() => import('./views/customers/credit'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/customers/:id/',
+                        perm: PERMISSIONS.CUSTOMER.DETAIL,
                         component: lazy(() => import('./views/customers/profile/RedirectToAdminCustomerDetail'))
                     },
                     {
                         exact: true,
                         path: '/app/customers/:id/:stuffId',
+                        perm: PERMISSIONS.CUSTOMER.DETAIL,
                         component: lazy(() => import('./views/customers/profile/AdminCustomerDetail'))
                     },
                     {
                         exact: true,
                         path: '/app/customers/:id/:stuffId/show',
+                        perm: PERMISSIONS.CUSTOMER.DETAIL,
                         component: lazy(() => import('./views/customers/profile/detail/show'))
                     },
                     {
@@ -364,6 +373,12 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/warehouse-state/:id/edit',
+                        perm: PERMISSIONS.WAREHOUSE_STATE.CARGO_EDIT,
+                        component: lazy(() => import('./views/warehouse-state/cargo/CargoEdit'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/article',
                         perm: PERMISSIONS.ARTICLE.LIST,
                         component: () => <Redirect to="/app/article/income" />
@@ -567,7 +582,7 @@ const routesConfig = [
                     {
                         exact: true,
                         path: '/customer',
-                        component: () => <Redirect to="/customer/active-cargo" />
+                        component: () => <Redirect to="/customer/cargos" />
                     },
                     {
                         exact: true,

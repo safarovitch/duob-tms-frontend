@@ -1,3 +1,5 @@
+import PERMISSIONS from "./permissions";
+
 const
     LIGHT = 'LIGHT',
     ONE_DARK = 'ONE_DARK',
@@ -54,6 +56,20 @@ export enum ApplicationStatusEnum {
     ON_ROAD = "ON_ROAD",
 }
 
+export enum TypeCalculationCargoEnum {
+    calculationRateWeight = "calculationRateWeight",
+    negotiatedPrice = "negotiatedPrice",
+    manualPrice = "manualPrice"
+}
+
+export const mapOfTypeCalculationCargoEnum = new Map(
+    [
+        [TypeCalculationCargoEnum.calculationRateWeight, "Расчет по норме и весу"],
+        [TypeCalculationCargoEnum.negotiatedPrice, "Ручная цена"],
+        [TypeCalculationCargoEnum.manualPrice, "Договорная цена"],
+    ]
+)
+
 export const mapOfAccountabilityType = new Map(
     [
         [AccountabilityType.PAYMENT, "Выдача"],
@@ -106,24 +122,28 @@ export const cargoStuffTabs = [
 
 export const customerStuffTabs = [
     {
-        value: 'active-cargo',
-        label: 'Активные грузы'
-    },
-    {
-        value: 'received-cargo',
-        label: 'Полученные грузы'
-    },
-    {
-        value: 'returned-cargo',
-        label: 'Возвращенные грузы'
+        value: 'cargos',
+        label: 'Грузы',
+        hasBadge: false,
+        perm: PERMISSIONS.CUSTOMER.CARGOS.LIST,
     },
     {
         value: 'reconciliation-act',
-        label: 'Акт сверки'
+        label: 'Акт сверки',
+        hasBadge: false,
+        perm: PERMISSIONS.CUSTOMER.RECONCILIATION_ACT.LIST,
+    },
+    {
+        value: 'credits',
+        label: 'Кредиты',
+        hasBadge: true,
+        perm: PERMISSIONS.CUSTOMER.CREDIT.LIST,
     },
     {
         value: 'notification',
-        label: 'Уведомление'
+        label: 'Уведомление',
+        hasBadge: false,
+        perm: PERMISSIONS.CUSTOMER.NOTIFICATION.LIST,
     }
 ];
 
@@ -271,6 +291,20 @@ export const mapOfStatusApplication = new Map<string, string>(
         [WAITING, 'Ожидается'],
         [PAID, 'Оплачено'],
         [ON_ROAD, 'В пути'],
+    ]
+)
+
+export enum TypeCargoCustomerEnum {
+    ACTIVE = "ACTIVE",
+    ISSUED = "ISSUED",
+    RETURNED = "RETURNED",
+}
+
+export const mapOfTypeCargoCustomer = new Map<string, string>(
+    [
+        [TypeCargoCustomerEnum.ACTIVE, 'Активные'],
+        [TypeCargoCustomerEnum.ISSUED, 'Полученные'],
+        [TypeCargoCustomerEnum.RETURNED, 'Возвращенные'],
     ]
 )
 

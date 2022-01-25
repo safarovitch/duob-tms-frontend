@@ -1,6 +1,7 @@
 import React, {useEffect, useReducer, useState} from "react";
 import {CargoIssueResponse} from "../../../model/Cargo";
 import {
+    Badge,
     Box,
     Breadcrumbs, Card,
     Container, IconButton,
@@ -159,7 +160,11 @@ const CargoIssueList: React.FC = () => {
                                             <TableBody>
                                                 {rows.map((row: CargoIssueResponse, index: number) => (
                                                     <TableRow hover key={row.id}>
-                                                        <TableCell>{row.createdDate}</TableCell>
+                                                        <TableCell>
+                                                            {
+                                                                row.credit ? (<Badge color="error" variant="dot" badgeContent=" ">{row.createdDate}</Badge>) : row.createdDate
+                                                            }
+                                                        </TableCell>
                                                         <TableCell>{row.client.code}</TableCell>
                                                         <TableCell>{row.client.balance} $</TableCell>
                                                         <TableCell>{row.actualAmount} $</TableCell>

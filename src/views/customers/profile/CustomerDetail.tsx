@@ -11,7 +11,6 @@ import {Container, makeStyles} from "@material-ui/core";
 import Page from "../../../components/Page";
 import {customerStuffTabs} from "../../../constants";
 import {Redirect} from "react-router-dom";
-import Header from "./detail/Header";
 import LoadingLayout from "../../../components/LoadingLayout";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,8 +61,7 @@ const CustomerDetail: React.FC = () => {
             {
                 customer ? (
                     <Container className={classes.root} maxWidth="lg">
-                        <Header customerName={customer.name}/>
-                        <Detail stuffId={stuffId} tabPath={'/customer'} />
+                        <Detail stuffId={stuffId} tabPath={'/customer'} customer={customer} />
                     </Container>
                 ) : <LoadingLayout loading={loading} hasError={hasError} />
             }

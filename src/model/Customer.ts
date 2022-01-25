@@ -20,11 +20,15 @@ export interface Customer {
     placeNumber?: number;
     amount?: number;
     balance?: number;
+    creditBalance?: number;
+    unconfirmedCredit?: number;
 }
 
 export interface CustomerStuffTab {
     value: string;
     label: string;
+    hasBadge: boolean;
+    perm: string[];
 }
 
 export interface CustomerTabPanelProps {
@@ -75,3 +79,34 @@ export interface CustomerReconciliationAct {
     discount: number;
     discountQuantity: number;
 }
+
+export interface Credit {
+    id: number;
+    adminApproval: boolean;
+    amount: number;
+    balance: number;
+    cashierApproval: boolean;
+    createdDate: string;
+    warehouseName: string;
+    description: string;
+    createdBy: string;
+}
+
+export interface CreditCreateRequest {
+    clientId: number;
+    warehouseId: number;
+    amount?: number;
+    description: string;
+}
+
+export interface CreditPaidRequest {
+    parentId?: number;
+    amount: number;
+}
+
+export interface CreditPaidResponse {
+    createdDate: string;
+    amount: number;
+    createdBy: string;
+}
+

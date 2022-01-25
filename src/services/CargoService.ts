@@ -172,6 +172,12 @@ class CustomerService {
             .catch(error => reject(error))
     })
 
+    creditCargoIssue = (id: number) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/applications/cargo-issue/${id}/credit`)
+            .then((response) => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     deleteCargoIssue = (id: number) => new Promise((resolve, reject) => {
         api.delete(`${API_BASE_URL}/applications/cargo-issues/${id}`)
             .then(response => resolve(response.data))
