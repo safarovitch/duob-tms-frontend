@@ -1,5 +1,5 @@
 import {CargoGeneral} from "./Customer";
-import {Currency} from "../constants";
+import {Currency, TypeCalculationCargoEnum} from "../constants";
 
 export interface Warehouse {
     id?: number;
@@ -51,16 +51,19 @@ export interface WarehouseStateCargo {
 
 export interface WarehouseStateCargoRequest {
     id?: number;
-    cargoTypeName: string;
-    heightCargo: number;
+    clientId: number;
+    providerId: number;
+    cargoTypeId: number;
+    tariffId: number;
+    productId: number;
+    customCodeId: number;
+    weightCargo: number;
     lengthCargo: number;
-    productName: string;
-    totalWeight: number;
     widthCargo: number;
-    clientCode: string;
-    providerCode: string;
-    cargoTariff: string;
-    cargoCustomCode: string;
+    heightCargo: number;
+    typeCalculation: TypeCalculationCargoEnum;
+    createdDate?: string;
+    updatedDate?: string;
 }
 
 export interface WarehouseStateTotal {

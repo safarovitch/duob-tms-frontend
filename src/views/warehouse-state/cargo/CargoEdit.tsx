@@ -10,7 +10,7 @@ import {
     Container,
     Grid,
     Link,
-    makeStyles,
+    makeStyles, MenuItem, TextField,
     Typography
 } from "@material-ui/core";
 import {WarehouseStateCargoRequest} from "../../../model/Warehouse";
@@ -28,6 +28,8 @@ import cargoService from "../../../services/CargoService";
 import LoadingLayout from "../../../components/LoadingLayout";
 import * as Yup from "yup";
 import {Formik, FormikProps} from 'formik';
+import {Autocomplete} from "@material-ui/lab";
+import {mapOfTypeCalculationCargoEnum, TypeCalculationCargoEnum} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,11 +56,17 @@ const CargoEdit: React.FC = () => {
     const [hasError, setHasError] = useState(false)
     const [cargo, setCargo] = useState<WarehouseStateCargoRequest>()
     const [customers, setCustomers] = useState<Customer[]>([])
+    const [customer, setCustomer] = useState<Customer | null>(null)
     const [providers, setProviders] = useState<Provider[]>([])
+    const [provider, setProvider] = useState<Provider | null>(null)
     const [cargoTypes, setCargoTypes] = useState<CargoType[]>([])
+    const [cargoType, setCargoType] = useState<CargoType | null>(null)
     const [cargoTariffs, setCargoTariffs] = useState<CargoTariff[]>([])
+    const [cargoTariff, setCargoTariff] = useState<CargoTariff | null>(null)
     const [cargoProducts, setCargoProducts] = useState<CargoProduct[]>([])
+    const [cargoProduct, setCargoProduct] = useState<CargoProduct | null>(null)
     const [cargoCustomCodes, setCargoCustomCodes] = useState<CargoCustomCode[]>([])
+    const [cargoCustomCode, setCargoCustomCode] = useState<CargoCustomCode | null>(null)
 
     useEffect(() => {
         let cancel = false;
@@ -67,7 +75,7 @@ const CargoEdit: React.FC = () => {
             try {
                 setLoading(true)
 
-                const dataCargo: any = await warehouseService.getWarehouseStateCargo(Number(cargoId))
+                const dataCargo: any = await warehouseService.getCargo(Number(cargoId))
                 const dataCustomers: any = await customerService.getFilteredCustomers(1, 10000, '')
                 const dataProviders: any = await providerService.getFilteredProvider(1, 10000, '')
                 const dataCargoTypes: any = await cargoService.getFilteredCargoTypes(1, 10000, '')
@@ -76,13 +84,19 @@ const CargoEdit: React.FC = () => {
                 const dataCargoCustomCodes: any = await cargoService.getFilteredCustomCodes(1, 10000, '')
 
                 if (!cancel) {
-                    setCargo(dataCargo[0])
+                    setCargo(dataCargo)
                     setCustomers(dataCustomers.content)
+                    setCustomer(dataCustomers.content.find((item: Customer) => item.id === dataCargo.clientId))
                     setProviders(dataProviders.content)
+                    setProvider(dataProviders.content.find((item: Provider) => item.id === dataCargo.providerId))
                     setCargoTypes(dataCargoTypes.content)
+                    setCargoType(dataCargoTypes.content.find((item: CargoType) => item.id === dataCargo.cargoTypeId))
                     setCargoTariffs(dataCargoTariffs.content)
+                    setCargoTariff(dataCargoTariffs.content.find((item: CargoType) => item.id === dataCargo.tariffId))
                     setCargoProducts(dataCargoProducts)
+                    setCargoProduct(dataCargoProducts.find((item: CargoType) => item.id === dataCargo.productId))
                     setCargoCustomCodes(dataCargoCustomCodes.content)
+                    setCargoCustomCode(dataCargoCustomCodes.content.find((item: CargoCustomCode) => item.id === dataCargo.customCodeId))
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -99,22 +113,21 @@ const CargoEdit: React.FC = () => {
 
     const initialValues: WarehouseStateCargoRequest = {
         id: cargo?.id,
-        clientCode: cargo?.clientCode || '',
-        providerCode: cargo?.providerCode || '',
-        cargoTypeName: cargo?.cargoTypeName || '',
-        cargoTariff: cargo?.cargoTariff || '',
-        productName: cargo?.productName || '',
-        cargoCustomCode: cargo?.cargoCustomCode || '',
-        totalWeight: cargo?.totalWeight || 0,
+        clientId: cargo?.clientId || 0,
+        providerId: cargo?.providerId || 0,
+        cargoTypeId: cargo?.cargoTypeId || 0,
+        tariffId: cargo?.tariffId || 0,
+        productId: cargo?.productId || 0,
+        customCodeId: cargo?.customCodeId || 0,
+        weightCargo: cargo?.weightCargo || 0,
         lengthCargo: cargo?.lengthCargo || 0,
         widthCargo: cargo?.widthCargo || 0,
         heightCargo: cargo?.heightCargo || 0,
-        // quantity: cargo?.quantity || 0,
+        typeCalculation: cargo?.typeCalculation as TypeCalculationCargoEnum || TypeCalculationCargoEnum.calculationRateWeight
     }
 
     const validationSchema = Yup.object().shape({
-        number: Yup.string().max(255),
-        totalWeight: Yup.number().typeError('Значение должно быть числом'),
+        weightCargo: Yup.number().typeError('Значение должно быть числом'),
         lengthCargo: Yup.number().typeError('Значение должно быть числом'),
         widthCargo: Yup.number().typeError('Значение должно быть числом'),
         heightCargo: Yup.number().typeError('Значение должно быть числом'),
@@ -122,9 +135,13 @@ const CargoEdit: React.FC = () => {
 
     const handleUpdateProduct = async (values: WarehouseStateCargoRequest, formActions: { [key: string]: any }) => {
         try {
-            // values.id = truck?.id;
+            values.id = Number(cargo?.id);
+            let updateCargo = {...cargo, ...values}
 
-            // await roadService.updateTruck(values)
+            delete updateCargo.createdDate
+            delete updateCargo.updatedDate
+
+            await warehouseService.updateCargo(updateCargo)
 
             enqueueSnackbar('Груз обновлено', {variant: 'success'});
             history.go(-1);
@@ -213,28 +230,282 @@ const CargoEdit: React.FC = () => {
                                                         md={4}
                                                         xs={12}
                                                     >
-                                                        {/*<Autocomplete*/}
-                                                        {/*    options={customers}*/}
-                                                        {/*    getOptionLabel={option => option.code}*/}
-                                                        {/*    getOptionSelected={(option, value) => option.code === value.code}*/}
-                                                        {/*    value={props.values.cargoCustomCode}*/}
-                                                        {/*    onChange={(e, value) => {*/}
-                                                        {/*        props.setFieldValue("type", value);*/}
-                                                        {/*        props.setFieldValue("typeId", value?.id);*/}
-                                                        {/*    }}*/}
-                                                        {/*    renderInput={params => (*/}
-                                                        {/*        <TextField*/}
-                                                        {/*            error={Boolean(props.touched.typeId && props.errors.typeId)}*/}
-                                                        {/*            helperText={props.touched.typeId && props.errors.typeId}*/}
-                                                        {/*            label="Выберите тип машины"*/}
-                                                        {/*            name="typeId"*/}
-                                                        {/*            variant="outlined"*/}
-                                                        {/*            onBlur={props.handleBlur}*/}
-                                                        {/*            required*/}
-                                                        {/*            {...params}*/}
-                                                        {/*        />*/}
-                                                        {/*    )}*/}
-                                                        {/*/>*/}
+                                                        <Autocomplete
+                                                            options={customers}
+                                                            getOptionLabel={option => option.code}
+                                                            getOptionSelected={(option, value) => option.code === value.code}
+                                                            value={customer}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("clientId", value?.id);
+                                                                setCustomer(value)
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.clientId && props.errors.clientId)}
+                                                                    helperText={props.touched.clientId && props.errors.clientId}
+                                                                    label="Выберите код клиента"
+                                                                    name="clientId"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <Autocomplete
+                                                            options={providers}
+                                                            getOptionLabel={option => option.code}
+                                                            getOptionSelected={(option, value) => option.code === value.code}
+                                                            value={provider}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("providerId", value?.id);
+                                                                setProvider(value)
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.providerId && props.errors.providerId)}
+                                                                    helperText={props.touched.providerId && props.errors.providerId}
+                                                                    label="Выберите поставщика"
+                                                                    name="providerId"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <Autocomplete
+                                                            options={cargoTypes}
+                                                            getOptionLabel={option => option.name}
+                                                            getOptionSelected={(option, value) => option.name === value.name}
+                                                            value={cargoType}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("cargoTypeId", value?.id);
+                                                                setCargoType(value)
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.cargoTypeId && props.errors.cargoTypeId)}
+                                                                    helperText={props.touched.cargoTypeId && props.errors.cargoTypeId}
+                                                                    label="Выберите вид груза"
+                                                                    name="cargoTypeId"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <Autocomplete
+                                                            options={cargoTariffs}
+                                                            getOptionLabel={option => option.name}
+                                                            getOptionSelected={(option, value) => option.name === value.name}
+                                                            value={cargoTariff}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("tariffId", value?.id);
+                                                                setCargoTariff(value)
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.tariffId && props.errors.tariffId)}
+                                                                    helperText={props.touched.tariffId && props.errors.tariffId}
+                                                                    label="Выберите тариф"
+                                                                    name="tariffId"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <Autocomplete
+                                                            options={cargoProducts}
+                                                            getOptionLabel={option => option.name}
+                                                            getOptionSelected={(option, value) => option.name === value.name}
+                                                            value={cargoProduct}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("productId", value?.id);
+                                                                setCargoProduct(value)
+                                                                setCargoCustomCode(null)
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.productId && props.errors.productId)}
+                                                                    helperText={props.touched.productId && props.errors.productId}
+                                                                    label="Выберите наименование"
+                                                                    name="productId"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <Autocomplete
+                                                            options={cargoCustomCodes.filter((item: CargoCustomCode) => item?.productDto?.id === props.values.productId)}
+                                                            getOptionLabel={option => option.code!}
+                                                            getOptionSelected={(option, value) => option.code === value.code}
+                                                            value={cargoCustomCode}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("customCodeId", value?.id);
+                                                                setCargoCustomCode(value)
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.customCodeId && props.errors.customCodeId)}
+                                                                    helperText={props.touched.customCodeId && props.errors.customCodeId}
+                                                                    label="Выберите таможенный код"
+                                                                    name="customCodeId"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <TextField
+                                                            error={Boolean(props.touched.weightCargo && props.errors.weightCargo)}
+                                                            fullWidth
+                                                            helperText={props.touched.weightCargo && props.errors.weightCargo}
+                                                            label="Введите вес (кг)"
+                                                            placeholder="0"
+                                                            name="weightCargo"
+                                                            onBlur={props.handleBlur}
+                                                            onChange={props.handleChange}
+                                                            value={props.values.weightCargo}
+                                                            variant="outlined"
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <TextField
+                                                            error={Boolean(props.touched.lengthCargo && props.errors.lengthCargo)}
+                                                            fullWidth
+                                                            helperText={props.touched.lengthCargo && props.errors.lengthCargo}
+                                                            label="Введите длину (м)"
+                                                            placeholder="0"
+                                                            name="lengthCargo"
+                                                            onBlur={props.handleBlur}
+                                                            onChange={props.handleChange}
+                                                            value={props.values.lengthCargo}
+                                                            variant="outlined"
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <TextField
+                                                            error={Boolean(props.touched.widthCargo && props.errors.widthCargo)}
+                                                            fullWidth
+                                                            helperText={props.touched.widthCargo && props.errors.widthCargo}
+                                                            label="Введите ширину (м)"
+                                                            placeholder="0"
+                                                            name="widthCargo"
+                                                            onBlur={props.handleBlur}
+                                                            onChange={props.handleChange}
+                                                            value={props.values.widthCargo}
+                                                            variant="outlined"
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <TextField
+                                                            error={Boolean(props.touched.heightCargo && props.errors.heightCargo)}
+                                                            fullWidth
+                                                            helperText={props.touched.heightCargo && props.errors.heightCargo}
+                                                            label="Введите высоту (м)"
+                                                            placeholder="0"
+                                                            name="heightCargo"
+                                                            onBlur={props.handleBlur}
+                                                            onChange={props.handleChange}
+                                                            value={props.values.heightCargo}
+                                                            variant="outlined"
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        md={4}
+                                                        xs={12}
+                                                    >
+                                                        <TextField
+                                                            select
+                                                            error={Boolean(props.touched.typeCalculation && props.errors.typeCalculation)}
+                                                            fullWidth
+                                                            helperText={props.touched.typeCalculation && props.errors.typeCalculation}
+                                                            label="Склад"
+                                                            name="typeCalculation"
+                                                            onBlur={props.handleBlur}
+                                                            onChange={props.handleChange}
+                                                            value={props.values.typeCalculation}
+                                                            variant="outlined"
+                                                            required
+                                                            SelectProps={{
+                                                                MenuProps: {
+                                                                    variant: "selectedMenu",
+                                                                    anchorOrigin: {
+                                                                        vertical: "bottom",
+                                                                        horizontal: "left"
+                                                                    },
+                                                                    transformOrigin: {
+                                                                        vertical: "top",
+                                                                        horizontal: "left"
+                                                                    },
+                                                                    getContentAnchorEl: null
+                                                                }
+                                                            }}
+                                                        >
+                                                            {Object.keys(TypeCalculationCargoEnum).map((item, index) => (
+                                                                <MenuItem key={index} value={item}>{mapOfTypeCalculationCargoEnum.get(item as TypeCalculationCargoEnum)}</MenuItem>
+                                                            ))}
+                                                        </TextField>
                                                     </Grid>
                                                 </Grid>
                                                 <Box mt={2} pb={1} className={classes.buttons}>

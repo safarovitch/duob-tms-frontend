@@ -56,6 +56,20 @@ export enum ApplicationStatusEnum {
     ON_ROAD = "ON_ROAD",
 }
 
+export enum TypeCalculationCargoEnum {
+    calculationRateWeight = "calculationRateWeight",
+    negotiatedPrice = "negotiatedPrice",
+    manualPrice = "manualPrice"
+}
+
+export const mapOfTypeCalculationCargoEnum = new Map(
+    [
+        [TypeCalculationCargoEnum.calculationRateWeight, "Расчет по норме и весу"],
+        [TypeCalculationCargoEnum.negotiatedPrice, "Ручная цена"],
+        [TypeCalculationCargoEnum.manualPrice, "Договорная цена"],
+    ]
+)
+
 export const mapOfAccountabilityType = new Map(
     [
         [AccountabilityType.PAYMENT, "Выдача"],

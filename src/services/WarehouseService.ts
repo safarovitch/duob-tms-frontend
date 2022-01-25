@@ -1,5 +1,5 @@
 import api from '../utils/Api'
-import {Warehouse} from "../model/Warehouse";
+import {Warehouse, WarehouseStateCargoRequest} from "../model/Warehouse";
 import {API_BASE_URL} from "../config";
 
 class WarehouseService {
@@ -67,6 +67,18 @@ class WarehouseService {
 
     getWarehouseStateCargo = (cargoId: number) => new Promise((resolve, reject)  => {
         api.get(`${API_BASE_URL}/sync/income-cargos/${cargoId}/history`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getCargo = (cargoId: number) => new Promise((resolve, reject)  => {
+        api.get(`${API_BASE_URL}/sync/income-cargos/${cargoId}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    updateCargo = (cargo: WarehouseStateCargoRequest) => new Promise((resolve, reject)  => {
+        api.put(`${API_BASE_URL}/sync/income-cargos/${cargo.id}`, cargo)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
