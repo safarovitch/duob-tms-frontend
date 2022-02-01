@@ -49,7 +49,7 @@ const CreditCheckbox: React.FC<{canCheckedCredit: boolean, cargoIssue: CargoIssu
                     <Checkbox
                         checked={cargoIssue.credit}
                         onClick={() => setOpen(true)}
-                        disabled={loading || !canCheckedCredit}
+                        disabled={loading || !canCheckedCredit || cargoIssue.status === 'ISSUED'}
                     />
                 } label="Кредит" />
                 {loading && <CircularProgress size={20} className={classes.loadingProgress} />}
