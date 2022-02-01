@@ -146,8 +146,8 @@ const RefillBalanceForm: React.FC<RefillBalanceFormProps> = ({refillBalance, cus
                                 >
                                     <Autocomplete
                                         options={customers}
-                                        getOptionLabel={option => option.name}
-                                        getOptionSelected={(option, value) => option.name === value.name}
+                                        getOptionLabel={option => option.code}
+                                        getOptionSelected={(option, value) => option.code === value.code}
                                         onChange={(e, value) => {
                                             props.setFieldValue("clientId", value?.id);
                                         }}

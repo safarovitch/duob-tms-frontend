@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as Yup from 'yup';
 import {Formik, FormikProps} from 'formik';
 import {useSnackbar} from 'notistack';
@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const hasSelectedCargoType = (cargoType: CargoType) => {
+    return cargoType.calculationRateWeight || cargoType.discount || cargoType.manualPrice || cargoType.negotiatedPrice
+}
 
 const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) => {
     const {cargoType} = props;
@@ -42,6 +45,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
+    const [selectedCargoType, setSelectCargoType] = useState<boolean>(true)
 
     useEffect(() => () => {
         dispatch(deleteSelectedCargoType())
@@ -162,7 +166,12 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
                                                 checked={props.values.manualPrice}
                                                 name="manualPrice"
                                                 color="primary"
-                                                onChange={props.handleChange}
+                                                onChange={(e) => {
+                                                    let cargoType = {...props.values}
+                                                    cargoType.manualPrice = e.target.checked
+                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                    props.handleChange(e)
+                                                }}
                                             />
                                             <Typography variant="subtitle1" className={classes.checkboxLabel}>
                                                 Ручная цена
@@ -179,7 +188,12 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
                                                 checked={props.values.negotiatedPrice}
                                                 name="negotiatedPrice"
                                                 color="primary"
-                                                onChange={props.handleChange}
+                                                onChange={(e) => {
+                                                    let cargoType = {...props.values}
+                                                    cargoType.negotiatedPrice = e.target.checked
+                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                    props.handleChange(e)
+                                                }}
                                             />
                                             <Typography variant="subtitle1" className={classes.checkboxLabel}>
                                                 Всегда использовать договорную цену
@@ -196,7 +210,12 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
                                                 checked={props.values.calculationRateWeight}
                                                 name="calculationRateWeight"
                                                 color="primary"
-                                                onChange={props.handleChange}
+                                                onChange={(e) => {
+                                                    let cargoType = {...props.values}
+                                                    cargoType.calculationRateWeight = e.target.checked
+                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                    props.handleChange(e)
+                                                }}
                                             />
                                             <Typography variant="subtitle1" className={classes.checkboxLabel}>
                                                 Расчет по весу и норме
@@ -213,13 +232,30 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
                                                 checked={props.values.discount}
                                                 name="discount"
                                                 color="primary"
-                                                onChange={props.handleChange}
+                                                onChange={(e) => {
+                                                    let cargoType = {...props.values}
+                                                    cargoType.discount = e.target.checked
+                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                    props.handleChange(e)
+                                                }}
                                             />
                                             <Typography variant="subtitle1" className={classes.checkboxLabel}>
                                                 Применять скидку
                                             </Typography>
                                         </label>
                                     </Grid>
+                                    {
+                                        !selectedCargoType && (
+                                            <Grid
+                                                item
+                                                xs={12}
+                                            >
+                                                <Typography align="center" color="error">
+                                                    Выберите тип расчета
+                                                </Typography>
+                                            </Grid>
+                                        )
+                                    }
                                 </Grid>
                                 <Box mt={2} pb={1} className={classes.buttons}>
                                     <Button
@@ -237,7 +273,7 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
                                         variant="contained"
                                         color="secondary"
                                         type="submit"
-                                        disabled={props.isSubmitting}
+                                        disabled={props.isSubmitting || !selectedCargoType}
                                     >
                                         {cargoType ? 'Сохранить' : 'Добавить'}
                                     </Button>
