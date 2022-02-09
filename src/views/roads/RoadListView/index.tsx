@@ -108,9 +108,7 @@ const RoadListView: React.FC = () => {
                                             <TableCell>Объем</TableCell>
                                             <TableCell>Вес</TableCell>
                                             <TableCell>Сумма</TableCell>
-                                            <TableCell>Количество мест</TableCell>
                                             <TableCell>Кол-во грузов</TableCell>
-                                            <TableCell>Недостающий груз</TableCell>
                                             <TableCell>Статус</TableCell>
                                             <TableCell align="center" width="15%">Действия</TableCell>
                                         </TableRow>
@@ -155,12 +153,8 @@ const RoadListView: React.FC = () => {
                                                             ) : '-'}
                                                         </TableCell>
                                                         <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
-                                                        <TableCell>{row.totalPlace}</TableCell>
                                                         <TableCell>
                                                             {row.cargoCount}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            0
                                                         </TableCell>
                                                         <TableCell>
                                                             {mapOfRoadStatus.get(row.status)}

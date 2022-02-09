@@ -5,4 +5,4 @@ export const EMPLOYEES_IMAGE_BASE_URL = API_BASE_URL + '/employees/image/';
 export const APPLICATIONS_IMAGE_BASE_URL = API_BASE_URL + '/applications/image/load/';
 export const CUSTOMERS_IMAGE_BASE_URL = API_BASE_URL + '/clients/image/';
 export const EMPLOYEE_ACCOUNTS_IMAGE_BASE_URL = API_BASE_URL + '/employee-accounts/file/';
-export const ENABLE_REDUX_LOGGER = true;
+export const ENABLE_REDUX_LOGGER = false;

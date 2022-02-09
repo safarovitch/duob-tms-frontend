@@ -119,10 +119,9 @@ const RoadDriverPDF: React.FC<{roadDriver: RoadDriverApplicationResponse}> = ({r
                         {roadDriver.roadId} #{roadDriver.id}
                     </Text>
                     <Text style={[styles.body, styles.fontBold]}>
-                        Сумма: {roadDriver.actualAmount}
-                    </Text>
-                    <Text style={[styles.body, styles.fontBold]}>
-                        Валюта: {roadDriver.actualMoneyUnit}
+                        Сумма: {roadDriver.actualAmount === 0
+                                    ? `${roadDriver.convertAmount} ${roadDriver.convertMoneyUnit}`
+                                    : `${roadDriver.actualAmount} ${roadDriver.actualMoneyUnit}`}
                     </Text>
                 </View>
             </View>

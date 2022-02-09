@@ -8,12 +8,11 @@ import {
     Button,
     Card,
     CardContent,
-    Checkbox,
+    Checkbox, FormControlLabel,
     Grid,
     makeStyles,
     MenuItem,
     TextField,
-    Typography
 } from '@material-ui/core';
 import {Warehouse, WarehouseFormProps} from "../../../model/Warehouse";
 import warehouseService from "../../../services/WarehouseService";
@@ -36,12 +35,6 @@ const useStyles = makeStyles((theme) => ({
     buttonsWidth: {
         width: 177
     },
-    checkbox: {
-        display: 'flex'
-    },
-    checkboxLabel: {
-        marginTop: 8
-    }
 }));
 
 const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => {
@@ -52,7 +45,7 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
 
     const initialValues: Warehouse = {
         name: warehouse?.name || '',
-        secondaryMoneyUnit: '' as Currency,
+        secondaryMoneyUnit: (warehouse?.secondaryMoneyUnit || '') as Currency,
         destination: warehouse?.destination || false
     }
 
@@ -191,17 +184,18 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({className, warehouse}) => 
                                     </TextField>
                                 </Grid>
                                 <Grid item md={12} xs={12}>
-                                    <label onClick={props.handleChange} className={classes.checkbox}>
-                                        <Checkbox
-                                            checked={props.values.destination}
-                                            name="destination"
-                                            color="primary"
-                                            onChange={props.handleChange}
-                                        />
-                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                            Склад назначения
-                                        </Typography>
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                name="destination"
+                                                color="primary"
+                                                onBlur={props.handleBlur}
+                                                onChange={props.handleChange}
+                                                checked={props.values.destination}
+                                            />
+                                        }
+                                        label="Склад назначения"
+                                    />
                                 </Grid>
                             </Grid>
                             <Box mt={2} pb={1} className={classes.buttons}>

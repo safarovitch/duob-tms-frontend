@@ -69,6 +69,12 @@ const navConfig = [
                 href: '/app/notifications',
                 perm: PERMISSIONS.NOTIFICATION.LIST
             },
+            {
+                title: 'Инвойсы',
+                icon: DescriptionIcon,
+                href: '/app/invoices',
+                perm: PERMISSIONS.INVOICE.LIST
+            },
         ]
     },
     {

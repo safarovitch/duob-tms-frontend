@@ -4,14 +4,12 @@ import {Article} from "./Article";
 import {Employee} from "./Employee";
 import {Warehouse} from "./Warehouse";
 import {CurrencyExchange} from "./Exchange";
-import {ApplicationStatusEnum, Currency, RoadDriverApplicationMoneyUnit, RoadDriverApplicationType} from "../constants";
+import {ApplicationStatusEnum, Currency, RoadDriverApplicationType} from "../constants";
 
 export interface WarehouseSecondaryMoneyUnit {
     secondaryMoneyUnit: Currency;
     secondaryMoneyCurrency: number
 }
-
-type StatusApplication = 'WAITING' | 'PAID' | 'ON_ROAD';
 
 export interface ApplicationStuffTab {
     value: string;
@@ -133,25 +131,23 @@ export interface RoadDriverApplicationRequest {
     roadId: number;
     type: RoadDriverApplicationType;
     actualAmount: number;
-    actualMoneyUnit: RoadDriverApplicationMoneyUnit;
+    actualMoneyUnit: Currency;
     balanceTjs: number;
     balanceUsd: number;
     description: string;
 }
 
-export interface RoadDriverApplicationResponse {
+export interface RoadDriverApplicationResponse extends CurrencyExchange{
     id: number;
     createdByName: string;
     createdById: string;
     roadId: number;
     type: RoadDriverApplicationType;
-    status?: StatusApplication;
+    status?: ApplicationStatusEnum;
     balanceTjs: number;
     balanceUsd: number;
     driverName: string;
     driverId: number | null;
-    actualAmount: number;
-    actualMoneyUnit: RoadDriverApplicationMoneyUnit;
     createdDate: string;
     updatedDate: string;
     description: string;

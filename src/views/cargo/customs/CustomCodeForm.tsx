@@ -7,12 +7,11 @@ import {
     Button,
     Card,
     CardContent,
-    Checkbox,
+    Checkbox, FormControlLabel,
     Grid,
     makeStyles,
     MenuItem,
     TextField,
-    Typography
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -29,15 +28,8 @@ const useStyles = makeStyles((theme) => ({
     },
     cancelButton: {
         marginRight: theme.spacing(2)
-    },
-    checkbox: {
-        display: 'flex'
-    },
-    checkboxLabel: {
-        marginTop: 8
     }
 }));
-
 
 const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) => {
     const classes = useStyles();
@@ -52,9 +44,10 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
     const initialValues: CargoCustomCode = {
         code: customCode?.code || '',
         price: customCode?.price || undefined,
-        baseRate: customCode?.baseRate || undefined,
+        baseRate: customCode?.baseRate || 0,
         vat: customCode?.vat || 18.0,
         totalPrice: customCode?.totalPrice || 0.0,
+        kgPerPlace: customCode?.kgPerPlace || 0,
         description: customCode?.description || '',
         unit: customCode?.unit as Units || Units.ton,
         productId: customCode?.productDto?.id || undefined,
@@ -68,6 +61,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
         baseRate: Yup.string().max(255),
         vat: Yup.string().max(255),
         totalRate: Yup.string().max(255),
+        kgPerPlace: Yup.number().typeError('Значение должно быть числом'),
     })
 
     const handleAddCustomCode = async (values: CargoCustomCode, formActions: { [key: string]: any }) => {
@@ -143,7 +137,8 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                             >
                                 <Grid
                                     item
-                                    md={6}
+                                    md={4}
+                                    sm={6}
                                     xs={12}
                                 >
                                     <TextField
@@ -156,7 +151,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         required
-                                        value={props.values.productId}
+                                        value={props.values.productId || ""}
                                         variant="outlined"
                                         SelectProps={{
                                             MenuProps: {
@@ -183,7 +178,8 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                 </Grid>
                                 <Grid
                                     item
-                                    md={6}
+                                    md={4}
+                                    sm={6}
                                     xs={12}
                                 >
                                     <TextField
@@ -202,7 +198,8 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
 
                                 <Grid
                                     item
-                                    md={6}
+                                    md={4}
+                                    sm={6}
                                     xs={12}
                                 >
                                     <TextField
@@ -214,14 +211,14 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         required
-                                        value={props.values.price}
+                                        value={props.values.price || ""}
+                                        placeholder="0"
                                         variant="outlined"
                                     />
                                 </Grid>
-
                                 <Grid
                                     item
-                                    md={6}
+                                    md={4}
                                     xs={12}
                                 >
                                     <TextField
@@ -239,7 +236,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                 </Grid>
                                 <Grid
                                     item
-                                    md={3}
+                                    md={4}
                                     xs={12}
                                 >
                                     <TextField
@@ -251,65 +248,64 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         required
-                                        value={props.values.baseRate}
+                                        value={props.values.baseRate || ""}
+                                        placeholder="0"
                                         variant="outlined"
                                     />
                                 </Grid>
-                                {/*<Grid*/}
-                                {/*    item*/}
-                                {/*    md={6}*/}
-                                {/*    xs={12}*/}
-                                {/*>*/}
-                                {/*    <TextField*/}
-                                {/*        error={Boolean(props.touched.totalPrice && props.errors.totalPrice)}*/}
-                                {/*        fullWidth*/}
-                                {/*        helperText={props.touched.totalPrice && props.errors.totalPrice}*/}
-                                {/*        label="Итоговая стоимость"*/}
-                                {/*        name="totalPrice"*/}
-                                {/*        disabled={true}*/}
-                                {/*        onBlur={props.handleBlur}*/}
-                                {/*        onChange={props.handleChange}*/}
-                                {/*        value={props.values.totalPrice}*/}
-                                {/*        variant="outlined"*/}
-                                {/*    />*/}
-                                {/*</Grid>*/}
-
                                 <Grid
                                     item
-                                    md={9}
+                                    md={4}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(props.touched.kgPerPlace && props.errors.kgPerPlace)}
+                                        fullWidth
+                                        helperText={props.touched.kgPerPlace && props.errors.kgPerPlace}
+                                        label="Кг за место"
+                                        name="kgPerPlace"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        required
+                                        value={props.values.kgPerPlace || ""}
+                                        placeholder="0"
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
                                     xs={12}
                                 >
                                     <TextField
                                         error={Boolean(props.touched.description && props.errors.description)}
                                         fullWidth
-                                        multiline
                                         helperText={props.touched.description && props.errors.description}
                                         label="Описание"
                                         name="description"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        required
                                         value={props.values.description}
                                         variant="outlined"
+                                        multiline
+                                        rows={2}
                                     />
                                 </Grid>
-
                                 <Grid
                                     item
-                                    md={12}
                                     xs={12}
                                 >
-                                    <label onClick={props.handleChange} className={classes.checkbox}>
-                                        <Checkbox
-                                            checked={props.values.isUnitThing}
-                                            name="isUnitThing"
-                                            color="primary"
-                                            onChange={props.handleChange}
-                                        />
-                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                            Вести расчет по штукам - (шт)
-                                        </Typography>
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                name="isUnitThing"
+                                                color="primary"
+                                                onBlur={props.handleBlur}
+                                                onChange={props.handleChange}
+                                                checked={props.values.isUnitThing}
+                                            />
+                                        }
+                                        label="Вести расчет по штукам - (шт)"
+                                    />
                                 </Grid>
                             </Grid>
                             <Box mt={2} pb={1} className={classes.buttons}>

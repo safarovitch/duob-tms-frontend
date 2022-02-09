@@ -35,6 +35,7 @@ export interface CargoCustomCode {
     baseRate?: number;
     vat?: number;
     totalPrice?: number;
+    kgPerPlace: number;
     description?: string;
     unit: Units | Units.ton;
     productId?: number;
@@ -89,6 +90,7 @@ export interface CargoTariff {
     warehouseDto?: Warehouse;
     cargoTypeDto?: CargoType;
     defaultValue: boolean;
+    updatedDate?: string;
 }
 
 export interface CargoTariffFormProps {

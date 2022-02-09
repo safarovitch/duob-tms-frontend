@@ -78,7 +78,10 @@ const WarehouseStateListView: React.FC = () => {
 
                 const dataWarehouses: any = await warehouseService.getAllWarehouse()
 
-                if (!cancel) setWarehouses(dataWarehouses)
+                if (dataWarehouses.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
+                } else if (!cancel) setWarehouses(dataWarehouses)
             } catch (error: any) {
                 !cancel && setHasError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -88,7 +91,7 @@ const WarehouseStateListView: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar])
+    }, [enqueueSnackbar, history])
 
     useEffect(() => {
         let cancel = false;

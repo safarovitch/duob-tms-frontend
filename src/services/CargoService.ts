@@ -125,6 +125,13 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
+    getHistoryCargoTariff = (id: number) => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/tariffs/${id}/history`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     postCargoTariff = (cargoTariff: CargoTariff) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + `/tariffs`, cargoTariff)
             .then((response) => {

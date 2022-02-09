@@ -255,11 +255,6 @@ export const mapOfRoadDriverApplicationType = new Map(
     ]
 )
 
-export enum RoadDriverApplicationMoneyUnit {
-    TJS = "TJS",
-    USD = "USD"
-}
-
 export const mapOfRoles = new Map(
     [
         [MANAGER, 'Менеджер'],

@@ -1,6 +1,5 @@
 import React from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import clsx from 'clsx';
+import {Link as RouterLink} from 'react-router-dom';
 import {
     Breadcrumbs,
     Button,
@@ -11,13 +10,9 @@ import {
     makeStyles
 } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-    PlusCircle as PlusCircleIcon,
-} from 'react-feather';
-import {WarehouseListHeaderProps} from "../../model/Warehouse";
+import {PlusCircle as PlusCircleIcon,} from 'react-feather';
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
     action: {
         marginBottom: theme.spacing(1),
         '& + &': {
@@ -29,16 +24,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<WarehouseListHeaderProps> = ({ className }) => {
+const Header: React.FC = () => {
     const classes = useStyles();
-    const history = useHistory();
 
-    const onCreateNewCustomer = () => {
-        history?.push("/app/warehouses/create")
-    }
     return (
         <Grid
-            className={clsx(classes.root, className)}
             container
             justifyContent="space-between"
             spacing={3}
@@ -60,22 +50,23 @@ const Header: React.FC<WarehouseListHeaderProps> = ({ className }) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        Склады
+                        Инвойсы
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    Все склады
+                    Все инвойсы
                 </Typography>
             </Grid>
             <Grid item>
                 <Button
                     color="secondary"
                     variant="contained"
-                    onClick={onCreateNewCustomer}
                     className={classes.action}
+                    component={RouterLink}
+                    to={`/app/invoices/create`}
                 >
                     <SvgIcon
                         fontSize="small"
