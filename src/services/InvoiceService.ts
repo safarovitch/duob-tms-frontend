@@ -9,6 +9,12 @@ class InvoiceService {
             .catch(error => reject(error))
     })
 
+    get = (id: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/invoices/${id}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getRoads = () => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/invoices/roads`)
             .then(response => resolve(response.data))
@@ -27,7 +33,23 @@ class InvoiceService {
             .catch(error => reject(error))
     })
 
-//    invoices/id/copy
+    postCopyInvoice = (id: number) => new Promise((resolve, reject) => {
+        api.post(`${API_BASE_URL}/invoices/${id}/copy`)
+            .then(response => resolve(response))
+            .catch(error => reject(error))
+    })
+
+    generateInvoice = (invoiceId: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/customs-invoice/excel/${invoiceId}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getInvoice = (fileName: string) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/customs-invoice/excel/download/${fileName}`, {responseType: "arraybuffer"})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
 }
 
 const invoiceService = new InvoiceService()

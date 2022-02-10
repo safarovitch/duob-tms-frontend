@@ -97,7 +97,7 @@ const CargoIssueList: React.FC = () => {
     };
 
     return (
-        <Page className={classes.root} title="Клиенты">
+        <Page className={classes.root} title="Выдача груза">
             <Container maxWidth="lg">
                 <Breadcrumbs
                     separator={<NavigateNextIcon fontSize="small" />}

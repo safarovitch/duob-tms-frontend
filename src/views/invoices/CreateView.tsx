@@ -46,6 +46,7 @@ const CreateView: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [roads, setRoads] = useState<GetRoadsResponse[]>([])
+    const [road, setRoad] = useState<GetRoadsResponse>()
 
     useEffect(() => {
         let cancel = false;
@@ -91,6 +92,8 @@ const CreateView: React.FC = () => {
 
     const handleCreate = async (values: CreateInvoiceRequest, formActions: { [key: string]: any }) => {
         try {
+            values.description = road!.road
+
             await invoiceService.post(values)
 
             enqueueSnackbar('Успешно создан', {variant: 'success'});
@@ -168,6 +171,7 @@ const CreateView: React.FC = () => {
                                                             getOptionSelected={(option, value) => option.road === value.road}
                                                             onChange={(e, value) => {
                                                                 props.setFieldValue("roadId", value?.id);
+                                                                setRoad(value || undefined)
                                                             }}
                                                             renderInput={params => (
                                                                 <TextField

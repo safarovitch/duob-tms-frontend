@@ -1,34 +1,47 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import {
-    Box,
+    Box, Breadcrumbs, Button,
     Card,
     Container,
-    Grid,
-    makeStyles, Table, TableBody, TableCell, TableHead,
+    Grid, IconButton, Link,
+    makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead,
     TablePagination, TableRow,
-    TextField
+    TextField, Typography
 } from "@material-ui/core";
 import {useSnackbar} from "notistack";
 import moment from "moment";
 import {GetListInvoiceResponse} from "../../model/Invoice";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import invoiceService from "../../services/InvoiceService";
-import Header from "./Header";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "../../components/Page";
 import NoFoundTableBody from "../../components/NoFoundTableBody";
+import CopyInvoiceButton from "./CopyInvoiceButton";
+import {NavLink as RouterLink} from "react-router-dom";
+import {ArrowRight as ArrowRightIcon, PlusCircle as PlusCircleIcon} from "react-feather";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         minHeight: '100%',
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
+    },
+    action: {
+        marginBottom: theme.spacing(1),
+        '& + &': {
+            marginLeft: theme.spacing(1)
+        }
+    },
+    actionIcon: {
+        marginRight: theme.spacing(1)
     }
 }));
 
 const ListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(10)
     const [startDate, setStartDate] = useState(moment().subtract(14, 'days').format('YYYY-MM-DD'))
@@ -59,7 +72,7 @@ const ListView: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, page, size, startDate, endDate])
+    }, [enqueueSnackbar, updateRows, page, size, startDate, endDate])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -86,7 +99,56 @@ const ListView: React.FC = () => {
     return (
         <Page className={classes.root} title="Инвойсы">
             <Container maxWidth="md">
-                <Header/>
+                <Grid
+                    container
+                    justifyContent="space-between"
+                    spacing={3}
+                >
+                    <Grid item>
+                        <Breadcrumbs
+                            separator={<NavigateNextIcon fontSize="small" />}
+                            aria-label="breadcrumb"
+                        >
+                            <Link
+                                variant="body1"
+                                color="inherit"
+                                to="/app"
+                                component={RouterLink}
+                            >
+                                Главная
+                            </Link>
+                            <Typography
+                                variant="body1"
+                                color="textPrimary"
+                            >
+                                Инвойсы
+                            </Typography>
+                        </Breadcrumbs>
+                        <Typography
+                            variant="h3"
+                            color="textPrimary"
+                        >
+                            Все инвойсы
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            className={classes.action}
+                            component={RouterLink}
+                            to={`/app/invoices/create`}
+                        >
+                            <SvgIcon
+                                fontSize="small"
+                                className={classes.actionIcon}
+                            >
+                                <PlusCircleIcon />
+                            </SvgIcon>
+                            Добавить
+                        </Button>
+                    </Grid>
+                </Grid>
                 <Box mt={3}>
                     <Card>
                         <Box py={3} px={2}>
@@ -141,7 +203,17 @@ const ListView: React.FC = () => {
                                                             <TableCell>{row.number}</TableCell>
                                                             <TableCell>{row.createdDate}</TableCell>
                                                             <TableCell>{row.description}</TableCell>
-                                                            <TableCell>Действия</TableCell>
+                                                            <TableCell align="center">
+                                                                <CopyInvoiceButton id={row.id} onCopy={invoiceService.postCopyInvoice} handleCopy={setUpdateRows} disabled={row.copy} />
+                                                                <IconButton
+                                                                    component={RouterLink}
+                                                                    to={`/app/invoices/${row.id}/edit`}
+                                                                >
+                                                                    <SvgIcon fontSize="small">
+                                                                        <ArrowRightIcon/>
+                                                                    </SvgIcon>
+                                                                </IconButton>
+                                                            </TableCell>
                                                         </TableRow>
                                                     ))
                                                 }
