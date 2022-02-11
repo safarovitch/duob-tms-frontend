@@ -1,23 +1,11 @@
-import React from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import clsx from 'clsx';
-import {
-    Breadcrumbs,
-    Button,
-    Grid,
-    Link,
-    SvgIcon,
-    Typography,
-    makeStyles
-} from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-    PlusCircle as PlusCircleIcon,
-} from 'react-feather';
-import {WarehouseListHeaderProps} from "../../model/Warehouse";
+import React from "react";
+import {CargoTariff} from "../../../../model/Cargo";
+import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from "@material-ui/core";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import {Link as RouterLink, useHistory} from "react-router-dom";
+import {ArrowLeft as PlusCircleIcon} from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
     action: {
         marginBottom: theme.spacing(1),
         '& + &': {
@@ -29,16 +17,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header: React.FC<WarehouseListHeaderProps> = ({ className }) => {
+const Header: React.FC<{tariff: CargoTariff}> = ({tariff}) => {
     const classes = useStyles();
     const history = useHistory();
 
-    const onCreateNewCustomer = () => {
-        history?.push("/app/warehouses/create")
-    }
     return (
         <Grid
-            className={clsx(classes.root, className)}
             container
             justifyContent="space-between"
             spacing={3}
@@ -56,26 +40,42 @@ const Header: React.FC<WarehouseListHeaderProps> = ({ className }) => {
                     >
                         Главная
                     </Link>
+                    <Link
+                        variant="body1"
+                        color="inherit"
+                        to="/app/cargo"
+                        component={RouterLink}
+                    >
+                        Константы груза
+                    </Link>
+                    <Link
+                        variant="body1"
+                        color="inherit"
+                        to="/app/cargo/tariff"
+                        component={RouterLink}
+                    >
+                        Тарифы
+                    </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Склады
+                        {tariff.name}
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    Все склады
+                    Истороия тарифа: {tariff.name}
                 </Typography>
             </Grid>
             <Grid item>
                 <Button
                     color="secondary"
                     variant="contained"
-                    onClick={onCreateNewCustomer}
                     className={classes.action}
+                    onClick={() => history.go(-1)}
                 >
                     <SvgIcon
                         fontSize="small"
@@ -83,11 +83,12 @@ const Header: React.FC<WarehouseListHeaderProps> = ({ className }) => {
                     >
                         <PlusCircleIcon />
                     </SvgIcon>
-                    Добавить
+                    Назад
                 </Button>
             </Grid>
         </Grid>
-    );
+    )
+
 }
 
-export default Header;
+export default Header

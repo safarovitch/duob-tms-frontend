@@ -122,6 +122,7 @@ const CustomCodeListView: React.FC = () => {
                                 <TableCell>Итоговая ставка %</TableCell>
                                 <TableCell>Стоимость</TableCell>
                                 <TableCell>Ед. расчета</TableCell>
+                                <TableCell>Кг за место</TableCell>
                                 <TableCell>Описание</TableCell>
                                 <TableCell align="center" width="18%">Действия</TableCell>
                             </TableRow>
@@ -141,6 +142,7 @@ const CustomCodeListView: React.FC = () => {
                                                     <TableCell>{Number(row.baseRate) + Number(row.vat)}</TableCell>
                                                     <TableCell>{row.totalPrice}</TableCell>
                                                     <TableCell>{units.get(row.unit)}</TableCell>
+                                                    <TableCell>{row.kgPerPlace}</TableCell>
                                                     <TableCell>{row.description}</TableCell>
                                                     <TableCell align="center">
                                                         <DefaultButton

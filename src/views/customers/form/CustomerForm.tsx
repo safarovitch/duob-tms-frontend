@@ -186,7 +186,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                                         name="birthdate"
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
-                                        value={props.values.birthdate}
+                                        value={props.values.birthdate || ""}
                                         variant="outlined"
                                         InputLabelProps={{
                                             shrink: true,

@@ -7,8 +7,8 @@ import * as Yup from "yup";
 import applicationService from "../../../services/Application";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {
+    Currency,
     mapOfRoadDriverApplicationType,
-    RoadDriverApplicationMoneyUnit,
     RoadDriverApplicationType
 } from "../../../constants";
 import {Formik, FormikProps} from "formik";
@@ -36,7 +36,7 @@ const RoadDriverForm: React.FC<{ roads: RoadBalanceApplicationResponse[] }> = ({
         roadId: 0,
         type: '' as RoadDriverApplicationType,
         actualAmount: 0,
-        actualMoneyUnit: '' as RoadDriverApplicationMoneyUnit,
+        actualMoneyUnit: '' as Currency,
         balanceTjs: 0,
         balanceUsd: 0,
         description: '',
@@ -66,17 +66,17 @@ const RoadDriverForm: React.FC<{ roads: RoadBalanceApplicationResponse[] }> = ({
 
     const isDisabledAmount = ({actualMoneyUnit, balanceTjs, balanceUsd}: RoadDriverApplicationRequest) => {
         return (
-            (actualMoneyUnit === RoadDriverApplicationMoneyUnit.TJS && balanceTjs === 0)
+            (actualMoneyUnit === Currency.TJS && balanceTjs === 0)
             ||
-            (actualMoneyUnit === RoadDriverApplicationMoneyUnit.USD && balanceUsd === 0)
+            (actualMoneyUnit === Currency.USD && balanceUsd === 0)
         )
     }
 
     const amountGreaterThenBalance = ({actualAmount, actualMoneyUnit, balanceTjs, balanceUsd}: RoadDriverApplicationRequest) => {
         return (
-            (actualMoneyUnit === RoadDriverApplicationMoneyUnit.TJS && actualAmount > balanceTjs)
+            (actualMoneyUnit === Currency.TJS && actualAmount > balanceTjs)
             ||
-            (actualMoneyUnit === RoadDriverApplicationMoneyUnit.USD && actualAmount > balanceUsd)
+            (actualMoneyUnit === Currency.USD && actualAmount > balanceUsd)
         )
     }
 
@@ -213,7 +213,7 @@ const RoadDriverForm: React.FC<{ roads: RoadBalanceApplicationResponse[] }> = ({
                                 >
                                     <TextField
                                         fullWidth
-                                        value={`${props.values.balanceTjs} ${RoadDriverApplicationMoneyUnit.TJS}`}
+                                        value={`${props.values.balanceTjs} ${Currency.TJS}`}
                                         disabled={true}
                                         variant="outlined"
                                     />
@@ -225,7 +225,7 @@ const RoadDriverForm: React.FC<{ roads: RoadBalanceApplicationResponse[] }> = ({
                                 >
                                     <TextField
                                         fullWidth
-                                        value={`${props.values.balanceUsd} ${RoadDriverApplicationMoneyUnit.USD}`}
+                                        value={`${props.values.balanceUsd} ${Currency.USD}`}
                                         disabled={true}
                                         variant="outlined"
                                     />
@@ -285,7 +285,7 @@ const RoadDriverForm: React.FC<{ roads: RoadBalanceApplicationResponse[] }> = ({
                                         }}
                                     >
                                         {
-                                            Object.keys(RoadDriverApplicationMoneyUnit).map((value, index) => (
+                                            [Currency.TJS, Currency.USD].map((value, index) => (
                                                 <MenuItem key={index} value={value}>{value}</MenuItem>
                                             ))
                                         }

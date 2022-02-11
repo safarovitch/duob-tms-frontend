@@ -2,7 +2,7 @@ import React, {useState, useEffect, useReducer} from 'react';
 import {Box, Card, IconButton, InputAdornment,
     makeStyles, SvgIcon, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField
 } from '@material-ui/core';
-import {Search as SearchIcon, Edit as EditIcon} from 'react-feather';
+import {Search as SearchIcon, Edit as EditIcon, ArrowRight as ArrowRightIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -153,6 +153,14 @@ const CargoTariffListView: React.FC = () => {
                                                                 onDelete={cargoService.deleteCargoTariff}
                                                                 handleDelete={handleDeleteRow}
                                                             />
+                                                            <IconButton
+                                                                component={RouterLink}
+                                                                to={`/app/cargo/tariff/${row.id}/history`}
+                                                            >
+                                                                <SvgIcon fontSize="small">
+                                                                    <ArrowRightIcon />
+                                                                </SvgIcon>
+                                                            </IconButton>
                                                         </TableCell>
                                                     </TableRow>
                                                 ))

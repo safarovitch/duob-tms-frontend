@@ -14,6 +14,7 @@ import STORAGE_COST from "./StorageCost";
 import NOTIFICATION from "./Notification";
 import CONVERSION from "./Conversion";
 import {ADMIN, MANAGER} from "./roles";
+import INVOICE from "./Invoice";
 
 const PERMISSIONS = {
     MANAGER: [MANAGER],
@@ -33,6 +34,7 @@ const PERMISSIONS = {
     STORAGE_COST,
     NOTIFICATION,
     CONVERSION,
+    INVOICE,
 }
 
 export default PERMISSIONS;

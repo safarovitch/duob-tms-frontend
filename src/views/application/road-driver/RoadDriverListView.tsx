@@ -22,7 +22,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {ArrowRight as ArrowRightIcon, Search as SearchIcon} from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {mapOfRoadDriverApplicationType, mapOfStatusApplication} from "../../../constants";
+import {ApplicationStatusEnum, mapOfRoadDriverApplicationType, mapOfStatusApplication} from "../../../constants";
 import DeleteButton from "../../../components/DeleteButton";
 import {NavLink as RouterLink} from "react-router-dom";
 import {setSelectedRoadDriver} from "../../../store/actions/applicationAction";
@@ -125,7 +125,7 @@ const RoadDriverListView: React.FC = () => {
         setUpdateRows()
     };
 
-    const isPaidApplication = (row: RoadDriverApplicationResponse): boolean => (row.status === 'PAID');
+    const isPaidApplication = (row: RoadDriverApplicationResponse): boolean => (row.status === ApplicationStatusEnum.PAID);
 
     return (
         <Card className={classes.root}>
@@ -214,7 +214,7 @@ const RoadDriverListView: React.FC = () => {
                                             <TableCell>{row.balanceTjs}</TableCell>
                                             <TableCell>{row.balanceUsd}</TableCell>
                                             <TableCell>{mapOfRoadDriverApplicationType.get(row.type)}</TableCell>
-                                            <TableCell>{row.actualAmount} {row.actualMoneyUnit}</TableCell>
+                                            <TableCell>{row.actualAmount === 0 ? `${row.convertAmount} ${row.convertMoneyUnit}` : `${row.actualAmount} ${row.actualMoneyUnit}`}</TableCell>
                                             <TableCell align="center">
                                                 {isPaidApplication(row) ? <DoneAllIcon className={classes.approved} /> : <CloseIcon className={classes.statusWaiting} />}
                                             </TableCell>

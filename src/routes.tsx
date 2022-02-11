@@ -236,6 +236,12 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/cargo/tariff/:id/history',
+                        perm: PERMISSIONS.CARGO.LIST,
+                        component: lazy(() => import('./views/cargo/tariff/history'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/roads',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/roads/RoadListView'))
@@ -274,6 +280,24 @@ const routesConfig = [
                         exact: true,
                         path: '/app/roads/:id/:stuffId/show',
                         component: lazy(() => import('./views/roads/cargo-show'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/invoices',
+                        perm: PERMISSIONS.INVOICE.LIST,
+                        component: lazy(() => import('./views/invoices/ListView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/invoices/create',
+                        perm: PERMISSIONS.INVOICE.LIST,
+                        component: lazy(() => import('./views/invoices/CreateView'))
+                    },
+                    {
+                        exact: true,
+                        path: '/app/invoices/:id/edit',
+                        perm: PERMISSIONS.INVOICE.LIST,
+                        component: lazy(() => import('./views/invoices/edit'))
                     },
                     {
                         exact: true,

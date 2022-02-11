@@ -153,7 +153,6 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> =
                                         onChange={(e, value) => {
                                             props.setFieldValue("articleId", value?.id);
                                         }}
-                                        value={props.values.article}
                                         renderInput={params => (
                                             <TextField
                                                 error={Boolean(props.touched.articleId && props.errors.articleId)}

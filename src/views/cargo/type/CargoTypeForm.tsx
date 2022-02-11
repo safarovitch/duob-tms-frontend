@@ -9,7 +9,7 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles, Container, Checkbox, Typography
+    makeStyles, Checkbox, Typography
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -101,189 +101,186 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
     }
 
     return (
-        <Container maxWidth="sm">
-            <Formik
-                initialValues={initialValues}
-                validationSchema={!cargoType ? validationSchema : null}
-                onSubmit={async (values, {
+        <Formik
+            initialValues={initialValues}
+            validationSchema={!cargoType ? validationSchema : null}
+            onSubmit={async (values, {
+                resetForm,
+                setErrors,
+                setStatus,
+                setSubmitting
+            }) => {
+                setSubmitting(true)
+                cargoType ? await handleUpdateCargoType(values, {
                     resetForm,
                     setErrors,
                     setStatus,
                     setSubmitting
-                }) => {
-                    setSubmitting(true)
-                    cargoType ? await handleUpdateCargoType(values, {
-                        resetForm,
-                        setErrors,
-                        setStatus,
-                        setSubmitting
-                    }) : await handleAddCargoType(values, {
-                        resetForm,
-                        setErrors,
-                        setStatus,
-                        setSubmitting
-                    })
-                }}
-            >
-                {(props: FormikProps<CargoType>) => (
-                    <form
-                        className={classes.root}
-                        onSubmit={props.handleSubmit}
-                    >
+                }) : await handleAddCargoType(values, {
+                    resetForm,
+                    setErrors,
+                    setStatus,
+                    setSubmitting
+                })
+            }}
+        >
+            {(props: FormikProps<CargoType>) => (
+                <form
+                    className={classes.root}
+                    onSubmit={props.handleSubmit}
+                >
 
-                        <Card>
-                            <CardContent>
+                    <Card>
+                        <CardContent>
 
+                            <Grid
+                                container
+                                spacing={3}
+                            >
                                 <Grid
-                                    container
-                                    spacing={3}
+                                    item
+                                    xs={12}
                                 >
-                                    <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                    >
-                                        <TextField
-                                            error={Boolean(props.touched.name && props.errors.name)}
-                                            fullWidth
-                                            helperText={props.touched.name && props.errors.name}
-                                            label="Вид груза"
-                                            name="name"
-                                            onBlur={props.handleBlur}
-                                            onChange={props.handleChange}
-                                            required
-                                            value={props.values.name}
-                                            variant="outlined"
-                                        />
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                    >
-                                        <label onClick={props.handleChange} className={classes.checkbox}>
-                                            <Checkbox
-                                                checked={props.values.manualPrice}
-                                                name="manualPrice"
-                                                color="primary"
-                                                onChange={(e) => {
-                                                    let cargoType = {...props.values}
-                                                    cargoType.manualPrice = e.target.checked
-                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                    props.handleChange(e)
-                                                }}
-                                            />
-                                            <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                                Ручная цена
-                                            </Typography>
-                                        </label>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                    >
-                                        <label onClick={props.handleChange} className={classes.checkbox}>
-                                            <Checkbox
-                                                checked={props.values.negotiatedPrice}
-                                                name="negotiatedPrice"
-                                                color="primary"
-                                                onChange={(e) => {
-                                                    let cargoType = {...props.values}
-                                                    cargoType.negotiatedPrice = e.target.checked
-                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                    props.handleChange(e)
-                                                }}
-                                            />
-                                            <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                                Всегда использовать договорную цену
-                                            </Typography>
-                                        </label>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                    >
-                                        <label onClick={props.handleChange} className={classes.checkbox}>
-                                            <Checkbox
-                                                checked={props.values.calculationRateWeight}
-                                                name="calculationRateWeight"
-                                                color="primary"
-                                                onChange={(e) => {
-                                                    let cargoType = {...props.values}
-                                                    cargoType.calculationRateWeight = e.target.checked
-                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                    props.handleChange(e)
-                                                }}
-                                            />
-                                            <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                                Расчет по весу и норме
-                                            </Typography>
-                                        </label>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                    >
-                                        <label onClick={props.handleChange} className={classes.checkbox}>
-                                            <Checkbox
-                                                checked={props.values.discount}
-                                                name="discount"
-                                                color="primary"
-                                                onChange={(e) => {
-                                                    let cargoType = {...props.values}
-                                                    cargoType.discount = e.target.checked
-                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                    props.handleChange(e)
-                                                }}
-                                            />
-                                            <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                                Применять скидку
-                                            </Typography>
-                                        </label>
-                                    </Grid>
-                                    {
-                                        !selectedCargoType && (
-                                            <Grid
-                                                item
-                                                xs={12}
-                                            >
-                                                <Typography align="center" color="error">
-                                                    Выберите тип расчета
-                                                </Typography>
-                                            </Grid>
-                                        )
-                                    }
-                                </Grid>
-                                <Box mt={2} pb={1} className={classes.buttons}>
-                                    <Button
-                                        className={classes.cancelButton}
+                                    <TextField
+                                        error={Boolean(props.touched.name && props.errors.name)}
+                                        fullWidth
+                                        helperText={props.touched.name && props.errors.name}
+                                        label="Вид груза"
+                                        name="name"
+                                        onBlur={props.handleBlur}
+                                        onChange={props.handleChange}
+                                        required
+                                        value={props.values.name}
                                         variant="outlined"
-                                        color="secondary"
-                                        type="button"
-                                        disabled={props.isSubmitting}
-                                        onClick={() => history.go(-1)}
-                                    >
-                                        Отмена
-                                    </Button>
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={12}
+                                    xs={12}
+                                >
+                                    <label onClick={props.handleChange} className={classes.checkbox}>
+                                        <Checkbox
+                                            checked={props.values.manualPrice}
+                                            name="manualPrice"
+                                            color="primary"
+                                            onChange={(e) => {
+                                                let cargoType = {...props.values}
+                                                cargoType.manualPrice = e.target.checked
+                                                setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                props.handleChange(e)
+                                            }}
+                                        />
+                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
+                                            Ручная цена
+                                        </Typography>
+                                    </label>
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={12}
+                                    xs={12}
+                                >
+                                    <label onClick={props.handleChange} className={classes.checkbox}>
+                                        <Checkbox
+                                            checked={props.values.negotiatedPrice}
+                                            name="negotiatedPrice"
+                                            color="primary"
+                                            onChange={(e) => {
+                                                let cargoType = {...props.values}
+                                                cargoType.negotiatedPrice = e.target.checked
+                                                setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                props.handleChange(e)
+                                            }}
+                                        />
+                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
+                                            Всегда использовать договорную цену
+                                        </Typography>
+                                    </label>
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={12}
+                                    xs={12}
+                                >
+                                    <label onClick={props.handleChange} className={classes.checkbox}>
+                                        <Checkbox
+                                            checked={props.values.calculationRateWeight}
+                                            name="calculationRateWeight"
+                                            color="primary"
+                                            onChange={(e) => {
+                                                let cargoType = {...props.values}
+                                                cargoType.calculationRateWeight = e.target.checked
+                                                setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                props.handleChange(e)
+                                            }}
+                                        />
+                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
+                                            Расчет по весу и норме
+                                        </Typography>
+                                    </label>
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={12}
+                                    xs={12}
+                                >
+                                    <label onClick={props.handleChange} className={classes.checkbox}>
+                                        <Checkbox
+                                            checked={props.values.discount}
+                                            name="discount"
+                                            color="primary"
+                                            onChange={(e) => {
+                                                let cargoType = {...props.values}
+                                                cargoType.discount = e.target.checked
+                                                setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                props.handleChange(e)
+                                            }}
+                                        />
+                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
+                                            Применять скидку
+                                        </Typography>
+                                    </label>
+                                </Grid>
+                                {
+                                    !selectedCargoType && (
+                                        <Grid
+                                            item
+                                            xs={12}
+                                        >
+                                            <Typography align="center" color="error">
+                                                Выберите тип расчета
+                                            </Typography>
+                                        </Grid>
+                                    )
+                                }
+                            </Grid>
+                            <Box mt={2} pb={1} className={classes.buttons}>
+                                <Button
+                                    className={classes.cancelButton}
+                                    variant="outlined"
+                                    color="secondary"
+                                    type="button"
+                                    disabled={props.isSubmitting}
+                                    onClick={() => history.go(-1)}
+                                >
+                                    Отмена
+                                </Button>
 
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        type="submit"
-                                        disabled={props.isSubmitting || !selectedCargoType}
-                                    >
-                                        {cargoType ? 'Сохранить' : 'Добавить'}
-                                    </Button>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </form>
-                )}
-            </Formik>
-        </Container>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    type="submit"
+                                    disabled={props.isSubmitting || !selectedCargoType}
+                                >
+                                    {cargoType ? 'Сохранить' : 'Добавить'}
+                                </Button>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </form>
+            )}
+        </Formik>
     );
 }
 

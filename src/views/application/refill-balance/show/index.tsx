@@ -11,9 +11,9 @@ import applicationService from "../../../../services/Application";
 import {deleteSelectedRefillBalance, setSelectedRefillBalance} from "../../../../store/actions/applicationAction";
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
-import CashierApprove from "../../components/CashierApprove";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
+import CashierApproveRefill from "../../components/CashierApproveRefill";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -141,7 +141,7 @@ const ShowView: React.FC = () => {
                     <Box mt={3} mb={4}>
                         {
                             !isPaid() && canApprove ? (
-                                <CashierApprove
+                                <CashierApproveRefill
                                     applicationId={refillBalance.id!}
                                     currencyExchangeData={refillBalance}
                                     onApprove={applicationService.approveRefillBalance}

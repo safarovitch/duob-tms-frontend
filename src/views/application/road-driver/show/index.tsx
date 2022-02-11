@@ -132,12 +132,13 @@ const ShowView: React.FC = () => {
                                     {roadDriver.roadId} #{roadDriver.id}
                                 </Typography>
                                 <Typography variant="body1">
-                                    Сумма: <b>{roadDriver.actualAmount} {roadDriver.actualMoneyUnit}</b>
+                                    Сумма: <b>{roadDriver.actualAmount === 0
+                                        ? `${roadDriver.convertAmount} ${roadDriver.convertMoneyUnit}`
+                                        : `${roadDriver.actualAmount} ${roadDriver.actualMoneyUnit}`}</b>
                                 </Typography>
                             </Grid>
                         </Grid>
                     </Box>
-                    <Divider />
                 </Card>
             </Container>
         </Page>
