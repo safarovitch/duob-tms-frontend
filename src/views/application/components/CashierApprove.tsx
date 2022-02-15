@@ -44,10 +44,8 @@ interface CashierApproveProps {
     disabledTJS?: boolean;
 }
 
-const CashierApprove: React.FC<CashierApproveProps> = ({
-                                                           applicationId, currencyExchangeData,
-                                                           onApprove, handleApprove, disabledTJS
-                                                       }) => {
+const CashierApprove: React.FC<CashierApproveProps> = (props) => {
+    const {applicationId, currencyExchangeData, onApprove, handleApprove, disabledTJS} = props
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
@@ -88,11 +86,12 @@ const CashierApprove: React.FC<CashierApproveProps> = ({
         }
     }
 
-    const calculateTotalAmount = (actualAmount: number, convertAmount: number) => {
-        isNaN(actualAmount) && (actualAmount = 0)
-        isNaN(convertAmount) && (convertAmount = 0)
+    const calculateActualAmount = (convertAmountUSD: number) => {
+        return Number((currencyExchangeData.totalAmount - convertAmountUSD).toFixed(2))
+    }
 
-        return (actualAmount + convertAmount).toFixed(2);
+    const calculateConvertAmount = (actualAmount: number) => {
+        return ((currencyExchangeData.totalAmount - actualAmount) * currencyExchangeData.currency).toFixed(2)
     }
 
     const calculateTotalConvertAmount = (convertAmount: number) => {
@@ -140,9 +139,20 @@ const CashierApprove: React.FC<CashierApproveProps> = ({
                                 label={`Введите сумму ${currencyExchangeData.actualMoneyUnit}`}
                                 placeholder="0"
                                 name="actualAmount"
+                                disabled={disabledTJS}
                                 onBlur={props.handleBlur}
                                 onChange={(e) => {
-                                    props.setFieldValue("totalAmount", calculateTotalAmount(Number(e.target.value), props.values.totalConvertAmount!))
+                                    let res = Number(calculateConvertAmount(Number(e.target.value)))
+
+                                    if (res < 0) {
+                                        props.setFieldValue("convertAmount", 0)
+                                        props.setFieldValue("totalConvertAmount", 0)
+                                        e.target.value = currencyExchangeData.totalAmount.toString()
+                                    } else {
+                                        props.setFieldValue("convertAmount", res)
+                                        props.setFieldValue("totalConvertAmount", calculateTotalConvertAmount(res))
+                                    }
+
                                     props.handleChange(e)
                                 }}
                                 value={props.values.actualAmount}
@@ -165,9 +175,18 @@ const CashierApprove: React.FC<CashierApproveProps> = ({
                                 disabled={disabledTJS}
                                 onBlur={props.handleBlur}
                                 onChange={(e) => {
-                                    let res = calculateTotalConvertAmount(Number(e.target.value))
-                                    props.setFieldValue("totalConvertAmount", res)
-                                    props.setFieldValue("totalAmount", calculateTotalAmount(Number(props.values.actualAmount), res))
+                                    let totalConvertAmount = calculateTotalConvertAmount(Number(e.target.value)),
+                                        actualAmount = calculateActualAmount(totalConvertAmount);
+
+                                    if (actualAmount < 0) {
+                                        e.target.value = calculateConvertAmount(0).toString()
+                                        props.setFieldValue("actualAmount", 0)
+                                        props.setFieldValue("totalConvertAmount", currencyExchangeData.totalAmount)
+                                    } else {
+                                        props.setFieldValue("actualAmount", actualAmount)
+                                        props.setFieldValue("totalConvertAmount", totalConvertAmount)
+                                    }
+
                                     props.handleChange(e)
                                 }}
                                 value={props.values.convertAmount}

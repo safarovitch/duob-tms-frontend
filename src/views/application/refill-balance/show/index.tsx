@@ -13,7 +13,7 @@ import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
-import CashierApproveRefill from "../../components/CashierApproveRefill";
+import CashierApproveRefill from "../../components/CashierApprove";
 
 const useStyles = makeStyles((theme) => ({
     root: {
