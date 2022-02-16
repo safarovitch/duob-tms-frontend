@@ -11,6 +11,7 @@ import DriverListView from "./driver/DriverListView";
 import TruckListView from "./truck/TruckListView";
 import TrailerListView from "./trailer/TrailerListView";
 import TruckTypeListView from "./truck-type/TruckTypeListView";
+import ProviderReceiverListView from "./provider-receiver/ProviderReceiverListView";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -74,6 +75,9 @@ const RoadStuffView: React.FC = () => {
                         </RoadTabPanel>
                         <RoadTabPanel index={'truck-type'} value={currentTab}>
                             <TruckTypeListView />
+                        </RoadTabPanel>
+                        <RoadTabPanel index={'provider-receiver'} value={currentTab}>
+                            <ProviderReceiverListView />
                         </RoadTabPanel>
                     </Card>
 

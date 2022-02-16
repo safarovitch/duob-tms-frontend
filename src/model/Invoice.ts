@@ -6,8 +6,8 @@ export interface GetRoadsResponse {
 export interface CreateInvoiceRequest {
     roadId: number;
     percent: number;
-    provider: string;
-    receiver: string;
+    providerId: number;
+    receiverId: number;
     number: string;
     description: string;
 }
@@ -24,10 +24,13 @@ export interface CargoInvoiceRequestList {
 
 export interface UpdateInvoiceRequest {
     id: number;
-    provider: string;
-    receiver: string;
+    providerId: number;
+    receiverId: number;
     percent: number;
     number: string;
+    currency: number;
+    truckNumber: string;
+    trailerNumber: string;
     totalUsd: number;
     totalTjs: number;
     quantity: number;
@@ -51,8 +54,8 @@ export interface GetListInvoiceResponse {
     number: string;
     createdDate: string;
     currency: number;
-    provider: string;
-    receiver: string;
+    providerId: number;
+    receiverId: number;
     truckNumber: string;
     trailerNumber: string;
     percent: number;

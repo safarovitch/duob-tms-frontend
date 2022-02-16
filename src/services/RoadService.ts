@@ -1,7 +1,7 @@
 import api from "../utils/Api";
 import {API_BASE_URL} from "../config";
 import {
-    Driver, RoadFuelDetail,
+    Driver, ProviderReceiver, RoadFuelDetail,
     RoadFuelRequest,
     RoadMileageRequest,
     RoadMoneyRequest,
@@ -10,6 +10,7 @@ import {
     Truck,
     TruckType
 } from "../model/Road";
+import {ProviderReceiverEnum} from "../constants";
 
 class RoadService {
     getFilteredRoads = (page: number, size: number) => new Promise((resolve, reject) => {
@@ -232,6 +233,30 @@ class RoadService {
         api.delete(`${API_BASE_URL}/truck-types/${truckTypeId}`)
             .then((response) => {resolve(response.data)})
             .catch((error) => {reject(error)})
+    })
+
+    getFilteredProviderReceiver = (page: number, size: number, type: ProviderReceiverEnum | null) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/invoices/persons`, {params: {page, size, type}})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    getProviderReceivers = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/invoices/persons/all`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    postProviderReceiver = (providerReceiver: ProviderReceiver) => new Promise((resolve, reject)  => {
+        api.post(`${API_BASE_URL}/invoices/persons`, providerReceiver)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    deleteProviderReceiver = (providerReceiverId: number) => new Promise((resolve, reject)  => {
+        api.delete(`${API_BASE_URL}/invoices/persons/${providerReceiverId}`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 }
 

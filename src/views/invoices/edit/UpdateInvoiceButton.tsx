@@ -52,10 +52,13 @@ const UpdateInvoiceButton: React.FC<UpdateInvoiceButtonInterface> = ({invoice, o
 
             const newInvoice: UpdateInvoiceRequest = {
                 id: invoice.id,
-                provider: invoice.provider,
-                receiver: invoice.receiver,
+                providerId: invoice.providerId,
+                receiverId: invoice.receiverId,
                 percent: invoice.percent,
                 number: invoice.number,
+                currency: Number(invoice.currency),
+                truckNumber: invoice.truckNumber,
+                trailerNumber: invoice.trailerNumber,
                 totalUsd: invoice.totalUsd,
                 totalTjs: invoice.totalTjs,
                 quantity: invoice.quantity,
