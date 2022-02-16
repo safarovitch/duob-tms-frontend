@@ -56,6 +56,18 @@ export enum ApplicationStatusEnum {
     ON_ROAD = "ON_ROAD",
 }
 
+export enum ProviderReceiverEnum {
+    PROVIDER = "PROVIDER",
+    RECEIVER = "RECEIVER"
+}
+
+export const mapOfProviderReceiverEnum = new Map(
+    [
+        [ProviderReceiverEnum.PROVIDER, "Отправитель"],
+        [ProviderReceiverEnum.RECEIVER, "Получатель"],
+    ]
+)
+
 export enum TypeCalculationCargoEnum {
     calculationRateWeight = "calculationRateWeight",
     negotiatedPrice = "negotiatedPrice",
@@ -163,6 +175,10 @@ export const roadStuffTabs = [
     {
         value: 'truck-type',
         label: 'Тип машины'
+    },
+    {
+        value: 'provider-receiver',
+        label: 'Получатели / Отправители'
     }
 ];
 

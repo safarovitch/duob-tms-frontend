@@ -21,13 +21,13 @@ const RowInvoiceEdit: React.FC<RowInvoiceEditInterface> = (props) => {
     const cargoCustomCode = cargoCustomCodes.find(item => item.id === row.customCodeId)!
 
     const handleQuantity = (value: number) => {
-        isNaN(value) && (value = row.quantity)
+        if (isNaN(value)) return;
 
         handleRowQuantity(index, value)
     }
 
     const handleWeight = (value: number) => {
-        isNaN(value) && (value = row.weight)
+        if (isNaN(value)) return;
 
         handleRowWeight(index, value)
     }

@@ -361,6 +361,12 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/road/provider-receiver/create',
+                        perm: PERMISSIONS.ROAD.LIST,
+                        component: lazy(() => import('./views/road/provider-receiver/CreateView'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/fuels',
                         perm: PERMISSIONS.FUEL.LIST,
                         component: lazy(() => import('./views/fuel/FuelListView'))

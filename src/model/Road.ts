@@ -1,6 +1,6 @@
 import React from "react";
 import {MoneyUnitType} from "./Exchange";
-import {RoadStatusEnum} from "../constants";
+import {ProviderReceiverEnum, RoadStatusEnum} from "../constants";
 
 export interface RoadList {
     id: number;
@@ -43,6 +43,7 @@ export interface RoadRequest {
     description: string;
     privateTruck?: boolean;
     withTrailer?: boolean;
+    containerNumber?: string;
 }
 
 export interface RoadMileageRequest {
@@ -117,6 +118,7 @@ export interface Road {
     truck: RoadTruck;
     trailer: {id: number, number: string};
     driver: {id: number, name: string};
+    containerNumber?: string;
     departureDate: string;
     arrivalDate: string;
     description: string;
@@ -218,4 +220,13 @@ export interface TruckType {
     returnNormWithoutCargo: number;
     returnNormWithCargo: number;
     returnNormTrailerWithCargo: number;
+}
+
+export interface ProviderReceiver {
+    id?: number;
+    name: string;
+    inn: string;
+    address: string;
+    country: string;
+    type: ProviderReceiverEnum
 }

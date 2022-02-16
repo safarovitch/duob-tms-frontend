@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {
     Box,
-    Breadcrumbs, Button,
+    Breadcrumbs,
+    Button,
     Card,
     CardContent,
     Container,
@@ -22,6 +23,9 @@ import * as Yup from "yup";
 import invoiceService from "../../services/InvoiceService";
 import {Formik, FormikProps} from "formik";
 import {Autocomplete} from "@material-ui/lab";
+import roadService from "../../services/RoadService";
+import {ProviderReceiverEnum} from "../../constants";
+import {ProviderReceiver} from "../../model/Road";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,6 +50,7 @@ const CreateView: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [roads, setRoads] = useState<GetRoadsResponse[]>([])
+    const [providerReceivers, setProviderReceivers] = useState<ProviderReceiver[]>([])
     const [road, setRoad] = useState<GetRoadsResponse>()
 
     useEffect(() => {
@@ -54,13 +59,15 @@ const CreateView: React.FC = () => {
         (async () => {
             try {
                 setLoading(true)
-                const data: any = await invoiceService.getRoads()
+                const dataRoads: any = await invoiceService.getRoads()
+                const dataProviderReceivers: any = await roadService.getProviderReceivers()
 
-                if (data.length === 0) {
+                if (dataRoads.length === 0 || dataProviderReceivers.length === 0) {
                     history.go(-1)
-                    enqueueSnackbar('Добавьте с начала рейс', {variant: 'info'})
+                    enqueueSnackbar('Добавьте с начала рейс или Получатель / Отправитель', {variant: 'info'})
                 } else if (!cancel) {
-                    setRoads(data)
+                    setRoads(dataRoads)
+                    setProviderReceivers(dataProviderReceivers)
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -76,8 +83,8 @@ const CreateView: React.FC = () => {
     const initialValues: CreateInvoiceRequest = {
         roadId: 0,
         percent: 100,
-        provider: '',
-        receiver: '',
+        providerId: 0,
+        receiverId: 0,
         number: '',
         description: ''
     }
@@ -209,17 +216,24 @@ const CreateView: React.FC = () => {
                                                         xs={12}
                                                         sm={6}
                                                     >
-                                                        <TextField
-                                                            error={Boolean(props.touched.provider && props.errors.provider)}
-                                                            fullWidth
-                                                            helperText={props.touched.provider && props.errors.provider}
-                                                            label="Введите поставшика"
-                                                            name="provider"
-                                                            onBlur={props.handleBlur}
-                                                            onChange={props.handleChange}
-                                                            value={props.values.provider}
-                                                            variant="outlined"
-                                                            required
+                                                        <Autocomplete
+                                                            options={providerReceivers.filter(item => item.type === ProviderReceiverEnum.PROVIDER)}
+                                                            getOptionLabel={option => option.name}
+                                                            getOptionSelected={(option, value) => option.name === value.name}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("providerId", value?.id);
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.providerId && props.errors.providerId)}
+                                                                    helperText={props.touched.providerId && props.errors.providerId}
+                                                                    label="Выберите поставшика"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
                                                         />
                                                     </Grid>
                                                     <Grid
@@ -227,17 +241,24 @@ const CreateView: React.FC = () => {
                                                         xs={12}
                                                         sm={6}
                                                     >
-                                                        <TextField
-                                                            error={Boolean(props.touched.receiver && props.errors.receiver)}
-                                                            fullWidth
-                                                            helperText={props.touched.receiver && props.errors.receiver}
-                                                            label="Введите получателья"
-                                                            name="receiver"
-                                                            onBlur={props.handleBlur}
-                                                            onChange={props.handleChange}
-                                                            value={props.values.receiver}
-                                                            variant="outlined"
-                                                            required
+                                                        <Autocomplete
+                                                            options={providerReceivers.filter(item => item.type === ProviderReceiverEnum.RECEIVER)}
+                                                            getOptionLabel={option => option.name}
+                                                            getOptionSelected={(option, value) => option.name === value.name}
+                                                            onChange={(e, value) => {
+                                                                props.setFieldValue("receiverId", value?.id);
+                                                            }}
+                                                            renderInput={params => (
+                                                                <TextField
+                                                                    error={Boolean(props.touched.receiverId && props.errors.receiverId)}
+                                                                    helperText={props.touched.receiverId && props.errors.receiverId}
+                                                                    label="Выберите получателья"
+                                                                    variant="outlined"
+                                                                    onBlur={props.handleBlur}
+                                                                    required
+                                                                    {...params}
+                                                                />
+                                                            )}
                                                         />
                                                     </Grid>
                                                 </Grid>

@@ -50,6 +50,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
         description: road?.description || '',
         privateTruck: road?.privateTruck || false,
         withTrailer: road?.withTrailer || false,
+        containerNumber: road?.containerNumber || ''
     }
 
     const validationSchema = Yup.object().shape({
@@ -187,65 +188,91 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                         required
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
-                                    <Autocomplete
-                                        options={trucks}
-                                        getOptionLabel={option => option.number}
-                                        getOptionSelected={(option, value) => option.number === value.number}
-                                        onChange={(e, value) => {
-                                            props.setFieldValue("truckId", value?.id)
-                                            props.setFieldValue("truck", value)
-                                            setTrailerNumber(value?.trailerNumber || '')
-                                            setDriverName(value?.driverName || '')
-                                            setHasTrailer(Boolean(value?.trailerNumber))
-                                            !Boolean(value?.trailerNumber) && props.setFieldValue("withTrailer", false)
-                                        }}
-                                        disabled={road ? true : privateTruck}
-                                        value={road ? props.values.truck as RoadTruck : undefined}
-                                        renderInput={params => (
+                                {
+                                    privateTruck ? (
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            md={4}
+                                        >
                                             <TextField
-                                                error={Boolean(props.touched.truckId && props.errors.truckId)}
-                                                helperText={props.touched.truckId && props.errors.truckId}
-                                                label="Выберите машину"
-                                                name="truckId"
-                                                variant="outlined"
+                                                error={Boolean(props.touched.containerNumber && props.errors.containerNumber)}
+                                                fullWidth
+                                                helperText={props.touched.containerNumber && props.errors.containerNumber}
+                                                label="Номер прицепа"
+                                                name="containerNumber"
                                                 onBlur={props.handleBlur}
+                                                onChange={props.handleChange}
+                                                disabled={road && true}
+                                                value={props.values.containerNumber}
+                                                variant="outlined"
                                                 required
-                                                {...params}
                                             />
-                                        )}
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
-                                    <TextField
-                                        fullWidth
-                                        label="Прицеп"
-                                        value={trailerNumber}
-                                        variant="outlined"
-                                        disabled
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                >
-                                    <TextField
-                                        fullWidth
-                                        label="Водитель"
-                                        value={driverName}
-                                        variant="outlined"
-                                        disabled
-                                    />
-                                </Grid>
+                                        </Grid>
+                                    ) : (
+                                        <>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                md={4}
+                                            >
+                                                <Autocomplete
+                                                    options={trucks}
+                                                    getOptionLabel={option => option.number}
+                                                    getOptionSelected={(option, value) => option.number === value.number}
+                                                    onChange={(e, value) => {
+                                                        props.setFieldValue("truckId", value?.id)
+                                                        props.setFieldValue("truck", value)
+                                                        setTrailerNumber(value?.trailerNumber || '')
+                                                        setDriverName(value?.driverName || '')
+                                                        setHasTrailer(Boolean(value?.trailerNumber))
+                                                        !Boolean(value?.trailerNumber) && props.setFieldValue("withTrailer", false)
+                                                    }}
+                                                    disabled={road ? true : privateTruck}
+                                                    value={road ? props.values.truck as RoadTruck : undefined}
+                                                    renderInput={params => (
+                                                        <TextField
+                                                            error={Boolean(props.touched.truckId && props.errors.truckId)}
+                                                            helperText={props.touched.truckId && props.errors.truckId}
+                                                            label="Выберите машину"
+                                                            name="truckId"
+                                                            variant="outlined"
+                                                            onBlur={props.handleBlur}
+                                                            required
+                                                            {...params}
+                                                        />
+                                                    )}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                md={4}
+                                            >
+                                                <TextField
+                                                    fullWidth
+                                                    label="Прицеп"
+                                                    value={trailerNumber}
+                                                    variant="outlined"
+                                                    disabled
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                md={4}
+                                            >
+                                                <TextField
+                                                    fullWidth
+                                                    label="Водитель"
+                                                    value={driverName}
+                                                    variant="outlined"
+                                                    disabled
+                                                />
+                                            </Grid>
+                                        </>
+                                    )
+                                }
                                 <Grid
                                     item
                                     xs={12}

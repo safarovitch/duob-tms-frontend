@@ -4,12 +4,16 @@ import {
     Box,
     Breadcrumbs,
     Card,
-    Container, Grid,
+    Container,
+    Grid,
     Link,
     makeStyles,
-    Table, TableBody, TableCell,
+    Table,
+    TableBody,
+    TableCell,
     TableHead,
-    TableRow, TextField,
+    TableRow,
+    TextField,
     Typography
 } from "@material-ui/core";
 import {useSnackbar} from "notistack";
@@ -27,6 +31,10 @@ import cargoService from "../../../services/CargoService";
 import RowInvoice from "./RowInvoice";
 import RowInvoiceEdit from "./RowInvoiceEdit";
 import DownloadInvoiceButton from "../DownloadInvoiceButton";
+import {ProviderReceiver} from "../../../model/Road";
+import roadService from "../../../services/RoadService";
+import {Autocomplete} from "@material-ui/lab";
+import {ProviderReceiverEnum} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,6 +58,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+enum InvoiceProperties {
+    truckNumber = "truckNumber",
+    trailerNumber = "trailerNumber",
+    number = "number",
+    providerId = "providerId",
+    receiverId = "receiverId"
+}
+
 const Index: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
@@ -57,6 +73,9 @@ const Index: React.FC = () => {
     const [invoice, setInvoice] = useState<GetListInvoiceResponse>()
     const [cargoProducts, setCargoProducts] = useState<CargoProduct[]>([])
     const [cargoCustomCodes, setCargoCustomCodes] = useState<CargoCustomCode[]>([])
+    const [providerReceivers, setProviderReceivers] = useState<ProviderReceiver[]>([])
+    const [provider, setProvider] = useState<ProviderReceiver>()
+    const [receiver, setReceiver] = useState<ProviderReceiver>()
     const [hasError, setHasError] = useState(false)
     const [loading, setLoading] = useState(false)
     const [updateLoading, setUpdateLoading] = useState(false)
@@ -72,11 +91,15 @@ const Index: React.FC = () => {
                 const data: any = await invoiceService.get(Number(invoiceId))
                 const dataCargoProducts: any = await cargoService.getAllProducts()
                 const dataCargoCustomCodes: any = await cargoService.getFilteredCustomCodes(1, 10000, '')
+                const dataProviderReceivers: any = await roadService.getProviderReceivers()
 
                 if (!cancel) {
                     setInvoice(data)
                     setCargoProducts(dataCargoProducts.filter((pItem: CargoProduct) => dataCargoCustomCodes.content.find((ccItem: CargoCustomCode) => ccItem.productDto!.id === pItem.id)))
                     setCargoCustomCodes(dataCargoCustomCodes.content)
+                    setProviderReceivers(dataProviderReceivers)
+                    setProvider(dataProviderReceivers.find((item: ProviderReceiver) => item.id === data.providerId))
+                    setReceiver(dataProviderReceivers.find((item: ProviderReceiver) => item.id === data.receiverId))
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -91,16 +114,28 @@ const Index: React.FC = () => {
         }
     }, [invoiceId, enqueueSnackbar])
 
-    const handleNumber = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const handleStringInput = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: InvoiceProperties) => {
         event.persist()
 
-        setInvoice({...invoice!, number: event.target.value})
+        setInvoice({...invoice!, [property]: event.target.value})
     }
 
-    const handleProvider = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const handleProviderReceiver = (value: number, property: InvoiceProperties) => {
+        setInvoice({...invoice!, [property]: value})
+    }
+
+    const handleCurrency = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()
 
-        setInvoice({...invoice!, provider: event.target.value})
+        if (isNaN(Number(event.target.value)) || (Number(event.target.value) < 0)) return;
+
+        let newInvoice = {...invoice!}
+        newInvoice.currency = (event.target.value as any)
+
+        newInvoice.totalTjs = Number((newInvoice.totalUsd * Number(newInvoice.currency)).toFixed(2))
+        newInvoice.ccPriceTjs = Number((newInvoice.ccPriceUsd * Number(newInvoice.currency)).toFixed(2))
+
+        setInvoice(newInvoice)
     }
 
     const handlePercent = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -122,12 +157,6 @@ const Index: React.FC = () => {
         }
 
         setInvoice(calculateGeneralTotals(newInvoice))
-    }
-
-    const handleReceiver = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-
-        setInvoice({...invoice!, receiver: event.target.value})
     }
 
     const handleRowCustomCode = (index: number, value: CargoCustomCode) => {
@@ -210,9 +239,9 @@ const Index: React.FC = () => {
         newInvoice.weight = weight
         newInvoice.quantity = quantity
         newInvoice.totalUsd = Number(totalUsd.toFixed(2))
-        newInvoice.totalTjs = Number((totalUsd * newInvoice.currency).toFixed(2))
+        newInvoice.totalTjs = Number((totalUsd * Number(newInvoice.currency)).toFixed(2))
         newInvoice.ccPriceUsd = Number(ccPriceUsd.toFixed(2))
-        newInvoice.ccPriceTjs = Number((ccPriceUsd * newInvoice.currency).toFixed(2))
+        newInvoice.ccPriceTjs = Number((ccPriceUsd * Number(newInvoice.currency)).toFixed(2))
 
         return newInvoice
     }
@@ -220,7 +249,7 @@ const Index: React.FC = () => {
     return (
         <Page title={invoice ? `Инвойс № ${1}` : 'Инвойс'}>
             {
-                invoice && cargoProducts.length && cargoCustomCodes.length ? (
+                invoice && cargoProducts.length && cargoCustomCodes.length && provider && receiver ? (
                     <Container className={classes.root} maxWidth="xl">
                         <Box>
                             <Breadcrumbs
@@ -258,101 +287,178 @@ const Index: React.FC = () => {
                             </Typography>
                         </Box>
                         <Card className={classes.mainContent}>
-                            <Grid container justifyContent="space-between">
+                            <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item>
                                     <Grid container spacing={2}>
                                         <Grid item>
-                                            <Box>
-                                                <Typography variant="h5">Дата: <b>{invoice.createdDate}</b></Typography>
-                                            </Box>
-                                            <Box mt={2}>
-                                                <Typography variant="h5">Номер
-                                                    машины: <b>{invoice.truckNumber}</b></Typography>
-                                            </Box>
-                                            <Box mt={2}>
-                                                {
-                                                    invoice.copy ? (
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="Номер инвойса"
-                                                            disabled={updateLoading || downloadLoading}
-                                                            onChange={handleNumber}
-                                                            value={invoice.number}
-                                                            variant="outlined"
-                                                            required
-                                                        />
-                                                    ) : (
-                                                        <Typography variant="h5">Номер инвойса: <b>{invoice.number}</b></Typography>
-                                                    )
-                                                }
-                                            </Box>
-                                            <Box mt={2}>
-                                                {
-                                                    invoice.copy ? (
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="Поставщик"
-                                                            disabled={updateLoading || downloadLoading}
-                                                            onChange={handleProvider}
-                                                            value={invoice.provider}
-                                                            variant="outlined"
-                                                            required
-                                                        />
-                                                    ) : (
-                                                        <Typography
-                                                            variant="h5">Поставщик: <b>{invoice.provider}</b></Typography>
-                                                    )
-                                                }
-                                            </Box>
+                                            {
+                                                invoice.copy ? (
+                                                    <>
+                                                        <Box>
+                                                            <TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="Номер инвойса"
+                                                                disabled={updateLoading || downloadLoading}
+                                                                onChange={(e) => handleStringInput(e, InvoiceProperties.number)}
+                                                                value={invoice.number || ''}
+                                                                variant="outlined"
+                                                            />
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="Дата"
+                                                                disabled={true}
+                                                                value={invoice.createdDate}
+                                                                variant="outlined"
+                                                            />
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <Autocomplete
+                                                                options={providerReceivers.filter(item => item.type === ProviderReceiverEnum.PROVIDER)}
+                                                                getOptionLabel={option => option.name}
+                                                                getOptionSelected={(option, value) => option.name === value.name}
+                                                                value={provider}
+                                                                onChange={(e, value) => {
+                                                                    e.persist()
+
+                                                                    const newValue = value || provider
+                                                                    setProvider(newValue)
+                                                                    handleProviderReceiver(newValue.id!, InvoiceProperties.providerId)
+                                                                }}
+                                                                size="small"
+                                                                disabled={updateLoading || downloadLoading}
+                                                                renderInput={params => (
+                                                                    <TextField
+                                                                        label="Поставщик"
+                                                                        variant="outlined"
+                                                                        {...params}
+                                                                    />
+                                                                )}
+                                                            />
+                                                        </Box>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Box>
+                                                            <Typography variant="h5">Номер инвойса: <b>{invoice.number}</b></Typography>
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <Typography variant="h5">Дата: <b>{invoice.createdDate}</b></Typography>
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <Typography variant="h5">Поставщик: <b>{provider.name}</b></Typography>
+                                                        </Box>
+                                                    </>
+                                                )
+                                            }
                                         </Grid>
                                         <Grid item>
-                                            <Box>
-                                                <Typography variant="h5">Курс: <b>{invoice.currency}</b></Typography>
-                                            </Box>
-                                            <Box mt={2}>
-                                                <Typography variant="h5">Номер
-                                                    прицепа: <b>{invoice.truckNumber}</b></Typography>
-                                            </Box>
-                                            <Box mt={2}>
-                                                {
-                                                    invoice.copy ? (
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="Процент %"
-                                                            disabled={updateLoading || downloadLoading}
-                                                            onChange={handlePercent}
-                                                            value={invoice.percent}
-                                                            variant="outlined"
-                                                            required
-                                                        />
-                                                    ) : (
-                                                        <Typography variant="h5">Процент
-                                                            %: <b>{invoice.percent}</b></Typography>
-                                                    )
-                                                }
-                                            </Box>
-                                            <Box mt={2}>
-                                                {
-                                                    invoice.copy ? (
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="Получатель"
-                                                            disabled={updateLoading || downloadLoading}
-                                                            onChange={handleReceiver}
-                                                            value={invoice.receiver}
-                                                            variant="outlined"
-                                                            required
-                                                        />
-                                                    ) : (
-                                                        <Typography
-                                                            variant="h5">Получатель: <b>{invoice.receiver}</b></Typography>
-                                                    )
-                                                }
-                                            </Box>
+                                            {
+                                                invoice.copy ? (
+                                                    <>
+                                                        <Box>
+                                                            <TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="Курс"
+                                                                disabled={updateLoading || downloadLoading}
+                                                                onChange={handleCurrency}
+                                                                value={invoice.currency}
+                                                                variant="outlined"
+                                                            />
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="Номер машины"
+                                                                disabled={updateLoading || downloadLoading}
+                                                                onChange={(e) => handleStringInput(e, InvoiceProperties.truckNumber)}
+                                                                value={invoice.truckNumber || ''}
+                                                                variant="outlined"
+                                                            />
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <Autocomplete
+                                                                options={providerReceivers.filter(item => item.type === ProviderReceiverEnum.RECEIVER)}
+                                                                getOptionLabel={option => option.name}
+                                                                getOptionSelected={(option, value) => option.name === value.name}
+                                                                value={receiver}
+                                                                onChange={(e, value) => {
+                                                                    e.persist()
+
+                                                                    const newValue = value || receiver
+                                                                    setReceiver(newValue)
+                                                                    handleProviderReceiver(newValue.id!, InvoiceProperties.receiverId)
+                                                                }}
+                                                                size="small"
+                                                                disabled={updateLoading || downloadLoading}
+                                                                renderInput={params => (
+                                                                    <TextField
+                                                                        label="Получатель"
+                                                                        variant="outlined"
+                                                                        {...params}
+                                                                    />
+                                                                )}
+                                                            />
+                                                        </Box>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Box>
+                                                            <Typography variant="h5">Курс: <b>{invoice.currency}</b></Typography>
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <Typography variant="h5">Номер машины: <b>{invoice.truckNumber}</b></Typography>
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <Typography variant="h5">Получатель: <b>{receiver.name}</b></Typography>
+                                                        </Box>
+                                                    </>
+                                                )
+                                            }
+                                        </Grid>
+                                        <Grid item>
+                                            {
+                                                invoice.copy ? (
+                                                    <>
+                                                        <Box>
+                                                            <TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="Процент %"
+                                                                disabled={updateLoading || downloadLoading}
+                                                                onChange={handlePercent}
+                                                                value={invoice.percent}
+                                                                variant="outlined"
+                                                            />
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="Номер прицепа"
+                                                                disabled={updateLoading || downloadLoading}
+                                                                onChange={(e) => handleStringInput(e, InvoiceProperties.trailerNumber)}
+                                                                value={invoice.trailerNumber || ''}
+                                                                variant="outlined"
+                                                            />
+                                                        </Box>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Box>
+                                                            <Typography variant="h5">Процент %: <b>{invoice.percent}</b></Typography>
+                                                        </Box>
+                                                        <Box mt={2}>
+                                                            <Typography variant="h5">Номер прицепа: <b>{invoice.trailerNumber}</b></Typography>
+                                                        </Box>
+                                                    </>
+                                                )
+                                            }
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -383,9 +489,7 @@ const Index: React.FC = () => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Box mt={2}>
-                                        <Typography variant="h5">Примечание: <b>{invoice.description}</b></Typography>
-                                    </Box>
+                                    <Typography variant="h5">Примечание: <b>{invoice.description}</b></Typography>
                                 </Grid>
                             </Grid>
                             <Box mt={3}>
