@@ -199,7 +199,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                                 error={Boolean(props.touched.containerNumber && props.errors.containerNumber)}
                                                 fullWidth
                                                 helperText={props.touched.containerNumber && props.errors.containerNumber}
-                                                label="Номер прицепа"
+                                                label="Номер контейнера"
                                                 name="containerNumber"
                                                 onBlur={props.handleBlur}
                                                 onChange={props.handleChange}
