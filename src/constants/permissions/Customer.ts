@@ -1,4 +1,4 @@
-import {ADMIN, CASHIER, MANAGER, WAREHOUSEMAN} from "./roles";
+import {ADMIN, CASHIER, CLIENT, MANAGER, WAREHOUSEMAN} from "./roles";
 
 const CUSTOMER = {
     LIST: [
@@ -25,20 +25,23 @@ const CUSTOMER = {
     CARGOS: {
         LIST: [
             ADMIN,
-            MANAGER
+            MANAGER,
+            CLIENT,
         ]
     },
     RECONCILIATION_ACT: {
         LIST: [
             ADMIN,
-            MANAGER
+            MANAGER,
+            CLIENT,
         ]
     },
     CREDIT: {
         LIST: [
             ADMIN,
             MANAGER,
-            CASHIER
+            CASHIER,
+            CLIENT,
         ],
         ADMIN_APPROVE: [
             ADMIN,
@@ -57,7 +60,8 @@ const CUSTOMER = {
     NOTIFICATION: {
         LIST: [
             ADMIN,
-            MANAGER
+            MANAGER,
+            CLIENT,
         ]
     },
 }
