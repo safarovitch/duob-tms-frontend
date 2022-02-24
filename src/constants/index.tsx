@@ -103,6 +103,7 @@ export enum RoadStatusEnum {
     ACTIVE = "ACTIVE",
     COMPLETED = "COMPLETED",
     ARRIVED = "ARRIVED",
+    LOADED = "LOADED"
 }
 
 export const mapOfRoadStatus = new Map(
@@ -110,6 +111,7 @@ export const mapOfRoadStatus = new Map(
         [RoadStatusEnum.ACTIVE, "Активный"],
         [RoadStatusEnum.COMPLETED, "Завершенный"],
         [RoadStatusEnum.ARRIVED, "Прибыл"],
+        [RoadStatusEnum.LOADED, "Загружен"],
     ]
 )
 

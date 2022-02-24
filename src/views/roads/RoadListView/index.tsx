@@ -1,6 +1,7 @@
 import React, {useEffect, useReducer, useState} from "react";
 import Header from "./Header";
 import {
+    Badge,
     Box, Button,
     Card,
     Container,
@@ -104,7 +105,8 @@ const RoadListView: React.FC = () => {
                                         <TableRow>
                                             <TableCell>Номер</TableCell>
                                             <TableCell>Путь рейса</TableCell>
-                                            <TableCell>Номер машин</TableCell>
+                                            <TableCell>Номер машины</TableCell>
+                                            <TableCell>Номер прицепа</TableCell>
                                             <TableCell>Объем</TableCell>
                                             <TableCell>Вес</TableCell>
                                             <TableCell>Сумма</TableCell>
@@ -122,35 +124,62 @@ const RoadListView: React.FC = () => {
                                                         key={row.id}
                                                     >
                                                         <TableCell>
-                                                            №{row.id}
+                                                            {
+                                                                row.privateTruck ? (
+                                                                    <Tooltip title="Частный" placement="right-end">
+                                                                        <Badge color="secondary" variant="dot">
+                                                                            №{row.id}
+                                                                        </Badge>
+                                                                    </Tooltip>
+                                                                ) : `№${row.id}`
+                                                            }
                                                         </TableCell>
                                                         <TableCell>
                                                             {row.road}
                                                         </TableCell>
                                                         <TableCell>
-                                                            {row.truck?.number || '-'}
+                                                            {row.privateTruck ? row.privateTruckNumber : (row.truck?.number || '-')}
                                                         </TableCell>
                                                         <TableCell>
-                                                            {row.truck ? (
-                                                                <Tooltip title={`Объем машины ${row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0)} м3 / Объем груза ${row.totalVolume} м3`}>
-                                                                    <Button style={{
-                                                                        color: getColorOfPercentage(calculatePercentage(row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0), row.totalVolume))
-                                                                    }}>
-                                                                        {calculatePercentage(row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0), row.totalVolume)}%
-                                                                    </Button>
-                                                                </Tooltip>
-                                                            ) : '-'}
+                                                            {row.privateTruck ? row.containerNumber : (row.trailer?.number || '-')}
                                                         </TableCell>
                                                         <TableCell>
-                                                            {row.truck ? (
-                                                                <Tooltip title={`Вес машины ${row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0)} кг / Вес груза ${row.totalWeight} кг`}>
-                                                                    <Button style={{
-                                                                        color: getColorOfPercentage(calculatePercentage(row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0), row.totalVolume))
-                                                                    }}>
-                                                                        {calculatePercentage(row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0), row.totalWeight)}%
-                                                                    </Button>
-                                                                </Tooltip>
-                                                            ) : '-'}
+                                                            {
+                                                                row.privateTruck ? (
+                                                                    <Tooltip title={`Объем груза ${row.totalVolume} м3`}>
+                                                                        <Button style={{textTransform: "none"}}>{row.totalVolume} м3</Button>
+                                                                    </Tooltip>
+                                                                ) : (
+                                                                    row.truck ? (
+                                                                        <Tooltip title={`Объем машины ${row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0)} м3 / Объем груза ${row.totalVolume} м3`}>
+                                                                            <Button style={{
+                                                                                color: getColorOfPercentage(calculatePercentage(row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0), row.totalVolume))
+                                                                            }}>
+                                                                                {calculatePercentage(row.truck.totalBodyCapacity + (row.trailer?.totalBodyCapacity || 0), row.totalVolume)}%
+                                                                            </Button>
+                                                                        </Tooltip>
+                                                                    ) : '-'
+                                                                )
+                                                            }
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {
+                                                                row.privateTruck ? (
+                                                                    <Tooltip title={`Вес груза ${row.totalWeight} кг`}>
+                                                                        <Button style={{textTransform: "none"}}>{row.totalWeight} кг</Button>
+                                                                    </Tooltip>
+                                                                ) : (
+                                                                    row.truck ? (
+                                                                        <Tooltip title={`Вес машины ${row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0)} кг / Вес груза ${row.totalWeight} кг`}>
+                                                                            <Button style={{
+                                                                                color: getColorOfPercentage(calculatePercentage(row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0), row.totalVolume))
+                                                                            }}>
+                                                                                {calculatePercentage(row.truck.liftingCapacity + (row.trailer?.liftingCapacity || 0), row.totalWeight)}%
+                                                                            </Button>
+                                                                        </Tooltip>
+                                                                    ) : '-'
+                                                                )
+                                                            }
                                                         </TableCell>
                                                         <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
                                                         <TableCell>

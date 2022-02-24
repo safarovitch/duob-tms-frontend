@@ -1,12 +1,22 @@
 import React, {useState} from "react";
-import {Box, Button, CircularProgress, makeStyles} from "@material-ui/core";
+import {Box, Button, CircularProgress, makeStyles, SvgIcon} from "@material-ui/core";
 import ConfirmModal from "../../components/ConfirmModal";
+import {Done as DoneIcon} from "@material-ui/icons";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import roadService from "../../services/RoadService";
 import {RoadStatusEnum} from "../../constants";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+    action: {
+        marginBottom: theme.spacing(1),
+        '& + &': {
+            marginLeft: theme.spacing(1)
+        }
+    },
+    actionIcon: {
+        marginRight: theme.spacing(1)
+    },
     loadingProgress: {
         position: 'absolute',
         top: '50%',
@@ -16,7 +26,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const ArrivedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updateRoad: Function}> = ({status, roadId, updateRoad}) => {
+const LoadedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updateRoad: Function}> = ({status, roadId, updateRoad}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const [isConfirmModalOpen, setOpen] = useState(false)
@@ -27,9 +37,9 @@ const ArrivedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updat
             setOpen(false)
             setLoading(true)
 
-            await roadService.arrivedRoad(roadId)
+            await roadService.loadedRoad(roadId)
 
-            enqueueSnackbar('Рейс прибыл', {variant: 'success'})
+            enqueueSnackbar('Рейс загружен', {variant: 'success'})
             updateRoad()
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -38,33 +48,32 @@ const ArrivedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updat
         }
     }
 
-    return RoadStatusEnum.ARRIVED === status || RoadStatusEnum.COMPLETED === status ?
-    (
-        <Button
-            variant="outlined"
-            color="primary"
-            disabled
-        >
-            Прибыл
-        </Button>
-    ) : (
+    return (
         <>
             <Box style={{position: 'relative'}}>
                 <Button
                     variant="outlined"
                     color="primary"
+                    className={classes.action}
                     type="submit"
                     onClick={() => setOpen(true)}
-                    disabled={loading}
+                    disabled={loading || !(status === RoadStatusEnum.LOADED || status === RoadStatusEnum.ACTIVE)}
                 >
-                    Прибыл
+                    {
+                        status === RoadStatusEnum.LOADED && (
+                            <SvgIcon fontSize="small" className={classes.actionIcon}>
+                                <DoneIcon />
+                            </SvgIcon>
+                        )
+                    }
+                    Загружен
                 </Button>
                 {loading && <CircularProgress size={20} className={classes.loadingProgress} />}
             </Box>
             <ConfirmModal
                 isOpen={isConfirmModalOpen}
                 title={'Вы уверены?'}
-                description={'Пожалуйста, убедитесь, что именно этот рейс прибыль.'}
+                description={`Пожалуйста, убедитесь, что именно этот рейс ${status === RoadStatusEnum.LOADED ? "активный" : "загружен" }.`}
                 onClose={() => setOpen(false)}
                 onAccept={handleAccept}
             />
@@ -72,4 +81,4 @@ const ArrivedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updat
     )
 }
 
-export default ArrivedRoadButton
+export default LoadedRoadButton

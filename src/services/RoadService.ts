@@ -97,14 +97,20 @@ class RoadService {
             .catch((error) => {reject(error)})
     })
 
-    completeRoad = (roadId: number) => new Promise((resolve, reject) => {
-        api.put(`${API_BASE_URL}/roads/${roadId}/complete`)
+    loadedRoad = (id: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/sync/roads/${id}/status`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
 
     arrivedRoad = (roadId: number) => new Promise((resolve, reject) => {
         api.put(`${API_BASE_URL}/roads/5`, {id: roadId})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
+    completeRoad = (roadId: number) => new Promise((resolve, reject) => {
+        api.put(`${API_BASE_URL}/roads/${roadId}/complete`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

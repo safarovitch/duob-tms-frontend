@@ -2,9 +2,10 @@ import {Breadcrumbs, Grid, Link, Typography} from "@material-ui/core";
 import React from "react";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {NavLink as RouterLink} from "react-router-dom";
-import CompleteRoadButton from "./CompleteRoadButton";
 import {RoadStatusEnum} from "../../constants";
 import ArrivedRoadButton from "./ArrivedRoadButton";
+import CompleteRoadButton from "./CompleteRoadButton";
+import LoadedRoadButton from "./LoadedRoadButton";
 
 const Header: React.FC<{id: string, title: string, roadStatus: RoadStatusEnum, updateRoad: Function}> = ({id, title, roadStatus, updateRoad}) => {
     return (
@@ -51,6 +52,9 @@ const Header: React.FC<{id: string, title: string, roadStatus: RoadStatusEnum, u
             </Grid>
             <Grid item>
                 <Grid container spacing={2}>
+                    <Grid item>
+                        <LoadedRoadButton status={roadStatus} roadId={Number(id)} updateRoad={updateRoad} />
+                    </Grid>
                     <Grid item>
                         <ArrivedRoadButton status={roadStatus} roadId={Number(id)} updateRoad={updateRoad} />
                     </Grid>

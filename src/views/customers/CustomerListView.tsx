@@ -43,7 +43,7 @@ const CustomerListView: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
+    const [size, setSize] = useState(20);
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
     const [rows, setRows] = useState<Customer[]>([]);
@@ -120,7 +120,7 @@ const CustomerListView: React.FC = () => {
                         </Box>
                         <PerfectScrollbar>
                             <Box minWidth={700}>
-                                <Table>
+                                <Table size="small">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>ФИО</TableCell>
@@ -198,7 +198,7 @@ const CustomerListView: React.FC = () => {
                             page={page - 1}
                             labelRowsPerPage={'Количество клиентов:'}
                             rowsPerPage={size}
-                            rowsPerPageOptions={[5, 10, 25]}
+                            rowsPerPageOptions={[20, 50, 100]}
                             onRowsPerPageChange={handleRowsPerPageChange}
                             labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                         />

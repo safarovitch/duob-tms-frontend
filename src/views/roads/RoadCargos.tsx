@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {
     Box,
-    Card,
+    Card, Grid,
     makeStyles,
     Table,
     TableBody,
@@ -18,6 +18,8 @@ import NoFoundTableBody from "../../components/NoFoundTableBody";
 import {useHistory} from "react-router-dom";
 import {setSelectedCustomerCargo} from "../../store/actions/customerActions";
 import roadService from "../../services/RoadService";
+import {Road} from "../../model/Road";
+import {Currency} from "../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,9 +27,13 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
     },
+    totalBalance: {
+        paddingLeft: theme.spacing(3),
+        paddingTop: theme.spacing(2),
+    },
 }));
 
-const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
+const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
@@ -132,17 +138,37 @@ const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
                     </Table>
                 </Box>
             </PerfectScrollbar>
-            <TablePagination
-                component="div"
-                count={total}
-                onPageChange={handlePageChange}
-                page={page - 1}
-                labelRowsPerPage={'Строк на странице:'}
-                rowsPerPage={size}
-                rowsPerPageOptions={[5, 10, 25]}
-                onRowsPerPageChange={handleRowsPerPageChange}
-                labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
-            />
+            <Grid container justifyContent="space-between">
+                <Grid item className={classes.totalBalance}>
+                    <Grid container spacing={2}>
+                        <Grid item>
+                            Объем: <b>{road.totalVolume} м3</b>
+                        </Grid>
+                        <Grid item>
+                            Вес: <b>{road.totalWeight} кг</b>
+                        </Grid>
+                        <Grid item>
+                            Сумма: <b>{road.totalAmount} {Currency.USD}</b>
+                        </Grid>
+                        <Grid item>
+                            Кол-во: <b>{road.cargoCount}</b>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    <TablePagination
+                        component="div"
+                        count={total}
+                        onPageChange={handlePageChange}
+                        page={page - 1}
+                        labelRowsPerPage={'Строк на странице:'}
+                        rowsPerPage={size}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        onRowsPerPageChange={handleRowsPerPageChange}
+                        labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
+                    />
+                </Grid>
+            </Grid>
         </Card>
     )
 }

@@ -110,7 +110,7 @@ const CargoShow: React.FC = () => {
                                 <Divider />
                                 <PerfectScrollbar>
                                     <Box minWidth={700}>
-                                        <Table>
+                                        <Table size="small">
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>№</TableCell>

@@ -56,7 +56,11 @@ const CargoShow: React.FC = () => {
                                 <Table>
                                     <TableBody>
                                         <TableRow>
-                                            <TableCell>Груз:</TableCell>
+                                            <TableCell>Клиент:</TableCell>
+                                            <TableCell>{customerCargo.clientCode}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Наименование:</TableCell>
                                             <TableCell>{customerCargo.productName}</TableCell>
                                         </TableRow>
                                         <TableRow>

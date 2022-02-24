@@ -62,8 +62,9 @@ const WarehouseStateListView: React.FC = () => {
     const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(10)
+    const [size, setSize] = useState(20)
     const [loading, setLoading] = useState(false)
+    const [loadingRows, setLoadingRows] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
     const [rows, setRows] = useState<WarehouseStateCargo[]>([])
@@ -98,7 +99,7 @@ const WarehouseStateListView: React.FC = () => {
 
         (async () => {
             try {
-                setLoading(true)
+                setLoadingRows(true)
                 setRows([])
 
                 const data: any = await warehouseService.getFilteredWarehouseStateCargos(
@@ -111,7 +112,7 @@ const WarehouseStateListView: React.FC = () => {
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
-                !cancel && setLoading(false)
+                !cancel && setLoadingRows(false)
             }
         })()
 
@@ -336,7 +337,7 @@ const WarehouseStateListView: React.FC = () => {
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
-                                                ) : <NoFoundTableBody loading={loading}/>
+                                                ) : <NoFoundTableBody loading={loadingRows}/>
                                             }
                                         </Table>
                                     </Box>
@@ -344,7 +345,7 @@ const WarehouseStateListView: React.FC = () => {
                                 <Grid container justifyContent="space-between">
                                     <Grid item className={classes.totalBalance}>
                                         {
-                                            warehouseStateTotal && (
+                                            warehouseStateTotal && rows.length > 0 && (
                                                 <Grid container spacing={2}>
                                                     <Grid item>
                                                         Мест: <b>{warehouseStateTotal.place}</b>
@@ -354,6 +355,9 @@ const WarehouseStateListView: React.FC = () => {
                                                     </Grid>
                                                     <Grid item>
                                                         Обьем: <b>{warehouseStateTotal.volume} м3</b>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        Вес: <b>{warehouseStateTotal.weight} кг</b>
                                                     </Grid>
                                                 </Grid>
                                             )
@@ -367,7 +371,7 @@ const WarehouseStateListView: React.FC = () => {
                                             page={page - 1}
                                             labelRowsPerPage={'Строк на странице:'}
                                             rowsPerPage={size}
-                                            rowsPerPageOptions={[10, 15, 20]}
+                                            rowsPerPageOptions={[20, 50, 100]}
                                             onRowsPerPageChange={handleRowsPerPageChange}
                                             labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                                         />

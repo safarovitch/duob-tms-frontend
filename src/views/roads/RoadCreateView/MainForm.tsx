@@ -50,6 +50,7 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
         description: road?.description || '',
         privateTruck: road?.privateTruck || false,
         withTrailer: road?.withTrailer || false,
+        privateTruckNumber: road?.privateTruckNumber || '',
         containerNumber: road?.containerNumber || ''
     }
 
@@ -190,25 +191,46 @@ const MainForm: React.FC<{road?: Road, updateRoad?: Function, trucks: RoadTruck[
                                 </Grid>
                                 {
                                     privateTruck ? (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={4}
-                                        >
-                                            <TextField
-                                                error={Boolean(props.touched.containerNumber && props.errors.containerNumber)}
-                                                fullWidth
-                                                helperText={props.touched.containerNumber && props.errors.containerNumber}
-                                                label="Номер контейнера"
-                                                name="containerNumber"
-                                                onBlur={props.handleBlur}
-                                                onChange={props.handleChange}
-                                                disabled={road && true}
-                                                value={props.values.containerNumber}
-                                                variant="outlined"
-                                                required
-                                            />
-                                        </Grid>
+                                        <>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                md={4}
+                                            >
+                                                <TextField
+                                                    error={Boolean(props.touched.privateTruckNumber && props.errors.privateTruckNumber)}
+                                                    fullWidth
+                                                    helperText={props.touched.privateTruckNumber && props.errors.privateTruckNumber}
+                                                    label="Номер машиный"
+                                                    name="privateTruckNumber"
+                                                    onBlur={props.handleBlur}
+                                                    onChange={props.handleChange}
+                                                    disabled={road && true}
+                                                    value={props.values.privateTruckNumber}
+                                                    variant="outlined"
+                                                    required
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                md={4}
+                                            >
+                                                <TextField
+                                                    error={Boolean(props.touched.containerNumber && props.errors.containerNumber)}
+                                                    fullWidth
+                                                    helperText={props.touched.containerNumber && props.errors.containerNumber}
+                                                    label="Номер контейнера"
+                                                    name="containerNumber"
+                                                    onBlur={props.handleBlur}
+                                                    onChange={props.handleChange}
+                                                    disabled={road && true}
+                                                    value={props.values.containerNumber}
+                                                    variant="outlined"
+                                                    required
+                                                />
+                                            </Grid>
+                                        </>
                                     ) : (
                                         <>
                                             <Grid

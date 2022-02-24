@@ -18,6 +18,9 @@ export interface RoadList {
     totalWeight: number;
     totalAmount: number;
     totalPlace: number;
+    privateTruck: boolean;
+    privateTruckNumber: string;
+    containerNumber: string;
 }
 
 export interface RoadsStuffTab {
@@ -43,6 +46,7 @@ export interface RoadRequest {
     description: string;
     privateTruck?: boolean;
     withTrailer?: boolean;
+    privateTruckNumber?: string;
     containerNumber?: string;
 }
 
@@ -118,7 +122,9 @@ export interface Road {
     truck: RoadTruck;
     trailer: {id: number, number: string};
     driver: {id: number, name: string};
+    privateTruckNumber?: string;
     containerNumber?: string;
+    cargoCount: number;
     departureDate: string;
     arrivalDate: string;
     description: string;
@@ -137,6 +143,10 @@ export interface Road {
     arrivalTrailerCargoWeight: number;
     totalKmInFact: number;
     totalKmInSpeedometer: number;
+    totalVolume: number;
+    totalWeight: number;
+    totalAmount: number;
+    totalPlace: number;
     speedometerDifference: number;
     contractPriceUsd: number;
     contractPriceTjs: number;
