@@ -162,7 +162,7 @@ const NotificationListView: React.FC = () => {
                 page={page - 1}
                 labelRowsPerPage={'Строк на странице:'}
                 rowsPerPage={size}
-                rowsPerPageOptions={[10, 15, 25]}
+                rowsPerPageOptions={[10,20, 30]}
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />

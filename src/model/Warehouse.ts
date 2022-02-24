@@ -70,4 +70,5 @@ export interface WarehouseStateTotal {
     place: number;
     price: number;
     volume: number;
+    weight: number;
 }

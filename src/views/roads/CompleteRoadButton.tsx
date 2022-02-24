@@ -1,26 +1,17 @@
 import React, {useState} from "react";
-import {Box, Button, CircularProgress, makeStyles, SvgIcon} from "@material-ui/core";
+import {Box, Button, CircularProgress, makeStyles} from "@material-ui/core";
 import ConfirmModal from "../../components/ConfirmModal";
-import {Done as DoneIcon} from "@material-ui/icons";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import roadService from "../../services/RoadService";
 import {RoadStatusEnum} from "../../constants";
 
-const useStyles = makeStyles((theme) => ({
-    action: {
-        marginBottom: theme.spacing(1),
-        '& + &': {
-            marginLeft: theme.spacing(1)
-        }
-    },
-    actionIcon: {
-        marginRight: theme.spacing(1)
-    },
+const useStyles = makeStyles(() => ({
     loadingProgress: {
         position: 'absolute',
         top: '50%',
-        left: '14px',
+        left: '50%',
+        marginLeft: '-14px',
         marginTop: '-14px',
     }
 }));
@@ -54,7 +45,7 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
             type="submit"
             disabled
         >
-            Завершенный
+            Завершить
         </Button>
     ) : (
         <>
@@ -62,18 +53,11 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
                 <Button
                     variant="outlined"
                     color="primary"
-                    className={classes.action}
                     type="submit"
                     onClick={() => setOpen(true)}
                     disabled={loading}
                 >
-                    <SvgIcon
-                        fontSize="small"
-                        className={classes.actionIcon}
-                    >
-                        {!loading && <DoneIcon />}
-                    </SvgIcon>
-                    Завершить рейс
+                    Завершить
                 </Button>
                 {loading && <CircularProgress size={20} className={classes.loadingProgress} />}
             </Box>

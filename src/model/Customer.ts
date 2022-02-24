@@ -41,6 +41,7 @@ export interface CustomerCargo {
     id?: number;
     amount: number;
     barcode: string;
+    clientCode: string;
     cargoTypeName: string;
     heightCargo: number;
     lengthCargo: number;

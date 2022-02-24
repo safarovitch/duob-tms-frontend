@@ -130,6 +130,10 @@ const CargoShow: React.FC = () => {
                                         <Table>
                                             <TableBody>
                                                 <TableRow>
+                                                    <TableCell>Клиент:</TableCell>
+                                                    <TableCell>{selectedCargo.clientCode}</TableCell>
+                                                </TableRow>
+                                                <TableRow>
                                                     <TableCell>Наименование:</TableCell>
                                                     <TableCell>{selectedCargo.productName}</TableCell>
                                                 </TableRow>
@@ -167,7 +171,7 @@ const CargoShow: React.FC = () => {
                                         <Divider />
                                         <PerfectScrollbar>
                                             <Box minWidth={700}>
-                                                <Table>
+                                                <Table size="small">
                                                     <TableHead>
                                                         <TableRow>
                                                             <TableCell>№</TableCell>

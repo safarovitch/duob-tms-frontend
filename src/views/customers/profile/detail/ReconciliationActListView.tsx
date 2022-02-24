@@ -31,7 +31,7 @@ const ReconciliationActListView: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar()
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(5)
+    const [size, setSize] = useState(10)
     const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
     const [rows, setRows] = useState<CustomerReconciliationAct[]>([])
@@ -179,7 +179,7 @@ const ReconciliationActListView: React.FC = () => {
                 page={page - 1}
                 labelRowsPerPage={'Строк на странице:'}
                 rowsPerPage={size}
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[10, 20, 30]}
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />

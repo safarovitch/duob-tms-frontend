@@ -230,6 +230,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         required
+                                        type="number"
                                         value={props.values.vat}
                                         variant="outlined"
                                     />
@@ -248,6 +249,7 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         required
+                                        type="number"
                                         value={props.values.baseRate || ""}
                                         placeholder="0"
                                         variant="outlined"
