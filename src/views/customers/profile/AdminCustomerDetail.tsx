@@ -55,7 +55,7 @@ const AdminCustomerDetail: React.FC = () => {
     }, [customer, customerId, enqueueSnackbar])
 
     return (
-        <Page title={customer?.name || ''}>
+        <Page title={customer?.code || ''}>
             {
                 customer ? (
                     <Container className={classes.root} maxWidth="xl">

@@ -7,7 +7,7 @@ import {
     TableBody,
     TableCell,
     TableHead, TablePagination,
-    TableRow,
+    TableRow, TextField,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {CustomerCargo} from "../../model/Customer";
@@ -20,6 +20,7 @@ import {setSelectedCustomerCargo} from "../../store/actions/customerActions";
 import roadService from "../../services/RoadService";
 import {Road} from "../../model/Road";
 import {Currency} from "../../constants";
+import useDebounce from "../../hooks/useDebounce";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: theme.spacing(3),
         paddingTop: theme.spacing(2),
     },
+    queryField: {
+        width: 150
+    },
 }));
 
 const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
@@ -38,9 +42,13 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
     const dispatch = useDispatch()
+    const [clientCode, setClientCode] = useState('')
+    const debouncedClientCode = useDebounce(clientCode, 500)
+    const [barcode, setBarcode] = useState('')
+    const debouncedBarcode = useDebounce(barcode, 500)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(5)
+    const [size, setSize] = useState(20)
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -52,7 +60,7 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
                 setLoading(true)
                 setRows([])
 
-                const data: any = await roadService.getRoadCargos(roadId, page, size)
+                const data: any = await roadService.getRoadCargos(roadId, page, size, debouncedClientCode, debouncedBarcode)
 
                 if (!cancel) {
                     setRows(data.content)
@@ -66,7 +74,7 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
         })()
 
         return () => {cancel = true}
-    }, [roadId, enqueueSnackbar, page, size])
+    }, [roadId, enqueueSnackbar, page, size, debouncedClientCode, debouncedBarcode])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -80,13 +88,50 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
 
     const isGroupCargo = (barcode: string) => barcode === '-';
 
+    const handleClientCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist();
+        setClientCode(event.target.value);
+        setPage(1);
+    };
+
+    const handleBarcodeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist();
+        setBarcode(event.target.value);
+        setPage(1);
+    };
+
     return rows && (
         <Card className={classes.root}>
+            <Box px={2}>
+                <Grid container spacing={3}>
+                    <Grid item>
+                        <TextField
+                            className={classes.queryField}
+                            size="small"
+                            onChange={handleClientCodeChange}
+                            placeholder="Код клиента"
+                            value={clientCode}
+                            variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            className={classes.queryField}
+                            size="small"
+                            onChange={handleBarcodeChange}
+                            placeholder="Штрих-код"
+                            value={barcode}
+                            variant="outlined"
+                        />
+                    </Grid>
+                </Grid>
+            </Box>
             <PerfectScrollbar>
                 <Box minWidth={700}>
                     <Table>
                         <TableHead>
                             <TableRow>
+                                <TableCell>Код клиента</TableCell>
                                 <TableCell>Груз</TableCell>
                                 <TableCell>Вид груза</TableCell>
                                 <TableCell>Д/Ш/В</TableCell>
@@ -109,6 +154,9 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
                                                 history.push(`${window.location.pathname}/show`)
                                             }}
                                         >
+                                            <TableCell>
+                                                {row.clientCode}
+                                            </TableCell>
                                             <TableCell>
                                                 {row.productName}
                                             </TableCell>
@@ -163,7 +211,7 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
                         page={page - 1}
                         labelRowsPerPage={'Строк на странице:'}
                         rowsPerPage={size}
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[20, 50, 100]}
                         onRowsPerPageChange={handleRowsPerPageChange}
                         labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                     />

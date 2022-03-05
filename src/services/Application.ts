@@ -7,8 +7,15 @@ import {
     RefillBalanceApplication, RoadDriverApplicationRequest
 } from "../model/Application";
 import {CurrencyExchange} from "../model/Exchange";
+import {CashTotalApplicationEnum} from "../constants";
 
 class Application {
+    getTotalCashierBalance = (type: CashTotalApplicationEnum, from: string, to: string, warehouseId?: number) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/applications/${type}/total`, {params: {from, to, warehouseId}})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getWarehouseSecondaryMoneyUnit = () => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/warehouses/secondary-money-unit`)
             .then(response => resolve(response.data))

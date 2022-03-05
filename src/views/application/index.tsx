@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {useParams} from "react-router";
 import {Box, Card, Container, Divider, makeStyles, Tab, Tabs} from "@material-ui/core";
@@ -12,6 +12,13 @@ import IncomeArticleListView from "./income-article/IncomeArticleListView";
 import OutcomeArticleListView from "./outcome-article/OutcomeArticleListView";
 import OutcomeTransferWarehouseListView from "./outcome-transfer-warehouse/OutcomeTransferWarehouseListView";
 import RoadDriverListView from "./road-driver/RoadDriverListView";
+import {Warehouse} from "../../model/Warehouse";
+import warehouseService from "../../services/WarehouseService";
+import errorMessageHandler from "../../utils/errorMessageHandler";
+import {useSnackbar} from "notistack";
+import usePermission from "../../hooks/usePermission";
+import PERMISSIONS from "../../constants/permissions";
+import LoadingLayout from "../../components/LoadingLayout";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,8 +36,41 @@ const getCurrentTab = (pathTab: string) => tabs.find(item => item.value === path
 const RoadStuffView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
+    const [loading, setLoading] = useState(false)
+    const [hasError, setHasError] = useState(false)
+    const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+    const [warehouseId, setWarehouseId] = useState<number>()
     const {stuffId: pathTab} = useParams<{ stuffId: string }>()
     const currentTab = getCurrentTab(pathTab)
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+
+    useEffect(() => {
+        let cancel = false;
+
+        currentTab && isAdmin && (async () => {
+            try {
+                setLoading(true)
+
+                const dataWarehouses: any = await warehouseService.getAllWarehouse()
+
+                if (dataWarehouses.length === 0) {
+                    history.go(-1)
+                    enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
+                } else if (!cancel) {
+                    setWarehouseId(dataWarehouses.find((item: Warehouse) => item.name === "Душанбе")?.id)
+                    setWarehouses(dataWarehouses)
+                }
+            } catch (error: any) {
+                !cancel && setHasError(true)
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                !cancel && setLoading(false)
+            }
+        })()
+
+        return () => {cancel = true}
+    }, [enqueueSnackbar, history, currentTab, isAdmin])
 
     if (!currentTab) {
         history.go(-1)
@@ -38,50 +78,59 @@ const RoadStuffView: React.FC = () => {
     }
 
     return (
-        <Page
-            className={classes.root}
-            title={'Заявки'}
-        >
-            <Container maxWidth="xl">
-                <Header title={currentTab.label} linkName={currentTab.value}/>
-                <Box mt={3}>
-                    <Card>
-                        <Tabs
-                            scrollButtons="auto"
-                            textColor="secondary"
-                            value={currentTab.value}
-                            centered
-                        >
-                            {tabs.map((tab) => (
-                                <Tab
-                                    key={tab.value}
-                                    value={tab.value}
-                                    label={tab.label}
-                                    to={tab.value}
-                                    component={Link}
-                                    {...a11yProps(tab)}
-                                />
-                            ))}
-                        </Tabs>
-                        <Divider/>
-                        <ApplicationTabPanel index={'refill-balance'} value={currentTab.value}>
-                            <RefillBalanceListView />
-                        </ApplicationTabPanel>
-                        <ApplicationTabPanel index={'income-article'} value={currentTab.value}>
-                            <IncomeArticleListView />
-                        </ApplicationTabPanel>
-                        <ApplicationTabPanel index={'outcome-article'} value={currentTab.value}>
-                            <OutcomeArticleListView />
-                        </ApplicationTabPanel>
-                        <ApplicationTabPanel index={'outcome-transfer-warehouse'} value={currentTab.value}>
-                            <OutcomeTransferWarehouseListView />
-                        </ApplicationTabPanel>
-                        <ApplicationTabPanel index={'road-driver'} value={currentTab.value}>
-                            <RoadDriverListView />
-                        </ApplicationTabPanel>
-                    </Card>
-                </Box>
-            </Container>
+        <Page title={'Заявки'}>
+            {
+                ((isAdmin && warehouses.length === 0) || (isAdmin && !warehouseId)) ? (
+                    <LoadingLayout loading={loading} hasError={hasError}/>
+                ) : (
+                    <Container className={classes.root} maxWidth="xl">
+                        <Header
+                            title={currentTab.label}
+                            linkName={currentTab.value}
+                            warehouses={warehouses}
+                            warehouseId={warehouseId}
+                            setWarehouseId={setWarehouseId}
+                        />
+                        <Box mt={3}>
+                            <Card>
+                                <Tabs
+                                    scrollButtons="auto"
+                                    textColor="secondary"
+                                    value={currentTab.value}
+                                    centered
+                                >
+                                    {tabs.map((tab) => (
+                                        <Tab
+                                            key={tab.value}
+                                            value={tab.value}
+                                            label={tab.label}
+                                            to={tab.value}
+                                            component={Link}
+                                            {...a11yProps(tab)}
+                                        />
+                                    ))}
+                                </Tabs>
+                                <Divider/>
+                                <ApplicationTabPanel index={'refill-balance'} value={currentTab.value}>
+                                    <RefillBalanceListView warehouseId={warehouseId}/>
+                                </ApplicationTabPanel>
+                                <ApplicationTabPanel index={'income-article'} value={currentTab.value}>
+                                    <IncomeArticleListView warehouseId={warehouseId} />
+                                </ApplicationTabPanel>
+                                <ApplicationTabPanel index={'outcome-article'} value={currentTab.value}>
+                                    <OutcomeArticleListView warehouseId={warehouseId} />
+                                </ApplicationTabPanel>
+                                <ApplicationTabPanel index={'outcome-transfer-warehouse'} value={currentTab.value}>
+                                    <OutcomeTransferWarehouseListView warehouseId={warehouseId} />
+                                </ApplicationTabPanel>
+                                <ApplicationTabPanel index={'road-driver'} value={currentTab.value}>
+                                    <RoadDriverListView warehouseId={warehouseId} />
+                                </ApplicationTabPanel>
+                            </Card>
+                        </Box>
+                    </Container>
+                )
+            }
         </Page>
     );
 }

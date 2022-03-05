@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useState,} from 'react';
 import {
-    Box, Card, Chip, Grid, IconButton, InputAdornment, makeStyles, SvgIcon, Table, TableBody, TableCell,
-    TableHead, TablePagination, TableRow, TextField,
+    Box, Card, Chip, Grid, IconButton, InputAdornment, SvgIcon, Table, TableBody, TableCell,
+    TableHead, TablePagination, TableRow, TextField, Typography,
 } from '@material-ui/core';
 import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -13,41 +13,24 @@ import {setSelectedIncomeArticle} from "../../../store/actions/applicationAction
 import applicationService from "../../../services/Application";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {Currency, mapOfStatusApplication} from "../../../constants";
+import {CashTotalApplicationEnum, Currency, mapOfStatusApplication} from "../../../constants";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
 import DoneIcon from "@material-ui/icons/Done";
 import useDebounce from "../../../hooks/useDebounce";
 import moment from "moment";
+import useCashTotal from "../useCashTotal";
+import getStyles from "../getStyles";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        minHeight: '100%',
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3)
-    },
-    queryField: {
-        width: 350
-    },
-    statusPaid: {
-        color: 'green',
-        fontWeight: 600
-    },
-    statusWaiting: {
-        color: 'red',
-        fontWeight: 600
-    }
-}));
-
-const IncomeArticleListView: React.FC = () => {
-    const classes = useStyles()
+const IncomeArticleListView: React.FC<{warehouseId?: number}> = ({warehouseId}) => {
+    const classes = getStyles()
     const dispatch = useDispatch()
     const {enqueueSnackbar} = useSnackbar()
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(10)
+    const [size, setSize] = useState(20)
     const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
     const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
@@ -58,6 +41,7 @@ const IncomeArticleListView: React.FC = () => {
     const [rows, setRows] = useState<IncomeByArticleApplication[]>([])
     const canEdit = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.EDIT)
     const canDelete = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.DELETE)
+    const cashTotal = useCashTotal(CashTotalApplicationEnum.ARTICLE_INCOME, updateRows, startDate, endDate, warehouseId)
 
     useEffect(() => {
         let cancel = false;
@@ -290,17 +274,32 @@ const IncomeArticleListView: React.FC = () => {
                     </Table>
                 </Box>
             </PerfectScrollbar>
-            <TablePagination
-                component="div"
-                count={total}
-                onPageChange={handlePageChange}
-                page={page - 1}
-                labelRowsPerPage={'Строк на странице:'}
-                rowsPerPage={size}
-                rowsPerPageOptions={[5, 10, 25]}
-                onRowsPerPageChange={handleRowsPerPageChange}
-                labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
-            />
+            <Grid container justifyContent="space-between">
+                <Grid item className={classes.totalBalance}>
+                    {cashTotal && (
+                        <Grid container spacing={4}>
+                            <Grid item>
+                                <Typography variant="h5">
+                                    Приход: <b>{cashTotal.actualAmountIncome} {Currency.USD} &nbsp; {cashTotal.convertAmountIncome} {cashTotal.convertMoneyUnit}</b>
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    )}
+                </Grid>
+                <Grid item>
+                    <TablePagination
+                        component="div"
+                        count={total}
+                        onPageChange={handlePageChange}
+                        page={page - 1}
+                        labelRowsPerPage={'Строк на странице:'}
+                        rowsPerPage={size}
+                        rowsPerPageOptions={[20, 30, 50]}
+                        onRowsPerPageChange={handleRowsPerPageChange}
+                        labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
+                    />
+                </Grid>
+            </Grid>
         </Card>
     )
 }

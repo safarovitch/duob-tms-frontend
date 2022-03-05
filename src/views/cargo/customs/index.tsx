@@ -36,7 +36,7 @@ const Index: React.FC = () => {
             try {
                 setLoading(true)
 
-                const data: any = await cargoService.getAllProducts()
+                const data: any = await cargoService.getOptionProducts()
 
                 if (data.length === 0) {
                     history.go(-1)

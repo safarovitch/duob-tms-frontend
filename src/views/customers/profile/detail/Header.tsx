@@ -66,14 +66,14 @@ const Header: React.FC<{ customer: Customer }> = ({customer}) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        {customer.name}
+                        {customer.code}
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    {customer.name}
+                    {customer.code}
                 </Typography>
             </Grid>
             {

@@ -22,6 +22,14 @@ export interface ApplicationTabPanelProps {
     children?: React.ReactNode;
 }
 
+export interface CashTotalApplication {
+    actualAmountIncome: number;
+    convertAmountIncome: number;
+    actualAmountOutcome: number;
+    convertAmountOutcome: number;
+    convertMoneyUnit: Currency;
+}
+
 interface CreatedBy {
     id: number;
     name: string;

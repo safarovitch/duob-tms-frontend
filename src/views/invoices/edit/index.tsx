@@ -89,7 +89,7 @@ const Index: React.FC = () => {
                 setLoading(true)
 
                 const data: any = await invoiceService.get(Number(invoiceId))
-                const dataCargoProducts: any = await cargoService.getAllProducts()
+                const dataCargoProducts: any = await cargoService.getOptionProducts()
                 const dataCargoCustomCodes: any = await cargoService.getFilteredCustomCodes(1, 10000, '')
                 const dataProviderReceivers: any = await roadService.getProviderReceivers()
 

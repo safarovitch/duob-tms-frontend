@@ -242,6 +242,12 @@ const routesConfig = [
                     },
                     {
                         exact: true,
+                        path: '/app/cargos/:id/edit',
+                        perm: PERMISSIONS.CARGO.EDIT,
+                        component: lazy(() => import('./views/cargo-edit'))
+                    },
+                    {
+                        exact: true,
                         path: '/app/roads',
                         perm: PERMISSIONS.ROAD.LIST,
                         component: lazy(() => import('./views/roads/RoadListView'))
@@ -400,12 +406,6 @@ const routesConfig = [
                         path: '/app/warehouse-state/:id',
                         perm: PERMISSIONS.WAREHOUSE_STATE.LIST,
                         component: lazy(() => import('./views/warehouse-state/cargo'))
-                    },
-                    {
-                        exact: true,
-                        path: '/app/warehouse-state/:id/edit',
-                        perm: PERMISSIONS.WAREHOUSE_STATE.CARGO_EDIT,
-                        component: lazy(() => import('./views/warehouse-state/cargo/CargoEdit'))
                     },
                     {
                         exact: true,

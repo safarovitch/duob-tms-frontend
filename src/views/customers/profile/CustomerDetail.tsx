@@ -57,7 +57,7 @@ const CustomerDetail: React.FC = () => {
     if (!existStuffId(stuffId)) return <Redirect to="/404"/>
 
     return (
-        <Page title={customer?.name || ''}>
+        <Page title={customer?.code || ''}>
             {
                 customer ? (
                     <Container className={classes.root} maxWidth="lg">

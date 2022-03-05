@@ -4,6 +4,9 @@ const CARGO = {
     LIST: [
         ADMIN
     ],
+    EDIT: [
+        ADMIN
+    ],
     ISSUES: {
         LIST: [
             ADMIN,

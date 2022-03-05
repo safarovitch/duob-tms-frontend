@@ -14,7 +14,7 @@ export default function errorMessageHandler(error: AxiosError): string {
         }
     }
     else if (error.request) errorMessage = 'Нет подключения к Интернету'
-    else errorMessage = `Произошла ошибка. else ${error.message}`
+    else errorMessage = `Произошла ошибка. ${error.message}`
 
     return errorMessage
 }

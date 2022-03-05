@@ -25,8 +25,8 @@ class CustomerService {
             .catch((error) => {reject(error)})
     })
 
-    getCustomers = () => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/clients/all`)
+    getOptionCustomers = () => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/clients/option`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -81,8 +81,8 @@ class CustomerService {
             }).catch(error => {reject(error)})
     })
 
-    getActiveCargos = (id: string, page: number, size: number, status: string) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/clients/income-cargos${id ? `/${id}` : ``}?page=${page}&size=${size}&${encodeURI(`extraParams[cargoStatus]=${status}`)}`)
+    getActiveCargos = (id: string, page: number, size: number, startDate: string, endDate:string, barcode: string, status: string) => new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/clients/income-cargos${id ? `/${id}` : ``}?${encodeURI(`extraParams[cargoStatus]=${status}&extraParams[barcode]=${barcode}`)}`, {params: {page, size, startDate, endDate}})
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

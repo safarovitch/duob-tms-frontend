@@ -38,7 +38,7 @@ const Index: React.FC = () => {
         (async () => {
             try {
                 setLoading(true)
-                const dataCustomers: any = await customerService.getCustomers()
+                const dataCustomers: any = await customerService.getOptionCustomers()
                 const dataWarehouseSecondaryMoneyUnit: any = await applicationService.getWarehouseSecondaryMoneyUnit()
 
                 if (dataCustomers.length === 0 || !dataWarehouseSecondaryMoneyUnit) {

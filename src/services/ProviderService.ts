@@ -3,6 +3,12 @@ import {Provider} from "../model/Provider";
 import {API_BASE_URL} from "../config";
 
 class ProviderService {
+    getOptionProviders = () => new Promise((resolve, reject)  => {
+        api.get(`${API_BASE_URL}/providers/option`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getFilteredProvider = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(`${API_BASE_URL}/providers`, {params: {page, size, search: query}})
             .then((response) => {

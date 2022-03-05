@@ -61,6 +61,14 @@ export enum ProviderReceiverEnum {
     RECEIVER = "RECEIVER"
 }
 
+export enum CashTotalApplicationEnum {
+    BALANCE_CLIENT = "balance-client",
+    ARTICLE_INCOME = "article-income",
+    ARTICLE_OUTCOME = "article-outcome",
+    TRANSACTION_MONEY = "transaction-money",
+    ROAD_DRIVER = "road-driver",
+}
+
 export const mapOfProviderReceiverEnum = new Map(
     [
         [ProviderReceiverEnum.PROVIDER, "Отправитель"],

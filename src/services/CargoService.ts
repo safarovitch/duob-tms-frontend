@@ -3,6 +3,12 @@ import {API_BASE_URL} from "../config";
 import {CargoCustomCode, CargoProduct, CargoTariff, CargoType} from "../model/Cargo";
 
 class CustomerService {
+    getOptionProducts = () => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/products/option`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getFilteredProducts = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(API_BASE_URL + `/products?page=${page}&size=${size}&search=${query}`)
             .then((response) => {
@@ -10,6 +16,7 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
     postProduct = (product: CargoProduct) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + `/products`, product)
             .then((response) => {
@@ -39,13 +46,12 @@ class CustomerService {
             .catch((error) => {reject(error)})
     })
 
-    getAllProducts = () => new Promise((resolve, reject)  => {
-        api.get<CargoProduct[]>(API_BASE_URL + `/products/all`)
-            .then((response) => {
-                resolve(response.data)
-            })
-            .catch((error) => {reject(error)})
+    getOptionCustomCodes = () => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/customs-codes/option`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
+
     getFilteredCustomCodes = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(API_BASE_URL + `/customs-codes?page=${page}&size=${size}&search=${query}`)
             .then((response) => {
@@ -53,6 +59,7 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
     postCustomCode = (customCode: CargoCustomCode) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + `/customs-codes`, customCode)
             .then((response) => {
@@ -82,6 +89,12 @@ class CustomerService {
             .catch((error) => {reject(error)})
     })
 
+    getOptionCargoTypes = () => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/cargos-types/option`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getFilteredCargoTypes = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
         api.get(API_BASE_URL + `/cargos-types?page=${page}&size=${size}&search=${query}`)
             .then((response) => {
@@ -89,6 +102,7 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
     postCargoType = (cargoType: CargoType) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + `/cargos-types`, cargoType)
             .then((response) => {
@@ -116,6 +130,12 @@ class CustomerService {
                 resolve(response.data)
             })
             .catch((error) => {reject(error)})
+    })
+
+    getOptionCargoTariffs = () => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/tariffs/option`)
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
     })
 
     getFilteredCargoTariffs = (page: number, size: number, query: string) => new Promise((resolve, reject)  => {
