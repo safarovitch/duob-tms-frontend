@@ -33,6 +33,7 @@ import DoneIcon from "@material-ui/icons/Done";
 import NoFoundTableBody from "../../components/NoFoundTableBody";
 import {useHistory} from "react-router-dom";
 import {CargoGeneral} from "../../model/Customer";
+import useDebounce from "../../hooks/useDebounce";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,8 +41,11 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
     },
-    queryField: {
+    textFieldSelect: {
         width: 250
+    },
+    queryField: {
+        width: 150
     },
     totalBalance: {
         paddingLeft: theme.spacing(3),
@@ -60,6 +64,10 @@ const WarehouseStateListView: React.FC = () => {
     const [selectedStatus, setSelectedStatus] = useState<string>(StatusCargoEnum.FORMALIZED)
     const [startDate, setStartDate] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
+    const [clientCode, setClientCode] = useState('')
+    const debouncedClientCode = useDebounce(clientCode, 500)
+    const [barcode, setBarcode] = useState('')
+    const debouncedBarcode = useDebounce(barcode, 500)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(20)
@@ -102,8 +110,8 @@ const WarehouseStateListView: React.FC = () => {
                 setLoadingRows(true)
                 setRows([])
 
-                const data: any = await warehouseService.getFilteredWarehouseStateCargos(
-                    warehouseId, selectedStatus, startDate, endDate, page, size)
+                const data: any = await warehouseService.getFilteredWarehouseStateCargos(warehouseId, selectedStatus,
+                    startDate, endDate, debouncedClientCode, debouncedBarcode, page, size)
 
                 if (!cancel) {
                     setRows(data.content)
@@ -117,7 +125,7 @@ const WarehouseStateListView: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, warehouseId, selectedStatus, startDate, endDate, page, size])
+    }, [enqueueSnackbar, warehouseId, selectedStatus, startDate, endDate, debouncedClientCode, debouncedBarcode, page, size])
 
     useEffect(() => {
         let cancel = false;
@@ -160,6 +168,18 @@ const WarehouseStateListView: React.FC = () => {
         setPage(1)
     }
 
+    const handleClientCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist();
+        setClientCode(event.target.value);
+        setPage(1);
+    };
+
+    const handleBarcodeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist();
+        setBarcode(event.target.value);
+        setPage(1);
+    };
+
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
         setSize(Number(event.target.value));
@@ -199,90 +219,118 @@ const WarehouseStateListView: React.FC = () => {
                         <Box mt={3}>
                             <Card>
                                 <Box py={3} px={2}>
-                                    <Grid container spacing={4}>
+                                    <Grid container spacing={4} alignItems="center" justifyContent="space-between">
                                         <Grid item>
-                                            <TextField
-                                                className={classes.queryField}
-                                                onChange={handleWarehouseChange}
-                                                value={warehouseId}
-                                                disabled={!canSelectWarehouse}
-                                                size="small"
-                                                select
-                                                fullWidth
-                                                label="Выберите склад"
-                                                variant="outlined"
-                                                SelectProps={{
-                                                    MenuProps: {
-                                                        variant: "selectedMenu",
-                                                        anchorOrigin: {
-                                                            vertical: "bottom",
-                                                            horizontal: "left"
-                                                        },
-                                                        transformOrigin: {
-                                                            vertical: "top",
-                                                            horizontal: "left"
-                                                        },
-                                                        getContentAnchorEl: null
-                                                    }
-                                                }}
-                                            >
-                                                <MenuItem key={0} value={0}>Все</MenuItem>
-                                                {warehouses.map((warehouse) => (
-                                                    <MenuItem key={warehouse.id} value={warehouse.id}>{warehouse.name}</MenuItem>
+                                            <Grid container spacing={4}>
+                                                <Grid item>
+                                                    <TextField
+                                                        className={classes.textFieldSelect}
+                                                        onChange={handleWarehouseChange}
+                                                        value={warehouseId}
+                                                        disabled={!canSelectWarehouse}
+                                                        size="small"
+                                                        select
+                                                        fullWidth
+                                                        label="Выберите склад"
+                                                        variant="outlined"
+                                                        SelectProps={{
+                                                            MenuProps: {
+                                                                variant: "selectedMenu",
+                                                                anchorOrigin: {
+                                                                    vertical: "bottom",
+                                                                    horizontal: "left"
+                                                                },
+                                                                transformOrigin: {
+                                                                    vertical: "top",
+                                                                    horizontal: "left"
+                                                                },
+                                                                getContentAnchorEl: null
+                                                            }
+                                                        }}
+                                                    >
+                                                        <MenuItem key={0} value={0}>Все</MenuItem>
+                                                        {warehouses.map((warehouse) => (
+                                                            <MenuItem key={warehouse.id} value={warehouse.id}>{warehouse.name}</MenuItem>
+                                                        ))}
+                                                    </TextField>
+                                                </Grid>
+                                                <Grid item>
+                                                    <TextField
+                                                        fullWidth
+                                                        type="date"
+                                                        label="От"
+                                                        onChange={handleStartDateChange}
+                                                        value={startDate}
+                                                        variant="outlined"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        size="small"
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <TextField
+                                                        fullWidth
+                                                        type="date"
+                                                        label="До"
+                                                        onChange={handleEndDateChange}
+                                                        value={endDate}
+                                                        variant="outlined"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        size="small"
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item>
+                                            <Grid container spacing={2}>
+                                                {statuses.map((status, index) => (
+                                                    <Grid item key={index}>
+                                                        {selectedStatus === status ? (
+                                                            <Chip
+                                                                label={mapOfStatusCargo.get(status)}
+                                                                clickable
+                                                                color="primary"
+                                                                onDelete={() => null}
+                                                                deleteIcon={<DoneIcon />}
+                                                            />
+                                                        ) : (
+                                                            <Chip
+                                                                label={mapOfStatusCargo.get(status)}
+                                                                clickable
+                                                                onClick={() => handleSelectStatus(status)}
+                                                            />
+                                                        )}
+                                                    </Grid>
                                                 ))}
-                                            </TextField>
-                                        </Grid>
-                                        <Grid item>
-                                            <TextField
-                                                fullWidth
-                                                type="date"
-                                                label="От"
-                                                onChange={handleStartDateChange}
-                                                value={startDate}
-                                                variant="outlined"
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                                size="small"
-                                            />
-                                        </Grid>
-                                        <Grid item>
-                                            <TextField
-                                                fullWidth
-                                                type="date"
-                                                label="До"
-                                                onChange={handleEndDateChange}
-                                                value={endDate}
-                                                variant="outlined"
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                                size="small"
-                                            />
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </Box>
                                 <Box pb={3} px={2}>
-                                    <Grid container spacing={2}>
-                                        {statuses.map((status, index) => (
-                                            <Grid item key={index}>
-                                                {selectedStatus === status ? (
-                                                    <Chip
-                                                        label={mapOfStatusCargo.get(status)}
-                                                        clickable
-                                                        color="primary"
-                                                        onDelete={() => null}
-                                                        deleteIcon={<DoneIcon />}
-                                                    />
-                                                ) : (
-                                                    <Chip
-                                                        label={mapOfStatusCargo.get(status)}
-                                                        clickable
-                                                        onClick={() => handleSelectStatus(status)}
-                                                    />
-                                                )}
-                                            </Grid>
-                                        ))}
+                                    <Grid container spacing={3}>
+                                        <Grid item>
+                                            <TextField
+                                                className={classes.queryField}
+                                                size="small"
+                                                onChange={handleClientCodeChange}
+                                                placeholder="Код клиента"
+                                                value={clientCode}
+                                                variant="outlined"
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                className={classes.queryField}
+                                                size="small"
+                                                onChange={handleBarcodeChange}
+                                                placeholder="Штрих-код"
+                                                value={barcode}
+                                                variant="outlined"
+                                            />
+                                        </Grid>
                                     </Grid>
                                 </Box>
                                 <PerfectScrollbar>

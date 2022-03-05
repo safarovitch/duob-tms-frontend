@@ -31,8 +31,9 @@ class RoadService {
             .catch((error) => {reject(error)})
     })
 
-    getRoadCargos = (id: number, page: number, size: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/roads/${id}/income-cargos/?page=${page}&size=${size}`)
+    getRoadCargos = (id: number, page: number, size: number, clientCode: string, barcode: string) =>
+        new Promise((resolve, reject) => {
+        api.get(`${API_BASE_URL}/roads/${id}/income-cargos/?${encodeURI(`extraParams[clientCode]=${clientCode}&extraParams[barcode]=${barcode}`)}`, {params: {page, size, clientCode, barcode}})
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

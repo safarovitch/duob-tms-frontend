@@ -4,11 +4,10 @@ import {
     Card,
     Grid, IconButton,
     InputAdornment,
-    makeStyles,
     SvgIcon, Table, TableBody, TableCell,
     TableHead,
     TablePagination, TableRow,
-    TextField
+    TextField, Typography
 } from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {useSnackbar} from "notistack";
@@ -22,43 +21,27 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {ArrowRight as ArrowRightIcon, Search as SearchIcon} from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {ApplicationStatusEnum, mapOfRoadDriverApplicationType, mapOfStatusApplication} from "../../../constants";
+import {
+    ApplicationStatusEnum,
+    CashTotalApplicationEnum, Currency,
+    mapOfRoadDriverApplicationType,
+    mapOfStatusApplication
+} from "../../../constants";
 import DeleteButton from "../../../components/DeleteButton";
 import {NavLink as RouterLink} from "react-router-dom";
 import {setSelectedRoadDriver} from "../../../store/actions/applicationAction";
 import {DoneAll as DoneAllIcon} from "@material-ui/icons";
 import CloseIcon from "@material-ui/icons/Close";
+import useCashTotal from "../useCashTotal";
+import getStyles from "../getStyles"
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        minHeight: '100%',
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3)
-    },
-    queryField: {
-        width: 350
-    },
-    approved: {
-        color: 'green',
-        fontWeight: 600
-    },
-    statusPaid: {
-        color: 'green',
-        fontWeight: 600
-    },
-    statusWaiting: {
-        color: 'red',
-        fontWeight: 600
-    }
-}));
-
-const RoadDriverListView: React.FC = () => {
-    const classes = useStyles()
+const RoadDriverListView: React.FC<{warehouseId?: number}> = ({warehouseId}) => {
+    const classes = getStyles()
     const dispatch = useDispatch()
     const {enqueueSnackbar} = useSnackbar()
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(10)
+    const [size, setSize] = useState(20)
     const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
     const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
@@ -67,6 +50,7 @@ const RoadDriverListView: React.FC = () => {
     const [rows, setRows] = useState<RoadDriverApplicationResponse[]>([])
     const [total, setTotal] = useState<number>(0)
     const canDelete = usePermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.DELETE)
+    const cashTotal = useCashTotal(CashTotalApplicationEnum.ROAD_DRIVER, updateRows, startDate, endDate, warehouseId)
 
     useEffect(() => {
         let cancel = false;
@@ -249,17 +233,37 @@ const RoadDriverListView: React.FC = () => {
                     </Table>
                 </Box>
             </PerfectScrollbar>
-            <TablePagination
-                component="div"
-                count={total}
-                onPageChange={handlePageChange}
-                page={page - 1}
-                labelRowsPerPage={'Строк на странице:'}
-                rowsPerPage={size}
-                rowsPerPageOptions={[5, 10, 25]}
-                onRowsPerPageChange={handleRowsPerPageChange}
-                labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
-            />
+            <Grid container justifyContent="space-between">
+                <Grid item className={classes.totalBalance}>
+                    {cashTotal && (
+                        <Grid container spacing={4}>
+                            <Grid item>
+                                <Typography variant="h5">
+                                    Приход: <b>{cashTotal.actualAmountIncome} {Currency.USD} &nbsp; {cashTotal.convertAmountIncome} {cashTotal.convertMoneyUnit}</b>
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h5">
+                                    Расход: <b>{cashTotal.actualAmountOutcome} {Currency.USD} &nbsp; {cashTotal.convertAmountOutcome} {cashTotal.convertMoneyUnit}</b>
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    )}
+                </Grid>
+                <Grid item>
+                    <TablePagination
+                        component="div"
+                        count={total}
+                        onPageChange={handlePageChange}
+                        page={page - 1}
+                        labelRowsPerPage={'Строк на странице:'}
+                        rowsPerPage={size}
+                        rowsPerPageOptions={[20, 30, 50]}
+                        onRowsPerPageChange={handleRowsPerPageChange}
+                        labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
+                    />
+                </Grid>
+            </Grid>
         </Card>
     )
 }

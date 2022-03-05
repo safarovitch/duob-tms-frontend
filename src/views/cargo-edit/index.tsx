@@ -13,23 +13,23 @@ import {
     makeStyles, MenuItem, TextField,
     Typography
 } from "@material-ui/core";
-import {WarehouseStateCargoRequest} from "../../../model/Warehouse";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import Page from "../../../components/Page";
 import {useSnackbar} from "notistack";
-import warehouseService from "../../../services/WarehouseService";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
-import {Customer} from "../../../model/Customer";
-import customerService from "../../../services/CustomerService";
-import {Provider} from "../../../model/Provider";
-import providerService from "../../../services/ProviderService";
-import {CargoCustomCode, CargoProduct, CargoTariff, CargoType} from "../../../model/Cargo";
-import cargoService from "../../../services/CargoService";
-import LoadingLayout from "../../../components/LoadingLayout";
 import * as Yup from "yup";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {Formik, FormikProps} from 'formik';
 import {Autocomplete} from "@material-ui/lab";
-import {mapOfTypeCalculationCargoEnum, TypeCalculationCargoEnum} from "../../../constants";
+import Page from "../../components/Page";
+import LoadingLayout from "../../components/LoadingLayout";
+import errorMessageHandler from "../../utils/errorMessageHandler";
+import {WarehouseStateCargoRequest} from "../../model/Warehouse";
+import {Customer} from "../../model/Customer";
+import {Provider} from "../../model/Provider";
+import {CargoCustomCode, CargoProduct, CargoTariff, CargoType} from "../../model/Cargo";
+import customerService from "../../services/CustomerService";
+import providerService from "../../services/ProviderService";
+import cargoService from "../../services/CargoService";
+import warehouseService from "../../services/WarehouseService";
+import {mapOfTypeCalculationCargoEnum, TypeCalculationCargoEnum} from "../../constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,27 +76,27 @@ const CargoEdit: React.FC = () => {
                 setLoading(true)
 
                 const dataCargo: any = await warehouseService.getCargo(Number(cargoId))
-                const dataCustomers: any = await customerService.getFilteredCustomers(1, 10000, '')
-                const dataProviders: any = await providerService.getFilteredProvider(1, 10000, '')
-                const dataCargoTypes: any = await cargoService.getFilteredCargoTypes(1, 10000, '')
-                const dataCargoTariffs: any = await cargoService.getFilteredCargoTariffs(1, 10000, '')
-                const dataCargoProducts: any = await cargoService.getAllProducts()
-                const dataCargoCustomCodes: any = await cargoService.getFilteredCustomCodes(1, 10000, '')
+                const dataCustomers: any = await customerService.getOptionCustomers()
+                const dataProviders: any = await providerService.getOptionProviders()
+                const dataCargoTypes: any = await cargoService.getOptionCargoTypes()
+                const dataCargoTariffs: any = await cargoService.getOptionCargoTariffs()
+                const dataCargoProducts: any = await cargoService.getOptionProducts()
+                const dataCargoCustomCodes: any = await cargoService.getOptionCustomCodes()
 
                 if (!cancel) {
                     setCargo(dataCargo)
-                    setCustomers(dataCustomers.content)
-                    setCustomer(dataCustomers.content.find((item: Customer) => item.id === dataCargo.clientId))
-                    setProviders(dataProviders.content)
-                    setProvider(dataProviders.content.find((item: Provider) => item.id === dataCargo.providerId))
-                    setCargoTypes(dataCargoTypes.content)
-                    setCargoType(dataCargoTypes.content.find((item: CargoType) => item.id === dataCargo.cargoTypeId))
-                    setCargoTariffs(dataCargoTariffs.content)
-                    setCargoTariff(dataCargoTariffs.content.find((item: CargoType) => item.id === dataCargo.tariffId))
+                    setCustomers(dataCustomers)
+                    setCustomer(dataCustomers.find((item: Customer) => item.id === dataCargo.clientId))
+                    setProviders(dataProviders)
+                    setProvider(dataProviders.find((item: Provider) => item.id === dataCargo.providerId))
+                    setCargoTypes(dataCargoTypes)
+                    setCargoType(dataCargoTypes.find((item: CargoType) => item.id === dataCargo.cargoTypeId))
+                    setCargoTariffs(dataCargoTariffs)
+                    setCargoTariff(dataCargoTariffs.find((item: CargoType) => item.id === dataCargo.tariffId))
                     setCargoProducts(dataCargoProducts)
                     setCargoProduct(dataCargoProducts.find((item: CargoType) => item.id === dataCargo.productId))
-                    setCargoCustomCodes(dataCargoCustomCodes.content)
-                    setCargoCustomCode(dataCargoCustomCodes.content.find((item: CargoCustomCode) => item.id === dataCargo.customCodeId))
+                    setCargoCustomCodes(dataCargoCustomCodes)
+                    setCargoCustomCode(dataCargoCustomCodes.find((item: CargoCustomCode) => item.id === dataCargo.customCodeId))
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -158,7 +158,7 @@ const CargoEdit: React.FC = () => {
         <Page title="Изменение груза">
             {
                 customers.length > 0 && providers.length > 0 && cargoTypes.length > 0 && cargoTariffs.length > 0
-                                                        && cargoProducts.length > 0 && cargoCustomCodes.length > 0 ? (
+                && cargoProducts.length > 0 && cargoCustomCodes.length > 0 ? (
                     <Container className={classes.root} maxWidth="lg">
                         <Breadcrumbs
                             separator={<NavigateNextIcon fontSize="small"/>}
@@ -171,22 +171,6 @@ const CargoEdit: React.FC = () => {
                                 component={RouterLink}
                             >
                                 Главная
-                            </Link>
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                to="/app/warehouse-state"
-                                component={RouterLink}
-                            >
-                                Состояние складов
-                            </Link>
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                to={`/app/warehouse-state/${cargoId}`}
-                                component={RouterLink}
-                            >
-                                Груз {cargoId}
                             </Link>
                             <Typography variant="body1" color="textPrimary">
                                 Изменение груза

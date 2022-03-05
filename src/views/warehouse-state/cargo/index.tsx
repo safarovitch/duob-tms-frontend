@@ -29,6 +29,8 @@ import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../constants";
 import DoneIcon from "@material-ui/icons/Done";
 import {NavLink as RouterLink} from "react-router-dom";
 import {Edit as EditIcon} from "react-feather";
+import usePermission from "../../../hooks/usePermission";
+import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,8 +47,9 @@ const CargoShow: React.FC = () => {
     const {id: cargoId} = useParams<{id: string}>()
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
-    const [cargos, setCargos] = useState<WarehouseStateCargo[]>()
+    const [cargos, setCargos] = useState<WarehouseStateCargo[]>([])
     const [selectedCargo, setSelectCargo] = useState<WarehouseStateCargo>()
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;
@@ -56,6 +59,8 @@ const CargoShow: React.FC = () => {
                 setLoading(true)
 
                 const dataCargos: any = await warehouseService.getWarehouseStateCargo(Number(cargoId))
+
+                if (dataCargos.length === 0) throw new Error("Не найдено")
 
                 if (!cancel) {
                     setCargos(dataCargos)
@@ -75,7 +80,7 @@ const CargoShow: React.FC = () => {
     return (
         <Page title={selectedCargo ? `Груз: ${selectedCargo.productName}` : 'Груз'}>
             {
-                cargos && selectedCargo ? (
+                cargos.length > 0 && selectedCargo ? (
                     <Container className={classes.root} maxWidth="xl">
                         <Header cargo={selectedCargo} />
                         <Box mt={3}>
@@ -113,18 +118,19 @@ const CargoShow: React.FC = () => {
                                             <Grid item>
                                                 <CardHeader title="Информация о грузе" />
                                             </Grid>
-                                            <Grid item>
-                                                <Box p={1}>
-                                                    <IconButton
-                                                        component={RouterLink}
-                                                        to={`/app/warehouse-state/${selectedCargo.id}/edit`}
-                                                    >
-                                                        <SvgIcon fontSize="small">
-                                                            <EditIcon/>
-                                                        </SvgIcon>
-                                                    </IconButton>
-                                                </Box>
-                                            </Grid>
+                                            {
+                                                isAdmin && (
+                                                    <Grid item>
+                                                        <Box p={1}>
+                                                            <IconButton component={RouterLink} to={`/app/cargos/${selectedCargo.id}/edit`}>
+                                                                <SvgIcon fontSize="small">
+                                                                    <EditIcon/>
+                                                                </SvgIcon>
+                                                            </IconButton>
+                                                        </Box>
+                                                    </Grid>
+                                                )
+                                            }
                                         </Grid>
                                         <Divider />
                                         <Table>

@@ -5,19 +5,22 @@ import {
     CardHeader,
     Container,
     Divider,
-    Grid,
-    makeStyles,
+    Grid, IconButton,
+    makeStyles, SvgIcon,
     Table,
     TableBody, TableCell, TableHead,
     TableRow
 } from "@material-ui/core";
-import {useHistory} from "react-router-dom";
+import {NavLink as RouterLink, useHistory} from "react-router-dom";
 import Header from "./Header";
 import Page from "../../../components/Page";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {useDispatch, useSelector} from "react-redux";
 import {CustomerCargo} from "../../../model/Customer";
 import {deleteSelectedCustomerCargo} from "../../../store/actions/customerActions";
+import {Edit as EditIcon} from "react-feather";
+import usePermission from "../../../hooks/usePermission";
+import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +36,7 @@ const CargoShow: React.FC = () => {
     const history = useHistory()
     const dispatch = useDispatch()
     const customerCargo = useSelector((state: {selectedCustomerCargo: CustomerCargo}) => state.selectedCustomerCargo)
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomerCargo())
@@ -51,7 +55,24 @@ const CargoShow: React.FC = () => {
                     <Grid container spacing={3}>
                         <Grid item md={4} xl={3} xs={12}>
                             <Card>
-                                <CardHeader title="Информация о грузе" />
+                                <Grid container justifyContent="space-between" alignItems="center">
+                                    <Grid item>
+                                        <CardHeader title="Информация о грузе" />
+                                    </Grid>
+                                    {
+                                        isAdmin && (
+                                            <Grid item>
+                                                <Box p={1}>
+                                                    <IconButton component={RouterLink} to={`/app/cargos/${customerCargo.id}/edit`}>
+                                                        <SvgIcon fontSize="small">
+                                                            <EditIcon/>
+                                                        </SvgIcon>
+                                                    </IconButton>
+                                                </Box>
+                                            </Grid>
+                                        )
+                                    }
+                                </Grid>
                                 <Divider />
                                 <Table>
                                     <TableBody>

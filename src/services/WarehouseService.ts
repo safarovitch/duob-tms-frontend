@@ -50,10 +50,10 @@ class WarehouseService {
     })
 
     getFilteredWarehouseStateCargos = (warehouseId: number, status: string, startDate: string, endDate: string,
-                                 page: number, size: number,) => new Promise((resolve, reject)  => {
-        let params = `extraParams[status]=${status}` + (warehouseId === 0 ? '' : `&extraParams[warehouseId]=${warehouseId}`)
+        clientCode: string, barcode: string, page: number, size: number,) => new Promise((resolve, reject)  => {
+        let params = `extraParams[status]=${status}&extraParams[clientCode]=${clientCode}&extraParams[barcode]=${barcode}` + (warehouseId === 0 ? '' : `&extraParams[warehouseId]=${warehouseId}`)
 
-        api.get(`${API_BASE_URL}/warehouses/state?${encodeURI(params)}`, {params: {startDate, endDate, page, size}})
+        api.get(`${API_BASE_URL}/warehouses/state?${encodeURI(params)}`, {params: {startDate, endDate, clientCode, barcode, page, size}})
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

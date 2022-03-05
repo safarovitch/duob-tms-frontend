@@ -7,7 +7,7 @@ import {
     TableBody,
     TableCell,
     TableHead, TablePagination,
-    TableRow,
+    TableRow, TextField,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {CustomerCargo} from "../../../../model/Customer";
@@ -26,12 +26,17 @@ import {
     TypeCargoCustomerEnum
 } from "../../../../constants";
 import DoneIcon from "@material-ui/icons/Done";
+import useDebounce from "../../../../hooks/useDebounce";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         minHeight: '100%',
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
+    },
+    queryField: {
+        width: 150
     },
 }));
 
@@ -43,7 +48,11 @@ const CargoListView: React.FC = () => {
     const [selectedStatus, setSelectedStatus] = useState<string>(TypeCargoCustomerEnum.ACTIVE)
     const [total, setTotal] = useState<number>(0)
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(10)
+    const [size, setSize] = useState(20)
+    const [startDate, setStartDate] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'))
+    const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
+    const [barcode, setBarcode] = useState('')
+    const debouncedBarcode = useDebounce(barcode, 500)
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
     const {id} = useParams<{id: string}>()
@@ -56,7 +65,7 @@ const CargoListView: React.FC = () => {
                 setLoading(true)
                 setRows([])
 
-                const data: any = await customerService.getActiveCargos(id, page, size, selectedStatus)
+                const data: any = await customerService.getActiveCargos(id, page, size, startDate, endDate, debouncedBarcode, selectedStatus)
 
                 if (!cancel) {
                     setRows(data.content)
@@ -70,7 +79,7 @@ const CargoListView: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [id, page, size, selectedStatus, enqueueSnackbar])
+    }, [id, page, size, startDate, endDate, debouncedBarcode, selectedStatus, enqueueSnackbar])
 
     const handleSelectStatus = (status: string) => {
         setSelectedStatus(status)
@@ -87,31 +96,95 @@ const CargoListView: React.FC = () => {
         setPage(newPage + 1);
     };
 
+    const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setStartDate(event.target.value)
+        setPage(1)
+    }
+
+    const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist()
+        setEndDate(event.target.value)
+        setPage(1)
+    }
+
+    const handleBarcodeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        event.persist();
+        setBarcode(event.target.value);
+        setPage(1);
+    };
+
     const isGroupCargo = (barcode: string) => barcode === '-';
 
     return rows && (
         <Card className={classes.root}>
             <Box pb={3} px={2}>
-                <Grid container spacing={2}>
-                    {Object.keys(TypeCargoCustomerEnum).map((status, index) => (
-                        <Grid item key={index}>
-                            {selectedStatus === status ? (
-                                <Chip
-                                    label={mapOfTypeCargoCustomer.get(status)}
-                                    clickable
-                                    color="primary"
-                                    onDelete={() => null}
-                                    deleteIcon={<DoneIcon />}
+                <Grid container justifyContent="space-between" alignItems="center" spacing={3}>
+                    <Grid item>
+                        <Grid container spacing={3}>
+                            <Grid item>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    label="От"
+                                    onChange={handleStartDateChange}
+                                    value={startDate}
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    size="small"
                                 />
-                            ) : (
-                                <Chip
-                                    label={mapOfTypeCargoCustomer.get(status)}
-                                    clickable
-                                    onClick={() => handleSelectStatus(status)}
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    label="До"
+                                    onChange={handleEndDateChange}
+                                    value={endDate}
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    size="small"
                                 />
-                            )}
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    className={classes.queryField}
+                                    size="small"
+                                    onChange={handleBarcodeChange}
+                                    placeholder="Штрих-код"
+                                    value={barcode}
+                                    variant="outlined"
+                                />
+                            </Grid>
                         </Grid>
-                    ))}
+                    </Grid>
+                    <Grid item>
+                        <Grid container spacing={2}>
+                            {Object.keys(TypeCargoCustomerEnum).map((status, index) => (
+                                <Grid item key={index}>
+                                    {selectedStatus === status ? (
+                                        <Chip
+                                            label={mapOfTypeCargoCustomer.get(status)}
+                                            clickable
+                                            color="primary"
+                                            onDelete={() => null}
+                                            deleteIcon={<DoneIcon />}
+                                        />
+                                    ) : (
+                                        <Chip
+                                            label={mapOfTypeCargoCustomer.get(status)}
+                                            clickable
+                                            onClick={() => handleSelectStatus(status)}
+                                        />
+                                    )}
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Box>
             <PerfectScrollbar>
@@ -195,7 +268,7 @@ const CargoListView: React.FC = () => {
                 page={page - 1}
                 labelRowsPerPage={'Строк на странице:'}
                 rowsPerPage={size}
-                rowsPerPageOptions={[10, 20, 30]}
+                rowsPerPageOptions={[20, 50, 100]}
                 onRowsPerPageChange={handleRowsPerPageChange}
                 labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
             />
