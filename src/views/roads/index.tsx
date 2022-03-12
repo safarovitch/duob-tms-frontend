@@ -108,7 +108,7 @@ const RoadsStuffView: React.FC = () => {
                                     <RoadFuel road={road} />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'cargos'} value={currentTab}>
-                                    <RoadCargos road={road} roadId={road.id!} />
+                                    <RoadCargos roadId={road.id!} />
                                 </RoadsTabPanel>
                                 <RoadsTabPanel index={'on-base'} value={currentTab}>
                                     <FuelDetailList updateRoad={setUpdateRoad} type="ON_BASE" />
