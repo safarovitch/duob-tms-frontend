@@ -134,7 +134,8 @@ const WarehouseStateListView: React.FC = () => {
             try {
                 setWarehouseStateTotal(undefined)
 
-                const data: any = await warehouseService.getFilteredWarehouseStateTotal(warehouseId, selectedStatus)
+                const data: any = await warehouseService.getFilteredWarehouseStateTotal(warehouseId, selectedStatus,
+                    startDate, endDate, debouncedClientCode, debouncedBarcode)
 
                 !cancel && setWarehouseStateTotal(data)
             } catch (error: any) {
@@ -143,7 +144,7 @@ const WarehouseStateListView: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, warehouseId, selectedStatus])
+    }, [enqueueSnackbar, warehouseId, selectedStatus, startDate, endDate, debouncedClientCode, debouncedBarcode])
 
     const handleWarehouseChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()
@@ -396,16 +397,16 @@ const WarehouseStateListView: React.FC = () => {
                                             warehouseStateTotal && rows.length > 0 && (
                                                 <Grid container spacing={2}>
                                                     <Grid item>
-                                                        Мест: <b>{warehouseStateTotal.place}</b>
+                                                        Мест: <b>{warehouseStateTotal.totalPlace}</b>
                                                     </Grid>
                                                     <Grid item>
-                                                        Стоимост: <b>{warehouseStateTotal.price} $</b>
+                                                        Стоимост: <b>{warehouseStateTotal.amount} $</b>
                                                     </Grid>
                                                     <Grid item>
-                                                        Обьем: <b>{warehouseStateTotal.volume} м3</b>
+                                                        Обьем: <b>{warehouseStateTotal.totalVolume} м3</b>
                                                     </Grid>
                                                     <Grid item>
-                                                        Вес: <b>{warehouseStateTotal.weight} кг</b>
+                                                        Вес: <b>{warehouseStateTotal.totalWeight} кг</b>
                                                     </Grid>
                                                 </Grid>
                                             )

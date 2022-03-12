@@ -3,8 +3,8 @@ import {colors, Direction, PaletteType, responsiveFontSizes} from '@material-ui/
 import { createTheme as createMuiTheme, ThemeOptions } from '@material-ui/core/styles';
 import typography from './typography';
 import { softShadows, strongShadows } from './shadows';
-import { THEMES } from '../constants';
-import {Settings} from "../context/SettingsContext";
+import {GlobalThemeEnum} from '../constants';
+import {GlobalSettingsInterface} from "../context/SettingsContext";
 import {Shadows} from "@material-ui/core/styles/shadows";
 
 const baseConfig = {
@@ -32,7 +32,7 @@ const baseConfig = {
 
 const themeConfigs = [
     {
-        name: THEMES.LIGHT,
+        name: GlobalThemeEnum.LIGHT,
         overrides: {
             MuiInputBase: {
                 input: {
@@ -67,7 +67,7 @@ const themeConfigs = [
         shadows: softShadows as Shadows
     },
     {
-        name: THEMES.ONE_DARK,
+        name: GlobalThemeEnum.ONE_DARK,
         palette: {
             type: 'dark' as PaletteType,
             action: {
@@ -97,7 +97,7 @@ const themeConfigs = [
         shadows: strongShadows as Shadows
     },
     {
-        name: THEMES.UNICORN,
+        name: GlobalThemeEnum.UNICORN,
         palette: {
             type: 'dark',
             action: {
@@ -128,7 +128,7 @@ const themeConfigs = [
     }
 ];
 
-export function createTheme(settings: Settings) {
+export function createTheme(settings: GlobalSettingsInterface) {
     let themeConfig = themeConfigs.find((theme) => theme.name === settings.theme);
 
     if (!themeConfig) {

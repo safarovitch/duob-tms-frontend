@@ -12,7 +12,7 @@ import {IncomeByArticleApplication, WarehouseSecondaryMoneyUnit} from "../../../
 import {Article} from "../../../model/Article";
 import articleService from "../../../services/ArticleService";
 import {ARTICLES} from "../../../constants";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 
 const useStyles = makeStyles((theme) => ({
     root: {

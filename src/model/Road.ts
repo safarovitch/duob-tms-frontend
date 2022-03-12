@@ -116,6 +116,13 @@ export interface RoadFuelDetail {
     roadId: number;
 }
 
+export interface RoadTotalCargos {
+    totalPlace: number;
+    amount: number;
+    totalVolume: number;
+    totalWeight: number;
+}
+
 export interface Road {
     id?: number;
     road: string;

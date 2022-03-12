@@ -1,7 +1,7 @@
 import {useContext} from 'react';
-import SettingsContext from '../context/SettingsContext';
+import SettingsContext, {SettingsContextValue} from '../context/SettingsContext';
 
-function useSettings() {
+function useSettings(): SettingsContextValue {
     return useContext(SettingsContext);
 }
 

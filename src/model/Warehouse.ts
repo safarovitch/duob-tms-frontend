@@ -67,8 +67,8 @@ export interface WarehouseStateCargoRequest {
 }
 
 export interface WarehouseStateTotal {
-    place: number;
-    price: number;
-    volume: number;
-    weight: number;
+    totalPlace: number;
+    amount: number;
+    totalVolume: number;
+    totalWeight: number;
 }

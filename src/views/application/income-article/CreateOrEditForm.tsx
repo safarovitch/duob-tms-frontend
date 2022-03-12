@@ -17,7 +17,7 @@ import {deleteSelectedIncomeArticle} from "../../../store/actions/applicationAct
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Autocomplete} from "@material-ui/lab";
 import {IncomeByArticleApplication, IncomeByArticleFormProps} from "../../../model/Application";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import {Currency} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -153,6 +153,7 @@ const CreateOrEditForm: React.FC<IncomeByArticleFormProps> =
                                         onChange={(e, value) => {
                                             props.setFieldValue("articleId", value?.id);
                                         }}
+                                        value={props.values.article}
                                         renderInput={params => (
                                             <TextField
                                                 error={Boolean(props.touched.articleId && props.errors.articleId)}

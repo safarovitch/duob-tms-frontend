@@ -9,7 +9,7 @@ import {deleteSelectedRefillBalance} from "../../../store/actions/applicationAct
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Autocomplete} from "@material-ui/lab";
 import {RefillBalanceApplication, RefillBalanceFormProps} from "../../../model/Application";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import {Currency, mapOfActionTypeApplication} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({

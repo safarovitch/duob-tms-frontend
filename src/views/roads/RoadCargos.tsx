@@ -18,8 +18,7 @@ import NoFoundTableBody from "../../components/NoFoundTableBody";
 import {useHistory} from "react-router-dom";
 import {setSelectedCustomerCargo} from "../../store/actions/customerActions";
 import roadService from "../../services/RoadService";
-import {Road} from "../../model/Road";
-import {Currency} from "../../constants";
+import {RoadTotalCargos} from "../../model/Road";
 import useDebounce from "../../hooks/useDebounce";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
+const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
@@ -51,6 +50,7 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
     const [size, setSize] = useState(20)
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
+    const [totalCargos, setTotalCargos] = useState<RoadTotalCargos>()
 
     useEffect(() => {
         let cancel = false;
@@ -75,6 +75,24 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
 
         return () => {cancel = true}
     }, [roadId, enqueueSnackbar, page, size, debouncedClientCode, debouncedBarcode])
+
+    useEffect(() => {
+        let cancel = false;
+
+        (async () => {
+            try {
+                const data: any = await roadService.getRoadTotalCargos(roadId, debouncedClientCode, debouncedBarcode)
+
+                if (!cancel) {
+                    setTotalCargos(data)
+                }
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            }
+        })()
+
+        return () => {cancel = true}
+    }, [roadId, enqueueSnackbar, debouncedClientCode, debouncedBarcode])
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
@@ -188,20 +206,24 @@ const RoadCargos: React.FC<{roadId: number, road: Road}> = ({roadId, road}) => {
             </PerfectScrollbar>
             <Grid container justifyContent="space-between">
                 <Grid item className={classes.totalBalance}>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            Объем: <b>{road.totalVolume} м3</b>
-                        </Grid>
-                        <Grid item>
-                            Вес: <b>{road.totalWeight} кг</b>
-                        </Grid>
-                        <Grid item>
-                            Сумма: <b>{road.totalAmount} {Currency.USD}</b>
-                        </Grid>
-                        <Grid item>
-                            Кол-во: <b>{road.cargoCount}</b>
-                        </Grid>
-                    </Grid>
+                    {
+                        totalCargos && rows.length > 0 && (
+                            <Grid container spacing={2}>
+                                <Grid item>
+                                    Мест: <b>{totalCargos.totalPlace}</b>
+                                </Grid>
+                                <Grid item>
+                                    Стоимост: <b>{totalCargos.amount} $</b>
+                                </Grid>
+                                <Grid item>
+                                    Объем: <b>{totalCargos.totalVolume} м3</b>
+                                </Grid>
+                                <Grid item>
+                                    Вес: <b>{totalCargos.totalWeight} кг</b>
+                                </Grid>
+                            </Grid>
+                        )
+                    }
                 </Grid>
                 <Grid item>
                     <TablePagination

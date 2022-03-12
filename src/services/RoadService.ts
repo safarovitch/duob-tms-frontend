@@ -11,6 +11,7 @@ import {
     TruckType
 } from "../model/Road";
 import {ProviderReceiverEnum} from "../constants";
+import apiHelper from "./ApiHelper";
 
 class RoadService {
     getFilteredRoads = (page: number, size: number) => new Promise((resolve, reject) => {
@@ -37,6 +38,9 @@ class RoadService {
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
+
+    getRoadTotalCargos = (id: number, clientCode: string, barcode: string) =>
+        apiHelper.get(`/roads/${id}/total-cargos/`, {extraParams: {clientCode, barcode}})
 
     getRoadFuelDetails = (roadId: number, type: string) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/road-fuels?roadId=${roadId}&type=${type}`)

@@ -4,7 +4,7 @@ import {RoadBalanceApplicationResponse, RoadDriverApplicationRequest} from "../.
 import {useSnackbar} from "notistack";
 import {useHistory} from "react-router-dom";
 import * as Yup from "yup";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {
     Currency,

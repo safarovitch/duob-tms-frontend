@@ -1,5 +1,7 @@
-export function restoreSettings() {
-    let settings = null;
+import {GlobalSettingsInterface} from "../context/SettingsContext";
+
+export function restoreSettings(): GlobalSettingsInterface | null {
+    let settings: GlobalSettingsInterface | null = null;
 
     try {
         const storeData = localStorage.getItem('settings');
@@ -15,6 +17,6 @@ export function restoreSettings() {
     return settings
 }
 
-export function storeSettings(settings: object) {
+export function storeSettings(settings: GlobalSettingsInterface) {
     localStorage.setItem('settings', JSON.stringify(settings));
 }

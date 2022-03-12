@@ -1,9 +1,6 @@
 import PERMISSIONS from "./permissions";
 
 const
-    LIGHT = 'LIGHT',
-    ONE_DARK = 'ONE_DARK',
-    UNICORN = 'UNICORN',
     INCOME = 'INCOME',
     INCOME_POSTFIX = 'income',
     OUTCOME = 'OUTCOME',
@@ -28,9 +25,13 @@ const
     THING = 'THING',
     TON = 'TON'
 
-export const THEMES = {LIGHT, ONE_DARK, UNICORN}
-
 export const ARTICLES = {INCOME, INCOME_POSTFIX, OUTCOME, OUTCOME_POSTFIX}
+
+export enum GlobalThemeEnum {
+    LIGHT = "LIGHT",
+    ONE_DARK = "ONE_DARK",
+    UNICORN = "UNICORN"
+}
 
 export enum Currency {
     USD = "USD",

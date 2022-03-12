@@ -13,7 +13,7 @@ import {ARTICLES} from "../../../constants";
 import employeeService from "../../../services/EmployeeService";
 import {useHistory} from "react-router-dom";
 import {WarehouseSecondaryMoneyUnit} from "../../../model/Application";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 
 const useStyles = makeStyles((theme) => ({
     root: {

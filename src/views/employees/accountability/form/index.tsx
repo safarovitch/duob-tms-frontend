@@ -25,7 +25,7 @@ import employeeService from "../../../../services/EmployeeService";
 import {Formik, FormikProps} from "formik";
 import {AccountabilityType, Currency, mapOfAccountabilityType,} from "../../../../constants";
 import {WarehouseSecondaryMoneyUnit} from "../../../../model/Application";
-import applicationService from "../../../../services/Application";
+import applicationService from "../../../../services/ApplicationService";
 import LoadingLayout from "../../../../components/LoadingLayout";
 
 const useStyles = makeStyles((theme) => ({

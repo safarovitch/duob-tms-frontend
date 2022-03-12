@@ -1,6 +1,7 @@
 import api from '../utils/Api'
 import {Warehouse, WarehouseStateCargoRequest} from "../model/Warehouse";
 import {API_BASE_URL} from "../config";
+import apiHelper from "./ApiHelper";
 
 class WarehouseService {
     getWarehouseBalances = () => new Promise((resolve, reject) => {
@@ -50,20 +51,22 @@ class WarehouseService {
     })
 
     getFilteredWarehouseStateCargos = (warehouseId: number, status: string, startDate: string, endDate: string,
-        clientCode: string, barcode: string, page: number, size: number,) => new Promise((resolve, reject)  => {
-        let params = `extraParams[status]=${status}&extraParams[clientCode]=${clientCode}&extraParams[barcode]=${barcode}` + (warehouseId === 0 ? '' : `&extraParams[warehouseId]=${warehouseId}`)
+                                       clientCode: string, barcode: string, page: number, size: number) => {
+        let extraParams: any = {status, clientCode, barcode}
 
-        api.get(`${API_BASE_URL}/warehouses/state?${encodeURI(params)}`, {params: {startDate, endDate, clientCode, barcode, page, size}})
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+        if (warehouseId !== 0) (extraParams.warehouseId = warehouseId)
 
-    getFilteredWarehouseStateTotal = (warehouseId: number, status: string) => new Promise((resolve, reject)  => {
-        let params = `extraParams[status]=${status}` + (warehouseId === 0 ? '' : `&extraParams[warehouseId]=${warehouseId}`)
-        api.get(`${API_BASE_URL}/warehouses/total?${encodeURI(params)}`)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+        return apiHelper.get(`/warehouses/state`, {startDate, endDate, page, size, extraParams})
+    }
+
+    getFilteredWarehouseStateTotal = (warehouseId: number, status: string, startDate: string, endDate: string,
+                                      clientCode: string, barcode: string) => {
+        let extraParams: any = {status, clientCode, barcode}
+
+        if (warehouseId !== 0) (extraParams.warehouseId = warehouseId)
+
+        return apiHelper.get(`/warehouses/total`, {startDate, endDate, extraParams})
+    }
 
     getWarehouseStateCargo = (cargoId: number) => new Promise((resolve, reject)  => {
         api.get(`${API_BASE_URL}/sync/income-cargos/${cargoId}/history`)

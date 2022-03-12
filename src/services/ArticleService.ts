@@ -1,37 +1,17 @@
-import api from "../utils/Api";
-import {API_BASE_URL} from "../config";
 import {Article} from "../model/Article";
+import apiHelper from "./ApiHelper";
 
-class ArticleService{
-    getArticles = (type: string) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/articles/all/${type}`)
-            .then(response => {resolve(response.data)})
-            .catch(error => {reject(error)})
-    })
+class ArticleService {
+    getArticles = (type: string) => apiHelper.get(`/articles/all/${type}`)
 
-    getFilteredArticles = (type: string, page: number, size: number) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/articles?type=${type}&page=${page}&size=${size}`)
-            .then((response) => {resolve(response.data)})
-            .catch((error) => {reject(error)})
-    })
+    getFilteredArticles = (type: string, page: number, size: number) =>
+        apiHelper.get(`/articles`, {type, page, size})
 
-    postArticle = (postfix: string, article: Article) => new Promise((resolve, reject)  => {
-        api.post(`${API_BASE_URL}/articles/${postfix}`, article)
-            .then((response) => {resolve(response.data)})
-            .catch((error) => {reject(error)})
-    })
+    postArticle = (postfix: string, article: Article) => apiHelper.post<Article>(`/articles/${postfix}`, article)
 
-    updateArticle = (article: Article) => new Promise((resolve, reject)  => {
-        api.put(`${API_BASE_URL}/articles/${article.id}`, article)
-            .then((response) => {resolve(response.data)})
-            .catch((error) => {reject(error)})
-    })
+    updateArticle = (article: Article) => apiHelper.put<Article>(`/articles/${article.id}`, article)
 
-    deleteArticle = (articleId: number) => new Promise((resolve, reject)  => {
-        api.delete(`${API_BASE_URL}/articles/${articleId}`)
-            .then((response) => {resolve(response.data)})
-            .catch((error) => {reject(error)})
-    })
+    deleteArticle = (articleId: number) => apiHelper.delete(`/articles/${articleId}`)
 }
 
 const articleService = new ArticleService()

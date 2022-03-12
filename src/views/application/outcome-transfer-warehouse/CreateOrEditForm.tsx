@@ -18,7 +18,7 @@ import {
     OutcomeTransferWarehouseApplication,
     OutcomeTransferWarehouseFormProps
 } from "../../../model/Application";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import {Currency} from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import {AppBar, Box, Grid, Hidden, IconButton, makeStyles, SvgIcon, Toolbar, Typography} from '@material-ui/core';
 import {Menu as MenuIcon} from 'react-feather';
 import Logo from '../../../components/Logo';
-import {Currency, THEMES} from '../../../constants';
+import {Currency, GlobalThemeEnum} from '../../../constants';
 import Settings from '../../CustomerLayout/TopBar/Settings';
 import Logout from "./Logout";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,11 +17,11 @@ import {User} from "../../../model/User";
 const useStyles = makeStyles((theme?: any) => ({
     root: {
         zIndex: theme.zIndex.drawer + 100,
-        ...theme.name === THEMES.LIGHT ? {
+        ...theme.name === GlobalThemeEnum.LIGHT ? {
             boxShadow: 'none',
             backgroundColor: theme.palette.primary.main
         } : {},
-        ...theme.name === THEMES.ONE_DARK ? {
+        ...theme.name === GlobalThemeEnum.ONE_DARK ? {
             backgroundColor: theme.palette.background.default
         } : {}
     },

@@ -10,7 +10,7 @@ import {useDispatch} from "react-redux";
 import {useSnackbar} from "notistack";
 import {IncomeByArticleApplication} from "../../../model/Application";
 import {setSelectedIncomeArticle} from "../../../store/actions/applicationAction";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {CashTotalApplicationEnum, Currency, mapOfStatusApplication} from "../../../constants";
