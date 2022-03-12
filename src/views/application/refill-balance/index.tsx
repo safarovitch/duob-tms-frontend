@@ -11,7 +11,7 @@ import LoadingLayout from "../../../components/LoadingLayout";
 import customerService from "../../../services/CustomerService";
 import {RefillBalanceApplication, WarehouseSecondaryMoneyUnit} from "../../../model/Application";
 import {Customer} from "../../../model/Customer";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 
 const useStyles = makeStyles((theme) => ({
     root: {

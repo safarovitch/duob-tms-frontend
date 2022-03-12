@@ -10,7 +10,7 @@ import Page from "../../../../components/Page";
 import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import PERMISSIONS from "../../../../constants/permissions";
 import {RoadDriverApplicationResponse} from "../../../../model/Application";
-import applicationService from "../../../../services/Application";
+import applicationService from "../../../../services/ApplicationService";
 import Header from "./Header";
 import ApproveApplication from "../../components/ApproveApplication";
 import {mapOfRoadDriverApplicationType} from "../../../../constants";

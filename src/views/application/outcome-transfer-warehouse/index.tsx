@@ -10,7 +10,7 @@ import warehouseService from "../../../services/WarehouseService";
 import {Warehouse} from "../../../model/Warehouse";
 import {useHistory} from "react-router-dom";
 import {WarehouseSecondaryMoneyUnit} from "../../../model/Application";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 
 const useStyles = makeStyles((theme) => ({
     root: {

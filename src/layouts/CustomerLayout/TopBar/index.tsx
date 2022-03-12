@@ -8,7 +8,7 @@ import {
     makeStyles, Typography,
 } from '@material-ui/core';
 import Logo from '../../../components/Logo';
-import { THEMES } from '../../../constants';
+import {GlobalThemeEnum} from '../../../constants';
 import Profile from './Profile';
 import Settings from './Settings';
 import {useSelector} from "react-redux";
@@ -17,11 +17,11 @@ import {User} from "../../../model/User";
 const useStyles = makeStyles((theme?: any) => ({
     root: {
         zIndex: theme.zIndex.drawer + 100,
-        ...theme.name === THEMES.LIGHT ? {
+        ...theme.name === GlobalThemeEnum.LIGHT ? {
             boxShadow: 'none',
             backgroundColor: theme.palette.primary.main
         } : {},
-        ...theme.name === THEMES.ONE_DARK ? {
+        ...theme.name === GlobalThemeEnum.ONE_DARK ? {
             backgroundColor: theme.palette.background.default
         } : {}
     },

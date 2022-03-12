@@ -8,7 +8,7 @@ import {ArrowRight as ArrowRightIcon, Search as SearchIcon} from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {useSnackbar} from "notistack";
 import {OutcomeByArticleApplication} from "../../../model/Application";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {CashTotalApplicationEnum, Currency, mapOfStatusApplication} from "../../../constants";

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import applicationService from "../../services/Application";
+import applicationService from "../../services/ApplicationService";
 import {CashTotalApplicationEnum} from "../../constants";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";

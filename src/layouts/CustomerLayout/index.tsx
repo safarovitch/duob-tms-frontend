@@ -1,37 +1,9 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core";
 import TopBar from './TopBar';
-
-const useStyles = makeStyles((theme) => {
-    return {
-        root: {
-            backgroundColor: theme.palette.background.default,
-            display: 'flex',
-            height: '100%',
-            overflow: 'hidden',
-            width: '100%'
-        },
-        wrapper: {
-            display: 'flex',
-            flex: '1 1 auto',
-            overflow: 'hidden',
-            paddingTop: 64,
-        },
-        contentContainer: {
-            display: 'flex',
-            flex: '1 1 auto',
-            overflow: 'hidden'
-        },
-        content: {
-            flex: '1 1 auto',
-            height: '100%',
-            overflow: 'auto'
-        }
-    }
-});
+import getStyles from "../getStyles";
 
 const CustomerLayout: React.FC = ({ children }) => {
-    const classes = useStyles();
+    const classes = getStyles();
 
     return (
         <div className={classes.root}>

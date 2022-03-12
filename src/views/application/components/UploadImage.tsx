@@ -1,5 +1,5 @@
 import React from "react";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {Button, Card, CardMedia, CircularProgress, Grid, makeStyles, SvgIcon, Typography} from "@material-ui/core";

@@ -22,7 +22,7 @@ import {useDispatch} from "react-redux";
 import {useSnackbar} from "notistack";
 import {RefillBalanceApplication} from "../../../model/Application";
 import {setSelectedRefillBalance} from "../../../store/actions/applicationAction";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {

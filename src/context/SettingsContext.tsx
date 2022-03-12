@@ -1,33 +1,37 @@
 import React, {createContext, ReactNode, useState} from 'react';
 import _ from 'lodash';
-import {THEMES} from '../constants';
 import {storeSettings} from '../utils/settings';
+import {GlobalThemeEnum} from "../constants";
 
-export class Settings {
-    theme: string | undefined;
-
-    constructor(theme?: string) {
-        this.theme = theme;
-    }
+export interface GlobalSettingsInterface {
+    theme: GlobalThemeEnum
 }
 
-const SettingsContext = createContext({
-    settings: new Settings(),
-    saveSettings: (settings: Settings) => {}
+const defaultSettings: GlobalSettingsInterface = {
+    theme: GlobalThemeEnum.LIGHT
+}
+
+export interface SettingsContextValue {
+    settings: GlobalSettingsInterface;
+    saveSettings: (settings: GlobalSettingsInterface) => void;
+}
+
+const SettingsContext = createContext<SettingsContextValue>({
+    settings: defaultSettings,
+    saveSettings: () => {}
 });
 
-const defaultSettings: Settings = new Settings(THEMES.LIGHT);
-
-export type SettingsProviderProps = {
-    settings: Settings,
-    children: JSX.Element | JSX.Element[] | ReactNode
+interface SettingsProviderProps {
+    settings: GlobalSettingsInterface | null;
+    children: JSX.Element | JSX.Element[] | ReactNode;
 }
 
-export const SettingsProvider: React.FC<SettingsProviderProps> = ({settings, children}) => {
-    const [currentSettings, setCurrentSettings] = useState(settings || defaultSettings);
+export const SettingsProvider: React.FC<SettingsProviderProps> = (props) => {
+    const {settings, children} = props
+    const [currentSettings, setCurrentSettings] = useState<GlobalSettingsInterface>(settings ?? defaultSettings);
 
-    const handleSaveSettings = (updatedSettings = {}) => {
-        const mergedSettings = _.merge({}, currentSettings, updatedSettings);
+    const handleSaveSettings = (updatedSettings: GlobalSettingsInterface) => {
+        const mergedSettings: GlobalSettingsInterface = _.merge({}, currentSettings, updatedSettings);
 
         setCurrentSettings(mergedSettings);
         storeSettings(mergedSettings);
@@ -44,7 +48,5 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({settings, chi
         </SettingsContext.Provider>
     );
 }
-
-export const SettingsConsumer = SettingsContext.Consumer;
 
 export default SettingsContext;

@@ -16,7 +16,7 @@ import moment from "moment";
 import {RoadDriverApplicationResponse} from "../../../model/Application";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {ArrowRight as ArrowRightIcon, Search as SearchIcon} from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";

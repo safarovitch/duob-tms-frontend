@@ -8,7 +8,7 @@ import {Formik, FormikProps} from 'formik';
 import {useHistory} from "react-router-dom";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {WarehouseSecondaryMoneyUnit} from "../../../model/Application";
-import applicationService from "../../../services/Application";
+import applicationService from "../../../services/ApplicationService";
 import {Conversion} from "../../../model/Conversion";
 import conversionService from "../../../services/ConversionService";
 import {Currency} from "../../../constants";

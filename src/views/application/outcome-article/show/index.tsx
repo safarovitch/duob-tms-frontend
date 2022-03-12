@@ -14,7 +14,7 @@ import Page from "../../../../components/Page";
 import Header from "./Header";
 import {OutcomeByArticleApplication} from "../../../../model/Application";
 import PERMISSIONS from "../../../../constants/permissions";
-import applicationService from "../../../../services/Application";
+import applicationService from "../../../../services/ApplicationService";
 import {deleteSelectedOutcomeArticle, setSelectedOutcomeArticle} from "../../../../store/actions/applicationAction";
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";

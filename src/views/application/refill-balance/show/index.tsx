@@ -7,7 +7,7 @@ import Header from "./Header";
 import {RefillBalanceApplication} from "../../../../model/Application";
 import {ApplicationStatusEnum, Currency, mapOfActionTypeApplication} from "../../../../constants";
 import PERMISSIONS from "../../../../constants/permissions";
-import applicationService from "../../../../services/Application";
+import applicationService from "../../../../services/ApplicationService";
 import {deleteSelectedRefillBalance, setSelectedRefillBalance} from "../../../../store/actions/applicationAction";
 import usePermission from "../../../../hooks/usePermission";
 import UploadImage from "../../components/UploadImage";

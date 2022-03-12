@@ -6,13 +6,13 @@ import {
 } from '@material-ui/core';
 import { Moon as MoonIcon, Sun as SunIcon } from 'react-feather';
 import useSettings from '../../../hooks/useSettings';
-import { THEMES } from '../../../constants';
+import {GlobalThemeEnum} from '../../../constants';
 
 const Settings: React.FC = () => {
     const { settings, saveSettings } = useSettings();
 
     const handleChange = () => {
-        saveSettings({...settings, theme: settings.theme === THEMES.LIGHT ? THEMES.ONE_DARK : THEMES.LIGHT})
+        saveSettings({...settings, theme: settings.theme === GlobalThemeEnum.LIGHT ? GlobalThemeEnum.ONE_DARK : GlobalThemeEnum.LIGHT})
     };
 
     return (
@@ -24,7 +24,7 @@ const Settings: React.FC = () => {
                 >
                     <SvgIcon>
                         {
-                            settings.theme === THEMES.LIGHT ? (
+                            settings.theme === GlobalThemeEnum.LIGHT ? (
                                 <MoonIcon />
                             ) : (
                                 <SunIcon />
