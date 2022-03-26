@@ -1,5 +1,6 @@
 import api from "../utils/Api";
 import {API_BASE_URL} from "../config";
+import {ResponseType} from "axios";
 
 interface ParamsInterface {
     page?: number;
@@ -13,7 +14,8 @@ interface ParamsInterface {
     type?: any;
     from?: string,
     to?: string,
-    warehouseId?: number
+    warehouseId?: number;
+    responseType?: ResponseType;
 }
 
 class ApiHelper {
@@ -32,7 +34,14 @@ class ApiHelper {
             delete params.extraParams
         }
 
-        api.get(API_BASE_URL + url + extraParams, {params: params})
+        let responseType = undefined;
+
+        if (params?.responseType) {
+            responseType = params.responseType
+            delete params.responseType
+        }
+
+        api.get(API_BASE_URL + url + extraParams, {params, responseType})
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })

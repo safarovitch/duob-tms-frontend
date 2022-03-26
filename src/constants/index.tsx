@@ -46,11 +46,6 @@ export enum AccountabilityType {
     REFUND = "REFUND"
 }
 
-export enum AccountabilityMoneyUnit {
-    TJS = "TJS",
-    USD = "USD"
-}
-
 export enum ApplicationStatusEnum {
     WAITING = "WAITING",
     PAID = "PAID",
@@ -86,8 +81,8 @@ export enum TypeCalculationCargoEnum {
 export const mapOfTypeCalculationCargoEnum = new Map(
     [
         [TypeCalculationCargoEnum.calculationRateWeight, "Расчет по норме и весу"],
-        [TypeCalculationCargoEnum.negotiatedPrice, "Ручная цена"],
-        [TypeCalculationCargoEnum.manualPrice, "Договорная цена"],
+        [TypeCalculationCargoEnum.negotiatedPrice, "Договорная цена"],
+        [TypeCalculationCargoEnum.manualPrice, "Ручная цена"],
     ]
 )
 

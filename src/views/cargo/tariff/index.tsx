@@ -11,6 +11,7 @@ import {useSnackbar} from "notistack";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import warehouseService from "../../../services/WarehouseService";
 import LoadingLayout from "../../../components/LoadingLayout";
+import cargoService from "../../../services/CargoService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,6 +29,7 @@ const Index: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [warehouses, setWarehouses] = useState<Warehouse[]>([])
+    const [prevDate, setPrevDate] = useState<string>()
     const cargoTariff = useSelector((state: { selectedCargoTariff: CargoTariff }) => state.selectedCargoTariff)
 
     useEffect(() => {
@@ -38,12 +40,20 @@ const Index: React.FC = () => {
                 setLoading(true)
 
                 const dataWarehouses: any = await warehouseService.getAllWarehouse();
+                let datePrevDate: any
+
+                if (cargoTariff) {
+                    datePrevDate = await cargoService.getPrevDateCargoTariff(cargoTariff.id!);
+                }
 
                 if (dataWarehouses.length === 0) {
                     history.go(-1)
                     enqueueSnackbar('Добавьте с начала склад', {variant: 'info'})
                 } else if (!cancel) {
                     setWarehouses(dataWarehouses)
+                    if (cargoTariff) {
+                        setPrevDate(datePrevDate)
+                    }
                 }
             } catch (error: any) {
                 !cancel && setHasError(true)
@@ -54,7 +64,7 @@ const Index: React.FC = () => {
         })()
 
         return () => {cancel = true}
-    }, [history, enqueueSnackbar])
+    }, [history, enqueueSnackbar, cargoTariff])
 
     if (!cargoTariff && history.location.pathname.includes('edit')) {
         history.go(-1);
@@ -64,11 +74,11 @@ const Index: React.FC = () => {
     return (
         <Page title={'Тарифы'}>
             {
-                warehouses.length > 0 ? (
+                warehouses.length > 0 && (cargoTariff ? prevDate : true ) ? (
                     <Container className={classes.root} maxWidth="lg">
                         <Header cargoTariff={cargoTariff}/>
                         <Box mt={3}>
-                            <CargoTariffForm cargoTariff={cargoTariff} warehouses={warehouses}/>
+                            <CargoTariffForm cargoTariff={cargoTariff} warehouses={warehouses} prevDate={prevDate} />
                         </Box>
                     </Container>
                 ) : <LoadingLayout loading={loading} hasError={hasError} />

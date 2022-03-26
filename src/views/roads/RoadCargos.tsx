@@ -20,6 +20,8 @@ import {setSelectedCustomerCargo} from "../../store/actions/customerActions";
 import roadService from "../../services/RoadService";
 import {RoadTotalCargos} from "../../model/Road";
 import useDebounce from "../../hooks/useDebounce";
+import usePermission from "../../hooks/usePermission";
+import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,6 +53,7 @@ const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
     const [totalCargos, setTotalCargos] = useState<RoadTotalCargos>()
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;
@@ -83,9 +86,7 @@ const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
             try {
                 const data: any = await roadService.getRoadTotalCargos(roadId, debouncedClientCode, debouncedBarcode)
 
-                if (!cancel) {
-                    setTotalCargos(data)
-                }
+                if (!cancel) setTotalCargos(data)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             }
@@ -212,9 +213,13 @@ const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
                                 <Grid item>
                                     Мест: <b>{totalCargos.totalPlace}</b>
                                 </Grid>
-                                <Grid item>
-                                    Стоимост: <b>{totalCargos.amount} $</b>
-                                </Grid>
+                                {
+                                    isAdmin && (
+                                        <Grid item>
+                                            Стоимост: <b>{totalCargos.amount} $</b>
+                                        </Grid>
+                                    )
+                                }
                                 <Grid item>
                                     Объем: <b>{totalCargos.totalVolume} м3</b>
                                 </Grid>

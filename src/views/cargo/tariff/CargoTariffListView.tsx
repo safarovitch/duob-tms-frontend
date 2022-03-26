@@ -120,7 +120,7 @@ const CargoTariffListView: React.FC = () => {
                                 </TableRow>
                             </TableHead>
                             {
-                                rows ? (
+                                rows && total > 0 ? (
                                     <TableBody>
                                         {
                                             Object.keys(rows).map((value: string) => (

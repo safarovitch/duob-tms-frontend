@@ -9,7 +9,7 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles, Checkbox, Typography
+    makeStyles, Checkbox, Typography, FormControlLabel
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const hasSelectedCargoType = (cargoType: CargoType) => {
-    return cargoType.calculationRateWeight || cargoType.discount || cargoType.manualPrice || cargoType.negotiatedPrice
+    return cargoType.calculationRateWeight || cargoType.manualPrice || cargoType.negotiatedPrice
 }
 
 const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) => {
@@ -129,10 +129,8 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
                     className={classes.root}
                     onSubmit={props.handleSubmit}
                 >
-
                     <Card>
                         <CardContent>
-
                             <Grid
                                 container
                                 spacing={3}
@@ -159,88 +157,87 @@ const CargoTypeForm: React.FC<CargoTypeFormProps> = (props: CargoTypeFormProps) 
                                     md={12}
                                     xs={12}
                                 >
-                                    <label onClick={props.handleChange} className={classes.checkbox}>
-                                        <Checkbox
-                                            checked={props.values.manualPrice}
-                                            name="manualPrice"
-                                            color="primary"
-                                            onChange={(e) => {
-                                                let cargoType = {...props.values}
-                                                cargoType.manualPrice = e.target.checked
-                                                setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                props.handleChange(e)
-                                            }}
-                                        />
-                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                            Ручная цена
-                                        </Typography>
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={props.values.manualPrice}
+                                                name="manualPrice"
+                                                color="primary"
+                                                onChange={(e) => {
+                                                    let cargoType = {...props.values}
+                                                    cargoType.manualPrice = e.target.checked
+                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                    props.setFieldValue("negotiatedPrice", false)
+                                                    props.setFieldValue("calculationRateWeight", false)
+                                                    props.handleChange(e)
+                                                }}
+                                            />
+                                        }
+                                        label="Ручная цена"
+                                    />
                                 </Grid>
                                 <Grid
                                     item
                                     md={12}
                                     xs={12}
                                 >
-                                    <label onClick={props.handleChange} className={classes.checkbox}>
-                                        <Checkbox
-                                            checked={props.values.negotiatedPrice}
-                                            name="negotiatedPrice"
-                                            color="primary"
-                                            onChange={(e) => {
-                                                let cargoType = {...props.values}
-                                                cargoType.negotiatedPrice = e.target.checked
-                                                setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                props.handleChange(e)
-                                            }}
-                                        />
-                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                            Всегда использовать договорную цену
-                                        </Typography>
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={props.values.negotiatedPrice}
+                                                name="negotiatedPrice"
+                                                color="primary"
+                                                onChange={(e) => {
+                                                    let cargoType = {...props.values}
+                                                    cargoType.negotiatedPrice = e.target.checked
+                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                    props.setFieldValue("manualPrice", false)
+                                                    props.handleChange(e)
+                                                }}
+                                            />
+                                        }
+                                        label="Всегда использовать договорную цену"
+                                    />
                                 </Grid>
                                 <Grid
                                     item
                                     md={12}
                                     xs={12}
                                 >
-                                    <label onClick={props.handleChange} className={classes.checkbox}>
-                                        <Checkbox
-                                            checked={props.values.calculationRateWeight}
-                                            name="calculationRateWeight"
-                                            color="primary"
-                                            onChange={(e) => {
-                                                let cargoType = {...props.values}
-                                                cargoType.calculationRateWeight = e.target.checked
-                                                setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                props.handleChange(e)
-                                            }}
-                                        />
-                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                            Расчет по весу и норме
-                                        </Typography>
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={props.values.calculationRateWeight}
+                                                name="calculationRateWeight"
+                                                color="primary"
+                                                onChange={(e) => {
+                                                    let cargoType = {...props.values}
+                                                    cargoType.calculationRateWeight = e.target.checked
+                                                    setSelectCargoType(hasSelectedCargoType(cargoType))
+                                                    props.setFieldValue("manualPrice", false)
+                                                    props.handleChange(e)
+                                                }}
+                                            />
+                                        }
+                                        label="Расчет по весу и норме"
+                                    />
                                 </Grid>
                                 <Grid
                                     item
                                     md={12}
                                     xs={12}
                                 >
-                                    <label onClick={props.handleChange} className={classes.checkbox}>
-                                        <Checkbox
-                                            checked={props.values.discount}
-                                            name="discount"
-                                            color="primary"
-                                            onChange={(e) => {
-                                                let cargoType = {...props.values}
-                                                cargoType.discount = e.target.checked
-                                                setSelectCargoType(hasSelectedCargoType(cargoType))
-                                                props.handleChange(e)
-                                            }}
-                                        />
-                                        <Typography variant="subtitle1" className={classes.checkboxLabel}>
-                                            Применять скидку
-                                        </Typography>
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={props.values.discount}
+                                                name="discount"
+                                                color="primary"
+                                                onChange={props.handleChange}
+                                            />
+                                        }
+                                        label="Применять скидку"
+                                    />
                                 </Grid>
                                 {
                                     !selectedCargoType && (

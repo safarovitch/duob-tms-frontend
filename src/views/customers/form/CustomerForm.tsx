@@ -171,7 +171,15 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                                         name="phoneNumber"
                                         required
                                         onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
+                                        onChange={(e) => {
+                                            let value = e.target.value
+
+                                            if (!isNaN(Number(value)) && value.length > 9) return
+
+                                            let lastSymbol = value[value.length - 1]
+                                            isNaN(Number(lastSymbol)) && (value = value.slice(0, value.length - 1))
+                                            props.setFieldValue("phoneNumber", value)
+                                        }}
                                         value={props.values.phoneNumber}
                                         variant="outlined"
                                     />

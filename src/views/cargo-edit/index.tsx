@@ -10,7 +10,7 @@ import {
     Container,
     Grid,
     Link,
-    makeStyles, MenuItem, TextField,
+    makeStyles, TextField,
     Typography
 } from "@material-ui/core";
 import {useSnackbar} from "notistack";
@@ -79,7 +79,7 @@ const CargoEdit: React.FC = () => {
                 const dataCustomers: any = await customerService.getOptionCustomers()
                 const dataProviders: any = await providerService.getOptionProviders()
                 const dataCargoTypes: any = await cargoService.getOptionCargoTypes()
-                const dataCargoTariffs: any = await cargoService.getOptionCargoTariffs()
+                const dataCargoTariffs: any = await cargoService.getOptionCargoTariffs(dataCargo.tariffId)
                 const dataCargoProducts: any = await cargoService.getOptionProducts()
                 const dataCargoCustomCodes: any = await cargoService.getOptionCustomCodes()
 
@@ -123,7 +123,8 @@ const CargoEdit: React.FC = () => {
         lengthCargo: cargo?.lengthCargo || 0,
         widthCargo: cargo?.widthCargo || 0,
         heightCargo: cargo?.heightCargo || 0,
-        typeCalculation: cargo?.typeCalculation as TypeCalculationCargoEnum || TypeCalculationCargoEnum.calculationRateWeight
+        typeCalculation: cargo?.typeCalculation as TypeCalculationCargoEnum || TypeCalculationCargoEnum.calculationRateWeight,
+        priceOne: cargo?.priceOne || 0,
     }
 
     const validationSchema = Yup.object().shape({
@@ -356,7 +357,7 @@ const CargoEdit: React.FC = () => {
                                                         xs={12}
                                                     >
                                                         <Autocomplete
-                                                            options={cargoCustomCodes.filter((item: CargoCustomCode) => item?.productDto?.id === props.values.productId)}
+                                                            options={cargoCustomCodes.filter((item: CargoCustomCode) => item.productId === props.values.productId)}
                                                             getOptionLabel={option => option.code!}
                                                             getOptionSelected={(option, value) => option.code === value.code}
                                                             value={cargoCustomCode}
@@ -460,37 +461,37 @@ const CargoEdit: React.FC = () => {
                                                         xs={12}
                                                     >
                                                         <TextField
-                                                            select
-                                                            error={Boolean(props.touched.typeCalculation && props.errors.typeCalculation)}
                                                             fullWidth
-                                                            helperText={props.touched.typeCalculation && props.errors.typeCalculation}
-                                                            label="Склад"
-                                                            name="typeCalculation"
-                                                            onBlur={props.handleBlur}
-                                                            onChange={props.handleChange}
-                                                            value={props.values.typeCalculation}
+                                                            label="Тип расчета"
+                                                            value={mapOfTypeCalculationCargoEnum.get(props.values.typeCalculation as TypeCalculationCargoEnum)}
                                                             variant="outlined"
-                                                            required
-                                                            SelectProps={{
-                                                                MenuProps: {
-                                                                    variant: "selectedMenu",
-                                                                    anchorOrigin: {
-                                                                        vertical: "bottom",
-                                                                        horizontal: "left"
-                                                                    },
-                                                                    transformOrigin: {
-                                                                        vertical: "top",
-                                                                        horizontal: "left"
-                                                                    },
-                                                                    getContentAnchorEl: null
-                                                                }
-                                                            }}
-                                                        >
-                                                            {Object.keys(TypeCalculationCargoEnum).map((item, index) => (
-                                                                <MenuItem key={index} value={item}>{mapOfTypeCalculationCargoEnum.get(item as TypeCalculationCargoEnum)}</MenuItem>
-                                                            ))}
-                                                        </TextField>
+                                                            disabled
+                                                        />
                                                     </Grid>
+                                                    {
+                                                        props.values.typeCalculation === TypeCalculationCargoEnum.manualPrice && (
+                                                            <Grid
+                                                                item
+                                                                md={4}
+                                                                xs={12}
+                                                            >
+                                                                <TextField
+                                                                    error={Boolean(props.touched.priceOne && props.errors.priceOne)}
+                                                                    fullWidth
+                                                                    helperText={props.touched.priceOne && props.errors.priceOne}
+                                                                    label="Введите цену"
+                                                                    placeholder="0"
+                                                                    name="priceOne"
+                                                                    onBlur={props.handleBlur}
+                                                                    onChange={props.handleChange}
+                                                                    value={props.values.priceOne || ''}
+                                                                    variant="outlined"
+                                                                    type="number"
+                                                                    required
+                                                                />
+                                                            </Grid>
+                                                        )
+                                                    }
                                                 </Grid>
                                                 <Box mt={2} pb={1} className={classes.buttons}>
                                                     <Button

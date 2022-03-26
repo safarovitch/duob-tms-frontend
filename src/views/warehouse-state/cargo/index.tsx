@@ -90,7 +90,7 @@ const CargoShow: React.FC = () => {
                                         <Grid container spacing={2}>
                                             {cargos.map((cargo, index) => (
                                                 <Grid item key={index}>
-                                                    {selectedCargo.date === cargo.date ? (
+                                                    {selectedCargo.syncDate === cargo.syncDate ? (
                                                         <Chip
                                                             label={cargo.date}
                                                             clickable

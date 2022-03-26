@@ -26,6 +26,8 @@ import {NavLink as RouterLink} from "react-router-dom";
 import {ArrowRight as ArrowRightIcon} from "react-feather";
 import DeleteButton from "../../../components/DeleteButton";
 import {Currency, mapOfRoadStatus} from "../../../constants";
+import usePermission from "../../../hooks/usePermission";
+import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +47,7 @@ const RoadListView: React.FC = () => {
     const [size, setSize] = useState(10)
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<RoadList[]>([])
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;
@@ -109,7 +112,11 @@ const RoadListView: React.FC = () => {
                                             <TableCell>Номер прицепа</TableCell>
                                             <TableCell>Объем</TableCell>
                                             <TableCell>Вес</TableCell>
-                                            <TableCell>Сумма</TableCell>
+                                            {
+                                                isAdmin && (
+                                                    <TableCell>Сумма</TableCell>
+                                                )
+                                            }
                                             <TableCell>Кол-во грузов</TableCell>
                                             <TableCell>Статус</TableCell>
                                             <TableCell align="center" width="15%">Действия</TableCell>
@@ -181,7 +188,11 @@ const RoadListView: React.FC = () => {
                                                                 )
                                                             }
                                                         </TableCell>
-                                                        <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
+                                                        {
+                                                            isAdmin && (
+                                                                <TableCell>{row.totalAmount} {Currency.USD}</TableCell>
+                                                            )
+                                                        }
                                                         <TableCell>
                                                             {row.cargoCount}
                                                         </TableCell>

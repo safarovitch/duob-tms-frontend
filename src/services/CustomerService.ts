@@ -1,6 +1,7 @@
 import api from '../utils/Api'
 import {CreditCreateRequest, CreditPaidRequest, Customer} from "../model/Customer";
 import {API_BASE_URL} from "../config";
+import apiHelper from "./ApiHelper";
 
 class CustomerService {
     getBalance = () => new Promise((resolve, reject) => {
@@ -81,11 +82,27 @@ class CustomerService {
             }).catch(error => {reject(error)})
     })
 
-    getActiveCargos = (id: string, page: number, size: number, startDate: string, endDate:string, barcode: string, status: string) => new Promise((resolve, reject) => {
-        api.get(`${API_BASE_URL}/clients/income-cargos${id ? `/${id}` : ``}?${encodeURI(`extraParams[cargoStatus]=${status}&extraParams[barcode]=${barcode}`)}`, {params: {page, size, startDate, endDate}})
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+    getActiveCargos = (
+        id: number,
+        page: number,
+        size: number,
+        startDate: string,
+        endDate:string,
+        barcode: string,
+        status: string
+    ) => apiHelper.get(
+        `/clients/income-cargos${id ? `/${id}` : ``}`,
+        {page, size, startDate, endDate, extraParams: {cargoStatus: status, barcode}}
+    )
+
+    getActiveTotalCargos = (id: number, startDate: string, endDate:string, barcode: string, status: string) =>
+        apiHelper.get(`/clients${id ? `/${id}` : ``}/total-cargos`, {startDate, endDate, extraParams: {status, barcode}})
+
+    generateCargos = (customerId: number, startDate: string, endDate:string) =>
+        apiHelper.get(`/clients/${customerId}/volume-report/generate`, {startDate, endDate})
+
+    getGenerateCargos = (fileName: string) =>
+        apiHelper.get(`/clients/${fileName}/volume-report/download`, {responseType: "arraybuffer"})
 
     getReconciliationActs = (id: string, page: number, size: number, startDate: string, endDate: string) => new Promise((resolve, reject) => {
         api.get(`${API_BASE_URL}/clients/reconciliation${id ? `/${id}` : ``}`, {params: {page, size, startDate, endDate}})
