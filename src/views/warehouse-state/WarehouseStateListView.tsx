@@ -77,6 +77,7 @@ const WarehouseStateListView: React.FC = () => {
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
     const [rows, setRows] = useState<WarehouseStateCargo[]>([])
     const [warehouseStateTotal, setWarehouseStateTotal] = useState<WarehouseStateTotal>()
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;
@@ -399,9 +400,13 @@ const WarehouseStateListView: React.FC = () => {
                                                     <Grid item>
                                                         Мест: <b>{warehouseStateTotal.totalPlace}</b>
                                                     </Grid>
-                                                    <Grid item>
-                                                        Стоимост: <b>{warehouseStateTotal.amount} $</b>
-                                                    </Grid>
+                                                    {
+                                                        isAdmin && (
+                                                            <Grid item>
+                                                                Стоимост: <b>{warehouseStateTotal.amount} $</b>
+                                                            </Grid>
+                                                        )
+                                                    }
                                                     <Grid item>
                                                         Обьем: <b>{warehouseStateTotal.totalVolume} м3</b>
                                                     </Grid>

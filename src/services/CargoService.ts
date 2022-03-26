@@ -1,6 +1,7 @@
 import api from "../utils/Api";
 import {API_BASE_URL} from "../config";
 import {CargoCustomCode, CargoProduct, CargoTariff, CargoType} from "../model/Cargo";
+import apiHelper from "./ApiHelper";
 
 class CustomerService {
     getOptionProducts = () => new Promise((resolve, reject)  => {
@@ -132,8 +133,8 @@ class CustomerService {
             .catch((error) => {reject(error)})
     })
 
-    getOptionCargoTariffs = () => new Promise((resolve, reject)  => {
-        api.get(API_BASE_URL + `/tariffs/option`)
+    getOptionCargoTariffs = (tariffId: number) => new Promise((resolve, reject)  => {
+        api.get(API_BASE_URL + `/tariffs/option?tariffId=${tariffId}`)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
@@ -152,6 +153,8 @@ class CustomerService {
             .catch(error => reject(error))
     })
 
+    getPrevDateCargoTariff = (id: number) => apiHelper.get(`/tariffs/${id}/prev-date`)
+
     postCargoTariff = (cargoTariff: CargoTariff) => new Promise((resolve, reject)  => {
         api.post(API_BASE_URL + `/tariffs`, cargoTariff)
             .then((response) => {
@@ -159,6 +162,7 @@ class CustomerService {
             })
             .catch((error) => {reject(error)})
     })
+
     updateCargoTariff = (cargoTariff: CargoTariff) => new Promise((resolve, reject)  => {
         api.put(API_BASE_URL + `/tariffs`, cargoTariff)
             .then((response) => {

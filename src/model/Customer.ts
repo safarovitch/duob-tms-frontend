@@ -53,6 +53,13 @@ export interface CustomerCargo {
     cargos: CargoGeneral[]
 }
 
+export interface CustomerTotalCargos {
+    totalPlace: number;
+    amount: number;
+    totalVolume: number;
+    totalWeight: number;
+}
+
 export interface CargoGeneral {
     roadId: number;
     warehouseId: number;

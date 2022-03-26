@@ -13,12 +13,13 @@ import WAREHOUSE_STATE from "./WarehouseState";
 import STORAGE_COST from "./StorageCost";
 import NOTIFICATION from "./Notification";
 import CONVERSION from "./Conversion";
-import {ADMIN, MANAGER} from "./roles";
+import {ADMIN, CLIENT, MANAGER} from "./roles";
 import INVOICE from "./Invoice";
 
 const PERMISSIONS = {
     MANAGER: [MANAGER],
     ADMIN: [ADMIN],
+    CLIENT: [CLIENT],
     ANALYTICS,
     EMPLOYEE,
     WAREHOUSE,

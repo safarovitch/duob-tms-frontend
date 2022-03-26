@@ -10,7 +10,7 @@ import {
     TableRow, TextField,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {CustomerCargo} from "../../../../model/Customer";
+import {CustomerCargo, CustomerTotalCargos} from "../../../../model/Customer";
 import customerService from "../../../../services/CustomerService";
 import {useSnackbar} from "notistack";
 import errorMessageHandler from "../../../../utils/errorMessageHandler";
@@ -28,15 +28,21 @@ import {
 import DoneIcon from "@material-ui/icons/Done";
 import useDebounce from "../../../../hooks/useDebounce";
 import moment from "moment";
+import DownloadCargosButton from "./DownloadCargosButton";
+import usePermission from "../../../../hooks/usePermission";
+import PERMISSIONS from "../../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         minHeight: '100%',
         paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3)
     },
     queryField: {
         width: 150
+    },
+    totalBalance: {
+        paddingLeft: theme.spacing(3),
+        paddingTop: theme.spacing(2),
     },
 }));
 
@@ -56,6 +62,9 @@ const CargoListView: React.FC = () => {
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
     const {id} = useParams<{id: string}>()
+    const [totalCargos, setTotalCargos] = useState<CustomerTotalCargos>()
+    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+    const isClient = usePermission(PERMISSIONS.CLIENT)
 
     useEffect(() => {
         let cancel = false;
@@ -65,7 +74,7 @@ const CargoListView: React.FC = () => {
                 setLoading(true)
                 setRows([])
 
-                const data: any = await customerService.getActiveCargos(id, page, size, startDate, endDate, debouncedBarcode, selectedStatus)
+                const data: any = await customerService.getActiveCargos(Number(id), page, size, startDate, endDate, debouncedBarcode, selectedStatus)
 
                 if (!cancel) {
                     setRows(data.content)
@@ -80,6 +89,22 @@ const CargoListView: React.FC = () => {
 
         return () => {cancel = true}
     }, [id, page, size, startDate, endDate, debouncedBarcode, selectedStatus, enqueueSnackbar])
+
+    useEffect(() => {
+        let cancel = false;
+
+        (async () => {
+            try {
+                const data: any = await customerService.getActiveTotalCargos(Number(id), startDate, endDate, debouncedBarcode, selectedStatus)
+
+                if (!cancel) setTotalCargos(data)
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            }
+        })()
+
+        return () => {cancel = true}
+    }, [id, startDate, endDate, debouncedBarcode, enqueueSnackbar, selectedStatus])
 
     const handleSelectStatus = (status: string) => {
         setSelectedStatus(status)
@@ -158,6 +183,13 @@ const CargoListView: React.FC = () => {
                                     placeholder="Штрих-код"
                                     value={barcode}
                                     variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item>
+                                <DownloadCargosButton
+                                    customerId={Number(id)}
+                                    startDate={startDate}
+                                    endDate={endDate}
                                 />
                             </Grid>
                         </Grid>
@@ -261,17 +293,45 @@ const CargoListView: React.FC = () => {
                     </Table>
                 </Box>
             </PerfectScrollbar>
-            <TablePagination
-                component="div"
-                count={total}
-                onPageChange={handlePageChange}
-                page={page - 1}
-                labelRowsPerPage={'Строк на странице:'}
-                rowsPerPage={size}
-                rowsPerPageOptions={[20, 50, 100]}
-                onRowsPerPageChange={handleRowsPerPageChange}
-                labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
-            />
+            <Grid container justifyContent="space-between">
+                <Grid item className={classes.totalBalance}>
+                    {
+                        totalCargos && rows.length > 0 && (
+                            <Grid container spacing={2}>
+                                <Grid item>
+                                    Мест: <b>{totalCargos.totalPlace}</b>
+                                </Grid>
+                                {
+                                    (isAdmin || isClient) && (
+                                        <Grid item>
+                                            Стоимост: <b>{totalCargos.amount} $</b>
+                                        </Grid>
+                                    )
+                                }
+                                <Grid item>
+                                    Объем: <b>{totalCargos.totalVolume} м3</b>
+                                </Grid>
+                                <Grid item>
+                                    Вес: <b>{totalCargos.totalWeight} кг</b>
+                                </Grid>
+                            </Grid>
+                        )
+                    }
+                </Grid>
+                <Grid item>
+                    <TablePagination
+                        component="div"
+                        count={total}
+                        onPageChange={handlePageChange}
+                        page={page - 1}
+                        labelRowsPerPage={'Строк на странице:'}
+                        rowsPerPage={size}
+                        rowsPerPageOptions={[20, 50, 100]}
+                        onRowsPerPageChange={handleRowsPerPageChange}
+                        labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
+                    />
+                </Grid>
+            </Grid>
         </Card>
     )
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState,} from 'react';
+import React, {useEffect, useState,} from 'react';
 import {
     Box,
     Card,
@@ -19,7 +19,6 @@ import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} fr
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {useSnackbar} from "notistack";
 import {RefillBalanceApplication} from "../../../model/Application";
 import {setSelectedRefillBalance} from "../../../store/actions/applicationAction";
 import applicationService from "../../../services/ApplicationService";
@@ -31,31 +30,28 @@ import {
     mapOfActionTypeApplication,
     mapOfStatusApplication
 } from "../../../constants";
-import useDebounce from "../../../hooks/useDebounce";
-import moment from "moment";
 import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
 import DoneIcon from "@material-ui/icons/Done";
 import useCashTotal from "../useCashTotal";
 import getStyles from "../getStyles";
+import {withTableFiltersInterface, withTableFilters} from "../../../hoc/withTableFilters";
 
-const RefillBalanceListView: React.FC<{warehouseId?: number}> = ({warehouseId}) => {
+interface RefillBalanceProps extends withTableFiltersInterface {
+    warehouseId?: number;
+}
+
+const RefillBalanceListView: React.FC<RefillBalanceProps> = (props) => {
+    const {warehouseId, page, setPage, handlePageChange, size, handleRowsPerPageChange, query, debouncedSearchTerm,
+        handleQueryChange, loading, setLoading, total, setTotal, updateRows, setUpdateRows, startDate,
+        handleStartDateChange, endDate, handleEndDateChange, enqueueSnackbar} = props
+
     const classes = getStyles()
     const dispatch = useDispatch()
-    const {enqueueSnackbar} = useSnackbar()
-    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
-    const [page, setPage] = useState(1)
-    const [size, setSize] = useState(10)
-    const [query, setQuery] = useState('')
-    const debouncedSearchTerm = useDebounce(query, 500)
-    const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
-    const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
     const statuses = ['PAID', 'WAITING']
     const [selectedStatus, setSelectedStatus] = useState<string>('')
-    const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<RefillBalanceApplication[]>([])
-    const [total, setTotal] = useState<number>(0)
     const canEdit = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.EDIT)
     const canDelete = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.DELETE)
     const cashTotal = useCashTotal(CashTotalApplicationEnum.BALANCE_CLIENT, updateRows, startDate, endDate, warehouseId)
@@ -68,7 +64,8 @@ const RefillBalanceListView: React.FC<{warehouseId?: number}> = ({warehouseId}) 
                 setLoading(true)
                 setRows([])
 
-                const data: any = await applicationService.getFilteredRefillBalances(page, size, debouncedSearchTerm, startDate, endDate, selectedStatus)
+                const data: any = await applicationService.getFilteredRefillBalances(page, size, debouncedSearchTerm,
+                    startDate, endDate, selectedStatus)
 
                 if (!cancel) {
                     setRows(data.content)
@@ -82,35 +79,7 @@ const RefillBalanceListView: React.FC<{warehouseId?: number}> = ({warehouseId}) 
         })()
 
         return () => {cancel = true}
-    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
-
-    const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist();
-        setSize(Number(event.target.value));
-        setPage(1);
-    }
-
-    const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage + 1);
-    }
-
-    const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setQuery(event.target.value)
-        setPage(1);
-    }
-
-    const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setStartDate(event.target.value)
-        setPage(1)
-    }
-
-    const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setEndDate(event.target.value)
-        setPage(1)
-    }
+    }, [setLoading, setTotal, updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const handleSelectStatus = (status: string) => {
         if (selectedStatus === status) setSelectedStatus('')
@@ -314,7 +283,7 @@ const RefillBalanceListView: React.FC<{warehouseId?: number}> = ({warehouseId}) 
                         page={page - 1}
                         labelRowsPerPage={'Строк на странице:'}
                         rowsPerPage={size}
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[20, 30, 50]}
                         onRowsPerPageChange={handleRowsPerPageChange}
                         labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                     />
@@ -324,4 +293,4 @@ const RefillBalanceListView: React.FC<{warehouseId?: number}> = ({warehouseId}) 
     )
 }
 
-export default RefillBalanceListView;
+export default withTableFilters(RefillBalanceListView);

@@ -39,7 +39,7 @@ const LoadedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, update
 
             await roadService.loadedRoad(roadId)
 
-            enqueueSnackbar('Рейс загружен', {variant: 'success'})
+            enqueueSnackbar(`Рейс ${status === RoadStatusEnum.LOADED ? "активен" : "загружен"}`, {variant: 'success'})
             updateRoad()
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -73,7 +73,7 @@ const LoadedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, update
             <ConfirmModal
                 isOpen={isConfirmModalOpen}
                 title={'Вы уверены?'}
-                description={`Пожалуйста, убедитесь, что именно этот рейс ${status === RoadStatusEnum.LOADED ? "активный" : "загружен" }.`}
+                description={`Пожалуйста, убедитесь, что именно этот рейс ${status === RoadStatusEnum.LOADED ? "активный" : "загружен"}.`}
                 onClose={() => setOpen(false)}
                 onAccept={handleAccept}
             />

@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState,} from 'react';
+import React, {useEffect, useState,} from 'react';
 import {
     Box, Card, Chip, Grid, IconButton, InputAdornment, SvgIcon, Table, TableBody, TableCell,
     TableHead, TablePagination, TableRow, TextField, Typography,
@@ -7,7 +7,6 @@ import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} fr
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {NavLink as RouterLink} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {useSnackbar} from "notistack";
 import {IncomeByArticleApplication} from "../../../model/Application";
 import {setSelectedIncomeArticle} from "../../../store/actions/applicationAction";
 import applicationService from "../../../services/ApplicationService";
@@ -18,26 +17,23 @@ import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
 import DoneIcon from "@material-ui/icons/Done";
-import useDebounce from "../../../hooks/useDebounce";
-import moment from "moment";
 import useCashTotal from "../useCashTotal";
 import getStyles from "../getStyles";
+import {withTableFilters, withTableFiltersInterface} from "../../../hoc/withTableFilters";
 
-const IncomeArticleListView: React.FC<{warehouseId?: number}> = ({warehouseId}) => {
+interface IncomeArticleProps extends withTableFiltersInterface {
+    warehouseId?: number;
+}
+
+const IncomeArticleListView: React.FC<IncomeArticleProps> = (props) => {
+    const {warehouseId, page, setPage, handlePageChange, size, handleRowsPerPageChange, query, debouncedSearchTerm,
+        handleQueryChange, loading, setLoading, total, setTotal, updateRows, setUpdateRows, startDate,
+        handleStartDateChange, endDate, handleEndDateChange, enqueueSnackbar} = props
+
     const classes = getStyles()
     const dispatch = useDispatch()
-    const {enqueueSnackbar} = useSnackbar()
-    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
-    const [total, setTotal] = useState<number>(0)
-    const [page, setPage] = useState(1)
-    const [size, setSize] = useState(20)
-    const [query, setQuery] = useState('')
-    const debouncedSearchTerm = useDebounce(query, 500)
-    const [startDate, setStartDate] = useState(moment().subtract(7, 'days').format('YYYY-MM-DD'))
-    const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
     const statuses = ['PAID', 'WAITING']
     const [selectedStatus, setSelectedStatus] = useState<string>('')
-    const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<IncomeByArticleApplication[]>([])
     const canEdit = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.EDIT)
     const canDelete = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.DELETE)
@@ -65,35 +61,7 @@ const IncomeArticleListView: React.FC<{warehouseId?: number}> = ({warehouseId}) 
         })()
 
         return () => {cancel = true}
-    }, [updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
-
-    const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist();
-        setSize(Number(event.target.value));
-        setPage(1);
-    };
-
-    const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage + 1);
-    };
-
-    const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setQuery(event.target.value)
-        setPage(1);
-    }
-
-    const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setStartDate(event.target.value)
-        setPage(1)
-    }
-
-    const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setEndDate(event.target.value)
-        setPage(1)
-    }
+    }, [setLoading, setTotal, updateRows, enqueueSnackbar, page, size, debouncedSearchTerm, startDate, endDate, selectedStatus])
 
     const handleSelectStatus = (status: string) => {
         if (selectedStatus === status) setSelectedStatus('')
@@ -304,4 +272,4 @@ const IncomeArticleListView: React.FC<{warehouseId?: number}> = ({warehouseId}) 
     )
 }
 
-export default IncomeArticleListView;
+export default withTableFilters(IncomeArticleListView);

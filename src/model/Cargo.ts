@@ -91,10 +91,13 @@ export interface CargoTariff {
     cargoTypeDto?: CargoType;
     defaultValue: boolean;
     updatedDate?: string;
+    createdDate?: null;
+    updatedBy?: string;
 }
 
 export interface CargoTariffFormProps {
-    cargoTariff: CargoTariff;
+    cargoTariff?: CargoTariff;
+    prevDate?: string;
     warehouses: Warehouse[];
 }
 

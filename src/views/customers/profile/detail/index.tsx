@@ -52,7 +52,7 @@ const Detail: React.FC<{ stuffId: string, tabPath: string, customer: Customer }>
                 </Tabs>
                 <Divider/>
                 <CustomerTabPanel index={'cargos'} value={currentTab}>
-                    <CargoListView/>
+                    <CargoListView />
                 </CustomerTabPanel>
                 <CustomerTabPanel index={'reconciliation-act'} value={currentTab}>
                     <ReconciliationActListView/>

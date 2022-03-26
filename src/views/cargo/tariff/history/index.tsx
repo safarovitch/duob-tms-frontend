@@ -72,7 +72,9 @@ const Index: React.FC = () => {
                                         <Table>
                                             <TableHead>
                                                 <TableRow>
-                                                    <TableCell>Дата</TableCell>
+                                                    <TableCell>Дата действия</TableCell>
+                                                    <TableCell>Дата изменения</TableCell>
+                                                    <TableCell>Сотрудник</TableCell>
                                                     <TableCell>Название тарифа</TableCell>
                                                     <TableCell>Филиал</TableCell>
                                                     <TableCell>Описание</TableCell>
@@ -97,7 +99,9 @@ const Index: React.FC = () => {
                                                 {
                                                     cargoTariffs.map(row => (
                                                         <TableRow hover key={row.id}>
+                                                            <TableCell>{row.createdDate}</TableCell>
                                                             <TableCell>{row.updatedDate}</TableCell>
+                                                            <TableCell>{row.updatedBy}</TableCell>
                                                             <TableCell>{row.name}</TableCell>
                                                             <TableCell>{row.warehouseDto?.name}</TableCell>
                                                             <TableCell>{row.description}</TableCell>

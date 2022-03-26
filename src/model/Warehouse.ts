@@ -47,6 +47,7 @@ export interface WarehouseStateCargo {
     providerCode: string;
     groupCargo: boolean;
     date: string;
+    syncDate?: string;
 }
 
 export interface WarehouseStateCargoRequest {
@@ -62,6 +63,7 @@ export interface WarehouseStateCargoRequest {
     widthCargo: number;
     heightCargo: number;
     typeCalculation: TypeCalculationCargoEnum;
+    priceOne: number;
     createdDate?: string;
     updatedDate?: string;
 }

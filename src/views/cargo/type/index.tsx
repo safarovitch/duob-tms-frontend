@@ -31,7 +31,7 @@ const Index: React.FC = () => {
             className={classes.root}
             title={'Вид груза'}
         >
-            <Container maxWidth="lg">
+            <Container maxWidth="md">
                 <Header cargoType={cargoType}/>
                 <Box mt={3}>
                     <CargoTypeForm cargoType={cargoType}/>

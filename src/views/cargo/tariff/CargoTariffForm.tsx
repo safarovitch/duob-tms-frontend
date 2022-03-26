@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as Yup from 'yup';
 import {Formik, FormikProps} from 'formik';
 import {useSnackbar} from 'notistack';
@@ -9,7 +9,7 @@ import {
     CardContent,
     Grid,
     TextField,
-    makeStyles, MenuItem, InputAdornment
+    makeStyles, MenuItem, InputAdornment, FormControlLabel, Checkbox
 } from '@material-ui/core';
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -17,6 +17,9 @@ import {CargoTariff, CargoTariffFormProps} from "../../../model/Cargo";
 import cargoService from "../../../services/CargoService";
 import {deleteSelectedCargoTariff} from "../../../store/actions/cargoActions";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
+import {KeyboardDatePicker} from "@material-ui/pickers";
+import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -35,11 +38,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouses}) => {
+const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouses, prevDate}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const dispatch = useDispatch();
+    const [createTariff, setCreateTariff] = useState<boolean>(false)
 
     useEffect(() => () => {
         dispatch(deleteSelectedCargoTariff())
@@ -63,8 +67,9 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
         totalMass: cargoTariff?.totalMass || undefined,
         totalCube: cargoTariff?.totalCube || undefined,
         totalPrice: cargoTariff?.totalPrice || undefined,
-        warehouseId: cargoTariff?.warehouseDto?.id || undefined,
+        warehouseId: cargoTariff?.warehouseDto?.id,
         defaultValue: cargoTariff?.defaultValue || false,
+        createdDate: cargoTariff?.createdDate || null,
     }
 
     const validationSchema = Yup.object().shape({
@@ -173,7 +178,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
                                         onBlur={props.handleBlur}
                                         onChange={props.handleChange}
                                         required
-                                        value={props.values.warehouseId}
+                                        value={props.values.warehouseId || ''}
                                         variant="outlined"
                                         SelectProps={{
                                             MenuProps: {
@@ -452,7 +457,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
                                     xs={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.maxRoadCube && props.touched.maxRoadCube)}
+                                        error={Boolean(props.touched.maxRoadCube && props.errors.maxRoadCube)}
                                         fullWidth
                                         helperText={props.touched.maxRoadCube && props.errors.maxRoadCube}
                                         label="Максимальная кубатура рейса"
@@ -473,7 +478,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
                                     xs={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.maxRoadMass && props.touched.maxRoadMass)}
+                                        error={Boolean(props.touched.maxRoadMass && props.errors.maxRoadMass)}
                                         fullWidth
                                         helperText={props.touched.maxRoadMass && props.errors.maxRoadMass}
                                         label="Максимальный вес рейса"
@@ -494,7 +499,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
                                     xs={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.totalMass && props.touched.totalMass)}
+                                        error={Boolean(props.touched.totalMass && props.errors.totalMass)}
                                         fullWidth
                                         helperText={props.touched.totalMass && props.errors.totalMass}
                                         label="Общий вес"
@@ -515,7 +520,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
                                     xs={6}
                                 >
                                     <TextField
-                                        error={Boolean(props.touched.totalCube && props.touched.totalCube)}
+                                        error={Boolean(props.touched.totalCube && props.errors.totalCube)}
                                         fullWidth
                                         helperText={props.touched.totalCube && props.errors.totalCube}
                                         label="Общий объем"
@@ -530,7 +535,69 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
                                         }}
                                     />
                                 </Grid>
+                                {
+                                    cargoTariff && (
+                                        <>
+                                            <Grid
+                                                item
+                                                md={4}
+                                                xs={6}
+                                            >
+                                                <KeyboardDatePicker
+                                                    shouldDisableDate={(date: MaterialUiPickersDate) => {
+                                                        let prev: moment.Moment = moment(prevDate)
+                                                        let beforeDate: moment.Moment = moment(cargoTariff?.createdDate).isSame(prev) ? prev : prev.add(1, 'd')
 
+                                                        return date!.isAfter(cargoTariff?.createdDate) || date!.isBefore(beforeDate)
+                                                    }}
+                                                    disableToolbar
+                                                    variant="inline"
+                                                    format="DD.MM.yyyy"
+                                                    error={Boolean(props.touched.createdDate && props.errors.createdDate)}
+                                                    fullWidth
+                                                    helperText={props.touched.createdDate && props.errors.createdDate}
+                                                    label="Дата действия"
+                                                    InputLabelProps={{shrink: true}}
+                                                    name="createdDate"
+                                                    onBlur={props.handleBlur}
+                                                    onChange={value => props.setFieldValue("createdDate", value?.format("YYYY-MM-DD") || null)}
+                                                    value={props.values.createdDate || ""}
+                                                    KeyboardButtonProps={{
+                                                        "aria-label": "change date"
+                                                    }}
+                                                    inputVariant="outlined"
+                                                    required
+                                                    disabled={createTariff}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                            >
+                                                <Grid container justifyContent="flex-end">
+                                                    <Grid item>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    name="test"
+                                                                    color="primary"
+                                                                    onBlur={props.handleBlur}
+                                                                    onChange={(e) => {
+                                                                        setCreateTariff(e.target.checked)
+                                                                        props.setFieldValue("createdDate", e.target.checked ? null : cargoTariff?.createdDate)
+                                                                        props.handleChange(e)
+                                                                    }}
+                                                                    checked={createTariff}
+                                                                />
+                                                            }
+                                                            label="Создать новый тавриф"
+                                                        />
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </>
+                                    )
+                                }
                             </Grid>
                             <Box mt={2} pb={1} className={classes.buttons}>
                                 <Button
