@@ -26,7 +26,6 @@ const useStyles = makeStyles(() => ({
 
 export type LoginFormProps = {
     className?: string;
-    onSubmitSuccess: () => void
     onSubmitFailure: (message: string) => void
 }
 
@@ -41,7 +40,7 @@ const loginValidationSchema = Yup.object().shape({
     password: Yup.string().max(255).required('Введите пароль')
 });
 
-const LoginForm: React.FC<LoginFormProps> = ({ className, onSubmitSuccess, onSubmitFailure, ...rest }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ className, onSubmitFailure, ...rest }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -58,7 +57,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ className, onSubmitSuccess, onSub
             }) => {
                 try {
                     await dispatch(login(values.username, values.password));
-                    onSubmitSuccess();
+                    window.location.reload()
                 } catch (error: any) {
                     let message: string;
 

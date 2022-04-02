@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import usePermission from "../hooks/usePermission";
+import hasPermission from "../hooks/hasPermisson";
 import {CUSTOMER_GUARD} from "../constants/permissions/roles";
 import customerService from "../services/CustomerService";
 import errorMessageHandler from "../utils/errorMessageHandler";
@@ -13,7 +13,7 @@ const CustomerGuard: React.FC = ({children}) => {
     const {enqueueSnackbar} = useSnackbar()
     const user = useSelector(({user}: { user: User }) => user);
 
-    if (!usePermission(CUSTOMER_GUARD)) return <Redirect to="/" />;
+    if (!hasPermission(CUSTOMER_GUARD)) return <Redirect to="/" />;
 
     (async () => {
         try {

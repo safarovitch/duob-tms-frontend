@@ -558,6 +558,7 @@ const CargoTariffForm: React.FC<CargoTariffFormProps> = ({cargoTariff, warehouse
                                                     helperText={props.touched.createdDate && props.errors.createdDate}
                                                     label="Дата действия"
                                                     InputLabelProps={{shrink: true}}
+                                                    InputProps={{ readOnly: true }}
                                                     name="createdDate"
                                                     onBlur={props.handleBlur}
                                                     onChange={value => props.setFieldValue("createdDate", value?.format("YYYY-MM-DD") || null)}

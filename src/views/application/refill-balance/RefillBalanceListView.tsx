@@ -30,7 +30,7 @@ import {
     mapOfActionTypeApplication,
     mapOfStatusApplication
 } from "../../../constants";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
 import DoneIcon from "@material-ui/icons/Done";
@@ -52,8 +52,8 @@ const RefillBalanceListView: React.FC<RefillBalanceProps> = (props) => {
     const statuses = ['PAID', 'WAITING']
     const [selectedStatus, setSelectedStatus] = useState<string>('')
     const [rows, setRows] = useState<RefillBalanceApplication[]>([])
-    const canEdit = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.EDIT)
-    const canDelete = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.DELETE)
+    const canEdit = hasPermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.EDIT)
+    const canDelete = hasPermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.DELETE)
     const cashTotal = useCashTotal(CashTotalApplicationEnum.BALANCE_CLIENT, updateRows, startDate, endDate, warehouseId)
 
     useEffect(() => {

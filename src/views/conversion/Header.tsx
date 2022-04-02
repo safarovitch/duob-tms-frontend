@@ -3,7 +3,7 @@ import {Breadcrumbs, Button, Grid, Link, makeStyles, Typography} from "@material
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {Link as RouterLink} from "react-router-dom";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header: React.FC = () => {
     const classes = useStyles();
-    const canCreate = usePermission(PERMISSIONS.CONVERSION.CREATE)
+    const canCreate = hasPermission(PERMISSIONS.CONVERSION.CREATE)
 
     return (
         <Grid

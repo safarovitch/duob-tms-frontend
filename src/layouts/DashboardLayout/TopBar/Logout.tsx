@@ -15,7 +15,6 @@ const Logout: React.FC = () => {
         try {
             setOpen(false)
             await dispatch(logout())
-            window.location.pathname = '/'
         } catch (error: any) {
             enqueueSnackbar('Unable to logout', {variant: 'error'})
         }

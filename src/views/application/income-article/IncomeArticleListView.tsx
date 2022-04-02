@@ -13,7 +13,7 @@ import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {CashTotalApplicationEnum, Currency, mapOfStatusApplication} from "../../../constants";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
 import DoneIcon from "@material-ui/icons/Done";
@@ -35,8 +35,8 @@ const IncomeArticleListView: React.FC<IncomeArticleProps> = (props) => {
     const statuses = ['PAID', 'WAITING']
     const [selectedStatus, setSelectedStatus] = useState<string>('')
     const [rows, setRows] = useState<IncomeByArticleApplication[]>([])
-    const canEdit = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.EDIT)
-    const canDelete = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.DELETE)
+    const canEdit = hasPermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.EDIT)
+    const canDelete = hasPermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.DELETE)
     const cashTotal = useCashTotal(CashTotalApplicationEnum.ARTICLE_INCOME, updateRows, startDate, endDate, warehouseId)
 
     useEffect(() => {

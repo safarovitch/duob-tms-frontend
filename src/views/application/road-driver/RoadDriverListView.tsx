@@ -14,7 +14,7 @@ import {useSnackbar} from "notistack";
 import useDebounce from "../../../hooks/useDebounce";
 import moment from "moment";
 import {RoadDriverApplicationResponse} from "../../../model/Application";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
@@ -49,7 +49,7 @@ const RoadDriverListView: React.FC<{warehouseId?: number}> = ({warehouseId}) => 
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<RoadDriverApplicationResponse[]>([])
     const [total, setTotal] = useState<number>(0)
-    const canDelete = usePermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.DELETE)
+    const canDelete = hasPermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.DELETE)
     const cashTotal = useCashTotal(CashTotalApplicationEnum.ROAD_DRIVER, updateRows, startDate, endDate, warehouseId)
 
     useEffect(() => {

@@ -4,7 +4,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import AuthGuard from "./components/AuthGuard";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PERMISSIONS from "./constants/permissions";
-import usePermission from "./hooks/usePermission";
+import hasPermission from "./hooks/hasPermisson";
 import EmployeeGuard from "./components/EmployeeGuard";
 import CustomerGuard from "./components/CustomerGuard";
 import CustomerLayout from "./layouts/CustomerLayout";
@@ -676,7 +676,7 @@ const filterRoutesConfig = (routes: any) => {
             route.routes = filterRoutesConfig(route.routes)
             return true
         } else {
-            if (route.perm) return usePermission(route.perm)
+            if (route.perm) return hasPermission(route.perm)
             else return true
         }
     })

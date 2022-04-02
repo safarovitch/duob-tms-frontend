@@ -25,7 +25,7 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import ConfirmModal from "../../../../components/ConfirmModal";
 import {Done as DoneIcon} from "@material-ui/icons";
-import usePermission from "../../../../hooks/usePermission";
+import hasPermission from "../../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../../constants/permissions";
 import CreditCheckbox from "./CreditCheckbox";
 
@@ -60,10 +60,10 @@ const IssueShow: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [loadingApprove, setLoadingApprove] = useState(false)
     const [isConfirmModalOpen, setOpen] = useState(false)
-    const canApprove = usePermission(PERMISSIONS.CARGO.ISSUES.APPROVE)
-    const canCheckedCredit = usePermission(PERMISSIONS.CARGO.ISSUES.CREDIT)
-    const isManager = usePermission(PERMISSIONS.MANAGER)
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+    const canApprove = hasPermission(PERMISSIONS.CARGO.ISSUES.APPROVE)
+    const canCheckedCredit = hasPermission(PERMISSIONS.CARGO.ISSUES.CREDIT)
+    const isManager = hasPermission(PERMISSIONS.MANAGER)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;

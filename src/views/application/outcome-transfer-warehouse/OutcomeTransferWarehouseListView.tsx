@@ -12,7 +12,7 @@ import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {CashTotalApplicationEnum, Currency, mapOfStatusApplication} from "../../../constants";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import {NavLink as RouterLink} from "react-router-dom";
 import {setSelectedOutcomeTransferWarehouse} from "../../../store/actions/applicationAction";
@@ -41,8 +41,8 @@ const OutcomeTransferWarehouseListView: React.FC<{warehouseId?: number}> = ({war
     const [selectedStatus, setSelectedStatus] = useState<string>('')
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<OutcomeTransferWarehouseApplication[]>([])
-    const canDelete = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.DELETE)
-    const canAdminApprove = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.ADMIN_APPROVE)
+    const canDelete = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.DELETE)
+    const canAdminApprove = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.ADMIN_APPROVE)
     const cashTotal = useCashTotal(CashTotalApplicationEnum.TRANSACTION_MONEY, updateRows, startDate, endDate, warehouseId)
 
     useEffect(() => {

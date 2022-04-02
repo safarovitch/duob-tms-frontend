@@ -21,7 +21,7 @@ import {useSelector} from "react-redux";
 import {User} from "../../../model/User";
 import {EMPLOYEES_IMAGE_BASE_URL} from "../../../config";
 import {mapOfRoles} from "../../../constants";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 
 const navConfig = [
@@ -241,7 +241,7 @@ const useStyles = makeStyles(() => ({
 
 const filterNavConfig = (items: any) => {
     return items.filter((item: any) => {
-        if (item.perm) return usePermission(item.perm)
+        if (item.perm) return hasPermission(item.perm)
         else return true
     })
 }

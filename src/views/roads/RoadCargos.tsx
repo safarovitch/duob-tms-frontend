@@ -20,7 +20,7 @@ import {setSelectedCustomerCargo} from "../../store/actions/customerActions";
 import roadService from "../../services/RoadService";
 import {RoadTotalCargos} from "../../model/Road";
 import useDebounce from "../../hooks/useDebounce";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +53,7 @@ const RoadCargos: React.FC<{roadId: number}> = ({roadId}) => {
     const [rows, setRows] = useState<CustomerCargo[]>([])
     const [loading, setLoading] = useState(false)
     const [totalCargos, setTotalCargos] = useState<RoadTotalCargos>()
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;

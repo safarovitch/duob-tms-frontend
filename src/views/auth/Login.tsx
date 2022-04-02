@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import { useHistory } from 'react-router';
 import {
     Avatar,
     Box,
@@ -77,12 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 function LoginView() {
     const classes = useStyles();
-    const history = useHistory();
     const [failureMessage, setFailureMessage] = useState<string | null>(null)
-
-    const handleSubmitSuccess = () => {
-        history.push('/app');
-    };
 
     const handleSubmitFailure = (message: string) => {
         setFailureMessage(message)
@@ -121,7 +115,7 @@ function LoginView() {
                             </Alert>
                         </Box>)}
                         <Box mt={3}>
-                            <LoginForm onSubmitSuccess={handleSubmitSuccess} onSubmitFailure={handleSubmitFailure} />
+                            <LoginForm onSubmitFailure={handleSubmitFailure} />
                         </Box>
                         <Box my={2}>
                             <Divider />

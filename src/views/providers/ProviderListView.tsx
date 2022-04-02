@@ -23,7 +23,7 @@ import {useDispatch} from "react-redux";
 import {setSelectedProvider} from "../../store/actions/providerActions";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import PERMISSIONS from "../../constants/permissions";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import DeleteButton from "../../components/DeleteButton";
 import NoFoundTableBody from "../../components/NoFoundTableBody";
 
@@ -50,8 +50,8 @@ const ProviderListView: React.FC<ProviderListProps> = () => {
     const [query, setQuery] = useState('');
     const debouncedSearchTerm = useDebounce(query, 500);
     const [loading, setLoading] = useState(false);
-    const canEdit = usePermission(PERMISSIONS.PROVIDER.EDIT)
-    const canDelete = usePermission(PERMISSIONS.PROVIDER.DELETE)
+    const canEdit = hasPermission(PERMISSIONS.PROVIDER.EDIT)
+    const canDelete = hasPermission(PERMISSIONS.PROVIDER.DELETE)
 
     useEffect(() => {
         let cancel = false;

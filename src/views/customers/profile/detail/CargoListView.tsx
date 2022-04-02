@@ -29,7 +29,7 @@ import DoneIcon from "@material-ui/icons/Done";
 import useDebounce from "../../../../hooks/useDebounce";
 import moment from "moment";
 import DownloadCargosButton from "./DownloadCargosButton";
-import usePermission from "../../../../hooks/usePermission";
+import hasPermission from "../../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -63,8 +63,8 @@ const CargoListView: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const {id} = useParams<{id: string}>()
     const [totalCargos, setTotalCargos] = useState<CustomerTotalCargos>()
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
-    const isClient = usePermission(PERMISSIONS.CLIENT)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
+    const isClient = hasPermission(PERMISSIONS.CLIENT)
 
     useEffect(() => {
         let cancel = false;

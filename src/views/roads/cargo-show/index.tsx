@@ -19,7 +19,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {CustomerCargo} from "../../../model/Customer";
 import {deleteSelectedCustomerCargo} from "../../../store/actions/customerActions";
 import {Edit as EditIcon} from "react-feather";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const CargoShow: React.FC = () => {
     const history = useHistory()
     const dispatch = useDispatch()
     const customerCargo = useSelector((state: {selectedCustomerCargo: CustomerCargo}) => state.selectedCustomerCargo)
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
 
     useEffect(() => () => {
         dispatch(deleteSelectedCustomerCargo())
@@ -128,7 +128,8 @@ const CargoShow: React.FC = () => {
                                                     <TableRow key={index}>
                                                         <TableCell>{++index}</TableCell>
                                                         <TableCell>
-                                                            {`Рейс ${row.roadId}`}
+                                                            {row.roadId && `Рейс ${row.roadId}`}
+                                                            {row.warehouseId && `Склад ${row.warehouseId}`}
                                                         </TableCell>
                                                         <TableCell>{row.description}</TableCell>
                                                         <TableCell>{row.barcode}</TableCell>

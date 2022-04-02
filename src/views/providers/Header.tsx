@@ -15,7 +15,7 @@ import {
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import {ProviderListHeaderProps} from "../../model/Provider";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -73,7 +73,7 @@ const Header: React.FC<ProviderListHeaderProps> = ({ className }) => {
                     Все поставщики
                 </Typography>
             </Grid>
-            {usePermission(PERMISSIONS.PROVIDER.CREATE) && (
+            {hasPermission(PERMISSIONS.PROVIDER.CREATE) && (
                 <Grid item>
                     <Button
                         color="secondary"

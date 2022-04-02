@@ -3,7 +3,7 @@ import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
 import {Box, Card, Container, Divider, Grid, makeStyles, Typography} from "@material-ui/core";
-import usePermission from "../../../../hooks/usePermission";
+import hasPermission from "../../../../hooks/hasPermisson";
 import {deleteSelectedRoadDriver, setSelectedRoadDriver} from "../../../../store/actions/applicationAction";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
 import Page from "../../../../components/Page";
@@ -38,7 +38,7 @@ const ShowView: React.FC = () => {
     const dispatch = useDispatch()
     const roadDriver = useSelector((state: {selectedApplicationRoadDriver: RoadDriverApplicationResponse}) => state.selectedApplicationRoadDriver)
     const [loading, setLoading] = useState(false)
-    const canApprove = usePermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.APPROVE)
+    const canApprove = hasPermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.APPROVE)
 
     useEffect(() => () => {
         dispatch(deleteSelectedRoadDriver())

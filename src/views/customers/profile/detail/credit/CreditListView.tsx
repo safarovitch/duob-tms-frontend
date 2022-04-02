@@ -20,7 +20,7 @@ import {Credit} from "../../../../../model/Customer";
 import {Currency} from "../../../../../constants";
 import {Close as CloseIcon, DoneAll as DoneAllIcon} from "@material-ui/icons";
 import AdminApproveButton from "../../../../application/components/AdminApproveButton";
-import usePermission from "../../../../../hooks/usePermission";
+import hasPermission from "../../../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../../../constants/permissions";
 import {MoreHorizontal as MoreHorizontalIcon} from "react-feather";
 import {needUpdateWarehouseBalance} from "../../../../../store/actions/warehouseActions";
@@ -54,9 +54,9 @@ const CreditListView: React.FC = () => {
     const [rows, setRows] = useState<Credit[]>([])
     const [loading, setLoading] = useState(false)
     const {id: customerId} = useParams<{id: string}>()
-    const canAdminApprove = usePermission(PERMISSIONS.CUSTOMER.CREDIT.ADMIN_APPROVE)
-    const canCashierApprove = usePermission(PERMISSIONS.CUSTOMER.CREDIT.CASHIER_APPROVE)
-    const canPaid = usePermission(PERMISSIONS.CUSTOMER.CREDIT.PAID)
+    const canAdminApprove = hasPermission(PERMISSIONS.CUSTOMER.CREDIT.ADMIN_APPROVE)
+    const canCashierApprove = hasPermission(PERMISSIONS.CUSTOMER.CREDIT.CASHIER_APPROVE)
+    const canPaid = hasPermission(PERMISSIONS.CUSTOMER.CREDIT.PAID)
 
     useEffect(() => {
         let cancel = false;

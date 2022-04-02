@@ -26,7 +26,7 @@ import LoadingLayout from "../../components/LoadingLayout";
 import moment from "moment";
 import {useSelector} from "react-redux";
 import {User} from "../../model/User";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 import {mapOfColorStatusCargo, mapOfStatusCargo, StatusCargoEnum} from "../../constants";
 import DoneIcon from "@material-ui/icons/Done";
@@ -34,6 +34,7 @@ import NoFoundTableBody from "../../components/NoFoundTableBody";
 import {useHistory} from "react-router-dom";
 import {CargoGeneral} from "../../model/Customer";
 import useDebounce from "../../hooks/useDebounce";
+import useQuery from "../../hooks/useQuery";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,15 +54,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+enum searchParamsEnum {
+    warehouseId = "warehouseId",
+    status = "status",
+    page = "page",
+    size = "size"
+}
+
 const WarehouseStateListView: React.FC = () => {
     const classes = useStyles()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
+    const query = useQuery()
     const user = useSelector(({user}: {user: User}) => user)
-    const canSelectWarehouse = usePermission(PERMISSIONS.WAREHOUSE_STATE.SELECT_WAREHOUSE)
-    const [warehouseId, setWarehouseId] = useState<number>(canSelectWarehouse ? 0 : (user.warehouseId || 1))
+    const canSelectWarehouse = hasPermission(PERMISSIONS.WAREHOUSE_STATE.SELECT_WAREHOUSE)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
+    const warehouseId = canSelectWarehouse ? getSearchParam(searchParamsEnum.warehouseId, 0) : user.warehouseId
     const statuses = [StatusCargoEnum.FORMALIZED, StatusCargoEnum.ARRIVED, StatusCargoEnum.RETURNED]
-    const [selectedStatus, setSelectedStatus] = useState<string>(StatusCargoEnum.FORMALIZED)
+    const selectedStatus = getSearchParam(searchParamsEnum.status, StatusCargoEnum.FORMALIZED)
     const [startDate, setStartDate] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
     const [clientCode, setClientCode] = useState('')
@@ -69,15 +79,14 @@ const WarehouseStateListView: React.FC = () => {
     const [barcode, setBarcode] = useState('')
     const debouncedBarcode = useDebounce(barcode, 500)
     const [total, setTotal] = useState<number>(0)
-    const [page, setPage] = useState(1)
-    const [size, setSize] = useState(20)
+    const page = getSearchParam(searchParamsEnum.page, 1)
+    const size = getSearchParam(searchParamsEnum.size, 20)
     const [loading, setLoading] = useState(false)
     const [loadingRows, setLoadingRows] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
     const [rows, setRows] = useState<WarehouseStateCargo[]>([])
     const [warehouseStateTotal, setWarehouseStateTotal] = useState<WarehouseStateTotal>()
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;
@@ -149,47 +158,44 @@ const WarehouseStateListView: React.FC = () => {
 
     const handleWarehouseChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()
-        setWarehouseId(Number(event.target.value))
-        setPage(1)
+        historyReplace({[searchParamsEnum.warehouseId]: event.target.value, [searchParamsEnum.page]: "1"})
     }
 
     const handleSelectStatus = (status: string) => {
-        setSelectedStatus(status)
-        setPage(1)
+        historyReplace({[searchParamsEnum.status]: status, [searchParamsEnum.page]: "1"})
     }
 
     const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()
         setStartDate(event.target.value)
-        setPage(1)
+        historyReplace({[searchParamsEnum.page]: "1"})
     }
 
     const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist()
         setEndDate(event.target.value)
-        setPage(1)
+        historyReplace({[searchParamsEnum.page]: "1"})
     }
 
     const handleClientCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
         setClientCode(event.target.value);
-        setPage(1);
+        historyReplace({[searchParamsEnum.page]: "1"})
     };
 
     const handleBarcodeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
         setBarcode(event.target.value);
-        setPage(1);
+        historyReplace({[searchParamsEnum.page]: "1"})
     };
 
     const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         event.persist();
-        setSize(Number(event.target.value));
-        setPage(1);
+        historyReplace({[searchParamsEnum.size]: event.target.value, [searchParamsEnum.page]: "1"})
     };
 
     const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage + 1);
+        historyReplace({[searchParamsEnum.page]: String(newPage + 1)})
     };
 
     const getCargoDate = (cargo: CargoGeneral) => {
@@ -210,6 +216,27 @@ const WarehouseStateListView: React.FC = () => {
                 return cargo.updatedDate
             }
         }
+    }
+
+    function historyReplace(params: {[key: string]: any}) {
+        Object.getOwnPropertyNames(params).forEach(item => {
+            query.set(item, params[item])
+        })
+
+        history.replace({search: query.toString()})
+    }
+
+    function getSearchParam(name: searchParamsEnum, defaultValue: any) {
+        let value = query.get(name)
+
+        if (value) {
+            switch (typeof defaultValue) {
+                case "number":
+                    return Number(value)
+                default:
+                    return value
+            }
+        } else return defaultValue
     }
 
     return (
@@ -422,7 +449,7 @@ const WarehouseStateListView: React.FC = () => {
                                             component="div"
                                             count={total}
                                             onPageChange={handlePageChange}
-                                            page={page - 1}
+                                            page={total && page - 1}
                                             labelRowsPerPage={'Строк на странице:'}
                                             rowsPerPage={size}
                                             rowsPerPageOptions={[20, 50, 100]}

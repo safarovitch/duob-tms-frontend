@@ -1,9 +1,11 @@
 import {User} from "../model/User";
 
 export default function hasPermission(permissions: string[]) {
-    const user = (JSON.parse(localStorage.getItem('user')!) as User)
+    const localUser = localStorage.getItem('user')
 
-    if (user === null) return true
+    if (localUser === null) return false
 
-    return user.roles.findIndex(r => permissions.indexOf(r) > -1) > -1;
+    const user = JSON.parse(localUser) as User
+
+    return user.roles?.findIndex(r => permissions.indexOf(r) > -1) > -1;
 }

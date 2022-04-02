@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {PlusCircle as PlusCircleIcon} from 'react-feather';
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
                     Все клиенты
                 </Typography>
             </Grid>
-            {usePermission(PERMISSIONS.CUSTOMER.CREATE) && (
+            {hasPermission(PERMISSIONS.CUSTOMER.CREATE) && (
                 <Grid item>
                     <Button
                         color="secondary"

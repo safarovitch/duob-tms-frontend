@@ -4,7 +4,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {NavLink as RouterLink} from "react-router-dom";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
 import {EmployeeAccountabilityResponse} from "../../../model/Employee";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header: React.FC<{ employee: EmployeeAccountabilityResponse }> = ({employee}) => {
     const classes = useStyles();
-    const canCreate = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.CREATE)
+    const canCreate = hasPermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.CREATE)
 
     return (
         <Grid

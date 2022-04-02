@@ -16,7 +16,7 @@ import {OutcomeTransferWarehouseApplication} from "../../../../model/Application
 import PERMISSIONS from "../../../../constants/permissions";
 import applicationService from "../../../../services/ApplicationService";
 import {deleteSelectedOutcomeTransferWarehouse, setSelectedOutcomeTransferWarehouse} from "../../../../store/actions/applicationAction";
-import usePermission from "../../../../hooks/usePermission";
+import hasPermission from "../../../../hooks/hasPermisson";
 import UploadImage from "../../components/UploadImage";
 import {User} from "../../../../model/User";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
@@ -54,8 +54,8 @@ const ShowView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const dispatch = useDispatch()
-    const canApprove = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.APPROVE)
-    const canAddPhoto = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.ADD_PHOTO)
+    const canApprove = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.APPROVE)
+    const canAddPhoto = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.ADD_PHOTO)
     const {selectedApplicationOutcomeTransferWarehouse: outcomeTransferWarehouse, user} =
         useSelector((state: {selectedApplicationOutcomeTransferWarehouse: OutcomeTransferWarehouseApplication, user: User}) => state)
 

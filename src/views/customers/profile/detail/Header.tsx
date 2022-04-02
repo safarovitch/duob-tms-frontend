@@ -6,7 +6,7 @@ import {useParams} from "react-router";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
 import {Customer} from "../../../../model/Customer";
 import {Currency} from "../../../../constants";
-import usePermission from "../../../../hooks/usePermission";
+import hasPermission from "../../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const Header: React.FC<{ customer: Customer }> = ({customer}) => {
     const classes = useStyles();
     const {stuffId, id} = useParams<{ stuffId: string, id: string }>()
-    const canCreateCredit = usePermission(PERMISSIONS.CUSTOMER.CREDIT.CREATE)
+    const canCreateCredit = hasPermission(PERMISSIONS.CUSTOMER.CREDIT.CREATE)
 
     return (
         <Grid

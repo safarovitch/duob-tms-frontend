@@ -9,7 +9,7 @@ import {ApplicationStatusEnum, Currency, mapOfActionTypeApplication} from "../..
 import PERMISSIONS from "../../../../constants/permissions";
 import applicationService from "../../../../services/ApplicationService";
 import {deleteSelectedRefillBalance, setSelectedRefillBalance} from "../../../../store/actions/applicationAction";
-import usePermission from "../../../../hooks/usePermission";
+import hasPermission from "../../../../hooks/hasPermisson";
 import UploadImage from "../../components/UploadImage";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
@@ -44,8 +44,8 @@ const ShowView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const dispatch = useDispatch()
-    const canApprove = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.APPROVE)
-    const canAddPhoto = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.ADD_PHOTO)
+    const canApprove = hasPermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.APPROVE)
+    const canAddPhoto = hasPermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.ADD_PHOTO)
     const refillBalance = useSelector((state: { selectedRefillBalance: RefillBalanceApplication }) => state.selectedRefillBalance)
 
     useEffect(() => () => {

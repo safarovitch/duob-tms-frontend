@@ -16,7 +16,7 @@ import {OutcomeByArticleApplication} from "../../../../model/Application";
 import PERMISSIONS from "../../../../constants/permissions";
 import applicationService from "../../../../services/ApplicationService";
 import {deleteSelectedOutcomeArticle, setSelectedOutcomeArticle} from "../../../../store/actions/applicationAction";
-import usePermission from "../../../../hooks/usePermission";
+import hasPermission from "../../../../hooks/hasPermisson";
 import UploadImage from "../../components/UploadImage";
 import {needUpdateWarehouseBalance} from "../../../../store/actions/warehouseActions";
 import {ApplicationStatusEnum, Currency} from "../../../../constants";
@@ -52,8 +52,8 @@ const ShowView: React.FC = () => {
     const classes = useStyles()
     const history = useHistory()
     const dispatch = useDispatch()
-    const canApprove = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.APPROVE)
-    const canAddPhoto = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.ADD_PHOTO)
+    const canApprove = hasPermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.APPROVE)
+    const canAddPhoto = hasPermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.ADD_PHOTO)
     const outcomeArticle = useSelector((state: { selectedApplicationOutcomeArticle: OutcomeByArticleApplication }) => state.selectedApplicationOutcomeArticle)
 
     useEffect(() => () => {

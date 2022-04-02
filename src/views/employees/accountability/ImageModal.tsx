@@ -10,7 +10,7 @@ import employeeService from "../../../services/EmployeeService";
 import {EMPLOYEE_ACCOUNTS_IMAGE_BASE_URL} from "../../../config";
 import {AccountabilityType, mapOfAccountabilityType} from "../../../constants";
 import ConfirmModal from "../../../components/ConfirmModal";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 
 const ImageModal: React.FC<{accountability: Accountability, handleUpdate: Function}> = ({accountability, handleUpdate}) => {
@@ -19,7 +19,7 @@ const ImageModal: React.FC<{accountability: Accountability, handleUpdate: Functi
     const [loading, setLoading] = useState(false)
     const [openConfirmModal, setOpenConfirmModal] = useState(false)
     const hiddenFileInput = useRef<HTMLInputElement>(null)
-    const canAddDeletePhoto = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.ADD_DELETE_PHOTO)
+    const canAddDeletePhoto = hasPermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.ADD_DELETE_PHOTO)
 
     const handleClick = () => {
         if (accountability.filePath) {

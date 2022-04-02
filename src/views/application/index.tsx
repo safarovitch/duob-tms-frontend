@@ -16,7 +16,7 @@ import {Warehouse} from "../../model/Warehouse";
 import warehouseService from "../../services/WarehouseService";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 import LoadingLayout from "../../components/LoadingLayout";
 
@@ -43,7 +43,7 @@ const RoadStuffView: React.FC = () => {
     const [warehouseId, setWarehouseId] = useState<number>()
     const {stuffId: pathTab} = useParams<{ stuffId: string }>()
     const currentTab = getCurrentTab(pathTab)
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;

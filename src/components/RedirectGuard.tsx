@@ -2,13 +2,13 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {User} from "../model/User";
 import {Redirect} from "react-router-dom";
-import usePermission from "../hooks/usePermission";
+import hasPermission from "../hooks/hasPermisson";
 import {CUSTOMER_GUARD, EMPLOYEE_GUARD} from "../constants/permissions/roles";
 
 const RedirectGuard: React.FC = ({children}) => {
     const user = useSelector((state: { user: User }) => state.user);
-    const isEmployee = usePermission(EMPLOYEE_GUARD);
-    const isCustomer = usePermission(CUSTOMER_GUARD);
+    const isEmployee = hasPermission(EMPLOYEE_GUARD);
+    const isCustomer = hasPermission(CUSTOMER_GUARD);
 
     if (user === null) return <Redirect to="/login" />;
 

@@ -3,7 +3,7 @@ import React from "react";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import {NavLink as RouterLink} from "react-router-dom";
 import {PlusCircle as PlusCircleIcon} from "react-feather";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 import {Warehouse} from "../../model/Warehouse";
 
@@ -34,11 +34,11 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props) => {
     const {title, linkName, warehouses, warehouseId, setWarehouseId} = props
     const classes = useStyles()
-    const canCreateRefillBalance = usePermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.CREATE)
-    const canCreateIncomeArticle = usePermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.CREATE)
-    const canCreateOutcomeArticle = usePermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.CREATE)
-    const canCreateOutcomeTransferWarehouse = usePermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.CREATE)
-    const canCreateRoadDriver = usePermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.CREATE)
+    const canCreateRefillBalance = hasPermission(PERMISSIONS.APPLICATION.REFILL_BALANCE.CREATE)
+    const canCreateIncomeArticle = hasPermission(PERMISSIONS.APPLICATION.INCOME_ARTICLE.CREATE)
+    const canCreateOutcomeArticle = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.CREATE)
+    const canCreateOutcomeTransferWarehouse = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_TRANSFER_WAREHOUSE.CREATE)
+    const canCreateRoadDriver = hasPermission(PERMISSIONS.APPLICATION.ROAD_DRIVER.CREATE)
 
     const canCreate = (): boolean => {
         switch (linkName) {

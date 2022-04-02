@@ -16,7 +16,7 @@ import {useDispatch} from "react-redux";
 import {setSelectedCustomer} from "../../store/actions/customerActions";
 import useDebounce from "../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
-import usePermission from "../../hooks/usePermission";
+import hasPermission from "../../hooks/hasPermisson";
 import PERMISSIONS from "../../constants/permissions";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../components/NoFoundTableBody";
@@ -48,7 +48,7 @@ const CustomerListView: React.FC = () => {
     const debouncedSearchTerm = useDebounce(query, 500);
     const [rows, setRows] = useState<Customer[]>([]);
     const [loading, setLoading] = useState(false);
-    const canEdit = usePermission(PERMISSIONS.CUSTOMER.EDIT)
+    const canEdit = hasPermission(PERMISSIONS.CUSTOMER.EDIT)
 
     useEffect(() => {
         let cancel = false;

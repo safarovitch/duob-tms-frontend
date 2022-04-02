@@ -15,11 +15,7 @@ export function login(username: string, password: string) {
         try {
             dispatch({ type: LOGIN_REQUEST });
 
-            const user = await authService.loginWithUsernameAndPassword(username, password);
-            dispatch({
-                type: LOGIN_SUCCESS,
-                payload: user
-            });
+            await authService.loginWithUsernameAndPassword(username, password);
         } catch (error: any) {
             dispatch({ type: LOGIN_FAILURE, payload: error });
             throw error;

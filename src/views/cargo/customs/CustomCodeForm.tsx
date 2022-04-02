@@ -289,7 +289,6 @@ const CustomCodeForm: React.FC<CustomCodeFormProps> = ({customCode, products}) =
                                         value={props.values.description}
                                         variant="outlined"
                                         multiline
-                                        rows={2}
                                     />
                                 </Grid>
                                 <Grid

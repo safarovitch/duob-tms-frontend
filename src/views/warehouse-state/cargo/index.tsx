@@ -29,7 +29,7 @@ import {mapOfColorStatusCargo, mapOfStatusCargo} from "../../../constants";
 import DoneIcon from "@material-ui/icons/Done";
 import {NavLink as RouterLink} from "react-router-dom";
 import {Edit as EditIcon} from "react-feather";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +49,7 @@ const CargoShow: React.FC = () => {
     const [hasError, setHasError] = useState(false)
     const [cargos, setCargos] = useState<WarehouseStateCargo[]>([])
     const [selectedCargo, setSelectCargo] = useState<WarehouseStateCargo>()
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;

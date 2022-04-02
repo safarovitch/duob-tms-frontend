@@ -26,7 +26,7 @@ import {NavLink as RouterLink} from "react-router-dom";
 import {ArrowRight as ArrowRightIcon} from "react-feather";
 import DeleteButton from "../../../components/DeleteButton";
 import {Currency, mapOfRoadStatus} from "../../../constants";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +47,7 @@ const RoadListView: React.FC = () => {
     const [size, setSize] = useState(10)
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<RoadList[]>([])
-    const isAdmin = usePermission(PERMISSIONS.ADMIN)
+    const isAdmin = hasPermission(PERMISSIONS.ADMIN)
 
     useEffect(() => {
         let cancel = false;

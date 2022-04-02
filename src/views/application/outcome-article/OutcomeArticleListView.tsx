@@ -12,7 +12,7 @@ import applicationService from "../../../services/ApplicationService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {CashTotalApplicationEnum, Currency, mapOfStatusApplication} from "../../../constants";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import {NavLink as RouterLink} from "react-router-dom";
 import {setSelectedOutcomeArticle} from "../../../store/actions/applicationAction";
@@ -41,8 +41,8 @@ const OutcomeArticleListView: React.FC<{warehouseId?: number}> = ({warehouseId})
     const [selectedStatus, setSelectedStatus] = useState<string>('')
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState<OutcomeByArticleApplication[]>([])
-    const canDelete = usePermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.DELETE)
-    const canAdminApprove = usePermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.ADMIN_APPROVE)
+    const canDelete = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.DELETE)
+    const canAdminApprove = hasPermission(PERMISSIONS.APPLICATION.OUTCOME_ARTICLE.ADMIN_APPROVE)
     const cashTotal = useCashTotal(CashTotalApplicationEnum.ARTICLE_OUTCOME, updateRows, startDate, endDate, warehouseId)
 
     useEffect(() => {

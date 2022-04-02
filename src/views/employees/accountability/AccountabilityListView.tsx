@@ -26,7 +26,7 @@ import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {Accountability, EmployeeAccountabilityResponse} from "../../../model/Employee";
 import Page from "../../../components/Page";
 import moment from "moment";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import {useParams} from "react-router";
 import {AccountabilityType, Currency, mapOfAccountabilityType} from "../../../constants";
@@ -75,10 +75,10 @@ const AccountabilityListView: React.FC = () => {
     const [employee, setEmployee] = useState<EmployeeAccountabilityResponse>()
     const [viewPDF, setViewPDF] = useState(false)
     const [accountability, setAccountability] = useState<Accountability>()
-    const canDelete = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.DELETE)
-    const canEdit = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.EDIT)
-    const canAdminApprove = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.ADMIN_APPROVE)
-    const canApprove = usePermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.APPROVE)
+    const canDelete = hasPermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.DELETE)
+    const canEdit = hasPermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.EDIT)
+    const canAdminApprove = hasPermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.ADMIN_APPROVE)
+    const canApprove = hasPermission(PERMISSIONS.EMPLOYEE.ACCOUNTABILITY.APPROVE)
 
     useEffect(() => {
         let cancel = false;

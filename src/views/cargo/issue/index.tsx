@@ -23,7 +23,7 @@ import {ArrowRight as ArrowRightIcon, Search as SearchIcon} from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {mapOfStatusCargoIssue, mapOfStatusColorCargoIssue} from "../../../constants";
-import usePermission from "../../../hooks/usePermission";
+import hasPermission from "../../../hooks/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import DeleteButton from "../../../components/DeleteButton";
 
@@ -49,7 +49,7 @@ const CargoIssueList: React.FC = () => {
     const debouncedSearchTerm = useDebounce(query, 500);
     const [rows, setRows] = useState<CargoIssueResponse[]>([])
     const [loading, setLoading] = useState(false)
-    const canDelete = usePermission(PERMISSIONS.CARGO.ISSUES.DELETE)
+    const canDelete = hasPermission(PERMISSIONS.CARGO.ISSUES.DELETE)
 
     useEffect(() => {
         let cancel = false;
