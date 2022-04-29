@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         borderBottom: 1,
     },
     tableData: {
-        width: '12%',
+        width: '24%',
     },
     tableDataId: {
         width: '4%',
@@ -80,10 +80,36 @@ const styles = StyleSheet.create({
     },
 });
 
+interface CargoIssuePrint {
+    type: string;
+    lengthCargo: number;
+    widthCargo: number;
+    heightCargo: number;
+    totalVolume: number;
+    wightCargo: number;
+}
+
+const groupByCargos = (cargos: CargoIssuePrint[]) => {
+    return cargos.sort((a, b) => a.type.localeCompare(b.type)).reduce((total: CargoIssuePrint[], currentValue: CargoIssuePrint) => {
+        const newTotal = total;
+        if (total.length && total[total.length - 1].type === currentValue.type) {
+            newTotal[total.length - 1] = {
+                type: currentValue.type,
+                lengthCargo: Number((total[total.length - 1].lengthCargo + currentValue.lengthCargo).toFixed(2)),
+                widthCargo: Number((total[total.length - 1].widthCargo + currentValue.widthCargo).toFixed(2)),
+                heightCargo: Number((total[total.length - 1].heightCargo + currentValue.heightCargo).toFixed(2)),
+                totalVolume: Number((total[total.length - 1].totalVolume + currentValue.totalVolume).toFixed(3)),
+                wightCargo: Number((total[total.length - 1].wightCargo + currentValue.wightCargo).toFixed(2)),
+            };
+        } else newTotal[total.length] = currentValue;
+        return newTotal;
+    }, [])
+}
+
 const CargoIssuePDF: React.FC<{cargoIssue: CargoIssueResponse}> = ({cargoIssue}) => {
     return (
         <Document>
-            <Page size="A4" style={styles.page}>
+            <Page size="A5" style={styles.page}>
                 <View style={styles.main}>
                     <HeaderPDF id={cargoIssue.id!} />
                     <View style={[styles.row, styles.mt1]}>
@@ -162,16 +188,6 @@ const CargoIssuePDF: React.FC<{cargoIssue: CargoIssueResponse}> = ({cargoIssue})
                                 </View>
                                 <View style={styles.tableData}>
                                     <Text style={styles.tableText}>
-                                        Дата
-                                    </Text>
-                                </View>
-                                <View style={styles.tableData}>
-                                    <Text style={styles.tableText}>
-                                        Груз
-                                    </Text>
-                                </View>
-                                <View style={styles.tableData}>
-                                    <Text style={styles.tableText}>
                                         Вид груза
                                     </Text>
                                 </View>
@@ -190,28 +206,12 @@ const CargoIssuePDF: React.FC<{cargoIssue: CargoIssueResponse}> = ({cargoIssue})
                                         Вес(кг)
                                     </Text>
                                 </View>
-                                <View style={styles.tableData}>
-                                    <Text style={styles.tableText}>
-                                        Стоимост
-                                    </Text>
-                                </View>
-                                <View style={styles.tableData}>
-                                    <Text style={styles.tableText}>
-                                        Штрих-код
-                                    </Text>
-                                </View>
                             </View>
                             {
-                                cargoIssue.cargos!.map((cargo, index) => (
-                                    <View style={styles.tableRow}>
+                                groupByCargos(cargoIssue.cargos!).map((cargo, index) => (
+                                    <View style={styles.tableRow} key={index}>
                                         <View style={styles.tableDataId}>
                                             <Text style={styles.tableText}>{++index}</Text>
-                                        </View>
-                                        <View style={styles.tableData}>
-                                            <Text style={styles.tableText}>{cargo.createdDate}</Text>
-                                        </View>
-                                        <View style={styles.tableData}>
-                                            <Text style={styles.tableText}>{cargo.product}</Text>
                                         </View>
                                         <View style={styles.tableData}>
                                             <Text style={styles.tableText}>{cargo.type}</Text>
@@ -223,13 +223,7 @@ const CargoIssuePDF: React.FC<{cargoIssue: CargoIssueResponse}> = ({cargoIssue})
                                             <Text style={styles.tableText}>{cargo.totalVolume}</Text>
                                         </View>
                                         <View style={styles.tableData}>
-                                            <Text style={styles.tableText}>{cargo.widthCargo}</Text>
-                                        </View>
-                                        <View style={styles.tableData}>
-                                            <Text style={styles.tableText}>{cargo.amount}</Text>
-                                        </View>
-                                        <View style={styles.tableData}>
-                                            <Text style={styles.tableText}>{cargo.barcode}</Text>
+                                            <Text style={styles.tableText}>{cargo.wightCargo}</Text>
                                         </View>
                                     </View>
                                 ))

@@ -60,7 +60,7 @@ const LoadedRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, update
                     disabled={loading || !(status === RoadStatusEnum.LOADED || status === RoadStatusEnum.ACTIVE)}
                 >
                     {
-                        status === RoadStatusEnum.LOADED && (
+                        status !== RoadStatusEnum.ACTIVE && (
                             <SvgIcon fontSize="small" className={classes.actionIcon}>
                                 <DoneIcon />
                             </SvgIcon>

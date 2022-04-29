@@ -1,19 +1,29 @@
 import React, {useState} from "react";
-import {Box, Button, CircularProgress, makeStyles} from "@material-ui/core";
+import {Box, Button, CircularProgress, makeStyles, SvgIcon} from "@material-ui/core";
 import ConfirmModal from "../../components/ConfirmModal";
 import errorMessageHandler from "../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import roadService from "../../services/RoadService";
 import {RoadStatusEnum} from "../../constants";
+import {Done as DoneIcon} from "@material-ui/icons";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     loadingProgress: {
         position: 'absolute',
         top: '50%',
         left: '50%',
         marginLeft: '-14px',
         marginTop: '-14px',
-    }
+    },
+    action: {
+        marginBottom: theme.spacing(1),
+        '& + &': {
+            marginLeft: theme.spacing(1)
+        }
+    },
+    actionIcon: {
+        marginRight: theme.spacing(1)
+    },
 }));
 
 const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, updateRoad: Function}> = ({status, roadId, updateRoad}) => {
@@ -38,13 +48,17 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
         }
     }
 
-    return RoadStatusEnum.COMPLETED === status ? (
+    return status === RoadStatusEnum.COMPLETED ? (
         <Button
+            className={classes.action}
             variant="outlined"
             color="primary"
             type="submit"
             disabled
         >
+            <SvgIcon fontSize="small" className={classes.actionIcon}>
+                <DoneIcon />
+            </SvgIcon>
             Завершить
         </Button>
     ) : (
@@ -55,7 +69,7 @@ const CompleteRoadButton: React.FC<{status: RoadStatusEnum, roadId: number, upda
                     color="primary"
                     type="submit"
                     onClick={() => setOpen(true)}
-                    disabled={loading}
+                    disabled={loading || status !== RoadStatusEnum.ARRIVED}
                 >
                     Завершить
                 </Button>

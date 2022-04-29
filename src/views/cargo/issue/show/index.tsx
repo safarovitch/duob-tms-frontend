@@ -225,7 +225,6 @@ const IssueShow: React.FC = () => {
                                                         <TableCell>Д / Ш / В</TableCell>
                                                         <TableCell>Обьем(м3)</TableCell>
                                                         <TableCell>Вес(кг)</TableCell>
-                                                        <TableCell>Стоимост</TableCell>
                                                         <TableCell>Штрих-код</TableCell>
                                                     </TableRow>
                                                 </TableHead>
@@ -247,7 +246,6 @@ const IssueShow: React.FC = () => {
                                                             <TableCell>{row.lengthCargo} / {row.widthCargo} / {row.heightCargo}</TableCell>
                                                             <TableCell>{row.totalVolume}</TableCell>
                                                             <TableCell>{row.wightCargo}</TableCell>
-                                                            <TableCell>{row.amount}</TableCell>
                                                             <TableCell>{row.barcode}</TableCell>
                                                         </TableRow>
                                                     ))}
