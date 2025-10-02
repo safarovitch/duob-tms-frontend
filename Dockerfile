@@ -3,21 +3,24 @@
 #############
 
 # base image
-FROM node:14.16.0 as build
+FROM node:18-alpine AS build
 
 # set working directory
 WORKDIR /app
 
 # add /app/node_modules/.bin to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH=/app/node_modules/.bin:$PATH
 
 # install and cache app dependencies
-COPY package.json /app/package.json
-RUN yarn install --network-timeout=300000
+COPY package.json yarn.lock* /app/
+RUN yarn install --network-timeout=300000 --frozen-lockfile
 
 # add app
 COPY . /app
-RUN set NODE_OPTIONS=--max_old_space_size=4096
+
+# Set Node options for build
+ENV NODE_OPTIONS=--max_old_space_size=4096
+
 # generate build
 RUN yarn build
 
