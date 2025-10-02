@@ -5,7 +5,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import {DollarSign as DollarIcon, CheckSquare as CheckSquareIcon, Box as BoxIcon, Sliders as SlidersIcon,
     Tool as ToolIcon} from 'react-feather';
 import {Avatar, Box, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography, makeStyles} from '@material-ui/core';
-import DashboardIcon from '@material-ui/icons/DashboardOutlined';
 import HomeIcon from '@material-ui/icons/HomeOutlined';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import LocalShippingIcon from '@material-ui/icons/LocalShippingOutlined';
@@ -24,17 +23,6 @@ import usePermission from "../../../hooks/usePermission";
 import PERMISSIONS from "../../../constants/permissions";
 
 const navConfig = [
-    {
-        subheader: 'Аналитика',
-        items: [
-            {
-                title: 'Аналитика',
-                icon: DashboardIcon,
-                href: '/app/reports/dashboard',
-                // perm: PERMISSIONS.ANALYTICS.LIST
-            },
-        ]
-    },
     {
         subheader: 'Рейс',
         items: [

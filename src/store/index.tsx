@@ -8,10 +8,10 @@ import { ENABLE_REDUX_LOGGER } from '../config';
 const loggerMiddleware = createLogger();
 
 const configureStore = (preloadedState = {}) => {
-    const middlewares: [Middleware] = [thunkMiddleware];
+    const middlewares: Middleware[] = [thunkMiddleware];
 
     if (ENABLE_REDUX_LOGGER) {
-        middlewares.push(loggerMiddleware);
+        middlewares.push(loggerMiddleware as any);
     }
 
     const middlewareEnhancer = composeWithDevTools(

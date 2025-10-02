@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  smart-sokhtmon-web:
+  duob-tms-web:
     image: 127.0.0.1:5000/duob-tms-web
     build:
       context: .
