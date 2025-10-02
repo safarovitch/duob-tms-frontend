@@ -530,9 +530,6 @@ const routesConfig = [
                 ]
             }
         ]
-    },
-    {
-        component: () => <Redirect to="/404" />
     }
 ];
 
