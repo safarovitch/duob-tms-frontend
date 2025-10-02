@@ -18,8 +18,8 @@ RUN yarn install --network-timeout=300000 --frozen-lockfile
 # add app
 COPY . /app
 
-# Set Node options for build
-ENV NODE_OPTIONS=--max_old_space_size=4096
+# Set Node options for build (includes OpenSSL legacy provider for compatibility)
+ENV NODE_OPTIONS="--max_old_space_size=4096 --openssl-legacy-provider"
 
 # generate build
 RUN yarn build
