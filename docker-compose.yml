@@ -7,4 +7,5 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - "8081:80"   # container runs nginx on 80, mapped to host 8081
+    restart: always
