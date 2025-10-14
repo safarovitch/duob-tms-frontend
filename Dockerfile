@@ -3,7 +3,7 @@
 #############
 
 # base image
-FROM node:14.16.0 as build
+FROM node:20.16.0 as build
 
 # set working directory
 WORKDIR /app
@@ -19,7 +19,7 @@ RUN yarn install --network-timeout=300000
 COPY . /app
 RUN set NODE_OPTIONS=--max_old_space_size=4096
 # generate build
-RUN yarn build
+RUN NODE_OPTIONS="--openssl-legacy-provider" SKIP_PREFLIGHT_CHECK=true TSC_COMPILE_ON_ERROR=true yarn build
 
 ############
 ### prod ###

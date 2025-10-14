@@ -124,39 +124,25 @@ function LoginView() {
                     <CardMedia
                         className={classes.media}
                         image="/static/auth.png"
-                        title="DuobTMS | Abad Technologies"
+                        title="DuobTMS"
                     >
-
                         <Box
                             alignItems="center"
                             display="flex"
                             mt={3}
                         >
-                            <Avatar
-                                className={classes.logo}
-                                alt="AbadTech"
-                                src="/static/abadtech.png"
-                            />
-                            <Box >
-                                <Typography
-                                    color="inherit"
-                                    variant="h2"
-                                >
-                                    Abad
-                                </Typography>
-                                <Typography
-                                    color="inherit"
-                                    variant="h3"
-                                >
-                                    Technologies
-                                </Typography>
-                            </Box>
+                            <Typography
+                                color="inherit"
+                                variant="h2"
+                            >
+                                DuobTMS
+                            </Typography>
                         </Box>
                         <Typography
                             color="inherit"
                             variant="subtitle1"
                         >
-                            Enterprise Software Development, Design & Consulting
+                            Transportation Management System
                         </Typography>
                     </CardMedia>
                 </Card>

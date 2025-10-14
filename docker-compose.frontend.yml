@@ -1,0 +1,18 @@
+services:
+  # Frontend React Application with Nginx
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duobtms_web_frontend
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - duobtms_default  # Connect to your existing backend network
+
+networks:
+  duobtms_default:
+    external: true  # Use the existing network where your backend is running
