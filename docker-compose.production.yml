@@ -1,0 +1,103 @@
+version: "3.9"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14
+    container_name: duobtms_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: duobtms
+      POSTGRES_USER: duobuser
+      POSTGRES_PASSWORD: duobpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - duobtms_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U duobuser -d duobtms"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Backend Spring Boot Application
+  app:
+    build: 
+      context: ../backend  # Adjust path to your backend directory
+      dockerfile: Dockerfile
+    container_name: duobtms_app
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/duobtms
+      SPRING_DATASOURCE_USERNAME: duobuser
+      SPRING_DATASOURCE_PASSWORD: duobpass
+      SERVER_PORT: 8080
+      SERVER_SERVLET_CONTEXT_PATH: /duobtms
+      JWT_SECRET_KEY: change_me_strong_production_key_here
+      DUOB_TMS_FILES_PATH: /documents
+      DUOB_TMS_FILES_BASE_URL: http://localhost:8080
+      SPRING_PROFILES_ACTIVE: production
+    ports:
+      - "8080:8080"
+    volumes:
+      - app_documents:/documents
+      - app_logs:/var/log/duobtms
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - duobtms_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/duobtms/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Frontend React Application with Nginx
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duobtms_web
+    restart: always
+    ports:
+      - "80:80"        # Main web access
+      - "443:443"      # HTTPS (if SSL is configured)
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - duobtms_network
+    volumes:
+      - web_logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.duobtms.service=frontend"
+      - "com.duobtms.version=1.0"
+
+networks:
+  duobtms_network:
+    driver: bridge
+    name: duobtms_network
+
+volumes:
+  postgres_data:
+    driver: local
+  app_documents:
+    driver: local
+  app_logs:
+    driver: local
+  web_logs:
+    driver: local
+

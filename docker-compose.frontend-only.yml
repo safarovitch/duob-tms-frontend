@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Frontend React Application with Nginx
+  duob-tms-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duob-tms-frontend
+    ports:
+      - "80:80"        # Production: Direct access on port 80
+      # - "8081:80"    # Alternative: Use this if port 80 is occupied
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - duob-network
+    labels:
+      - "com.duobtms.service=frontend"
+      - "com.duobtms.version=1.0"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  duob-network:
+    driver: bridge
+    name: duob-tms-network

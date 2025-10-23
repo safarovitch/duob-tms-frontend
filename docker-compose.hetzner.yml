@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # Frontend React Application with Nginx
+  duob-tms-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duob-tms-frontend
+    ports:
+      - "80:80"        # Production: Map to port 80 for direct access
+      # - "8081:80"    # Alternative: Use this if port 80 is occupied
+    restart: unless-stopped
+    depends_on:
+      - duob-tms-service
+    networks:
+      - duob-network
+    environment:
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.duob-web.rule=Host(`your-domain.com`)"
+      - "traefik.http.services.duob-web.loadbalancer.server.port=80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Backend Spring Boot Service (if you want to run it locally)
+  duob-tms-service:
+    image: openjdk:11-jre-slim  # Adjust based on your backend requirements
+    container_name: duob-tms-backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - duob-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - SERVER_PORT=8080
+      - JAVA_OPTS=-Xmx1024m -Xms512m
+    volumes:
+      # Mount your backend JAR file here
+      - ./backend/app.jar:/app/app.jar:ro
+      # Mount documents directory if needed
+      - duob-documents:/documents
+    command: ["java", "-jar", "/app/app.jar"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Database (PostgreSQL) - Add if needed
+  duob-database:
+    image: postgres:13-alpine
+    container_name: duob-tms-db
+    restart: unless-stopped
+    networks:
+      - duob-network
+    environment:
+      - POSTGRES_DB=duobtms
+      - POSTGRES_USER=duobuser
+      - POSTGRES_PASSWORD=your_secure_password_here
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"  # Remove this in production for security
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U duobuser -d duobtms"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Cache (Optional)
+  duob-redis:
+    image: redis:6-alpine
+    container_name: duob-tms-redis
+    restart: unless-stopped
+    networks:
+      - duob-network
+    ports:
+      - "6379:6379"  # Remove this in production for security
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Reverse Proxy with SSL (Traefik) - Optional but recommended
+  traefik:
+    image: traefik:v2.9
+    container_name: duob-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # Traefik dashboard
+    networks:
+      - duob-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/traefik.yml:ro
+      - ./traefik/dynamic.yml:/dynamic.yml:ro
+      - traefik_certificates:/certificates
+    environment:
+      - TRAEFIK_API_DASHBOARD=true
+      - TRAEFIK_API_INSECURE=true
+    labels:
+      - "traefik.enable=true"
+
+networks:
+  duob-network:
+    driver: bridge
+    name: duob-tms-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  duob-documents:
+    driver: local
+  traefik_certificates:
+    driver: local

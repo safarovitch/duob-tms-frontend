@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14
+    container_name: duobtms_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: duobtms
+      POSTGRES_USER: duobuser
+      POSTGRES_PASSWORD: duobpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - duobtms_network
+
+  # Backend Spring Boot Application (Your existing setup)
+  app:
+    build: .  # This should point to your backend directory
+    container_name: duobtms_app
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/duobtms
+      SPRING_DATASOURCE_USERNAME: duobuser
+      SPRING_DATASOURCE_PASSWORD: duobpass
+      SERVER_PORT: 8080
+      SERVER_SERVLET_CONTEXT_PATH: /duobtms
+      JWT_SECRET_KEY: change_me_strong
+      DUOB_TMS_FILES_PATH: /documents
+      DUOB_TMS_FILES_BASE_URL: http://localhost:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - duobtms_network
+    volumes:
+      - app_documents:/documents
+
+  # Frontend React Application with Nginx
+  web:
+    build:
+      context: ./frontend  # Path to your frontend directory
+      dockerfile: Dockerfile
+    container_name: duobtms_web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - duobtms_network
+    environment:
+      - NODE_ENV=production
+
+networks:
+  duobtms_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  app_documents:
