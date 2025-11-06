@@ -1,9 +1,8 @@
-import {ADMIN, ENGINEER, MANAGER} from "./roles";
+import {ADMIN, MANAGER} from "./roles";
 
 const WAREHOUSE_STATE = {
     LIST: [
         ADMIN,
-        ENGINEER,
         MANAGER
     ],
     SELECT_WAREHOUSE: [

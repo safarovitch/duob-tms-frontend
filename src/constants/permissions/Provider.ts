@@ -1,9 +1,8 @@
-import {ADMIN, MANAGER, WAREHOUSEMAN} from "./roles";
+import {ADMIN, MANAGER} from "./roles";
 
 const PROVIDER = {
     LIST: [
         ADMIN,
-        WAREHOUSEMAN,
         MANAGER
     ],
     CREATE: [

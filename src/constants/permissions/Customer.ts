@@ -1,9 +1,8 @@
-import {ADMIN, CASHIER, CLIENT, MANAGER, WAREHOUSEMAN} from "./roles";
+import {ADMIN, CASHIER, CLIENT, MANAGER} from "./roles";
 
 const CUSTOMER = {
     LIST: [
         ADMIN,
-        WAREHOUSEMAN,
         MANAGER,
         CASHIER
     ],
